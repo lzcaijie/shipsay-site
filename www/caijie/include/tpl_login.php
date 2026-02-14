@@ -1,5 +1,4 @@
-<?php
-<!doctype html> <html class="ShipSayCms"> <head> <meta charset="UTF-8"> <title>船说CMS - 后台登录</title> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> <script src="//cdn.staticfile.org/jquery/3.4.0/jquery.min.js"></script>
+<?php /* template */ ?><!doctype html> <html class="ShipSayCms"> <head> <meta charset="UTF-8"> <title>船说CMS - 后台登录</title> <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"> <script src="//cdn.staticfile.org/jquery/3.4.0/jquery.min.js"></script>
    <script src="/layui/layui.all.js"></script>
 
    <style>
@@ -136,4 +135,3 @@
    </script>
 </body>
 </html>
-?>
