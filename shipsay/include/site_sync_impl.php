@@ -5,7 +5,7 @@
  */
 header('Content-Type: application/json; charset=utf-8');
 
-if (!defined('SS_SITE_SYNC_IMPL_VER')) define('SS_SITE_SYNC_IMPL_VER', '6.3.1-impl');
+if (!defined('SS_SITE_SYNC_IMPL_VER')) define('SS_SITE_SYNC_IMPL_VER', '6.3.3-impl');
 
 function ss_resp($arr){
   echo json_encode($arr, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
@@ -203,8 +203,8 @@ function ss_core_policy_load($bakdir, &$err){
   if (!is_file($f)) return ss_core_policy_default();
   $raw = @file_get_contents($f);
   $j = json_decode((string)$raw, true);
-  if (!is_array($j)) { $err = 'bad_json'; return null; }
-  if (empty($j['skip']) || !is_array($j['skip'])) { $err = 'bad_policy'; return null; }
+  if (!is_array($j)) { $err = 'bad_json'; return ss_core_policy_default(); }
+  if (empty($j['skip']) || !is_array($j['skip'])) { $err = 'bad_policy'; return ss_core_policy_default(); }
   return ss_core_policy_normalize($j);
 }
 
@@ -231,6 +231,23 @@ function ss_core_policy_summary($bakdir){
   $sha1 = $raw !== '' ? (string)sha1($raw) : '';
   $size = (int)strlen($raw);
   $applied_at = is_file($f) ? (int)filemtime($f) : 0;
+  $exists = is_file($f) ? 1 : 0;
+  $err = '';
+  $policy_ver = 1;
+  $updated_at = 0;
+  if ($exists) {
+    $j = json_decode($raw, true);
+    if (!is_array($j)) {
+      $err = 'bad_json';
+    } else if (empty($j['skip']) || !is_array($j['skip'])) {
+      $err = 'bad_policy';
+    } else {
+      $policy_ver = isset($j['policy_ver']) ? (int)$j['policy_ver'] : 1;
+      if ($policy_ver < 1) $policy_ver = 1;
+      $updated_at = isset($j['updated_at']) ? (int)$j['updated_at'] : 0;
+      if ($updated_at < 0) $updated_at = 0;
+    }
+  }
   $bak = ss_core_policy_list_backups($bakdir);
   return [
     'sha1' => $sha1,
@@ -238,7 +255,10 @@ function ss_core_policy_summary($bakdir){
     'applied_at' => $applied_at,
     'backup_count' => count($bak),
     'latest_backup' => ($bak ? basename($bak[0]) : ''),
-    'exists' => is_file($f) ? 1 : 0,
+    'exists' => $exists,
+    'err' => $err,
+    'policy_ver' => $policy_ver,
+    'updated_at' => $updated_at,
   ];
 }
 
@@ -252,14 +272,31 @@ function ss_core_policy_write($bakdir, $policy, $keep, &$err){
   if (is_file($f)) {
     $bak_name = 'core_policy_' . date('Ymd_His') . '_' . substr(bin2hex(random_bytes(5)), 0, 8);
     $bak_dir = rtrim($bakdir,'/').'/'.$bak_name;
-    @mkdir($bak_dir, 0755, true);
-    @copy($f, $bak_dir . '/core_policy.json');
+    if (!is_dir($bak_dir) && !@mkdir($bak_dir, 0755, true)) { $err = 'backup_failed'; return false; }
+    if (!@copy($f, $bak_dir . '/core_policy.json')) { $err = 'backup_failed'; return false; }
   }
 
   $policy['updated_at'] = time();
   $out = json_encode($policy, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
   if ($out === false) { $err = 'encode_failed'; return false; }
-  if (@file_put_contents($f, $out) === false) { $err = 'write_failed'; return false; }
+  $tmp = $f . '.tmp_' . substr(bin2hex(random_bytes(4)), 0, 8);
+  $fp = @fopen($tmp, 'wb');
+  if (!$fp) { $err = 'write_failed'; return false; }
+  $w = @fwrite($fp, $out);
+  if ($w === false || $w < strlen($out)) {
+    @fclose($fp);
+    @unlink($tmp);
+    $err = 'write_failed';
+    return false;
+  }
+  @fflush($fp);
+  if (function_exists('fsync')) @fsync($fp);
+  @fclose($fp);
+  if (!@rename($tmp, $f)) {
+    @unlink($tmp);
+    $err = 'rename_failed';
+    return false;
+  }
 
   ss_core_policy_clean_old($bakdir, $keep);
   return true;
@@ -1478,7 +1515,6 @@ if (!empty($data['core_check_only'])) {
   // v6.3：加载核心策略（core_policy.json）
   $perr = '';
   $policy = ss_core_policy_load($bakdir, $perr);
-  if (!$policy) ss_resp(['ok'=>0,'error'=>'policy_invalid','detail'=>$perr ?: 'bad_policy']);
 
 
   if ($url === '') ss_resp(['ok'=>0,'error'=>'core_url_empty']);
@@ -1570,6 +1606,9 @@ if (!empty($data['core_check_only'])) {
       'skipped_by'=>$skip_by,
       'skipped_samples'=>$skip_samples,
     ],
+    'policy_used'=>ss_core_policy_summary($bakdir),
+    'policy_load_err'=>(string)$perr,
+    'policy_fallback'=>$perr ? 1 : 0,
     'site_sync'=>$meta,
   ]);
 }
@@ -1596,7 +1635,6 @@ if (!empty($data['core_apply'])) {
   // v6.3：加载核心策略（core_policy.json）
   $perr = '';
   $policy = ss_core_policy_load($bakdir, $perr);
-  if (!$policy) ss_resp(['ok'=>0,'error'=>'policy_invalid','detail'=>$perr ?: 'bad_policy']);
 
   $keep = (int)($core['keep'] ?? 3);
   if ($keep < 1) $keep = 1;
@@ -1766,6 +1804,9 @@ if (!empty($data['core_apply'])) {
         'overwrite_samples' => array_slice($overwrite_files, 0, 20),
       ],
     ],
+    'policy_used'=>ss_core_policy_summary($bakdir),
+    'policy_load_err'=>(string)$perr,
+    'policy_fallback'=>$perr ? 1 : 0,
     'site_sync' => $meta2,
   ]);
 }
