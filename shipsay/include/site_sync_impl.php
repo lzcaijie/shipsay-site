@@ -1,9 +1,11 @@
 <?php
 /**
- * ShipSay CMS - site sync implementation (v6.2)
+ * ShipSay CMS - site sync implementation (v6.3.x)
  * Impl: /shipsay/include/site_sync_impl.php (loaded by /www/api/site_sync.php)
  */
 header('Content-Type: application/json; charset=utf-8');
+
+if (!defined('SS_SITE_SYNC_IMPL_VER')) define('SS_SITE_SYNC_IMPL_VER', '6.3.1-impl');
 
 function ss_resp($arr){
   echo json_encode($arr, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
@@ -1309,7 +1311,7 @@ if (!empty($data['tpl_status'])) {
 if (!empty($data['core_status'])) {
   $state = ss_core_load_state($bakdir);
   $bak = ss_core_list_backups($bakdir);
-  $meta = ss_site_sync_meta('6.3.0-impl', $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
+  $meta = ss_site_sync_meta(SS_SITE_SYNC_IMPL_VER, $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
   ss_resp([
     'ok'=>1,
     'v'=>63,
@@ -1341,7 +1343,7 @@ if (!empty($data['core_policy_apply'])) {
     ss_resp(['ok'=>0,'error'=>'policy_write_failed','detail'=>$werr ?: 'unknown']);
   }
 
-  $meta = ss_site_sync_meta('6.3.0-impl', $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
+  $meta = ss_site_sync_meta(SS_SITE_SYNC_IMPL_VER, $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
   ss_resp([
     'ok'=>1,
     'v'=>63,
@@ -1549,7 +1551,7 @@ if (!empty($data['core_check_only'])) {
 
   ss_rrmdir($tmp);
 
-  $meta = ss_site_sync_meta('6.3.0-impl', $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
+  $meta = ss_site_sync_meta(SS_SITE_SYNC_IMPL_VER, $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
   ss_resp([
     'ok'=>1,
     'v'=>63,
@@ -1738,10 +1740,10 @@ if (!empty($data['core_apply'])) {
 
   ss_rrmdir($tmp);
 
-  $meta2 = ss_site_sync_meta('6.3.0-impl', $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
+  $meta2 = ss_site_sync_meta(SS_SITE_SYNC_IMPL_VER, $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
   ss_resp([
     'ok' => 1,
-    'v'  => 62,
+    'v'  => 63,
     'core' => [
       'current' => ss_core_load_state($bakdir),
       'backup_count' => count(ss_core_list_backups($bakdir)),
@@ -1820,10 +1822,10 @@ if (!empty($data['core_rollback'])) {
   // 控量清理
   ss_core_clean_old($bakdir, $keep);
 
-  $meta2 = ss_site_sync_meta('6.3.0-impl', $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
+  $meta2 = ss_site_sync_meta(SS_SITE_SYNC_IMPL_VER, $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
   ss_resp([
     'ok' => 1,
-    'v'  => 62,
+    'v'  => 63,
     'core' => [
       'current' => ss_core_load_state($bakdir),
       'backup_count' => count(ss_core_list_backups($bakdir)),
