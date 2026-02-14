@@ -1,0 +1,35 @@
+User-agent: Baiduspider
+Allow: /
+User-agent: 360Spider
+Allow: /
+User-agent: Sogou Spider
+Allow: /
+User-agent: Sosospider
+Allow: /
+User-agent: YisouSpider
+Allow: /
+User-agent: Bytespider
+Allow: /
+User-agent: Bingbot
+Allow: /
+User-agent: Yodaobot
+Disallow: /
+User-agent: Googlebot
+Disallow: /
+User-agent: Adsbot
+Disallow: /
+User-agent: YandexBot
+Disallow: /
+User-agent: GPTBot
+Disallow: /
+User-agent: Amazonbot
+Disallow: /
+User-agent: Applebot
+Disallow: /
+User-agent: DataForSeoBot
+Disallow: /
+User-agent: SMTBot
+Disallow: /
+
+Sitemap: /sitemap/sitemap.xml
+Sitemap: /sitemap/sm_sitemap.xml

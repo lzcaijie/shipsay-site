@@ -1,0 +1,15 @@
+*.log
+*.tmp
+*.swp
+*.bak
+.DS_Store
+
+# secrets / local
+*secret*
+*password*
+*token*
+*.key
+*.pem
+
+# backups / runtime
+shipsay/configs/_bak/

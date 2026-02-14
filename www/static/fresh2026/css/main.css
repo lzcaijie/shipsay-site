@@ -1,0 +1,347 @@
+:root{
+  --bg:#f6f7fb;
+  --card:#fff;
+  --txt:#111;
+  --muted:#666;
+  --pri:#2d5bff;
+  --bd:rgba(0,0,0,.08);
+  --shadow:0 8px 24px rgba(10,20,60,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);font:14px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft Yahei",sans-serif}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+
+.wrap{max-width:1120px;margin:0 auto;padding:12px}
+.layout{display:block}
+
+/* topbar */
+.topbar{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--bd)}
+.topbar .wrap{display:flex;align-items:center;gap:10px;padding:10px 12px;flex-wrap:nowrap}
+.topbar .brand{font-weight:900;white-space:nowrap;flex:0 0 auto}
+.topbar .crumb{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.topbar .spacer{flex:1}
+.topbar .link{font-size:13px;color:var(--pri);white-space:nowrap;flex:0 0 auto}
+
+.search{display:flex;gap:8px;align-items:center;flex:1;min-width:0}
+.search input{flex:1;min-width:0;width:auto;padding:10px 12px;border:1px solid var(--bd);border-radius:14px;background:#fafbff}
+.search button{flex:0 0 auto;white-space:nowrap;padding:10px 14px;border:0;border-radius:14px;background:var(--pri);color:#fff;cursor:pointer}
+
+/* cards */
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:12px;margin:12px 0;box-shadow:var(--shadow)}
+.card-hd,.cardhd{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.h1{font-size:18px;line-height:1.3;margin:0 0 6px}
+.h2{font-size:15px;margin:0}
+.muted{color:var(--muted);font-size:12px}
+.more{color:var(--pri);font-size:12px}
+
+/* books */
+.books-grid{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.book{display:flex;gap:10px;border:1px solid var(--bd);border-radius:14px;padding:10px;background:#fff;min-width:0}
+.cover{width:56px;height:76px;border-radius:12px;object-fit:cover;background:#eee;flex:0 0 auto}
+.meta{min-width:0}
+.meta .t{font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.meta .s{color:var(--muted);font-size:12px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.meta .d{color:var(--muted);font-size:12px;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* list rows */
+.list{display:flex;flex-direction:column;gap:8px}
+.item{padding:10px;border:1px solid var(--bd);border-radius:14px;background:#fff}
+.list-item{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid var(--bd);border-radius:14px;background:#fff}
+.list-item .li-main{min-width:0;flex:1}
+.li-title{display:block;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.li-sub{color:var(--muted);font-size:12px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank-no{width:28px;flex:0 0 28px;text-align:center;color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* info page */
+.bookhead{display:flex;gap:12px;align-items:flex-start}
+.coverbig{width:108px;height:144px;border-radius:16px;object-fit:cover;background:#eee;flex:0 0 auto}
+.info{min-width:0}
+.info .line{color:var(--muted);font-size:12px;margin-top:4px}
+.btnrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.bookhead .btnrow{justify-content:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:14px;border:1px solid var(--bd);background:#fff;min-width:92px}
+.btn.primary{background:var(--pri);border-color:var(--pri);color:#fff}
+
+.tags{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tagtitle{color:var(--muted);font-size:12px}
+.tag{padding:6px 10px;border:1px solid var(--bd);border-radius:999px;background:#fff;font-size:12px}
+
+.chaptercard .chapters-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.chaptercard .citem{display:block;padding:10px;border:1px solid var(--bd);border-radius:14px;background:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.kv{display:grid;gap:8px;margin-top:10px}
+.kv div{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid var(--bd);border-radius:14px;background:#fff}
+.kv span{color:var(--muted);font-size:12px;white-space:nowrap;flex:0 0 auto}
+.kv b{font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;text-align:right}
+.kv b a{color:var(--pri)}
+
+/* tabs */
+.tabs{display:flex;gap:10px;flex-wrap:wrap}
+.tabs a{flex:1;text-align:center;padding:10px;border:1px solid var(--bd);border-radius:14px;background:#fff;min-width:98px}
+.tabs a.active{background:rgba(45,91,255,.08);border-color:rgba(45,91,255,.28);color:var(--pri)}
+
+/* pager */
+.pager{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:12px}
+.pager a,.pager span{display:inline-flex;align-items:center;justify-content:center;min-width:86px;padding:10px 12px;border:1px solid var(--bd);border-radius:14px;background:#fff}
+.pager .muted{border:1px dashed var(--bd);background:transparent}
+.pager .select{min-width:0;padding:0;border:0;background:transparent}
+.pager select{padding:10px 12px;border:1px solid var(--bd);border-radius:14px;background:#fff}
+
+/* reader */
+.readbg.night{background:#0f1115;color:#e8e8e8}
+.readbg.night .card{background:#161922;border-color:rgba(255,255,255,.08)}
+.readbg.night .topbar{background:#161922;border-color:rgba(255,255,255,.08)}
+.readbg.night .btn{background:#1b2030;border-color:rgba(255,255,255,.08);color:#e8e8e8}
+.content{font-size:16px;line-height:1.95;word-break:break-word}
+.readnav{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.readtools{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.toolbtn{padding:10px 12px;border:1px solid var(--bd);border-radius:14px;background:#fff;cursor:pointer}
+.readbg.night .toolbtn{background:#1b2030;border-color:rgba(255,255,255,.08);color:#e8e8e8}
+
+/* footer */
+.site-footer{margin-top:24px;padding:18px 0;background:#fff;border-top:1px solid #eee;color:#666;font-size:14px;line-height:1.8}
+.site-footer .wrap{padding:0 16px}
+.site-footer .ft-links{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px}
+.site-footer .ft-links a{color:var(--pri)}
+.site-footer .sep{color:var(--muted)}
+.site-footer .ft-desc{margin-top:10px;color:var(--muted);font-size:12px;line-height:1.8}
+.site-footer .ft-copy{margin-top:10px;color:var(--muted);font-size:12px}
+
+@media (min-width: 900px){
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+  .maincol{min-width:0}
+  .sidecol{position:sticky;top:64px}
+  .books-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width: 899px){
+  .layout{display:block}
+  .sidecol{width:100%;display:block;position:static;margin-top:12px}
+  .sidecol .card{margin:0}
+  .sidecol .card + .card{margin-top:12px}
+}
+@media (max-width: 360px){
+  .books-grid{grid-template-columns:1fr}
+  .chaptercard .chapters-grid{grid-template-columns:1fr}
+}
+/* ========= tpl_info.php 详情页细节微调 v2（替换旧段） ========= */
+
+/* 1) 开始阅读 / 章节目录：PC 两列并排；手机一列居中，宽度统一 */
+.bookhead .btnrow{
+  display:grid !important;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:12px;
+  margin-top:14px;
+  max-width:360px;
+  margin-left:auto;
+  margin-right:auto;
+}
+.bookhead .btnrow .btn{
+  width:100%;
+  min-width:0;
+  height:44px;
+  border-radius:14px;
+}
+@media (max-width: 520px){
+  .bookhead .btnrow{
+    grid-template-columns:1fr;
+    max-width:240px;
+  }
+}
+
+/* 2) 最新章节：PC 两列 + 每条最多2行；手机 1 行省略号（与目录一致） */
+/* 最新章节的结构就是：.cardhd(或.card-hd) + .list */
+@media (min-width: 900px){
+  .maincol section.card > .cardhd + .list,
+  .maincol section.card > .card-hd + .list{
+    display:grid !important;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:8px;
+  }
+
+  .maincol section.card > .cardhd + .list > a.item,
+  .maincol section.card > .card-hd + .list > a.item{
+    display:-webkit-box !important;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    overflow:hidden;
+    white-space:normal;
+    line-height:1.45;
+    word-break:break-word;
+  }
+}
+
+@media (max-width: 899px){
+  .maincol section.card > .cardhd + .list,
+  .maincol section.card > .card-hd + .list{
+    display:flex !important;
+    flex-direction:column;
+    gap:8px;
+  }
+
+  .maincol section.card > .cardhd + .list > a.item,
+  .maincol section.card > .card-hd + .list > a.item{
+    display:block !important;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+}
+/* ========= tpl_info.php 详情页细节微调 v3（直接追加到 main.css 最后，用于覆盖前面的 v2） ========= */
+
+/* 1) 开始阅读 / 章节目录：手机=一列（你要的）；PC=两列 */
+.bookhead .btnrow{
+  display:grid !important;
+  grid-template-columns:1fr !important;   /* 手机默认一列 */
+  gap:12px;
+  margin-top:14px;
+  max-width:240px;
+  margin-left:auto;
+  margin-right:auto;
+}
+.bookhead .btnrow .btn{
+  width:100% !important;
+  min-width:0;
+  height:44px;
+  border-radius:14px;
+}
+@media (min-width: 900px){
+  .bookhead .btnrow{
+    grid-template-columns:repeat(2, minmax(0, 1fr)) !important; /* PC 两列 */
+    max-width:360px;
+  }
+}
+
+/* 2) 最新章节：PC 两列 + 每条最多2行；手机 1 行省略号（你说这条已正常，我保持不动并增强选择器） */
+@media (min-width: 900px){
+  .maincol section.card > .cardhd + .list,
+  .maincol section.card > .card-hd + .list{
+    display:grid !important;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:8px;
+  }
+  .maincol section.card > .cardhd + .list > a.item,
+  .maincol section.card > .card-hd + .list > a.item{
+    display:-webkit-box !important;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    overflow:hidden;
+    white-space:normal;
+    line-height:1.45;
+    word-break:break-word;
+  }
+}
+@media (max-width: 899px){
+  .maincol section.card > .cardhd + .list,
+  .maincol section.card > .card-hd + .list{
+    display:flex !important;
+    flex-direction:column;
+    gap:8px;
+  }
+  .maincol section.card > .cardhd + .list > a.item,
+  .maincol section.card > .card-hd + .list > a.item{
+    display:block !important;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+}
+
+/* 3) 右侧“阅读记录 / 回首页”：平铺开 + 自适应（宽就两列，窄就一列） */
+.sidecol .btnrow{
+  display:grid !important;
+  grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));
+  gap:10px;
+}
+.sidecol .btnrow .btn{
+  width:100% !important;
+  min-width:0;
+}
+/* ====== 作者页/搜索页/分类页 书卡（book-card）补齐样式：兼容现有模板结构 ====== */
+.book-card{
+  display:flex;
+  gap:10px;
+  border:1px solid var(--bd);
+  border-radius:14px;
+  padding:10px;
+  background:#fff;
+  min-width:0;
+}
+.book-cover{flex:0 0 auto}
+.book-cover img{
+  width:56px;
+  height:76px;
+  border-radius:12px;
+  object-fit:cover;
+  background:#eee;
+}
+.book-meta{min-width:0;display:block}
+.book-title{
+  display:block;
+  font-weight:800;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.book-sub{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:2px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.book-desc{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.pager.readnav{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:10px;
+}
+.pager.readnav a,
+.pager.readnav span{
+  width:100%;
+  min-width:0;
+}
+.pager.readnav .mid{
+  font-size:12px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+@media (max-width: 360px){
+  .pager.readnav a,
+  .pager.readnav span{
+    padding:10px 8px;
+    min-width:0;
+  }
+}
+/* ====== rank 排行页：chips + 文案细节 ====== */
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px 12px;
+  border:1px solid var(--bd);
+  border-radius:14px;
+  background:#fff;
+  font-size:13px;
+  line-height:1;
+}
+.chip.active{
+  background:var(--pri);
+  border-color:var(--pri);
+  color:#fff;
+}
+.dot{margin:0 6px;color:var(--muted)}
+.li-title a{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
