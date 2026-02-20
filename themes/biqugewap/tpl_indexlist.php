@@ -10,11 +10,7 @@ $currentPage = isset($pid) ? $pid : 1;
 $totalPages = ceil($chapters / $chaptersPerPage);
 
 function getChapterPageUrl($articleid, $page = 1) {
-    if ($page == 1) {
-        return "/index/{$articleid}/";
-    } else {
-        return "/index/{$articleid}/{$page}/";
-    }
+    return Url::index_url($articleid, $page);
 }
 
 $pageTitle = ($currentPage > 1) ? 
