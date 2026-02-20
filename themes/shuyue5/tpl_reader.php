@@ -142,7 +142,7 @@ $cateurl.=$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
             </ul>
             <form class="navbar-form navbar-left hidden-xs" action="/search/" method="get">
                 <div class="form-group">
-                    <input type="text" class="form-control" name="q" value="" placeholder="搜索作品">
+                    <input type="text" class="form-control" name="searchkey" value="" placeholder="搜索作品">
                 </div>
                 <button type="submit" class="btn btn-default">搜索</button>
             </form>
