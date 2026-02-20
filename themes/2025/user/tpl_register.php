@@ -7,7 +7,7 @@
 <?php $page_title="新用户注册"; require_once __THEME_DIR__  . '/tpl_header.php'; ?>
 </nav>
 <link rel="stylesheet" href="/static/biquge/user.css">
-<script src="/static/2025/vendor/jquery.cookie.min.js"></script>
+<script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="/static/biquge/user.js"></script>
 <div id="main" class="main-height  container flex-wrap section-bottom mb20">
 <div class="hotcontent">

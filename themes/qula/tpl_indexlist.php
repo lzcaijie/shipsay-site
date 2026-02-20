@@ -90,7 +90,21 @@
     </section>
 
 </div>
-<script src="/static/<?=$theme_dir?>/push-baidu.js"></script>
-<script src="/static/<?=$theme_dir?>/push-sm.js"></script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    bp.src = "//zz.bdstatic.com/linksubmit/push.js";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<script>
+(function(){
+    var s = document.createElement("script");
+    s.src = "https://cdn.sm.cn/auto/push.js";
+    var r = document.getElementsByTagName("script")[0];
+    r.parentNode.insertBefore(s, r)
+})();
+</script>
 
 <?php require_once 'tpl_footer.php'; ?>
