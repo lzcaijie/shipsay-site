@@ -52,7 +52,7 @@ $pageDescription .= '，作者：' . $author . '。';
 <meta property="og:novel:chapter_name" content="<?=$chaptername?>">
 <meta property="og:novel:chapter_url" content="<?=$uri?>">
 
-<?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
+<?php require_once 'tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
 <style>
 .loading-text {
     text-align: center;
@@ -104,7 +104,7 @@ $pageDescription .= '，作者：' . $author . '。';
                 <?php if ($i == $now_pid): ?>
                     <strong><?=$i?></strong>
                 <?php else: ?>
-                    <a href="<?=Url::chapter_url($articleid,$chapterid,$i)?>"><?=$i?></a>
+                    <a href="/read/<?=$articleid?>/<?=$chapterid?>/<?=$i?>.html"><?=$i?></a>
                 <?php endif; ?>
             <?php endfor; ?>
             
@@ -204,7 +204,7 @@ $pageDescription .= '，作者：' . $author . '。';
         <div class="clear"></div>
     </div>
     
-    <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
+    <?php require_once 'tpl_footer.php'; ?>
     
     <script src="/static/<?=$theme_dir?>/user.js"></script>
     <script src="/static/<?=$theme_dir?>/readpage.js"></script>

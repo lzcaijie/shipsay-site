@@ -1,5 +1,4 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
-<?php $theme_list_limit = isset($category_per_page) ? max(1,(int)$category_per_page) : 20; ?>
 <!DOCTYPE html>
 <html lang="cmn-Hans">
 <head>
@@ -22,7 +21,7 @@
     <meta property="og:novel:update_time" content='<?=$lastupdate?>' />
     <meta property="og:novel:latest_chapter_name" content="<?=$lastchapter?>"/>
     <meta property="og:novel:latest_chapter_url" content="<?=$site_url?><?=$last_url?>"/>
-    <?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
+    <?php require_once 'tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
 <div class="container body-content">
     <ol class="breadcrumb hidden-xs">
         <li><a href="/" title="<?=SITE_NAME?>"><i class="glyphicon glyphicon-home fs-14" aria-hidden="true"></i> 首页</a></li>
@@ -82,7 +81,7 @@
             $i = 0;
             if (!empty($chapterrows) && is_array($chapterrows)):
                 foreach($chapterrows as $k => $v):
-                    if ($i >= $theme_list_limit) break;
+                    if ($i >= 50) break;
             ?>
                 <dd class="col-sm-4"><a href="<?=$v['cid_url']?>"><?=$v['cname']?></a></dd>
             <?php
@@ -96,7 +95,7 @@
 
     <div class="panel panel-default">
         <div class="panel-body" style="text-align: center;">
-            <a class="btn btn-primary" href="<?=$index_url?>" rel="nofollow">查看更多章节目录</a>
+            <a class="btn btn-primary" href="/index/<?=$articleid?>/" rel="nofollow">查看更多章节目录</a>
         </div>
     </div>
 
@@ -140,6 +139,6 @@
 })();
 </script>
 
-<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
+<?php require_once 'tpl_footer.php'; ?>
 <script src="/static/<?=$theme_dir?>/js/user.js"></script>
 <script src="/static/<?=$theme_dir?>/js/layer.js"></script>

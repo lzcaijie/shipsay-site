@@ -6,7 +6,7 @@
     <title>与“<?=$searchkey;?>”有关的小说-<?=SITE_NAME?></title>
     <meta name="keywords" content="<?=SITE_NAME?>搜索结果" />
     <meta name="description" content="<?=$searchkey;?>的搜索结果">
-    <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
+    <?php require_once 'tpl_header.php'; ?>
 <div class="container body-content">
     <ol class="breadcrumb hidden-xs">
         <li><a href="/" title="<?=SITE_NAME?>"><i class="glyphicon glyphicon-home fs-14" aria-hidden="true"></i> 首页</a></li>
@@ -42,4 +42,4 @@
     </div>
     <div class="clear"></div>
 </div>
-<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
+<?php require_once 'tpl_footer.php'; ?>
