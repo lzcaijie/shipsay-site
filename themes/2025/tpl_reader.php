@@ -94,29 +94,8 @@ $cateurl.=$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
 </style>
 </head>
 <body id="wrapper">
-<div class="header-common hidden-xs">
-<div class="container">
-<div class="header-common-left"><a href="/" title="<?=SITE_NAME?>" class="logo"><?=SITE_NAME?></a></div>
-<div class="header-common-right">
-<div class="header-common-search">
-<form name="articlesearch" method="get" action="/search/">
-<input name="searchkey" type="text" class="text" id="searchkey" size="10" maxlength="50" placeholder="搜索从这里开始..." autocomplete="off" required>
-<button type="submit" name="submit"><svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3340"><path d="M902.4 889.6l-156.8-156.8c156.8-147.2 166.4-393.6 22.4-553.6S371.2 12.8 211.2 160C51.2 307.2 44.8 553.6 192 713.6c131.2 140.8 342.4 166.4 502.4 60.8l160 163.2c12.8 12.8 32 12.8 44.8 0 12.8-12.8 16-35.2 3.2-48z m-755.2-448c0-182.4 147.2-329.6 329.6-329.6 182.4 0 329.6 147.2 329.6 329.6 0 182.4-147.2 329.6-329.6 329.6C294.4 774.4 147.2 624 147.2 441.6z" p-id="3341"></path></svg></button>
-</form>
-</div>
-</div>
-</div>
-<div class="cf"></div>
-</div>
-<div class="header-common-nav hidden-xs">
-<div class="container">
-<a class="active" href="/" title="<?=SITE_NAME?>">首页</a>
-<a href="<?=$allbooks_url?>" title="书库">书库</a>
-<a href="/quanben<?=$allbooks_url?>" title="全本">全本</a>
-<a href="/search/">搜索</a>
-<a href="<?=$fake_recentread?>">轨迹</a>
-</div>
-<div class="cf"></div>
+<div class="hidden-xs">
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </div>
 <div class="container visible-xs">
 <div class="header-m">
@@ -138,9 +117,9 @@ $cateurl.=$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
         <?php if ($now_pid > 1): ?>
             <a href="<?=$prevpage_url?>" rel="prev">上一页</a>
         <?php endif; ?>
-        
+
         <span>第<?=$now_pid?>页/共<?=$max_pid?>页</span>
-        
+
         <?php for ($i = 1; $i <= min($max_pid, 10); $i++): ?>
             <?php if ($i == $now_pid): ?>
                 <strong><?=$i?></strong>
@@ -148,7 +127,7 @@ $cateurl.=$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
                 <a href="/read/<?=$articleid?>/<?=$chapterid?>/<?=$i?>.html"><?=$i?></a>
             <?php endif; ?>
         <?php endfor; ?>
-        
+
         <?php if ($now_pid < $max_pid): ?>
             <a href="<?=$nextpage_url?>" rel="next">下一页</a>
         <?php endif; ?>
@@ -228,53 +207,61 @@ $cateurl.=$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
 </div>
 <div class="cf"></div>
 </div>
-<div class="footer">
-<div class="container">
-<p class="hidden-xs">本站所有小说为转载作品，所有章节均由网友上传，转载至本站只是为了宣传本书让更多读者欣赏。</p>
-<p class="visible-xs">本站小说由程序自动索引</p>
-<p>Copyright &copy; 2023 <?=SITE_NAME?></p>
-<p><a href="/sitemap/sm_sitemap.xml" title="神马 SiteMap" target="_blank">神马SiteMap</a> | <a href="/sitemap/sitemap.xml" title="XML SiteMap" target="_blank">SiteMap</a></p>
-<div class="cf"></div>
-</div>
-</div>
-<script src="/static/<?=$theme_dir?>/js/jquery.min.js?v=20221207"></script>
-<script src="/static/<?=$theme_dir?>/js/2025.js?v=20221207"></script>
-<script src="/static/<?=$theme_dir?>/js/readpage.js?v=20221207"></script>
-<script src="/static/<?=$theme_dir?>/js/tempbookcase.js?v=20221207"></script>
-<script src="/static/<?=$theme_dir?>/js/user.js?v=20221207" defer="defer"></script>
-<script src="/static/<?=$theme_dir?>/layer/layer.js?v=20221207" defer="defer"></script>
 <script>
-   <?php if (Ss::use_js() && !$isSearchEngine) : ?>
-      setTimeout(function() {
-          $.ajax({
-              type: "post",
-              url: "/api/reader_js.php",
-              data: {
-                  articleid: '<?= $articleid ?>',
-                  chapterid: '<?= $chapterid ?>',
-                  pid: '<?= $now_pid ?>'
-              },
-              success: function(data) {
-                  $('#article').html(data);
-              },
-              error: function() {
-                  $('#article').html('<div class="error-text">加载失败，请刷新重试</div>');
-              }
-          });
-      }, 200);
-  <?php endif ?>
-	const articleid = <?=$articleid?>;
-	const chapterid = <?=$chapterid?>;
-	const uri = "<?=$uri?>";
-	const articlename = "<?=$articlename?>";
-	const chaptername = "<?=$chaptername?>";
-	const author = "<?= $author ?>";
-	const lastvisit = "<?=date('m-d',$v['lastupdate'])?>";
-	const imgurl = "<?=$img_url?>";
-	lastread.set(articleid,uri,articlename,chaptername,author,lastvisit,imgurl);
-	
+window.addEventListener('load', function () {
+  function loadScript(src, cb) {
+    var s = document.createElement('script');
+    s.src = src;
+    s.async = true;
+    s.onload = cb;
+    s.onerror = cb;
+    document.head.appendChild(s);
+  }
+  var themeDir = "<?=$theme_dir?>";
+  var scripts = [
+    "/static/" + themeDir + "/js/readpage.js?v=20221207",
+    "/static/" + themeDir + "/js/tempbookcase.js?v=20221207",
+    "/static/" + themeDir + "/js/user.js?v=20221207",
+    "/static/" + themeDir + "/layer/layer.js?v=20221207"
+  ];
+  (function next(i){
+    if(i >= scripts.length){ afterAll(); return; }
+    loadScript(scripts[i], function(){ next(i+1); });
+  })(0);
 
+  function afterAll(){
+    <?php if (Ss::use_js() && !$isSearchEngine) : ?>
+    setTimeout(function() {
+      try{
+        if (typeof $ === 'function' && $('#article').length) {
+          $.ajax({
+            type: "post",
+            url: "/api/reader_js.php",
+            data: { articleid: '<?= $articleid ?>', chapterid: '<?= $chapterid ?>', pid: '<?= $now_pid ?>' },
+            success: function(data){ $('#article').html(data); },
+            error: function(){ $('#article').html('<div class="error-text">加载失败，请刷新重试</div>'); }
+          });
+        }
+      }catch(e){}
+    }, 200);
+    <?php endif ?>
+
+    try{
+      if (window.lastread && typeof window.lastread.set === 'function') {
+        const articleid = <?=$articleid?>;
+        const uri = "<?=$uri?>";
+        const articlename = "<?=$articlename?>";
+        const chaptername = "<?=$chaptername?>";
+        const author = "<?= $author ?>";
+        const lastvisit = "<?=date('m-d',$v['lastupdate'])?>";
+        const imgurl = "<?=$img_url?>";
+        window.lastread.set(articleid, uri, articlename, chaptername, author, lastvisit, imgurl);
+      }
+    }catch(e){}
+  }
+});
 </script>
 
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 </body>
 </html>
