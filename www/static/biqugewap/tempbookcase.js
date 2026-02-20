@@ -1,0 +1,195 @@
+var bookmax = 30;
+
+function normUrl(u) {
+    if (!u) return '';
+    u = String(u);
+    if (/^https?:\/\//i.test(u)) return u;
+    if (u.charAt(0) === '/') return u;
+    return '/' + u;
+}
+
+function safeText(t) {
+    return (t === undefined || t === null) ? '' : String(t);
+}
+
+function pickCover(arr) {
+    // cover 优先第 7 段，其次第 6 段（兼容旧记录）
+    var c = arr[6] || arr[5] || '';
+    c = String(c);
+    if (!c || c === 'undefined' || c === 'null') return '/static/biqugewap/nocover.jpg';
+    return c;
+}
+
+function LastRead() { this.bookList = "bookList"; }
+
+LastRead.prototype = {
+    set: function (bid, url, bookname, chaptername, author, readtime, cover) {
+        if (!(bid && url && bookname && chaptername && author)) return;
+
+        // 兼容旧格式：第 6 段可能是封面 url
+        if (typeof cover === 'undefined' && typeof readtime === 'string' && /^(https?:\/\/|\/)/i.test(readtime)) {
+            cover = readtime;
+            readtime = '';
+        }
+
+        var v = bid + '#' + url + '#' + bookname + '#' + chaptername + '#' + author + '#' + (readtime || '') + '#' + (cover || '');
+
+        var aBooks = lastread.getBook();
+        var aBid = [];
+        for (i = 0; i < aBooks.length; i++) aBid.push(aBooks[i][0]);
+
+        if ($.inArray(bid, aBid) != -1) {
+            lastread.remove(bid);
+        } else {
+            while (aBooks.length >= bookmax) {
+                lastread.remove(aBooks[0][0]);
+                aBooks = lastread.getBook();
+            }
+        }
+        this.setItem(bid, v);
+        this.setBook(bid);
+    },
+
+    get: function (k) { return this.getItem(k) ? this.getItem(k).split("#") : ""; },
+    remove: function (k) { this.removeItem(k); this.removeBook(k); },
+
+    setBook: function (v) {
+        var reg = new RegExp("(^|#)" + v);
+        var books = this.getItem(this.bookList);
+        if (books === "") books = v;
+        else {
+            if (books.search(reg) === -1) books += "#" + v;
+            else books.replace(reg, "#" + v);
+        }
+        this.setItem(this.bookList, books);
+    },
+
+    getBook: function () {
+        var v = this.getItem(this.bookList) ? this.getItem(this.bookList).split("#") : [];
+        var books = [];
+        if (v.length) {
+            for (var i = 0; i < v.length; i++) {
+                var item = this.getItem(v[i]);
+                if (!item) continue;
+                var tem = item.split('#');
+                if (tem.length > 3) books.push(tem);
+            }
+        }
+        return books;
+    },
+
+    removeBook: function (v) {
+        var reg = new RegExp("(^|#)" + v);
+        var books = this.getItem(this.bookList);
+        if (!books) books = "";
+        else if (books.search(reg) != -1) books = books.replace(reg, "");
+        this.setItem(this.bookList, books);
+    },
+
+    setItem: function (k, v) {
+        if (!!window.localStorage) localStorage.setItem(k, v);
+        else {
+            var expireDate = new Date();
+            var EXPIR_MONTH = 30 * 24 * 3600 * 1000;
+            expireDate.setTime(expireDate.getTime() + 12 * EXPIR_MONTH);
+            document.cookie = k + "=" + encodeURIComponent(v) + ";expires=" + expireDate.toGMTString() + "; path=/";
+        }
+    },
+
+    getItem: function (k) {
+        var value = "";
+        if (!!window.localStorage) value = window.localStorage.getItem(k) || "";
+        else {
+            reg = new RegExp("(^| )" + k + "=([^;]*)(;|\x24)");
+            var result = reg.exec(document.cookie);
+            if (result) value = decodeURIComponent(result[2]) || "";
+        }
+        return value;
+    },
+
+    removeItem: function (k) {
+        if (!!window.localStorage) window.localStorage.removeItem(k);
+        else {
+            var expireDate = new Date();
+            expireDate.setTime(expireDate.getTime() - 1000);
+            document.cookie = k + "= " + ";expires=" + expireDate.toGMTString();
+        }
+    },
+
+    removeAll: function () {
+        if (!!window.localStorage) window.localStorage.clear();
+        else {
+            var v = this.getItem(this.bookList) ? this.getItem(this.bookList).split("#") : [];
+            if (v.length) for (var k in v) this.removeItem(v[k]);
+            this.removeItem(this.bookList);
+        }
+    }
+};
+
+function removebook(k) { lastread.remove(k); showtempbooks(); }
+function removeall() { lastread.removeAll(); showtempbooks(); }
+
+function showtempbooks() {
+    var books = lastread.getBook().reverse();
+    var $box = $("#tempBookcase");
+    $box.empty();
+
+    if (!books.length) {
+        $box.append($('<div class="nobook">没有阅读记录。</div>'));
+        return;
+    }
+
+    for (var i = 0; i < books.length && i < bookmax; i++) {
+        var b = books[i];
+
+        var infoUrl = normUrl(b[0]);
+        var readUrl = normUrl(b[1]);
+        var bookname = safeText(b[2]);
+        var chaptername = safeText(b[3]);
+        var author = safeText(b[4]);
+        var cover = pickCover(b);
+
+        var $dl = $('<dl></dl>');
+
+        var $coverA = $('<a></a>')
+            .addClass('cover')
+            .attr('href', infoUrl)
+            .attr('title', bookname);
+
+        var $img = $('<img>')
+            .attr('src', cover)
+            .attr('alt', bookname)
+            .on('error', function () {
+                this.src = '/static/biqugewap/nocover.jpg';
+                this.onerror = null;
+            });
+
+        $coverA.append($img);
+
+        var $dt = $('<dt></dt>');
+        $dt.append($('<a></a>').attr('href', infoUrl).attr('title', bookname).text(bookname));
+
+        var $dd1 = $('<dd class="history"></dd>');
+        $dd1.append('已读到：');
+        $dd1.append($('<a></a>').attr('href', readUrl).attr('title', chaptername).text(chaptername));
+
+        var $dd2 = $('<dd class="history"></dd>');
+
+        var $dd3 = $('<dd></dd>');
+        $dd3.append($('<a></a>').attr('href', '/author/' + encodeURIComponent(author) + '/').attr('title', author).text(author));
+        $dd3.append(
+            $('<a id="del_temp">移除</a>')
+                .attr('href', 'javascript:void(0)')
+                .on('click', (function (key) {
+                    return function () {
+                        if (confirm('确定要将本书移除吗？')) removebook(key);
+                    };
+                })(b[0]))
+        );
+
+        $dl.append($coverA, $dt, $dd1, $dd2, $dd3);
+        $box.append($dl);
+    }
+}
+
+window.lastread = new LastRead();
