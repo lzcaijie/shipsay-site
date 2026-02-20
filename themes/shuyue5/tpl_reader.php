@@ -40,7 +40,7 @@ $cateurl.=$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
     <title><?=$pageTitle?></title>
     <meta name="keywords" content="<?=$articlename?>,<?=$chaptername?>,<?=$author?>,<?=SITE_NAME?>" />
     <meta name="description" content="<?=$pageDescription?>">
-    
+
     <meta property="og:type" content="novel">
     <meta property="og:title" content="<?=$pageTitle?>">
     <meta property="og:description" content="<?=$pageDescription?>">
@@ -52,7 +52,7 @@ $cateurl.=$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
     <meta property="og:novel:status" content="<?=$isfull?>">
     <meta property="og:novel:chapter_name" content="<?=$chaptername?>">
     <meta property="og:novel:chapter_url" content="<?=$cateurl?>">
-    
+
     <link rel="canonical" href="<?=$cateurl?>">
     <meta http-equiv="Cache-Control" content="no-transform">
     <meta http-equiv="Cache-Control" content="no-siteapp">
@@ -64,9 +64,6 @@ $cateurl.=$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="screen-orientation" content="portrait">
     <meta name="x5-orientation" content="portrait">
-
-    <link href="/static/<?=$theme_dir?>/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/static/<?=$theme_dir?>/css/site.css?v=<?=date('Ymd', time())?>" rel="stylesheet">
     <style>
     .loading-text {
         text-align: center;
@@ -98,16 +95,15 @@ $cateurl.=$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
     #rtext #booktxt p{margin:0 0 16px;}
     #rtext #booktxt p:empty{display:none;margin:0;padding:0;}
     </style>
-</head>
-<body id="apage">
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="spider-pagination" aria-label="章节分页导航">
     <?php if ($max_pid > 1): ?>
         <?php if ($now_pid > 1): ?>
             <a href="<?=$prevpage_url?>" rel="prev">上一页</a>
         <?php endif; ?>
-        
+
         <span>第<?=$now_pid?>页/共<?=$max_pid?>页</span>
-        
+
         <?php for ($i = 1; $i <= min($max_pid, 10); $i++): ?>
             <?php if ($i == $now_pid): ?>
                 <strong><?=$i?></strong>
@@ -115,41 +111,12 @@ $cateurl.=$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
                 <a href="/read/<?=$articleid?>/<?=$chapterid?>/<?=$i?>.html"><?=$i?></a>
             <?php endif; ?>
         <?php endfor; ?>
-        
+
         <?php if ($now_pid < $max_pid): ?>
             <a href="<?=$nextpage_url?>" rel="next">下一页</a>
         <?php endif; ?>
     <?php endif; ?>
 </div>
-
-<header class="header_46f navbar navbar-inverse" id="header">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/"><?=SITE_NAME?></a>
-        </div>
-        <nav class="collapse navbar-collapse" id="navbar">
-            <ul class="nav navbar-nav">
-                <li><a href="/">首页</a></li>
-                <li><a href="/all/">书库</a></li>
-                <li><a href="/rank/">排行</a></li>
-                <li><a href="/full/">全本</a></li>
-                <li><a href="/history.html">轨迹</a></li>
-            </ul>
-            <form class="navbar-form navbar-left hidden-xs" action="/search/" method="get">
-                <div class="form-group">
-                    <input type="text" class="form-control" name="q" value="" placeholder="搜索作品">
-                </div>
-                <button type="submit" class="btn btn-default">搜索</button>
-            </form>
-            <ul class="login_46f nav navbar-nav navbar-right" id="header-login"></ul>
-        </nav>
-    </div>
-</header>
 
 <div class="container body-content">
     <ol class="breadcrumb hidden-xs">
@@ -251,33 +218,70 @@ $cateurl.=$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
     <div class="clear"></div>
 </div>
 
-<?php require_once 'tpl_footer.php'; ?>
-<script src="/static/<?=$theme_dir?>/js/pagetop.js?v=<?=date('Ymd', time())?>"></script>
-<script src="/static/<?=$theme_dir?>/js/tempbookcase.js?v=<?=date('Ymd', time())?>"></script>
-
 <script>
-   <?php if (Ss::use_js() && !$isSearchEngine) : ?>
-      setTimeout(function() {
-          $.ajax({
-              type: "post",
-              url: "/api/reader_js.php",
-              data: {
-                  articleid: '<?= $articleid ?>',
-                  chapterid: '<?= $chapterid ?>',
-                  pid: '<?= $now_pid ?>'
-              },
-              success: function(data) {
-                  $('#article').html(data);
-              },
-              error: function() {
-                  $('#article').html('<div class="error-text">加载失败，请刷新重试</div>');
-              }
-          });
-      }, 200);
-  <?php endif ?>
+document.addEventListener('DOMContentLoaded', function () {
+    // keep legacy selector usage
+    try { document.body.id = 'apage'; } catch (e) {}
 
-    lastread.set('<?=$info_url?>','<?=$uri?>','<?=$articlename?>','<?=$chaptername?>','<?=$author?>','<?=date("m-d")?>','<?=$img_url?>');
+    function loadScript(src) {
+        return new Promise(function (resolve, reject) {
+            var s = document.createElement('script');
+            s.src = src;
+            s.async = true;
+            s.onload = resolve;
+            s.onerror = reject;
+            document.head.appendChild(s);
+        });
+    }
+
+    var themeDir = "<?=$theme_dir?>";
+    var v = "<?=date('Ymd', time())?>";
+
+    // jQuery/bootstrap/common.js are loaded by tpl_footer.php (blocking),
+    // so by DOMContentLoaded they should already exist.
+    var queue = [
+        "/static/" + themeDir + "/js/layer.js",
+        "/static/" + themeDir + "/js/tempbookcase.js?v=" + v,
+        "/static/" + themeDir + "/js/pagetop.js?v=" + v,
+        "/static/" + themeDir + "/js/user.js?v=" + v
+    ];
+
+    (function next(i) {
+        if (i >= queue.length) {
+            afterAll();
+            return;
+        }
+        loadScript(queue[i]).then(function () { next(i + 1); }).catch(function () { next(i + 1); });
+    })(0);
+
+    function afterAll() {
+        <?php if (Ss::use_js() && !$isSearchEngine) : ?>
+        setTimeout(function () {
+            $.ajax({
+                type: "post",
+                url: "/api/reader_js.php",
+                data: {
+                    articleid: '<?= $articleid ?>',
+                    chapterid: '<?= $chapterid ?>',
+                    pid: '<?= $now_pid ?>'
+                },
+                success: function (data) {
+                    $('#article').html(data);
+                },
+                error: function () {
+                    $('#article').html('<div class="error-text">加载失败，请刷新重试</div>');
+                }
+            });
+        }, 200);
+        <?php endif ?>
+
+        try {
+            if (window.lastread && typeof lastread.set === 'function') {
+                lastread.set('<?=$info_url?>','<?=$uri?>','<?=$articlename?>','<?=$chaptername?>','<?=$author?>','<?=date("m-d")?>','<?=$img_url?>');
+            }
+        } catch (e) {}
+    }
+});
 </script>
-<script src="/static/<?=$theme_dir?>/js/user.js"></script>
-<script src="/static/<?=$theme_dir?>/js/layer.js"></script>
 
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
