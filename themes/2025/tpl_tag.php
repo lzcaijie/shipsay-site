@@ -6,7 +6,7 @@
 <title><?= $tag ?>小说推荐_好看的<?= $tag ?>类小说_<?= $tag ?>小说排行榜_<?= SITE_NAME ?></title>
 <meta name="keywords" content="<?= $tag ?>小说推荐_好看的<?= $tag ?>类小说_<?= $tag ?>小说排行榜_<?= SITE_NAME ?>">
 <meta name="description" content="<?= $tag ?>小说推荐_好看的<?= $tag ?>类小说_<?= $tag ?>小说排行榜_<?= SITE_NAME ?>">
-<link rel="canonical" href="http://www.28txt.com/tag/82.html">
+<link rel="canonical" href="<?=$site_url?><?=$uri?>">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="renderer" content="webkit|ie-comp|ie-stand">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -95,7 +95,7 @@
 <p class="hidden-xs">本站所有小说为转载作品，所有章节均由网友上传，转载至本站只是为了宣传本书让更多读者欣赏。</p>
 <p class="visible-xs">本站小说由程序自动索引</p>
 <p>Copyright &copy; 2023 <?= SITE_NAME ?></p>
-<p><a href="/sitemap/sm_sitemap.xml" title="神马 SiteMap" target="_blank">神马SiteMap</a> | <a href="/sitemap/sitemap.xml" title="XML SiteMap" target="_blank">SiteMap</a></p>
+<p><a href="/sitemap/sm_sitemap.xml" title="神马 SiteMap">神马SiteMap</a> | <a href="/sitemap/sitemap.xml" title="XML SiteMap">SiteMap</a></p>
 <div class="cf"></div>
 </div>
 </div>
