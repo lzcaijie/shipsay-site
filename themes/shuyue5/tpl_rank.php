@@ -1,6 +1,7 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 
 <?php
+$theme_list_limit = isset($category_per_page) ? max(1, (int)$category_per_page) : 20;
 $page_end_scripts = '<script>nav_sel(\'nav_top\');</script>';
 ?>
 
@@ -12,7 +13,7 @@ $page_end_scripts = '<script>nav_sel(\'nav_top\');</script>';
     <meta name="keywords" content="小说排行榜,<?=SITE_NAME?>排行榜" />
     <meta name="description" content="小说排行榜" />
     <link rel="canonical" href="<?=$site_url?>/rank/">
-    <?php require_once 'tpl_header.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container body-content">
     <div class="panel panel-default">
         <div class="panel-heading"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> 小说排行榜</div>
@@ -27,7 +28,7 @@ $page_end_scripts = '<script>nav_sel(\'nav_top\');</script>';
                 <th class="hidden-xs" width="64">状态</th>
             </tr>
             <?php if(!empty($articlerows) && is_array($articlerows)): ?>
-            <?php foreach($articlerows as $k => $v): ?><?php if($k < 48):?>
+            <?php foreach($articlerows as $k => $v): ?><?php if($k < $theme_list_limit):?>
             <tr>
                 <td class="fs-12 hidden-xs"><?=$v['sortname_2']?></td>
                 <td><a href="<?=$v['info_url']?>" title="<?=$v['articlename']?>"><?=$v['articlename']?></a></td>
@@ -42,4 +43,4 @@ $page_end_scripts = '<script>nav_sel(\'nav_top\');</script>';
         </table>
     </div>
 </div>
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

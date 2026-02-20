@@ -10,7 +10,7 @@ $pid = (isset($pid) && (int)$pid > 0) ? (int)$pid : 1;
     <meta name="keywords" content="<?=$articlename?>章节目录,<?=$articlename?>最新章节,<?=$author?>" />
     <meta name="description" content="《<?=$articlename?>》章节目录<?php if($pid>1):?>第<?=$pid?>页<?php endif;?>，作者：<?=$author?>。" />
     <link rel="canonical" href="<?=$site_url?><?=$uri?>">
-    <?php require_once 'tpl_header.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container body-content">
     <ol class="breadcrumb hidden-xs">
         <li><a href="/" title="<?=SITE_NAME?>"><i class="glyphicon glyphicon-home fs-14" aria-hidden="true"></i> 首页</a></li>
@@ -69,4 +69,4 @@ $pid = (isset($pid) && (int)$pid > 0) ? (int)$pid : 1;
     <div class="clear"></div>
 </div>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

@@ -1,3 +1,6 @@
+<?php
+$ss_search_url = $site_url . '/search/';
+?>
 	<footer class="footer">
 		<p><?=SITE_NAME?>所有小说均由根据搜索引擎转码而来</p>
         <p>本站不保存小说内容及数据，仅作宣传展示。</p>
@@ -12,7 +15,7 @@
     <script>imglazy();</script>
     <div id="searchguide">
         <div class="search">
-    		<form name="search" action="/search/" method="get">
+    		<form name="search" action="<?=$ss_search_url?>" method="get">
     			<input type="text" placeholder="可搜书名，请您少字也别输错字" value="" name="searchkey" class="search" id="searchkey" autocomplete="on" required>
     			<button type="submit">搜 索</button>
     		</form>
@@ -21,7 +24,7 @@
     	<div class="searchhot">
     	    <h4>热门搜索</h4>
     	    <p>
-    	        <a href="/search/?searchkey=重生">重生</a><a href="/search/?searchkey=战神">战神</a><a href="/search/?searchkey=超能力">超能力</a><a href="/search/?searchkey=总裁">总裁</a><a href="/search/?searchkey=萌宝">萌宝</a><a href="/search/?searchkey=系统">系统</a><a href="/search/?searchkey=聊天群">聊天群</a><a href="/search/?searchkey=万界">万界</a><a href="/search/?searchkey=最强">最强</a><a href="/search/?searchkey=穿越">穿越</a>
+    	        <a href="<?=$ss_search_url?>?searchkey=重生">重生</a><a href="<?=$ss_search_url?>?searchkey=战神">战神</a><a href="<?=$ss_search_url?>?searchkey=超能力">超能力</a><a href="<?=$ss_search_url?>?searchkey=总裁">总裁</a><a href="<?=$ss_search_url?>?searchkey=萌宝">萌宝</a><a href="<?=$ss_search_url?>?searchkey=系统">系统</a><a href="<?=$ss_search_url?>?searchkey=聊天群">聊天群</a><a href="<?=$ss_search_url?>?searchkey=万界">万界</a><a href="<?=$ss_search_url?>?searchkey=最强">最强</a><a href="<?=$ss_search_url?>?searchkey=穿越">穿越</a>
     	    </p>
     	</div>
     </div>
