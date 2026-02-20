@@ -1,5 +1,6 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 <?php
+$theme_list_limit = isset($category_per_page) ? max(1, (int)$category_per_page) : 20;
 $cateurl=$_SERVER['SERVER_PORT']==443?'https://':'http://';
 $cateurl.=$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
 $curid = 0;
@@ -12,7 +13,7 @@ $curid = 0;
     <meta name="keywords" content="<?=$sortname?>小说书库,<?=SITE_NAME?>小说书库" />
     <meta name="description" content="最全<?=$sortname?>小说书库">
     <link rel="canonical" href="<?=$cateurl?>">
-    <?php require_once 'tpl_header.php'; require_once 'tpl_fun.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once __THEME_DIR__ . '/tpl_fun.php'; ?>
 <div class="class">
     <ul class="container">
         <?php if(!empty($sortcategory) && is_array($sortcategory)): ?>
@@ -31,7 +32,7 @@ $curid = 0;
         <div class="panel-body">
             <div class="row">
                 <?php if(!empty($retarr) && is_array($retarr)): ?>
-                <?php foreach($retarr as $k => $v): ?><?php if($k < 6):?>
+                <?php foreach($retarr as $k => $v): ?><?php if($k < $theme_list_limit):?>
                 <div class="col-xs-4 book-coverlist">
                     <div class="row">
                         <div class="col-sm-5">
@@ -78,7 +79,7 @@ $curid = 0;
         </table>
     </div>
 </div>
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 <?php if($fullflag):?>
 <script>nav_sel('nav_full');nav_sel('sort<?=$curid?>');</script>
 <?php else: ?>

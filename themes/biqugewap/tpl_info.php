@@ -27,7 +27,7 @@ $keywords = "{$articlename},{$articlename}最新章节,{$articlename}免费阅�
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <link rel="stylesheet" href="/static/<?=$theme_dir?>/book.css">
 
-<?php require_once 'tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
+<?php $full_allbooks_url=(isset($fake_fullstr)?"/".trim($fake_fullstr,"/"):"/quanben").$allbooks_url; $bookcase_url=$site_url . "/bookcase/"; require_once __THEME_DIR__ . '/tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
 </head>
 <body>
 	<header class="header">
@@ -47,7 +47,7 @@ $keywords = "{$articlename},{$articlename}最新章节,{$articlename}免费阅�
 	            <div class="book-cell">
                     <h1 class="book-title"><?=$articlename?></h1>
                     <p class="book-meta">作者：<a href="<?=$author_url?>" title="<?=$author?>"><?=$author?></a></p>
-                    <p class="book-meta">分类：<a href="<?=Sort::ss_sorturl($sortid)?>" target="_blank" title="<?=$sortname?>"><?=$sortname?></a></p>
+                    <p class="book-meta">分类：<a href="<?=Sort::ss_sorturl($sortid)?>" title="<?=$sortname?>"><?=$sortname?></a></p>
                     <p class="book-meta">人气：<?=$allvisit?></p>
                     <p class="book-meta"><?=$isfull?> | <?=$words_w?>万字</p>
                 </div>
@@ -92,7 +92,7 @@ $keywords = "{$articlename},{$articlename}最新章节,{$articlename}免费阅�
 		<div class="clear"></div>
 	</div>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 
 <script src="/static/<?=$theme_dir?>/user.js"></script>
     <div id="guide" class="guide">
@@ -110,7 +110,7 @@ $keywords = "{$articlename},{$articlename}最新章节,{$articlename}免费阅�
             <i class="icon icon-rank"></i>
             <span class="guide-nav-h">排行榜</span>
         </a>
-        <a href="/quanben<?=$allbooks_url?>" class="guide-nav-a">
+        <a href="<?=$full_allbooks_url?>" class="guide-nav-a">
             <i class="icon icon-end"></i>
             <span class="guide-nav-h">全本</span>
         </a>
@@ -120,7 +120,7 @@ $keywords = "{$articlename},{$articlename}最新章节,{$articlename}免费阅�
         </a>
     </nav>
             <div class="guide-footer">
-                <a href="/bookcase/"><svg id="icon-person" viewBox="0 0 16 16"><g><path d="M12 5a4 4 0 1 0-8 0 4 4 0 0 0 8 0zM3 5a5 5 0 1 1 10 0A5 5 0 0 1 3 5z"></path><path d="M8 9c-4.397 0-8 2.883-8 6.5a.5.5 0 1 0 1 0C1 12.49 4.113 10 8 10s7 2.49 7 5.5a.5.5 0 1 0 1 0C16 11.883 12.397 9 8 9z"></path></g></svg>会员书架</a>
+                <a href="<?=$bookcase_url?>"><svg id="icon-person" viewBox="0 0 16 16"><g><path d="M12 5a4 4 0 1 0-8 0 4 4 0 0 0 8 0zM3 5a5 5 0 1 1 10 0A5 5 0 0 1 3 5z"></path><path d="M8 9c-4.397 0-8 2.883-8 6.5a.5.5 0 1 0 1 0C1 12.49 4.113 10 8 10s7 2.49 7 5.5a.5.5 0 1 0 1 0C16 11.883 12.397 9 8 9z"></path></g></svg>会员书架</a>
             </div>
         </div>
     </div>
