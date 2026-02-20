@@ -20,7 +20,8 @@
     $endChapter = min($currentPage * $chaptersPerPage, $chapters);
 
     function getChapterPageUrl($articleid, $page = 1) {
-        return Url::index_url($articleid, $page);
+        if ($page == 1) return "/index/{$articleid}/";
+        return "/index/{$articleid}/{$page}/";
     }
 
     $pageTitle = ($currentPage > 1) ?
@@ -125,3 +126,5 @@
 <button class="gotop" onclick="javascript:gotop();">顶部</button>
 
 <?php require_once 'tpl_footer.php'; ?>
+</body>
+</html>
