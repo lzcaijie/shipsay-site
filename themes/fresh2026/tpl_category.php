@@ -6,7 +6,7 @@
 <title><?=$sortname?>小说_<?=$sortname?>小说排行榜_<?=SITE_NAME?></title>
 <meta name="keywords" content="<?=$sortname?>,<?=$sortname?>小说,排行榜">
 <meta name="description" content="<?=SITE_NAME?>提供<?=$sortname?>小说列表与排行，免费阅读最新章节。">
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body>
 
@@ -73,4 +73,4 @@
   </aside>
 </main>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

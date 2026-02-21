@@ -20,7 +20,7 @@
 <title><?=$page_title?>_<?=SITE_NAME?></title>
 <meta name="keywords" content="排行,<?=$page_title?>">
 <meta name="description" content="<?=SITE_NAME?>小说排行榜：<?=$page_title?>。">
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body>
 
@@ -83,6 +83,6 @@
   </section>
 </main>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 </body>
 </html>

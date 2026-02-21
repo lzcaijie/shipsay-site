@@ -6,7 +6,7 @@
 <title>《<?=$articlename?>》目录_<?=$author?>_<?=SITE_NAME?></title>
 <meta name="keywords" content="<?=$articlename?>,<?=$author?>,目录">
 <meta name="description" content="<?=$articlename?>章节目录，最新章节列表。">
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body>
 
@@ -88,6 +88,6 @@
   </aside>
 </main>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 </body>
 </html>
