@@ -21,7 +21,7 @@
     <meta property="og:novel:update_time" content='<?=$lastupdate?>' />
     <meta property="og:novel:latest_chapter_name" content="<?=$lastchapter?>"/>
     <meta property="og:novel:latest_chapter_url" content="<?=$site_url?><?=$last_url?>"/>
-    <?php require_once 'tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
+    <?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
 <div class="container body-content">
     <ol class="breadcrumb hidden-xs">
         <li><a href="/" title="<?=SITE_NAME?>"><i class="glyphicon glyphicon-home fs-14" aria-hidden="true"></i> 首页</a></li>
@@ -139,6 +139,6 @@
 })();
 </script>
 
-<?php require_once 'tpl_footer.php'; ?>
-<script src="/static/<?=$theme_dir?>/js/user.js"></script>
-<script src="/static/<?=$theme_dir?>/js/layer.js"></script>
+<?php $page_end_scripts = '<script src="/static/'.$theme_dir.'/js/user.js"></script>'
+    . '<script src="/static/'.$theme_dir.'/js/layer.js"></script>'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

@@ -29,6 +29,7 @@ $common_ver  = @filemtime($common_file);
 <script src="/static/<?=$theme_dir?>/js/jquery.min.js"></script>
 <script src="/static/<?=$theme_dir?>/js/bootstrap.min.js"></script>
 <script src="/static/<?=$theme_dir?>/js/common.js<?php if($common_ver){echo '?v='.$common_ver;}?>"></script>
+<?php if(isset($page_end_scripts) && $page_end_scripts){echo $page_end_scripts;} ?>
 <?php include_once __ROOT_DIR__ . '/shipsay/configs/count.ini.php';foreach($count as $v) {if($v['enable'])echo $v['html'];}?>
 </body>
 </html>
