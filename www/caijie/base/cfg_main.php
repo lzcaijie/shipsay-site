@@ -139,6 +139,22 @@ foreach($theme_arr as $k=>$v)
    </div>
 
    <div class="layui-form-item">
+       <label class="layui-form-label">首页最近更新</label>
+       <div class="layui-input-inline">
+           <input type="text" name="home_lastupdate_num" value="<?=isset($home_lastupdate_num)?$home_lastupdate_num:30?>" autocomplete="off" class="layui-input">
+       </div>
+       <div class="layui-form-mid layui-word-aux">首页“最近更新/最后更新”: 显示多少本</div>
+   </div>
+
+   <div class="layui-form-item">
+       <label class="layui-form-label">首页最新入库</label>
+       <div class="layui-input-inline">
+           <input type="text" name="home_postdate_num" value="<?=isset($home_postdate_num)?$home_postdate_num:30?>" autocomplete="off" class="layui-input">
+       </div>
+       <div class="layui-form-mid layui-word-aux">首页“最新入库”: 显示多少本</div>
+   </div>
+
+   <div class="layui-form-item">
        <label class="layui-form-label">推荐票数</label>
        <div class="layui-input-inline">
            <input type="text" name="vote_perday" value="<?=$vote_perday?:3?>" autocomplete="off" class="layui-input">
