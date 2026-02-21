@@ -1,4 +1,15 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
+
+<?php
+// 目录页链接兜底（避免写死 /index/ 破坏后台路由/伪静态配置）
+$index_url_safe = '';
+if (isset($index_url) && $index_url) {
+    $index_url_safe = $index_url;
+} elseif (isset($articleid) && $articleid && class_exists('Url') && method_exists('Url', 'index_url')) {
+    $index_url_safe = Url::index_url($articleid);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="cmn-Hans">
 <head>
@@ -95,7 +106,7 @@
 
     <div class="panel panel-default">
         <div class="panel-body" style="text-align: center;">
-            <a class="btn btn-primary" href="/index/<?=$articleid?>/" rel="nofollow">查看更多章节目录</a>
+            <a class="btn btn-primary" href="<?=$index_url_safe?>" rel="nofollow">查看更多章节目录</a>
         </div>
     </div>
 

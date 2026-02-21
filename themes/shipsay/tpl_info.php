@@ -1,4 +1,15 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
+
+<?php
+// 目录页链接兜底（避免写死 /index/ 破坏后台路由/伪静态配置）
+$index_url_safe = '';
+if (isset($index_url) && $index_url) {
+    $index_url_safe = $index_url;
+} elseif (isset($articleid) && $articleid && class_exists('Url') && method_exists('Url', 'index_url')) {
+    $index_url_safe = Url::index_url($articleid);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -15,7 +26,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="canonical" href="<?=$uri?>" />
     
-    <link rel="prefetch" href="/index/<?=$articleid?>/" as="document" />
+    <link rel="prefetch" href="<?=$index_url_safe?>" as="document" />
     
     <script type="application/ld+json">
     {
@@ -81,7 +92,7 @@
     <meta property="og:image" content="<?=$img_url?>">
     <meta property="og:image:alt" content="<?=$articlename?>封面">
     
-    <?php require_once 'tpl_header.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body>
     <div class="container">
@@ -151,7 +162,7 @@
                     </div>
                     
                     <div style="text-align: center; margin: 15px 0 25px;">
-                        <a href="/index/<?=$articleid?>/" style="display: inline-block; padding: 10px 25px; background: linear-gradient(135deg, #4a90e2, #3a7bc8); color: white; text-decoration: none; border-radius: 4px; font-weight: bold; box-shadow: 0 2px 5px rgba(74, 144, 226, 0.3); transition: all 0.3s;">
+                        <a href="<?=$index_url_safe?>" style="display: inline-block; padding: 10px 25px; background: linear-gradient(135deg, #4a90e2, #3a7bc8); color: white; text-decoration: none; border-radius: 4px; font-weight: bold; box-shadow: 0 2px 5px rgba(74, 144, 226, 0.3); transition: all 0.3s;">
                             <i class="fa fa-list-ol"></i> 查看完整目录（共<?=$chapters?>章）
                         </a>
                     </div>
@@ -182,7 +193,7 @@
                     <div style="text-align: center; margin: 25px 0 15px; padding: 15px; background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 6px; border: 1px solid #dee2e6;">
                         <p style="margin: 0; color: #495057; font-size: 14px;">
                             当前显示前50章，共 <?=$chapters?> 章。
-                            <a href="/index/<?=$articleid?>/" style="color: #4a90e2; font-weight: bold; margin-left: 8px;">
+                            <a href="<?=$index_url_safe?>" style="color: #4a90e2; font-weight: bold; margin-left: 8px;">
                                 查看完整目录
                             </a>
                         </p>
@@ -204,6 +215,6 @@
 </script>
 
 
-    <?php require_once 'tpl_footer.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 </body>
 </html>

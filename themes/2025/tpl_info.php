@@ -1,4 +1,15 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
+
+<?php
+// 目录页链接兜底（避免写死 /index/ 破坏后台路由/伪静态配置）
+$index_url_safe = '';
+if (isset($index_url) && $index_url) {
+    $index_url_safe = $index_url;
+} elseif (isset($articleid) && $articleid && class_exists('Url') && method_exists('Url', 'index_url')) {
+    $index_url_safe = Url::index_url($articleid);
+}
+?>
+
 <?php
 if (!function_exists('ss_e')) {
 	function ss_e($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
@@ -29,7 +40,7 @@ if (!function_exists('ss_e')) {
     ?>
 
     <?php if ($showViewAllLink): ?>
-    <link rel="prefetch" href="/index/<?=$articleid?>/" as="document" />
+    <link rel="prefetch" href="<?=$index_url_safe?>" as="document" />
     <?php endif; ?>
 
     <script type="application/ld+json">
@@ -135,7 +146,7 @@ if (!function_exists('ss_e')) {
 
                 <div class="detail-book-buttons">
                     <a href="<?=$first_url?>" class="detail-book-btn start">开始阅读</a>
-                    <a href="/index/<?=$articleid?>/" class="detail-book-btn directory">章节目录</a>
+                    <a href="<?=$index_url_safe?>" class="detail-book-btn directory">章节目录</a>
                     <a href="javascript:addbookcase('<?=$articleid?>','<?=$articlename?>');" class="detail-book-btn bookshelf">加入书架</a>
                 </div>
 
@@ -170,7 +181,7 @@ if (!function_exists('ss_e')) {
 
             <?php if ($showViewAllLink): ?>
             <div class="detail-view-all">
-                <a href="/index/<?=$articleid?>/" class="detail-view-all-btn">
+                <a href="<?=$index_url_safe?>" class="detail-view-all-btn">
                     查看完整目录（共<?=$chapters?>章）
                 </a>
             </div>
@@ -201,7 +212,7 @@ if (!function_exists('ss_e')) {
 
             <?php if ($showViewAllLink): ?>
             <div class="detail-view-all">
-                <a href="/index/<?=$articleid?>/" class="detail-view-all-btn">
+                <a href="<?=$index_url_safe?>" class="detail-view-all-btn">
                     查看完整目录（共<?=$chapters?>章）
                 </a>
             </div>
