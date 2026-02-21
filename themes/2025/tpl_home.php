@@ -21,7 +21,7 @@
 </head>
 <body>
 
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container">
 <div class="list-index-1">
 <div class="title"><h2>精品荟萃</h2><span>最火热门小说推荐</span></div>
@@ -128,6 +128,6 @@
 </div>
 <div class="cf"></div>
 </div>
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 </body>
 </html>

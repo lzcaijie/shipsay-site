@@ -21,7 +21,7 @@
 </head>
 <body>
 
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <div class="container visible-xs">
 <div class="header-m">

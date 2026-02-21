@@ -103,7 +103,7 @@ if (!function_exists('ss_e')) {
 </head>
 
 <body class="page-detail">
-    <?php require_once 'tpl_header.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
     <?php require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php'; ?>
 
     <div class="detail-container">
@@ -229,6 +229,7 @@ if (!function_exists('ss_e')) {
 
 
 
+
         <?php if (isset($neighbor) && !empty($neighbor)): ?>
         <div class="detail-recommend">
             <div class="detail-recommend-header">
@@ -289,6 +290,6 @@ if (!function_exists('ss_e')) {
     </script>
 
 
-    <?php require_once 'tpl_footer.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 </body>
 </html>

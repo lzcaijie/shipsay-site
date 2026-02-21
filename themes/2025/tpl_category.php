@@ -22,7 +22,7 @@
 <link rel="stylesheet" href="/static/<?=$theme_dir?>/css/2025.css?v=20221207" />
 </head>
 <body>
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <div class="container visible-xs">
 <div class="header-m">
@@ -110,6 +110,6 @@
 </div>
 </div>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 </body>
 </html>

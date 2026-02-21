@@ -119,7 +119,7 @@ $currentUrl = getPageUrl($articleid, $currentPage);
 <link rel="stylesheet" href="/static/<?=$theme_dir?>/css/chapter.css?v=<?=time()?>" />
 </head>
 <body>
-<?php require_once 'tpl_headerr.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
 
 <div class="container visible-xs">
 <div class="header-m">
@@ -144,7 +144,7 @@ $currentUrl = getPageUrl($articleid, $currentPage);
             <h1 class="chapter-book-title">
                 <a href="<?=$info_url?>"><?= $articlename ?></a>
             </h1>
-            
+
             <div class="chapter-book-meta">
                 <a href="<?=Sort::ss_sorturl($sortid)?>"><?=$sortname?></a>
                 <a href="<?=$author_url?>" title="<?=$author?>作品集"><?=$author?></a>
@@ -152,7 +152,7 @@ $currentUrl = getPageUrl($articleid, $currentPage);
                 <span><?=$allvisit?>点击</span>
                 <span><?=$isfull?></span>
             </div>
-            
+
             <div class="chapter-current-info">
                 <div class="chapter-total">共 <?= $chapters ?> 章</div>
                 <div class="chapter-range">当前显示：第 <?=$startChapter?> - <?=$endChapter?> 章</div>
@@ -167,7 +167,7 @@ $currentUrl = getPageUrl($articleid, $currentPage);
             <span>《<?= $articlename ?>》章节目录</span>
             <span class="chapter-list-count">每页显示 <?=$chaptersPerPage?> 章</span>
         </div>
-        
+
         <div class="chapter-list-grid">
             <?php foreach($list_arr as $index => $v): 
                 $chapterNumber = $startChapter + $index;
@@ -180,21 +180,21 @@ $currentUrl = getPageUrl($articleid, $currentPage);
             </div>
             <?php endforeach ?>
         </div>
-        
+
         <!-- 分页导航 -->
         <div class="chapter-pagination">
             <?php if ($currentPage > 1): ?>
             <a href="<?=getPageUrl($articleid, $currentPage-1)?>" class="chapter-page-btn prev">上一页</a>
             <?php endif; ?>
-            
+
             <div class="chapter-page-info">
                 第 <?=$currentPage?> 页 / 共 <?=$totalPages?> 页
             </div>
-            
+
             <?php if ($currentPage < $totalPages): ?>
             <a href="<?=getPageUrl($articleid, $currentPage+1)?>" class="chapter-page-btn next">下一页</a>
             <?php endif; ?>
-            
+
             <?php if ($totalPages > 1): ?>
             <div class="chapter-page-select">
                 <span>跳转到：</span>
@@ -233,13 +233,13 @@ $currentUrl = getPageUrl($articleid, $currentPage);
         <div class="chapter-recommend-header">
             <h2 class="chapter-recommend-title">推荐阅读</h2>
         </div>
-        
+
         <div class="chapter-recommend-grid">
             <?php 
             $neighborCount = 0;
             foreach($neighbor as $k => $v): 
                 if ($neighborCount >= 6) break;
-                
+
                 // 确保有封面图片
                 $coverImg = !empty($v['img_url']) ? $v['img_url'] : '/static/'.$theme_dir.'/nocover.jpg';
             ?>
@@ -256,14 +256,14 @@ $currentUrl = getPageUrl($articleid, $currentPage);
                     </a>
                     <span><?=$v['sortname_2']?> / <?=$v['isfull']?></span>
                 </div>
-                
+
                 <div class="chapter-recommend-content">
                     <h3 class="chapter-recommend-name">
                         <a href="<?=$v['info_url']?>" title="<?=$v['articlename']?>"><?=$v['articlename']?></a>
                     </h3>
-                    
+
                     <div class="chapter-recommend-author"><?=$v['author']?></div>
-                    
+
                     <div class="chapter-recommend-meta">
                         <span><?=$v['words_w']?>万字</span>
                         <span><?=Text::ss_lastupdate($v['lastupdate'])?></span>
@@ -279,6 +279,6 @@ $currentUrl = getPageUrl($articleid, $currentPage);
     <?php endif; ?>
 </div>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 </body>
 </html>

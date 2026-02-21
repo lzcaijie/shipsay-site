@@ -29,7 +29,7 @@ $__author = isset($author) ? $author : '';
 <link rel="stylesheet" href="/static/<?=$theme_dir?>/css/2025.css?v=20251207" />
 </head>
 <body>
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <div class="container visible-xs">
 <div class="header-m">
@@ -108,6 +108,6 @@ if (isset($dbarr) && isset($db)) {
 
 </div>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 </body>
 </html>
