@@ -1,6 +1,6 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 <?php
-// ====== 蜘蛛识别逻辑（阅读页需要：因为内容走 JS，给蜘蛛直接输出正文） ======
+
 $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 $isSearchEngine = false;
 $searchEngines = [
@@ -72,7 +72,7 @@ $pageDescription .= '，作者：' . $author . '。';
     font-style: normal;
 }
 
-/* ====== 隐藏分页导航样式（阅读页给蜘蛛用） ====== */
+
 .spider-pagination{
     position:absolute;
     left:-9999px;
