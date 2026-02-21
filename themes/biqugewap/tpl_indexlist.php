@@ -10,11 +10,19 @@ $currentPage = isset($pid) ? $pid : 1;
 $totalPages = ceil($chapters / $chaptersPerPage);
 
 function getChapterPageUrl($articleid, $page = 1) {
+    $page = (int)$page;
+    if ($page < 1) $page = 1;
+
+    // 优先走 CMS 的 Url::index_url（避免写死 /index/ 破坏后台路由/伪静态配置）
+    if (class_exists('Url') && method_exists('Url', 'index_url')) {
+        return Url::index_url($articleid, $page);
+    }
+
+    // 兜底（保持旧结构）
     if ($page == 1) {
         return "/index/{$articleid}/";
-    } else {
-        return "/index/{$articleid}/{$page}/";
     }
+    return "/index/{$articleid}/{$page}/";
 }
 
 $pageTitle = ($currentPage > 1) ? 
