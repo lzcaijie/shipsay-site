@@ -11,7 +11,7 @@
 <meta property="og:title" content="<?=$author?>的全部小说">
 <meta property="og:description" content="<?=$author?>的全部小说"> 
 
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <div class="container">
 	<div class="side_commend" style="width:100%;">
@@ -34,4 +34,4 @@
 	</div>
 </div>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
