@@ -72,7 +72,7 @@ if (isset($index_url) && $index_url) {
 <body style="zoom: 1;">
 
 <div class="page">
-    <?php require_once 'tpl_header.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
     <div class="g_wrap idx-wrap">
         <div class="idx-head">
@@ -103,7 +103,7 @@ if (isset($index_url) && $index_url) {
     <div class="g_footer">
         <div class="g_row">
             <div class="g_col_9">
-                <?php require_once 'tpl_footer.php'; ?>
+                <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
             </div>
         </div>
     </div>

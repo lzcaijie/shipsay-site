@@ -28,7 +28,7 @@
 <body style="zoom: 1;">
 <div class="page">
     <!-- start header -->
-    <?php require_once 'tpl_header.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
     <!-- end header -->
 
 	<div class="hom-bd pr" id="imgload">
@@ -151,7 +151,7 @@
             <?php if(isset($ShipSayLink['is_link']) && $ShipSayLink['is_link']==1 && !empty($link_html)): ?>
                 <h4>友情链接:</h4> <?=$link_html?>
             <?php endif; ?>
-            <?php require_once 'tpl_footer.php'; ?>
+            <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 		</div>
 	</div>
 </div>
