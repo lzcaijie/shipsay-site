@@ -31,7 +31,7 @@ $articlerows_safe = (!empty($articlerows) && is_array($articlerows)) ? $articler
 <body style="zoom: 1;">
 <div class="page">
     <!-- start header -->
-    <?php require_once 'tpl_header.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
     <!-- end header -->
 
     <div class="lst-hd g_sub_hd pop-lst-hd">
@@ -88,7 +88,7 @@ $articlerows_safe = (!empty($articlerows) && is_array($articlerows)) ? $articler
 <div class="g_footer">
 	<div class="g_row">
 		<div class="g_col_9">
-			 <?php require_once 'tpl_footer.php'; ?>
+			 <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 		</div>
 	</div>
 </div>

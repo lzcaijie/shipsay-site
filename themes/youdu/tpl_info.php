@@ -85,7 +85,7 @@ $maxDisplay = 50;
 <body style="zoom: 1;">
 
 <div class="page">
-    <?php require_once 'tpl_header.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
     <div class="det-hd pt25 mb30">
         <div class="g_wrap">
@@ -204,7 +204,7 @@ $maxDisplay = 50;
     <div class="g_footer">
         <div class="g_row">
             <div class="g_col_9">
-                <?php require_once 'tpl_footer.php'; ?>
+                <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
             </div>
         </div>
     </div>

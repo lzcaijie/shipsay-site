@@ -26,7 +26,7 @@
 <div class="page">
 
     <!-- start header -->
-    <?php require_once 'tpl_header.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
     <!-- end header -->
 
     <div class="ser-wrap">
@@ -116,7 +116,7 @@
 <div class="g_footer">
     <div class="g_row">
         <div class="g_col_9">
-            <?php require_once 'tpl_footer.php'; ?>
+            <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
         </div>
     </div>
 </div>
