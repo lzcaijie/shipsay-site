@@ -47,7 +47,7 @@ $jump_html_wap_safe = isset($jump_html_wap) ? $jump_html_wap : '';
         width: 25%;
     }
 </style>
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <body>
 <div class="page-head" style="margin-bottom:5px;">
@@ -74,4 +74,4 @@ $jump_html_wap_safe = isset($jump_html_wap) ? $jump_html_wap : '';
 
 <div class="index-container"><?=$jump_html_wap_safe?></div>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

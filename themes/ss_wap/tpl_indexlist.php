@@ -41,7 +41,7 @@ $list_arr_safe = (!empty($list_arr) && is_array($list_arr)) ? $list_arr : [];
 $htmltitle_safe = isset($htmltitle) ? $htmltitle : '';
 ?>
 
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <body>
 <div class="page-head">
@@ -63,4 +63,4 @@ $htmltitle_safe = isset($htmltitle) ? $htmltitle : '';
     <div class="index-container"><?=$htmltitle_safe?></div>
 </div>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

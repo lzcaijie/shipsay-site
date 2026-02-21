@@ -36,7 +36,7 @@ $langtailrows_safe = (!empty($langtailrows) && is_array($langtailrows)) ? $langt
 $lastarr_safe = (!empty($lastarr) && is_array($lastarr)) ? $lastarr : [];
 ?>
 
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <body>
 <div class="page-head">
@@ -95,4 +95,4 @@ $lastarr_safe = (!empty($lastarr) && is_array($lastarr)) ? $lastarr : [];
 })();
 </script>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
