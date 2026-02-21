@@ -1,4 +1,8 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
+<?php
+$rank_base = '/' . ((isset($fake_rankstr) && $fake_rankstr) ? trim($fake_rankstr, '/') : 'rank') . '/';
+$full_allbooks_url_safe = (isset($full_allbooks_url) && $full_allbooks_url) ? $full_allbooks_url : ('/' . ((isset($fake_fullstr) && $fake_fullstr) ? trim($fake_fullstr,'/') : 'quanben') . $allbooks_url);
+?>
 <!DOCTYPE html>
 <html lang='zh'>
 <head>
@@ -19,7 +23,7 @@
 		<div class="clear"></div>
 	</header>
 	<div class="fixed">	<div class="rank mt0">
-		<h4>小说周点击榜<a class="pull-right" href="/rank/weekvisit/">More+</a></h4>
+		<h4>小说周点击榜<a class="pull-right" href="<?=$rank_base?>weekvisit/">More+</a></h4>
 		<div class="content">
 		     <?php
                          $sql =  $rico_sql;
@@ -41,7 +45,7 @@
 		<div class="clear"></div>
 	</div>
 	<div class="rank">
-		<h4>小说月点击榜<a class="pull-right" href="/rank/monthvisit/">More+</a></h4>
+		<h4>小说月点击榜<a class="pull-right" href="<?=$rank_base?>monthvisit/">More+</a></h4>
 		<div class="content">
 		    <?php
                          $sql =  $rico_sql;
@@ -63,7 +67,7 @@
 		<div class="clear"></div>
 	</div>
 	<div class="rank">
-		<h4>小说总点击榜<a class="pull-right" href="/rank/allvisit/">More+</a></h4>
+		<h4>小说总点击榜<a class="pull-right" href="<?=$rank_base?>allvisit/">More+</a></h4>
 		<div class="content">
 			<?php
                          $sql =  $rico_sql;
@@ -85,7 +89,7 @@
 		<div class="clear"></div>
 	</div>
 	<div class="rank">
-		<h4>小说收藏榜<a class="pull-right" href="/rank/goodnum/">More+</a></h4>
+		<h4>小说收藏榜<a class="pull-right" href="<?=$rank_base?>goodnum/">More+</a></h4>
 		<div class="content">
 			<?php
                          $sql =  $rico_sql;
@@ -142,7 +146,7 @@
             <i class="icon icon-rank"></i>
             <span class="guide-nav-h">排行榜</span>
         </a>
-        <a href="/quanben<?=$allbooks_url?>" class="guide-nav-a">
+        <a href="<?=$full_allbooks_url_safe?>" class="guide-nav-a">
             <i class="icon icon-end"></i>
             <span class="guide-nav-h">全本</span>
         </a>
