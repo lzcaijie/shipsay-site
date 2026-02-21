@@ -12,7 +12,7 @@ $sortid_safe = isset($sortid) ? $sortid : 0;
 <title><?=$author_safe?>的全部小说 - <?=$author_safe?>最新作品集 - <?=$author_safe?>简介 - <?=SITE_NAME?></title>
 <meta name="keywords" content="<?=$author_safe?>的全部小说,<?=$author_safe?>作品集,<?=$author_safe?>简介,<?=$author_safe?>照片,<?=SITE_NAME?>">
 <meta name="description" content="<?=$author_safe?>的全部小说尽在<?=SITE_NAME?>,<?=SITE_NAME?>为您提供<?=$author_safe?>最新全部作品集，查找<?=$author_safe?>的最新作品、<?=$author_safe?>作品集就上<?=SITE_NAME?>！">
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <script src="/static/<?=$theme_dir?>/user.js"></script>
 
 <div class="container">
@@ -46,4 +46,4 @@ $sortid_safe = isset($sortid) ? $sortid : 0;
 	</div>
 	<div class="clear"></div>
 </div>
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
