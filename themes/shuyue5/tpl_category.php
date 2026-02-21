@@ -12,7 +12,7 @@ $curid = 0;
     <meta name="keywords" content="<?=$sortname?>小说书库,<?=SITE_NAME?>小说书库" />
     <meta name="description" content="最全<?=$sortname?>小说书库">
     <link rel="canonical" href="<?=$cateurl?>">
-    <?php require_once 'tpl_header.php'; require_once 'tpl_fun.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once 'tpl_fun.php'; ?>
 <div class="class">
     <ul class="container">
         <?php if(!empty($sortcategory) && is_array($sortcategory)): ?>
@@ -78,9 +78,11 @@ $curid = 0;
         </table>
     </div>
 </div>
-<?php require_once 'tpl_footer.php'; ?>
-<?php if($fullflag):?>
-<script>nav_sel('nav_full');nav_sel('sort<?=$curid?>');</script>
-<?php else: ?>
-<script>nav_sel('nav_sort');nav_sel('sort<?=$curid?>');</script>
-<?php endif ?>
+<?php
+if($fullflag){
+    $page_end_scripts = "<script>nav_sel('nav_full');nav_sel('sort{$curid}');</script>";
+}else{
+    $page_end_scripts = "<script>nav_sel('nav_sort');nav_sel('sort{$curid}');</script>";
+}
+?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

@@ -12,7 +12,7 @@ $page_end_scripts = '<script>nav_sel(\'nav_top\');</script>';
     <meta name="keywords" content="小说排行榜,<?=SITE_NAME?>排行榜" />
     <meta name="description" content="小说排行榜" />
     <link rel="canonical" href="<?=$site_url?>/rank/">
-    <?php require_once 'tpl_header.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container body-content">
     <div class="panel panel-default">
         <div class="panel-heading"><span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> 小说排行榜</div>
@@ -42,4 +42,4 @@ $page_end_scripts = '<script>nav_sel(\'nav_top\');</script>';
         </table>
     </div>
 </div>
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

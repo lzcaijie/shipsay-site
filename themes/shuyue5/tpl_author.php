@@ -7,7 +7,7 @@
     <meta name="keywords" content="<?=$author?>的全部小说">
     <meta name="description" content="<?=$author?>的全部小说-<?=SITE_NAME?>">
     <link rel="canonical" href="<?=$site_url?><?=$uri?>">
-    <?php require_once 'tpl_header.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container body-content">
     <ol class="breadcrumb hidden-xs">
         <li><a href="/" title="<?=SITE_NAME?>"><i class="glyphicon glyphicon-home fs-14" aria-hidden="true"></i> 首页</a></li>
@@ -62,4 +62,4 @@
         <div class="clear"></div>
     </div>
 </div>
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

@@ -1,6 +1,6 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 <?php
-// ====== 蜘蛛识别逻辑（阅读页需要：因为内容走 JS，给蜘蛛直接输出正文） ======
+
 $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 $isSearchEngine = false;
 $searchEngines = [
@@ -72,7 +72,7 @@ $pageDescription .= '，作者：' . $author . '。';
     font-style: normal;
 }
 
-/* ====== 隐藏分页导航样式（阅读页给蜘蛛用） ====== */
+
 .spider-pagination{
     position:absolute;
     left:-9999px;
@@ -113,9 +113,6 @@ echo '<script src="/static/' . $theme_dir . '/js/' . $tempvar . '.js"></script>'
 
 <body class="bg6" id="readbg" onselectstart="return false">
 
-<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
-
-
 <div class="top">
     <div class="bar">
         <div class="chepnav">
@@ -146,7 +143,7 @@ echo '<script src="/static/' . $theme_dir . '/js/' . $tempvar . '.js"></script>'
             <li><span class="fl">字体大小</span><span class="dx dxl">A-</span><span class="dx dxc">20</span><span class="dx dxr">A+</span></li>
             <li class="hid"><span class="fl">页面宽度</span><p class="dx kdl"><span class="icon"></span><span class="fl">-</span></p><p class="dx kdc">100%</p><p class="dx kdr"><span class="icon"></span><span class="fl">+</span></p></li>
         </ul>
-        <div class="btn-wrap"><a class="red-btn" href="javascript:\">保存</a><a class="grey-btn" href="javascript:\">取消</a></div>
+        <div class="btn-wrap"><a class="red-btn" href="javascript:">保存</a><a class="grey-btn" href="javascript:">取消</a></div>
     </div>
 <?php endif ?>
 
@@ -183,7 +180,7 @@ echo '<script src="/static/' . $theme_dir . '/js/' . $tempvar . '.js"></script>'
     <?php if ($now_pid > 1): ?><a href="<?=$prevpage_url?>" rel="prev">上一页</a><?php endif; ?>
     <span>第<?=$now_pid?>页/共<?=$max_pid?>页</span>
     <?php for ($i = 1; $i <= min($max_pid, 10); $i++): ?>
-        <?php if ($i == $now_pid): ?><strong><?=$i?></strong><?php else: ?><a href="/read/<?=$articleid?>/<?=$chapterid?>/<?=$i?>.html\"><?=$i?></a><?php endif; ?>
+        <?php if ($i == $now_pid): ?><strong><?=$i?></strong><?php else: ?><a href="/read/<?=$articleid?>/<?=$chapterid?>/<?=$i?>.html"><?=$i?></a><?php endif; ?>
     <?php endfor; ?>
     <?php if ($now_pid < $max_pid): ?><a href="<?=$nextpage_url?>" rel="next">下一页</a><?php endif; ?>
 </div>
@@ -221,6 +218,7 @@ echo '<script src="/static/' . $theme_dir . '/js/' . $tempvar . '.js"></script>'
 
 <p class="mlfy_page"><?=SITE_NAME?> -书友最值得收藏的网络小说网站</p>
 
+<script src="/static/<?=$theme_dir?>/js/history.js"></script>
 <script type="text/javascript" src="/static/<?=$theme_dir?>/js/transform.js"></script>
 
 <script>
@@ -251,6 +249,6 @@ lastread.set('<?=$articleid?>', '<?=$uri?>', '<?=$articlename?>', '<?=$chapterna
 <?php endif ?>
 </script>
 
-<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
+<?php include_once __ROOT_DIR__ . '/shipsay/configs/count.ini.php';foreach($count as $v) {if($v['enable'])echo $v['html'];}?>
 </body>
 </html>
