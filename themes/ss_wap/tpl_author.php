@@ -22,7 +22,7 @@ $res_safe = (!empty($res) && is_array($res)) ? $res : [];
     .list-item .mr15{margin-right: 15px;}
 </style>
 
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <body>
 <div class="page-head">
@@ -63,4 +63,4 @@ $res_safe = (!empty($res) && is_array($res)) ? $res : [];
     <div style="padding:12px;color:#999;">暂无该作者作品</div>
 <?php endif; ?>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

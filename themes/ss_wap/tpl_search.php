@@ -19,7 +19,7 @@ $searchkey_safe = isset($searchkey) ? trim($searchkey) : '';
     .list-item .mr15{margin-right: 15px;}
 </style>
 
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <body>
 <div class="page-head">
@@ -67,4 +67,4 @@ $searchkey_safe = isset($searchkey) ? trim($searchkey) : '';
     <?php endif; ?>
 <?php endif; ?>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
