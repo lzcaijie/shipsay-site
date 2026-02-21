@@ -8,7 +8,7 @@
     <meta name="keywords" content="<?=SITE_NAME?>,<?=SITE_NAME?>网,<?=SITE_NAME?>阅读网，<?=SITE_NAME?>免费阅读网,<?=SITE_URL?>" />
     <meta name="description" content="<?=SITE_NAME?>(<?=SITE_URL?>)是广大书友最值得收藏的网络小说阅读网，网站收录了当前最火热的网络小说，免费提供高质量的小说最新章节，是广大网络小说爱好者必备的小说阅读网。" />
 
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <div class="container flex flex-wrap">
     <div class="border3 commend flex flex-between">
@@ -169,7 +169,7 @@
             <?php endif ?><?php endforeach ?>
             <div class="sort-section-more flex flex-wrap">
                 <?php foreach($sort6 as $k => $v): ?><?php if($k > 0):?>
-                <div class="sortlist"><a href="<?=$v['info_url']?>"><?=$v['articlename']?></a><span class="s_gray">/<?=$v['author']?></span></div>
+                <div class="sortlist"><a href="<?=$v['info_url']?>\<?=$v['articlename']?></a><span class="s_gray">/<?=$v['author']?></span></div>
                 <?php endif ?><?php endforeach ?>
             </div>
         </div>
@@ -202,4 +202,4 @@
     <div class="link">友情链接:<?=$link_html?></div>
 </div>
 <script>$('nav a:first-child').addClass('orange');</script>
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

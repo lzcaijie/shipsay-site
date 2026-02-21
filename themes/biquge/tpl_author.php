@@ -7,7 +7,7 @@
 <title><?=$author?> 的全部作品_<?=SITE_NAME?></title>
 <meta name="keywords" content="<?=$author?>的全部小说">
 <meta name="description" content="<?=$author?>的全部小说">
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <div class="container flex flex-wrap mb20">
     <div class="border3 commend flex flex-between category-commend">
@@ -30,4 +30,4 @@
     </div>
 </div>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

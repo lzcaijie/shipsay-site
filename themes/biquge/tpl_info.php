@@ -23,7 +23,7 @@
     <meta property="og:novel:lastest_chapter_name" content="<?=$lastchapter?>">
     <meta property="og:novel:lastest_chapter_url" content="<?=$site_url?><?=$last_url?>">
 
-<?php require_once 'tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
 
 <div class="container">
     <div class="border3-2">
@@ -125,4 +125,4 @@
 })();
 </script>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

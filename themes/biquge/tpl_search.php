@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>搜索_<?=SITE_NAME?></title>
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <div class="container flex flex-wrap mb20">
     <div class="border3 commend flex flex-between category-commend">
@@ -28,4 +28,4 @@
     </div>
 </div>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
