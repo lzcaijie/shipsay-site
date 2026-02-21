@@ -6,7 +6,7 @@
     <title>好看的<?php if($sortname != ''):?><?=$sortname?>小说txt下载<?php endif ?><?php if($fullflag):?>已完本小说<?php endif ?>_<?=SITE_NAME?></title>
     <meta name="keywords" content="<?php if($sortname == ''):?>分类列表,小说全部分类列表,小说书库<?php else:?><?=$sortname?>,<?=$sortname?>类型推荐,<?=$year?>热门的<?=$sortname?>小说,<?=$sortname?>的分类列表,<?=$sortname?>的小说书库<?php endif ?>">
     <meta name="description" content="<?php if($sortname == ''):?>分类列表,小说全部分类列表,小说书库<?php else:?><?=$sortname?>,<?=$sortname?>类型推荐,<?=$year?>热门的<?=$sortname?>小说,<?=$sortname?>的分类列表,<?=$sortname?>的小说书库,<?=SITE_NAME?>为你提供免费无弹窗的阅读体验<?php endif ?>">
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container">
         <div class="row">
             
@@ -81,4 +81,4 @@
 
 
 <!-- /sort -->
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

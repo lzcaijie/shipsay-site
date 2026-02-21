@@ -19,7 +19,7 @@
     <meta property="og:novel:update_time" content="<?=$lastupdate?>">
     <meta property="og:novel:lastest_chapter_name" content="<?=$lastchapter?>">
     <meta property="og:novel:lastest_chapter_url" content="<?=$site_url?><?=$last_url?>">
-  <?php require_once 'tpl_header.php'; ?>
+  <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
   <div class="container">
         <div class="row row-detail">
             <div class="layout layout-col1">
@@ -119,4 +119,4 @@
 </script>
 
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
