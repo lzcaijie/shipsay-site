@@ -169,7 +169,7 @@
             <?php endif ?><?php endforeach ?>
             <div class="sort-section-more flex flex-wrap">
                 <?php foreach($sort6 as $k => $v): ?><?php if($k > 0):?>
-                <div class="sortlist"><a href="<?=$v['info_url']?>\<?=$v['articlename']?></a><span class="s_gray">/<?=$v['author']?></span></div>
+                <div class="sortlist"><a href="<?=$v['info_url']?>"><?=$v['articlename']?></a><span class="s_gray">/<?=$v['author']?></span></div>
                 <?php endif ?><?php endforeach ?>
             </div>
         </div>
@@ -181,8 +181,8 @@
         <p>最后更新</p>
         <?php foreach($lastupdate as $k => $v): ?>
             <div class="list-out">
-                <span class="flex w80"><em>[<?=$v['sortname']?>]</em><em><a href="<?=$v['info_url']?>"><?=$v['articlename']?></a></em><em><a href="<?=$v['last_url']?>"><?=$v['lastchapter']?></a></em></span>
-                <span class="gray dispc"><?=$v['author']?>&nbsp;&nbsp;<?=date('m-d',$v['lastupdate'])?></span>
+                <span class="flex w80"><em>[<?=$v['sortname']?>]</em><em><a href="<?=$v['info_url']?>"><?=$v['articlename']?></a></em><em class="s_gray"><?=date('m-d',$v['lastupdate'])?></em></span>
+                    <span class="gray dispc"><?=$v['author']?></span>
             </div>
         <?php endforeach ?>
     </div>
