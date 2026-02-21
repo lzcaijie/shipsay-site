@@ -6,7 +6,7 @@
 <title><?=$author?>作品大全_<?=SITE_NAME?></title>
 <meta name="keywords" content="<?=$author?>,<?=$author?>作品,小说">
 <meta name="description" content="<?=$author?>作品大全：最新章节免费阅读。">
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body>
 
@@ -57,6 +57,6 @@
   </section>
 </main>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 </body>
 </html>

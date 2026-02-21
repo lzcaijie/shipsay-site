@@ -6,7 +6,7 @@
 <title>搜索_<?=SITE_NAME?></title>
 <meta name="keywords" content="搜索,小说,<?=SITE_NAME?>">
 <meta name="description" content="<?=SITE_NAME?>小说搜索。">
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body>
 
@@ -91,6 +91,6 @@
   <?php endif; ?>
 </main>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 </body>
 </html>

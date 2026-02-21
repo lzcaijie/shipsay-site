@@ -73,7 +73,7 @@ if (!empty($neighbor) && is_array($neighbor)) {
 <meta name="keywords" content="<?=$articlename?>,<?=$author?>,<?=$sortname?>">
 <meta name="description" content="<?=$intro_des?>">
 <link href="<?=$site_url?><?=$uri?>" rel="canonical">
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body>
 
@@ -209,6 +209,6 @@ if (!empty($neighbor) && is_array($neighbor)) {
   </aside>
 </main>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 </body>
 </html>

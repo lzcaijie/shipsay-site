@@ -6,7 +6,7 @@
 <title><?=SITE_NAME?>_<?=SITE_NAME?>小说阅读网</title>
 <meta name="keywords" content="<?=SITE_NAME?>,小说,最新章节,免费阅读">
 <meta name="description" content="<?=SITE_NAME?>提供热门网络小说最新章节免费阅读。">
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body>
 
@@ -101,4 +101,4 @@
   </aside>
 </main>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
