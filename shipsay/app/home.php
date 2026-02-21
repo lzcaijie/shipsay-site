@@ -1,5 +1,10 @@
 <?php
 
+$home_lastupdate_num = isset($home_lastupdate_num) ? intval($home_lastupdate_num) : 30;
+if ($home_lastupdate_num <= 0) $home_lastupdate_num = 30;
+$home_postdate_num = isset($home_postdate_num) ? intval($home_postdate_num) : 30;
+if ($home_postdate_num <= 0) $home_postdate_num = 30;
+
 $sql=$rico_sql.'AND articleid IN ('.$commend_ids.' ) ORDER BY FIELD (articleid,'.$commend_ids.')';
 if(isset($redis))
 {
@@ -32,7 +37,7 @@ foreach($sortarr as $k=>$v)
 	}
 }
 ;
-$sql=$rico_sql.'ORDER BY lastupdate DESC LIMIT 30';
+$sql=$rico_sql.'ORDER BY lastupdate DESC LIMIT '.$home_lastupdate_num;
 if(isset($redis))
 {
 	$lastupdate=$redis->ss_redis_getrows($sql,$home_cache_time,1);
@@ -41,7 +46,7 @@ else
 {
 	$lastupdate=$db->ss_getrows($sql);
 }
-$sql=$rico_sql.'ORDER BY postdate DESC LIMIT 30';
+$sql=$rico_sql.'ORDER BY postdate DESC LIMIT '.$home_postdate_num;
 if(isset($redis))
 {
 	$postdate=$redis->ss_redis_getrows($sql,$home_cache_time,1);

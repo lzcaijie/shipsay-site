@@ -65,6 +65,8 @@ require_once $config_file=__ROOT_DIR__.'/shipsay/configs/config.ini.php';
                "readpage_split_mode": $("select[name='readpage_split_mode']").val(),
                "readpage_split_lines": $("input[name='readpage_split_lines']").val(),
                "category_per_page": $("input[name='category_per_page']").val(),
+               "home_lastupdate_num": $("input[name='home_lastupdate_num']").val(),
+               "home_postdate_num": $("input[name='home_postdate_num']").val(),
                "vote_perday": $("input[name='vote_perday']").val(),
                "count_visit": $("input[name='count_visit']").is(':checked') ? 1 : 0,
 
