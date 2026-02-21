@@ -6,7 +6,7 @@
 <title>小说排行榜-<?=SITE_NAME?></title>
 <meta name="keywords" content="小说排行榜" />
 <meta name="description" content="小说排行榜" />
-<?php require_once 'tpl_header.php';?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php';?>
 </head>
 <body>
 	<header class="header">
@@ -126,7 +126,7 @@
 		<div class="clear"></div>
 	</div>
 <?php endfor?>
-	<?php require_once 'tpl_footer.php'; ?>
+	<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
     <div id="guide" class="guide">
         <div class="guide-content">
         <nav class="guide-nav">

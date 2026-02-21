@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <?php if($search_count == 0): ?>
 <title>小说搜索-<?=SITE_NAME?></title>
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <body>
 	<header class="header">
 		<div class="left"><a href="javascript:history.go(-1)"><svg id="icon-arrow-l" viewBox="0 0 8 16"><path d="M.146 7.646a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7v.708l7-7a.5.5 0 0 0-.708-.708l-7 7z"></path></svg></a></div>
@@ -33,7 +33,7 @@
 	
 <?php else: ?>
 <title><?=$searchkey?>-小说搜索-<?=SITE_NAME?></title>
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <body>
 	<header class="header">
 		<div class="left"><a href="javascript:history.go(-1)"><svg id="icon-arrow-l" viewBox="0 0 8 16"><path d="M.146 7.646a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7v.708l7-7a.5.5 0 0 0-.708-.708l-7 7z"></path></svg></a></div>
@@ -59,7 +59,7 @@
 		<div class="clear"></div>
 	</div>
 	<?php endif ?>
-	<?php require_once 'tpl_footer.php'; ?>
+	<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
     <div id="guide" class="guide">
         <div class="guide-content">
         <nav class="guide-nav">
