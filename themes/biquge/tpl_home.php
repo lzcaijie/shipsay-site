@@ -176,13 +176,30 @@
     </div>
 </div>
 
+<?php
+// 首页“最后更新/最新入库”数量：优先支持将来新增的 home_lastupdate_num/home_postdate_num；
+// 当前先复用后台已有的 category_per_page（与列表页同口径）。
+$home_lastupdate_limit = isset($home_lastupdate_num) ? (int)$home_lastupdate_num : (isset($category_per_page) ? (int)$category_per_page : 20);
+if ($home_lastupdate_limit <= 0) $home_lastupdate_limit = 20;
+if ($home_lastupdate_limit > 100) $home_lastupdate_limit = 100;
+
+$home_postdate_limit = isset($home_postdate_num) ? (int)$home_postdate_num : (isset($category_per_page) ? (int)$category_per_page : 20);
+if ($home_postdate_limit <= 0) $home_postdate_limit = 20;
+if ($home_postdate_limit > 100) $home_postdate_limit = 100;
+?>
+
 <div class="container flex flex-wrap section-bottom">
     <div class="border3-1 lastupdate">
         <p>最后更新</p>
         <?php foreach($lastupdate as $k => $v): ?>
+            <?php if($k >= $home_lastupdate_limit) break; ?>
             <div class="list-out">
-                <span class="flex w80"><em>[<?=$v['sortname']?>]</em><em><a href="<?=$v['info_url']?>"><?=$v['articlename']?></a></em><em class="s_gray"><?=date('m-d',$v['lastupdate'])?></em></span>
-                    <span class="gray dispc"><?=$v['author']?></span>
+                <span class="flex w80">
+                    <em>[<?=$v['sortname']?>]</em>
+                    <em><a href="<?=$v['info_url']?>"><?=$v['articlename']?></a></em>
+                    <em><a href="<?=$v['last_url']?>"><?=$v['lastchapter']?></a></em>
+                </span>
+                <span class="gray dispc"><?=$v['author']?>&nbsp;&nbsp;<?=date('m-d',$v['lastupdate'])?></span>
             </div>
         <?php endforeach ?>
     </div>
@@ -190,6 +207,7 @@
     <div class="border3-1 popular">
         <p>最新入库</p>
         <?php foreach($postdate as $k => $v): ?>
+            <?php if($k >= $home_postdate_limit) break; ?>
             <div class="list-out">
                 <span>[<?=$v['sortname_2']?>] <a href="<?=$v['info_url']?>"><?=$v['articlename']?></a></span>
                 <span class="gray"><?=$v['author']?></span>
