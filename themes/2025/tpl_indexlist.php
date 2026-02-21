@@ -18,11 +18,19 @@ $totalPages = ceil($chapters / $chaptersPerPage);
 
 // 分页链接生成函数
 function getPageUrl($articleid, $page = 1) {
+    $page = (int)$page;
+    if ($page < 1) $page = 1;
+
+    // 优先走 CMS 的 Url::index_url（避免写死 /index/ 破坏后台路由/伪静态配置）
+    if (class_exists('Url') && method_exists('Url', 'index_url')) {
+        return Url::index_url($articleid, $page);
+    }
+
+    // 兜底（保持旧结构）
     if ($page == 1) {
         return "/index/{$articleid}/";
-    } else {
-        return "/index/{$articleid}/{$page}/";
     }
+    return "/index/{$articleid}/{$page}/";
 }
 
 // 当前页面URL
@@ -198,9 +206,9 @@ $currentUrl = getPageUrl($articleid, $currentPage);
             <?php if ($totalPages > 1): ?>
             <div class="chapter-page-select">
                 <span>跳转到：</span>
-                <select onchange="window.location.href='<?=getPageUrl($articleid, '')?>' + this.value">
+                <select onchange="window.location.href=this.value">
                     <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                    <option value="<?=$i?>" <?=($i == $currentPage) ? 'selected' : ''?>><?=$i?></option>
+                    <option value="<?=getPageUrl($articleid, $i)?>" <?=($i == $currentPage) ? 'selected' : ''?>><?=$i?></option>
                     <?php endfor; ?>
                 </select>
             </div>
