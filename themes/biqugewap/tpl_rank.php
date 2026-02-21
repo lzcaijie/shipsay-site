@@ -6,7 +6,7 @@
 <title><?=$page_title?>排行榜-<?=$year?>小说排行榜 - <?=SITE_NAME?></title>
 <meta name="keywords" content="小说排行榜,好看的小说总点击榜,总点击榜小说阅读">
 <meta name="description" content="<?=SITE_NAME?>为您提供好看的小说总点击榜，总点击榜小说在线阅读！">
-<?php require_once 'tpl_header.php';?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php';?>
 </head>
 <body>
 	<header class="header">
@@ -62,6 +62,6 @@
             </div>
         </div>
     </div>
-	<?php require_once 'tpl_footer.php'; ?>
+	<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 	</body>
 </html>

@@ -51,7 +51,7 @@ $keywords = "{$articlename}章节目录,{$articlename}最新章节,{$author},{$a
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <link rel="stylesheet" href="/static/<?=$theme_dir?>/book.css">
 
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body>
 	<header class="header">
@@ -94,7 +94,7 @@ $keywords = "{$articlename}章节目录,{$articlename}最新章节,{$author},{$a
 		</div>
 		<div class="clear"></div>
 	</div>
-	<?php require_once 'tpl_footer.php'; ?>
+	<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
     <div id="guide" class="guide">
         <div class="guide-content">
         <nav class="guide-nav">

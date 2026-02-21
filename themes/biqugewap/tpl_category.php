@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <title><?php if($sortname !=''):?><?=$sortname?>小说-<?=$sortname?>小说大全<?php else:?>小说书库<?php endif ?>-<?=SITE_NAME?></title>
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body>
 	<header class="header">
@@ -43,7 +43,7 @@
 		<div class="pages"><ul class="pagination" id="pagelink"><?php $jump_html_wap=str_replace('<a','<li><a',$jump_html_wap);$jump_html_wap=str_replace('</a>','</a></li>',$jump_html_wap);$jump_html_wap=str_replace('<strong>','<li class="active"><span>',$jump_html_wap);$jump_html_wap=str_replace('</strong>','</span></li>',$jump_html_wap);echo $jump_html_wap;?></ul></div>
 		<div class="clear"></div>
 	</div>
-	<?php require_once 'tpl_footer.php'; ?>
+	<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
     <div id="guide" class="guide">
         <div class="guide-content">
         <nav class="guide-nav">

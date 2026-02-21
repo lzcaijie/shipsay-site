@@ -6,7 +6,7 @@
 <title><?=SITE_NAME?>_<?=SITE_NAME?>网_书友最值得收藏的网络小说阅读网</title>
 <meta name="keywords" content="<?=SITE_NAME?>,<?=SITE_NAME?>网,最新<?=SITE_NAME?>,<?=SITE_NAME?>阅读网">
 <meta name="description" content="<?=SITE_NAME?>,<?=SITE_NAME?>网,最新<?=SITE_NAME?>,<?=SITE_NAME?>阅读网，是广大书友最值得收藏的网络小说阅读网，网站收录了当前最火热的网络小说，免费提供高质量的小说最新章节，是广大网络小说爱好者必备的小说阅读网。">
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body>
 	<header class="header">
@@ -101,7 +101,7 @@
 		</div>
 		<ul class="list">
 		    <?php elseif( $k < 5 ) : ?>
-            <li><span><?=$k+1?></span><a href="<?=$v['info_url']?>" title="<?=$v['articlename']?>"><?=$v['articlename']?></a><a href="<?=$v['author_url']?>"><?=$v['author']?></a></li>
+            <li><span><?=$k+1?></span><a href="<?=$v['info_url']?>" title="<?=$v['articlename']?><?=$v['articlename']?></a><a href="<?=$v['author_url']?><?=$v['author']?></a></li>
             <?php endif?><?php endforeach?>
 		</ul>
 		<div class="clear"></div>
@@ -120,8 +120,6 @@
 		<ul class="list">
 		     <?php } elseif( $k < 15 ) { ?>
             <li><span><?=$k+1?></span><a href="<?=$v['info_url']?>" title="<?=$v['articlename']?>"><?=$v['articlename']?></a><a href="<?=$v['author_url']?>"><?=$v['author']?></a></li>
-            
-		
 		<?php }}} ?>
 		</ul>
 		<div class="clear"></div>
@@ -142,6 +140,6 @@
 	</div>
 	<div class="rank"><h4>友情链接:</h4> <?=$link_html?></div>
     
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 </body>
 </html>
