@@ -38,7 +38,7 @@
         <?php if(!empty($retarr) && is_array($retarr)): ?>
             <?php foreach($retarr as $k => $v): ?><?php if($k >= 6):?>
                 <div class="list-out">
-                    <span class="flex w80"><em>[<?=$v['sortname']?>]</em><em><a href="<?=$v['info_url']?>\<?=$v['articlename']?></a></em><em><a href="<?=$v['last_url']?>"><?=$v['lastchapter']?></a></em></span>
+                    <span class="flex w80"><em>[<?=$v['sortname']?>]</em><em><a href="<?=$v['info_url']?>"><?=$v['articlename']?></a></em><em><a href="<?=$v['last_url']?>"><?=$v['lastchapter']?></a></em></span>
                     <span class="gray dispc"><?=$v['author']?>&nbsp;&nbsp;<?=date('m-d',$v['lastupdate'])?></span>
                 </div>
             <?php endif ?><?php endforeach ?>
