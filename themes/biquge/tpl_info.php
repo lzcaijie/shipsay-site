@@ -1,4 +1,15 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
+
+<?php
+// 目录页链接兜底（避免写死 /index/ 破坏后台路由/伪静态配置）
+$index_url_safe = '';
+if (isset($index_url) && $index_url) {
+    $index_url_safe = $index_url;
+} elseif (isset($articleid) && $articleid && class_exists('Url') && method_exists('Url', 'index_url')) {
+    $index_url_safe = Url::index_url($articleid);
+}
+?>
+
 <?php $year = isset($year) && $year ? $year : date('Y'); ?>
 
 <!DOCTYPE html>
@@ -79,7 +90,7 @@
     <div class="info-chapters-title">
         <strong>《<?=$articlename?>》正文</strong>
         <?php if ($chapters > 50): ?>
-        <a href="/index/<?=$articleid?>/" style="float: right; font-size: 14px; color: #4a90e2; text-decoration: none;">
+        <a href="<?=$index_url_safe?>" style="float: right; font-size: 14px; color: #4a90e2; text-decoration: none;">
             查看完整目录（共<?=$chapters?>章）
         </a>
         <?php endif; ?>
@@ -99,7 +110,7 @@
 
     <?php if ($chapters > 50): ?>
     <div style="text-align: center; margin-top: 20px;">
-        <a href="/index/<?=$articleid?>/" style="display: inline-block; padding: 10px 25px; background: #4a90e2; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+        <a href="<?=$index_url_safe?>" style="display: inline-block; padding: 10px 25px; background: #4a90e2; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
             查看完整目录（共<?=$chapters?>章）
         </a>
     </div>

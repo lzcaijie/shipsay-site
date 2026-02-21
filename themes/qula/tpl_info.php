@@ -1,5 +1,16 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 
+<?php
+// 目录页链接兜底（避免写死 /index/ 破坏后台路由/伪静态配置）
+$index_url_safe = '';
+if (isset($index_url) && $index_url) {
+    $index_url_safe = $index_url;
+} elseif (isset($articleid) && $articleid && class_exists('Url') && method_exists('Url', 'index_url')) {
+    $index_url_safe = Url::index_url($articleid);
+}
+?>
+
+
 <!DOCTYPE html>
 <head>
     <title><?=$articlename?>(<?=$author?>)_<?=$articlename?>最新章节免费阅读_<?=SITE_NAME?></title>
@@ -93,7 +104,7 @@
     
     <!-- 查看完整目录链接 -->
     <div style="text-align:center; margin:20px 0;">
-        <a href="/index/<?=$articleid?>/" style="display:inline-block; padding:10px 25px; background:#4285f4; color:white; text-decoration:none; border-radius:4px; font-weight:bold;">
+        <a href="<?=$index_url_safe?>" style="display:inline-block; padding:10px 25px; background:#4285f4; color:white; text-decoration:none; border-radius:4px; font-weight:bold;">
             查看完整目录
         </a>
     </div>
