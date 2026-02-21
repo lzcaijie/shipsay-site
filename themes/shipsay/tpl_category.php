@@ -7,7 +7,7 @@
 <title><?php if($sortname !=''):?><?=$sortname?><?php else:?>小说书库<?php endif ?>_<?=SITE_NAME?>书友最值得收藏的网络小说阅读网</title>
 <meta name="keywords" content="<?=SITE_NAME?>小说,<?=SITE_NAME?>小说网,最新章节免费阅读小说网,<?=SITE_NAME?>阅读网">
 <meta name="description" content="<?=SITE_NAME?>小说,<?=SITE_NAME?>小说网,最新章节免费阅读小说网,<?=SITE_NAME?>阅读网">
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <!-- sort -->
 <div class="store">
 	<div class="store_left">
@@ -65,4 +65,4 @@
 
 </div>
 <!-- /sort -->
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

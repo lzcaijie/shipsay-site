@@ -83,7 +83,7 @@
     <meta property="og:image" content="<?=$img_url?>">
     <meta property="og:image:alt" content="<?=$articlename?>封面">
     
-    <?php require_once 'tpl_header.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body>
     <div class="container">
@@ -202,6 +202,6 @@
     </div>
 
 
-    <?php require_once 'tpl_footer.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 </body>
 </html>

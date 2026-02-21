@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title><?=$searchkey?> 的搜索结果_<?=SITE_NAME?></title>
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <div class="container">
 	<div class="side_commend" style="width:100%;">
@@ -29,4 +29,4 @@
 	</div>
 </div>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
