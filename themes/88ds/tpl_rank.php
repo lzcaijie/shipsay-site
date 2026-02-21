@@ -6,7 +6,7 @@
   <title>小说排行_<?=SITE_NAME?>阅读网_<?=SITE_NAME?></title>
   <meta name="keywords" content="排行榜<?=SITE_NAME?>" />
   <meta name="description" content="排行榜<?=SITE_NAME?>" />
-  <?php require_once 'tpl_header.php'; ?>
+  <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <body>
   <div class="header">
@@ -43,4 +43,4 @@
     </div>
   </div>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

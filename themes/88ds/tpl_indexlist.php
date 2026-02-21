@@ -16,7 +16,7 @@ $pid = (isset($pid) && (int)$pid>0) ? (int)$pid : 1;
   <title><?=$pageTitle?></title>
   <meta name="keywords" content="<?=$articlename?>章节目录,<?=$articlename?>最新章节,<?=$author?>" />
   <meta name="description" content="《<?=$articlename?>》章节目录第<?=$pid?>页，作者：<?=$author?>，总章节：<?=$chapters?>章。" />
-  
+
   <meta http-equiv="Cache-Control" content="no-transform">
   <meta http-equiv="Cache-Control" content="no-siteapp">
   <meta name="applicable-device" content="pc,mobile">
@@ -24,7 +24,7 @@ $pid = (isset($pid) && (int)$pid>0) ? (int)$pid : 1;
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="canonical" href="<?=$uri?>" />
-  
+
   <script type="application/ld+json"><?php
 $itemlist_elements = [];
 if (!empty($list_arr)) {
@@ -46,7 +46,7 @@ echo json_encode([
   "itemListElement"=>$itemlist_elements
 ], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
 ?></script>
-  
+
   <script type="application/ld+json"><?=
 json_encode([
   "@context"=>"https://schema.org",
@@ -58,9 +58,9 @@ json_encode([
     ["@type"=>"ListItem","position"=>4,"name"=>"章节目录".($pid>1 ? "第{$pid}页" : ""),"item"=>(string)$uri],
   ]
 ], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) ?></script>
-  
-  <?php require_once 'tpl_header.php'; ?>
-  
+
+  <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
+
   <body>
     <div class="header">
       <div class="back">
@@ -72,7 +72,7 @@ json_encode([
 		<a href="/" class="login_topbtn c_index_login">首页</a>
       </div>
     </div>
-	
+
 	<div class="cover">
       <div class="read">
         <h3><?=$articlename?> - 章节目录<?php if (isset($pid) && $pid > 1): ?>（第<?=$pid?>页）<?php endif; ?></h3>
@@ -85,4 +85,4 @@ json_encode([
       </ul>
     </div>
 	<div class="index-container"><?=$htmltitle?></div>
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
