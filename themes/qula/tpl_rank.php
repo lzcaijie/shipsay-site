@@ -6,7 +6,7 @@
 <title><?=$page_title?>_小说排行榜_<?=SITE_NAME?></title>
 <meta name="keywords" content="<?=$page_title?>小说排行榜" />
 <meta name="description" content="<?=SITE_NAME?>是广大书友最值得收藏的网络小说阅读网，网站收录了当前最火热的<?=$page_title?>小说排行榜，免费提供高质量的小说最新章节。" />
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <body>
      <div class="container">
         <div class="row row-rank">
@@ -100,4 +100,4 @@
                 </div>
             </div>
 			</div>
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
