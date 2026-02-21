@@ -11,7 +11,7 @@ if (!function_exists('ss_e')) {
   <meta charset="UTF-8">
   <title>搜索“<?=ss_e($searchkey)?>”的结果-<?=SITE_NAME?></title>
   <meta name="MobileOptimized" content="240"/>
-  <?php require_once 'tpl_header.php'; ?>
+  <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <body>
   <div class="header">
@@ -50,4 +50,4 @@ if (!function_exists('ss_e')) {
     </div>
   </div>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

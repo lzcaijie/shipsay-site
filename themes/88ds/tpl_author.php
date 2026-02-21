@@ -15,7 +15,7 @@ if (!function_exists('ss_e')) {
   <link rel="stylesheet" href="/static/<?=$theme_dir?>/style.css">
 </head>
 <body>
-  <?php require_once 'tpl_header.php'; ?>
+  <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
   <div class="container">
     <div class="bread">
@@ -44,6 +44,6 @@ if (!function_exists('ss_e')) {
     </div>
   </div>
 
-  <?php require_once 'tpl_footer.php'; ?>
+  <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 </body>
 </html>

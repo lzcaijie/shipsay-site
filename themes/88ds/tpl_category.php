@@ -7,7 +7,7 @@
   <title><?=$sortname?>小说排行榜_<?=SITE_NAME?></title>
   <meta name="keywords" content="<?=$sortname?>小说排行榜,<?=$sortname?>小说排行榜手机阅读" />
   <meta name="description" content="<?=SITE_NAME?>提供<?=$year?>年<?=$sortname?>小说排行榜手机阅读。" />
-  <?php require_once 'tpl_header.php'; ?>
+  <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <body>
   <div class="header">
@@ -46,4 +46,4 @@
     <div class="index-container"><?=$jump_html_wap?></div>
   </div>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

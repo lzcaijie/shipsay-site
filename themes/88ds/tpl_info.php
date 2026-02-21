@@ -9,7 +9,7 @@ if (!function_exists('ss_e')) { function ss_e($s){ return htmlspecialchars((stri
   <title><?=$articlename?>(<?=$author?>)最新章节免费阅读-<?=$articlename?><?=$author?>完整版全文免费在线阅读-<?=SITE_NAME?></title>
   <meta name="keywords" content="<?=$articlename?>,<?=$articlename?><?=$author?>,<?=$articlename?>TXT全文免费在线阅读" />
   <meta name="description" content="<?=$intro_p?>！<?=$articlename?>是<?=$author?>大神的最新小说，<?=SITE_NAME?>小说网提供<?=$articlename?>最新章节全文免费阅读，<?=$articlename?>完整版全文免费在线阅读，<?=$articlename?>全文免费阅读，<?=$articlename?>无弹窗全文免费阅读！请关注<?=SITE_NAME?>吧，本站最新最快更新<?=$articlename?>的最新章节。" />
-  
+
   <meta http-equiv="Cache-Control" content="no-transform">
   <meta http-equiv="Cache-Control" content="no-siteapp">
   <meta name="applicable-device" content="pc,mobile">
@@ -17,9 +17,9 @@ if (!function_exists('ss_e')) { function ss_e($s){ return htmlspecialchars((stri
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="canonical" href="<?=$uri?>" />
-  
+
   <link rel="prefetch" href="<?=$index_url?>" as="document" />
-  
+
   <script type="application/ld+json"><?=
 json_encode([
   "@context"=>"https://schema.org",
@@ -33,7 +33,7 @@ json_encode([
   "image"=>(string)$img_url,
   "description"=>(string)$intro_p
 ], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) ?></script>
-  
+
   <script type="application/ld+json"><?=
 json_encode([
   "@context"=>"https://schema.org",
@@ -44,7 +44,7 @@ json_encode([
     ["@type"=>"ListItem","position"=>3,"name"=>(string)$articlename,"item"=>(string)$info_url],
   ]
 ], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) ?></script>
-  
+
   <meta property="og:type" content="novel"/>
   <meta property="og:title" content="<?=$articlename?>"/>
   <meta property="og:description" content="<?=$intro_des?>"/>
@@ -59,8 +59,8 @@ json_encode([
   <meta property="og:novel:update_time" content='<?=$lastupdate?>' />
   <meta property="og:novel:latest_chapter_name" content="<?=$lastchapter?>"/>
   <meta property="og:novel:latest_chapter_url" content="https://<?=SITE_URL?><?=$last_url?>"/>
-  <?php require_once 'tpl_header.php'; ?>
-  
+  <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
+
   <body>
     <div class="header">
       <div class="back">
@@ -126,4 +126,4 @@ json_encode([
 })();
 </script>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
