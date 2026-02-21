@@ -30,17 +30,13 @@ if (isset($index_url) && $index_url) {
     $index_url_safe = Url::index_url($articleid);
 }
 
-/**
- * 注意：有些书章节数不足50时，$chapters 可能为空或不准确，
- * 所以“更多/目录”按钮不要依赖 $chapters，而用实际章节数组数量判断。
- */
 $chapter_total_by_rows = 0;
 if (!empty($chapterrows) && is_array($chapterrows)) {
     $chapter_total_by_rows = count($chapterrows);
 }
 ?>
 
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <script src="/static/<?=$theme_dir?>/user.js"></script>
 
 <div class="container">
@@ -107,7 +103,6 @@ if (!empty($chapterrows) && is_array($chapterrows)) {
                 ?>
 
                 <?php
-                // 只要章节数组存在，就展示“目录页”入口；如果章节>=50，再文案提示“查看更多”
                 if (!empty($index_url_safe)):
                     $more_text = '查看目录';
                     if ($chapter_total_by_rows >= 50) {
@@ -145,4 +140,4 @@ if (!empty($chapterrows) && is_array($chapterrows)) {
 })();
 </script>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

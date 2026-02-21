@@ -13,7 +13,7 @@ $sorttitle_safe = ($sortname_safe !== '') ? $sortname_safe : '全部';
     <title><?php if($sortname_safe != ''):?><?=$sortname_safe?>_<?=$sortname_safe?>小说_<?php endif ?><?php if($fullflag_safe):?>已完本_<?php endif ?>小说书库_<?=SITE_NAME?></title>
     <meta name="keywords" content="<?php if($sortname_safe == ''):?>分类列表,小说全部分类列表,小说书库<?php else:?><?=$sortname_safe?>,<?=$sortname_safe?>类型推荐,<?=$year_safe?>热门的<?=$sortname_safe?>小说,<?=$sortname_safe?>的分类列表,<?=$sortname_safe?>的小说书库<?php endif ?>">
     <meta name="description" content="<?php if($sortname_safe == ''):?>分类列表,小说全部分类列表,小说书库<?php else:?><?=$sortname_safe?>,<?=$sortname_safe?>类型推荐,<?=$year_safe?>热门的<?=$sortname_safe?>小说,<?=$sortname_safe?>的分类列表,<?=$sortname_safe?>的小说书库,<?=SITE_NAME?>为你提供免费无弹窗的阅读体验<?php endif ?>">
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <div class="container">
 	<div class="class">
@@ -47,4 +47,4 @@ $sorttitle_safe = ($sortname_safe !== '') ? $sortname_safe : '全部';
 	</div>
 	<div class="clear"></div>
 </div>
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

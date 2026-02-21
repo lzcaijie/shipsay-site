@@ -8,7 +8,7 @@
     <meta name="keywords" content="<?=$articlename?>,<?=$articlename?>目录,<?=$author?>" />
     <meta name="description" content="《<?=$articlename?>》章节目录第<?=$pid?>页，作者：<?=$author?>，共<?=$chapters?>章。" />
 
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <script src="/static/<?=$theme_dir?>/user.js"></script>
 
 <div class="container">
@@ -63,4 +63,4 @@
 	<div class="clear"></div>
 </div>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

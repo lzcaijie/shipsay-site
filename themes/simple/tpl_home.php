@@ -7,7 +7,7 @@
 <title><?=SITE_NAME?>_<?=SITE_NAME?>网_书友最值得收藏的网络小说阅读网</title>
 <meta name="keywords" content="<?=SITE_NAME?>,<?=SITE_NAME?>网,<?=SITE_NAME?>免费阅读,<?=SITE_NAME?>阅读网">
 <meta name="description" content="<?=SITE_NAME?>为您提供最新最全的小说信息,更新及时、全站免费阅读，为读者打造一个舒心的阅读环境，看小说就上<?=SITE_NAME?>阅读网">
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container">
 	<div class="content">
 		<div class="content-left" id="fengtui">
@@ -67,4 +67,4 @@
 	</div>
 </div>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
