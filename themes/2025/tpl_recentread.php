@@ -22,7 +22,7 @@
 </style>
 </head>
 <body>
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container visible-xs">
 <div class="header-m">
 <a class="header-m-left" href="javascript:window.history.go(-1);"><svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2585"><path d="M358.997 512l311.168-311.168a42.667 42.667 0 1 0-60.33-60.33L268.5 481.834a42.667 42.667 0 0 0 0 60.33L609.835 883.5a42.667 42.667 0 0 0 60.33-60.331L358.997 512z" p-id="2586"></path></svg></a>
@@ -41,19 +41,11 @@
 </div>
 <div class="cf"></div>
 </div>
-<div class="footer">
-<div class="container">
-<p class="hidden-xs">本站所有小说为转载作品，所有章节均由网友上传，转载至本站只是为了宣传本书让更多读者欣赏。</p>
-<p class="visible-xs">本站小说由程序自动索引</p>
-<p>Copyright &copy; 2023 <?=SITE_NAME?></p>
-<p><a href="/sitemap/sm_sitemap.xml" title="神马 SiteMap" target="_blank">神马SiteMap</a> | <a href="/sitemap/sitemap.xml" title="XML SiteMap" target="_blank">SiteMap</a></p>
-<div class="cf"></div>
-</div>
-</div>
-<script src="/static/<?=$theme_dir?>/js/jquery.min.js?v=20221207"></script>
-<script src="/static/<?=$theme_dir?>/js/2025.js?v=20221207"></script>
+
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 <script src="/static/<?=$theme_dir?>/js/tempbookcase.js?v=20221207"></script>
 <script>showtempbooks();</script>
 <script src="/static/<?=$theme_dir?>/layer/layer.js?v=20221207"></script>
+
 </body>
 </html>

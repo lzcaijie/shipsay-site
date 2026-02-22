@@ -117,21 +117,19 @@ else
 {
 	$retarr=$db->ss_getrows($sql);
 }
-if($page==1)
-{
-	$orgin_uri=str_replace(['{sortid}','{sortcode}','{pid}'],[$sortid,$sortcode,1],$fake_sort_url);
-	if($fullflag)$orgin_uri='/'.$fake_fullstr.$orgin_uri;
-}
-function replace_last_num($new_page_num,$uri)
-{
-	return preg_replace('/(\d+)(\D*?)$/i',$new_page_num.'${2}',$uri);
-}
 function replace_all_num($new_page_num)
 {
 	global $fake_sort_url,$fullflag,$fake_fullstr;
 	$ret=preg_replace('/({sortid}|{sortcode}).*{pid}/i',$new_page_num,$fake_sort_url);
 	if($fullflag)$ret='/'.$fake_fullstr.$ret;
 	return $ret;
+}
+function ss_category_page_url($pid)
+{
+	global $is_sortid,$sortid,$sortcode,$fullflag,$fake_fullstr;
+	$u = $is_sortid ? Url::category_url($sortid,$pid) : Url::category_url($sortcode,$pid);
+	if($fullflag) $u = '/'.$fake_fullstr.$u;
+	return $u;
 }
 $jump_page=Page::ss_jumppage($allpage,$page);
 $jump_html='';
@@ -166,11 +164,11 @@ if($sortid==-1)
 }
 else
 {
-	$first_page_url=replace_last_num(1,$orgin_uri);
-	$last_page_url=replace_last_num($allpage,$orgin_uri);
-	$pre_url=$page>1?replace_last_num($page-1,$orgin_uri):'javascript:void(0);';
-	$next_url=$page<$allpage?replace_last_num($page+1,$orgin_uri):'javascript:void(0);';
-	$jump_html.='<li><a href="'.replace_last_num(1,$orgin_uri).'">1</a></li>';
+	$first_page_url=ss_category_page_url(1);
+	$last_page_url=ss_category_page_url($allpage);
+	$pre_url=$page>1?ss_category_page_url($page-1):'javascript:void(0);';
+	$next_url=$page<$allpage?ss_category_page_url($page+1):'javascript:void(0);';
+	$jump_html.='<li><a href="'.ss_category_page_url(1).'">1</a></li>';
 	$jump_html.='<li><a href="'.$pre_url.'">&lt;&lt;</a></li>';
 	$jump_html_wap.='<a class="index-container-btn" href="'.$pre_url.'">上一页</a>';
 	$jump_html_wap.='<select id="indexselect" onchange="self.location.href=options[selectedIndex].value">';
@@ -179,17 +177,17 @@ else
 		if($page==$v)
 		{
 			$jump_html.='<li class="active"><span>'.$v.'</span></li>';
-			$jump_html_wap.='<option selected="selected" value="'.replace_last_num($v,$orgin_uri).'">';
+			$jump_html_wap.='<option selected="selected" value="'.ss_category_page_url($v).'">';
 		}
 		else
 		{
-			$jump_html.='<li><a href="'.replace_last_num($v,$orgin_uri).'">'.$v.'</a>';
-			$jump_html_wap.='<option value="'.replace_last_num($v,$orgin_uri).'">';
+			$jump_html.='<li><a href="'.ss_category_page_url($v).'">'.$v.'</a></li>';
+			$jump_html_wap.='<option value="'.ss_category_page_url($v).'">';
 		}
 		$jump_html_wap.='第'.$v.'页</option>';
 	}
 	$jump_html.='<li><a href="'.$next_url.'">&gt;&gt;</a></li>';
-	$jump_html.='<li><a href="'.replace_last_num($allpage,$orgin_uri).'">'.$allpage.'</a></li>';
+	$jump_html.='<li><a href="'.ss_category_page_url($allpage).'">'.$allpage.'</a></li>';
 	$jump_html_wap.='</select><a class="index-container-btn" href="'.$next_url.'">下一页</a>';
 }
 $sql=$rico_sql.$sortidstr.' ORDER BY postdate DESC LIMIT '.$category_per_page;
