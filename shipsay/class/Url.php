@@ -88,7 +88,7 @@ class Url
 			$subaid=floor($aid/1000);
 			if($pid==1)
 			{
-				$from=['/{subaid}/i','/{aid}|{acode}/i','/(-|_|\/)?{pid}/i'];
+				$from=['/{subaid}/i','/{aid}|{acode}/i','/(-|_|\\/)?{pid}/i'];
 				$to=[$subaid,$aid,''];
 			}
 			else
@@ -101,7 +101,7 @@ class Url
 		{
 			if($pid==1)
 			{
-				$from=['/{aid}|{acode}/i','/(-|_|\/)?{pid}/i'];
+				$from=['/{aid}|{acode}/i','/(-|_|\\/)?{pid}/i'];
 				$to=[$aid,''];
 			}
 			else
@@ -175,35 +175,58 @@ class Url
 	static function fake2real($fake_url)
 	{
 		$from=['{subaid}','{acode}','{aid}','{cid}'];
-		$to=['\d+','([a-z0-9_-]+)','(\d+)','(\d+)(_\d+)?'];
+		$to=['\\d+','([a-z0-9_-]+)','(\\d+)','(\\d+)(_\\d+)?'];
 		$ret=str_replace($from,$to,$fake_url);
-		$ret=str_replace(['/','.'],['\\/','\\.'],$ret);
+		$ret=str_replace(['/','.'],['\\\\/','\\\\.'],$ret);
 		return '/^'.$ret.'?$/i';
 	}
 	static function sort2real($fake_sort_url)
 	{
 		$from=['{sortcode}','{sortid}','{pid}','.'];
-		$to=['[a-z_-]+','[1-9]+','[1-9]+','\.'];
+		$to=['[a-z_-]+','[1-9]+','[1-9]+','\\.'];
 		$ret=str_replace($from,$to,$fake_sort_url);
 		return '#^'.$ret.'?$#i';
 	}
 	static function indexlist2real($fake_indexlist)
 	{
-		$from=['/{subaid}/i','/{aid}/i','/{acode}/i','/(_|-|\/)?{pid}/i'];
-		$to=['\d+','(\d+)','([a-z0-9_-]+)','(?:_|-|/)?(\d+)?'];
+		$from=['/{subaid}/i','/{aid}/i','/{acode}/i','/(_|-|\\/)?{pid}/i'];
+		$to=['\\d+','(\\d+)','([a-z0-9_-]+)','(?:_|-|/)?(\\d+)?'];
 		$ret=preg_replace($from,$to,$fake_indexlist);
-		$ret=str_replace(['/','.'],['\\/','\\.'],$ret);
+		$ret=str_replace(['/','.'],['\\\\/','\\\\.'],$ret);
 		return '/^'.$ret.'?$/i';
 	}
 	static function tag2real($fake_tag)
 	{
 		$from=['{tag}','{pid}'];
-		$to=['([^/]+)','(\d+)'];
+		$to=['([^/]+)','(\\d+)'];
 		$ret=str_replace($from,$to,$fake_tag);
 		return '#^'.$ret.'$#iU';
 	}
 	static function ss_errpage()
 	{
+		// 兜底补齐 __THEME_DIR__：有些 Nginx/入口会绕过 router.php，导致 error.php 走无样式 fallback
+		if(!defined('__THEME_DIR__'))
+		{
+			global $theme_dir;
+			$root = defined('__ROOT_DIR__') ? __ROOT_DIR__ : dirname($_SERVER['DOCUMENT_ROOT']);
+			if(!empty($theme_dir))
+			{
+				$tmp_theme_dir = $root.'/themes/'.$theme_dir;
+				if(is_dir($tmp_theme_dir))
+				{
+					define('__THEME_DIR__',$tmp_theme_dir);
+				}
+			}
+		}
+
+		// 兜底补齐 $site_url（部分模板/错误页会用到）
+		global $site_url;
+		if(empty($site_url) && !empty($_SERVER['HTTP_HOST']))
+		{
+			$site_url = (!empty($_SERVER['SERVER_PORT']) && intval($_SERVER['SERVER_PORT'])===443) ? 'https://' : 'http://';
+			$site_url .= $_SERVER['HTTP_HOST'];
+		}
+
 		// 统一从 __ROOT_DIR__ 取错误页（避免 DOCUMENT_ROOT 不一致导致引用到错误位置）
 		if(defined('__ROOT_DIR__'))
 		{
