@@ -177,7 +177,7 @@ class Url
 		$from=['{subaid}','{acode}','{aid}','{cid}'];
 		$to=['\\d+','([a-z0-9_-]+)','(\\d+)','(\\d+)(_\\d+)?'];
 		$ret=str_replace($from,$to,$fake_url);
-		$ret=str_replace(['/','.'],['\\\\/','\\\\.'],$ret);
+		$ret=str_replace(['/','.'],['\\/','\\.'],$ret);
 		return '/^'.$ret.'?$/i';
 	}
 	static function sort2real($fake_sort_url)
@@ -192,7 +192,7 @@ class Url
 		$from=['/{subaid}/i','/{aid}/i','/{acode}/i','/(_|-|\\/)?{pid}/i'];
 		$to=['\\d+','(\\d+)','([a-z0-9_-]+)','(?:_|-|/)?(\\d+)?'];
 		$ret=preg_replace($from,$to,$fake_indexlist);
-		$ret=str_replace(['/','.'],['\\\\/','\\\\.'],$ret);
+		$ret=str_replace(['/','.'],['\\/','\\.'],$ret);
 		return '/^'.$ret.'?$/i';
 	}
 	static function tag2real($fake_tag)
