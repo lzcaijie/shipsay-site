@@ -7,6 +7,10 @@
 <meta name="keywords" content="<?=SITE_NAME?>,<?=SITE_NAME?>网,最新<?=SITE_NAME?>,<?=SITE_NAME?>阅读网">
 <meta name="description" content="<?=SITE_NAME?>,<?=SITE_NAME?>网,最新<?=SITE_NAME?>,<?=SITE_NAME?>阅读网，是广大书友最值得收藏的网络小说阅读网，网站收录了当前最火热的网络小说，免费提供高质量的小说最新章节，是广大网络小说爱好者必备的小说阅读网。">
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
+<?php
+$top_url_safe = (isset($fake_top) && $fake_top) ? $fake_top : '/rank/';
+$full_allbooks_url_safe = (isset($full_allbooks_url) && $full_allbooks_url) ? $full_allbooks_url : ('/quanben' . (isset($allbooks_url) ? $allbooks_url : '/'));
+?>
 <body>
     <div class="header">
       <div class="logo">
@@ -23,8 +27,8 @@
     <div class="nav">
       <ul>
         <li><a href="javascript:;" onclick="toggleSort();" rel="nofollow">分类</a></li>
-        <li><a href="/rank/">排行</a></li>
-        <li><a href="/quanben<?=$allbooks_url?>">全本</a></li>
+        <li><a href="<?=$top_url_safe?>">排行</a></li>
+        <li><a href="<?=$full_allbooks_url_safe?>">全本</a></li>
         <li><a href="/bookcase/" rel="nofollow">书架</a></li>
       </ul>
     </div>

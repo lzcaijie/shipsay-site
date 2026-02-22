@@ -10,9 +10,13 @@
 
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
+<?php
+$full_allbooks_url_safe = (isset($full_allbooks_url) && $full_allbooks_url) ? $full_allbooks_url : ('/quanben' . (isset($allbooks_url) ? $allbooks_url : '/'));
+?>
+
 <body>
     <div class="index-head">
-        <h1><a href="/" class="logo"><?=SITE_NAME?></a></h1><a href="/bookcase/" rel="nofollow" class="btn">书架</a><a href="/quanben<?=$allbooks_url?>" rel="nofollow" class="btn">完本</a><a href="javascript:;" onclick="toggleSort();" rel="nofollow" class="btn">排行</a>
+        <h1><a href="/" class="logo"><?=SITE_NAME?></a></h1><a href="/bookcase/" rel="nofollow" class="btn">书架</a><a href="<?=$full_allbooks_url_safe?>" rel="nofollow" class="btn">完本</a><a href="javascript:;" onclick="toggleSort();" rel="nofollow" class="btn">排行</a>
     </div>
     <div class="sort c_sort" id="submenu" style="display:none;">
         <ul>
@@ -135,7 +139,7 @@
         </div>
         <?php endif?><?php endforeach?>
     </div>
-    
+
     <div class="s_m">
         <div class="q_top c_big">
             <p class="c_big_border"><?=Sort::ss_sortname(3,1)?></p>
@@ -193,7 +197,7 @@
         </div>
         <?php endif?><?php endforeach?>
     </div>
-       
+
     <div class="s_m">
         <div class="q_top c_big">
             <p class="c_big_border"><?=Sort::ss_sortname(5,1)?></p>
