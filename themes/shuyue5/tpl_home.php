@@ -133,13 +133,13 @@
                 <table class="table">
                     <tbody>
                     <?php if(!empty($postdate) && is_array($postdate)): ?>
-                    <?php foreach($postdate as $k => $v) { if($k < 20) { ?>
+                    <?php foreach($postdate as $k => $v) { ?>
                     <tr>
                         <td class="text-muted hidden-xs" width="48"><?=$v['sortname_2']?></td>
                         <td class=""><a href="<?=$v['info_url']?>" title="<?=$v['articlename']?>"><?=mb_substr($v['articlename'], 0, 7)?></a></td>
                         <td class="text-right fs-12" title="<?=$v['author']?>"><?=$v['author']?></td>
                     </tr>
-                    <?php }} ?>
+                    <?php } ?>
                     <?php endif ?>
                     </tbody>
                 </table>
@@ -153,7 +153,7 @@
                 <table class="table">
                     <tbody>
                     <?php if(!empty($lastupdate) && is_array($lastupdate)): ?>
-                    <?php foreach($lastupdate as $k => $v) { if($k < 20) { ?>
+                    <?php foreach($lastupdate as $k => $v) { ?>
                     <tr>
                         <td class="text-muted hidden-xs" width="48"><?=$v['sortname_2']?></td>
                         <td class=""><a href="<?=$v['info_url']?>" title="<?=$v['articlename']?>"><?=mb_substr($v['articlename'], 0, 7)?></a></td>
@@ -161,7 +161,7 @@
                         <td class="text-right fs-12" title="<?=$v['author']?>"><?=$v['author']?></td>
                         <td class="fs-12 hidden-xs" width="72"><?=date('m-d',$v['lastupdate'])?></td>
                     </tr>
-                    <?php }} ?>
+                    <?php } ?>
                     <?php endif ?>
                     </tbody>
                 </table>

@@ -49,7 +49,7 @@
         <?php if(isset($allbooks_url)): ?><a class="more" href="<?=$allbooks_url?>">最近更多</a><?php endif; ?>
       </div>
       <div class="list">
-        <?php if(!empty($lastupdate)): $j=0; foreach($lastupdate as $v): $j++; if($j>25) break; ?>
+        <?php if(!empty($lastupdate)): foreach($lastupdate as $v): ?>
           <div class="item">
             <div class="row">
               <a class="t" href="<?=$v['info_url']?>"><?=$v['articlename']?></a>
