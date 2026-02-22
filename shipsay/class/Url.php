@@ -204,8 +204,26 @@ class Url
 	}
 	static function ss_errpage()
 	{
-		$errpage=dirname($_SERVER['DOCUMENT_ROOT']).'/shipsay/include/error.php';
-		require_once $errpage;
+		// 统一从 __ROOT_DIR__ 取错误页（避免 DOCUMENT_ROOT 不一致导致引用到错误位置）
+		if(defined('__ROOT_DIR__'))
+		{
+			$errpage=__ROOT_DIR__.'/shipsay/include/error.php';
+		}
+		else
+		{
+			$errpage=dirname($_SERVER['DOCUMENT_ROOT']).'/shipsay/include/error.php';
+		}
+		if(is_file($errpage))
+		{
+			require $errpage;
+		}
+		else
+		{
+			@header('Status: 404 Not Found',true);
+			@header("http/1.1 404 Not Found");
+			echo '404 Not Found';
+			exit;
+		}
 		return;
 	}
 }
