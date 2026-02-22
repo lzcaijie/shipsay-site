@@ -1,5 +1,15 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 
+<?php
+$search_url_safe = function_exists('ss_search_url')
+    ? ss_search_url()
+    : ((isset($fake_search) && $fake_search) ? $fake_search : '/search/');
+
+$full_allbooks_url_safe = !empty($full_allbooks_url)
+    ? $full_allbooks_url
+    : ('/quanben' . (isset($allbooks_url) ? $allbooks_url : '/sort/'));
+?>
+
 <!-- header -->
 <meta name="robots" content="all">
 <meta name="googlebot" content="all">
@@ -25,7 +35,7 @@
 		<div class="header-nav">
 			<a href="/" title="首页">首 页</a>
 			<a href="<?=$allbooks_url?>" title="书库">书 库</a>
-			<a href="/quanben<?=$allbooks_url?>">全本</a>
+			<a href="<?=$full_allbooks_url_safe?>">全本</a>
 		</div>
 	</div>
 	<div class="clear"></div>

@@ -1,7 +1,12 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 <?php $searchkey_safe = isset($searchkey) ? trim($searchkey) : ''; ?>
+<?php
+$search_url_safe = function_exists('ss_search_url')
+    ? ss_search_url()
+    : ((isset($fake_search) && $fake_search) ? $fake_search : '/search/');
+?>
 
-<form id="post" name="t_frmsearch" method="post" action="/search/">
+<form id="post" name="t_frmsearch" method="post" action="<?=$search_url_safe?>">
     <table cellpadding="0" cellspacing="0" style="width:100%;">
         <tr>
             <td style="width:50px;">

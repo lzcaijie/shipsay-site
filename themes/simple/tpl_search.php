@@ -13,7 +13,7 @@
 <div class="container">
 	<div class="content">
 		<div class="search">
-			<form name="articlesearch" method="post" action="/search/">
+			<form name="articlesearch" method="post" action="<?=$search_url_safe?>">
 				<input name="searchkey" type="text" class="text" id="searchkey" size="10" maxlength="50" placeholder="搜索从这里开始..." />
 				<input type="hidden" name="action" value="login" />
 				<button type="submit" name="submit">搜  索</button>

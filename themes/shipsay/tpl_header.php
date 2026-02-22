@@ -1,4 +1,10 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
+
+<?php
+$full_allbooks_url_safe = !empty($full_allbooks_url)
+    ? $full_allbooks_url
+    : ('/quanben' . (isset($allbooks_url) ? $allbooks_url : '/sort/'));
+?>
 <!-- header -->
 <meta name="robots" content="all">
 <meta name="bingbot" content="all">
@@ -29,7 +35,7 @@
             <div class="header_right">
                 <a id="home" href="/"><i class="fa fa-home fa-lg"></i><br>首页</a>
                 <a href="<?=$allbooks_url?>"><i class="fa fa-book fa-lg"></i><br>书库</a>
-                <a href="/quanben<?=$allbooks_url?>"><i class="fa fa-coffee fa-lg"></i><br>完本</a>
+                <a href="<?=$full_allbooks_url_safe?>"><i class="fa fa-coffee fa-lg"></i><br>完本</a>
                 <a href="<?=$fake_recentread?>" rel="nofollow"><i class="fa fa-history fa-lg"></i><br>足迹</a>
             </div>
         </div>
@@ -40,7 +46,7 @@
             <?php foreach(Sort::ss_sorthead() as $v): ?>
                 <a href="<?=$v['sorturl']?>"><?=$v['sortname_2']?></a>
             <?php endforeach ?>
-                
+
              <div id="user_panel">
             </div> 
         </nav>
