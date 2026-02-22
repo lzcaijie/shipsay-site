@@ -5,6 +5,11 @@
 <meta charset="utf-8">
 <title>阅读记录 - <?=SITE_NAME?></title>
 <?php require_once 'tpl_header.php';?>
+<?php
+$full_allbooks_url_safe = !empty($full_allbooks_url)
+    ? $full_allbooks_url
+    : ('/quanben' . (isset($allbooks_url) ? $allbooks_url : '/sort/'));
+?>
 </head>
 <body>
 	<header class="header">
@@ -42,7 +47,7 @@
             <i class="icon icon-rank"></i>
             <span class="guide-nav-h">排行榜</span>
         </a>
-        <a href="/quanben<?=$allbooks_url?>" class="guide-nav-a">
+        <a href="<?=$full_allbooks_url_safe?>" class="guide-nav-a">
             <i class="icon icon-end"></i>
             <span class="guide-nav-h">全本</span>
         </a>
