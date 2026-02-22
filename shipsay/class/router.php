@@ -67,7 +67,22 @@ if(preg_match(Url::tag2real($fake_tag),urldecode($uri),$matches)||strpos($uri,$t
 	require_once __ROOT_DIR__.'/shipsay/app/tag.php';
 	exit;
 }
-if(decide_uri($uri,$fake_top))
+
+// fake_top 兼容：支持 /top/ 与 /top.html 互为别名（避免后台切换后旧链接 404）
+$fake_top_alt='';
+if(!empty($fake_top))
+{
+	$ft=rtrim($fake_top,'/');
+	if(substr($ft,-5)==='.html')
+	{
+		$fake_top_alt=substr($ft,0,-5);
+	}
+	else
+	{
+		$fake_top_alt=$ft.'.html';
+	}
+}
+if(decide_uri($uri,$fake_top) || (!empty($fake_top_alt) && decide_uri($uri,$fake_top_alt)))
 {
 	require_once __ROOT_DIR__.'/shipsay/app/top.php';
 	exit;
