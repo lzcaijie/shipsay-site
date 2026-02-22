@@ -25,7 +25,8 @@ if (!function_exists('ss_recentread_url')) {
 }
 if (!function_exists('ss_top_url')) {
   function ss_top_url(){
-    return '/rank/allvisit/';
+    global $fake_top;
+    return !empty($fake_top) ? $fake_top : '/rank/allvisit/';
   }
 }
 if (!function_exists('ss_nocover_url')) {

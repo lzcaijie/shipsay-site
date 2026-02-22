@@ -10,6 +10,11 @@
     <script src="/static/<?=$theme_dir?>/common.js"></script>
     <script src="/static/<?=$theme_dir?>/user.js"></script>
 
+<?php
+$top_url_safe = !empty($fake_top) ? $fake_top : '/rank/';
+$full_allbooks_url_safe = !empty($full_allbooks_url) ? $full_allbooks_url : ('/quanben' . (isset($allbooks_url) ? $allbooks_url : '/sort/'));
+?>
+
 </head>
 
 <body>
@@ -42,18 +47,18 @@
     <li><a href="/">首页</a></li>
     <li><a rel="nofollow" href="/bookcase/">永久书架</a></li>
     <?php foreach(Sort::ss_sorthead() as $v): ?>
-                <li><a href="<?=$v['sorturl']?>"><?=$v['sortname_2']?>小说</a></li>
+                <li><a href="<?=$v['sorturl']?>" ><?=$v['sortname_2']?>小说</a></li>
             <?php endforeach ?>
-    
-    <li><a href="/rank/">排行榜单</a></li>
+
+    <li><a href="<?=$top_url_safe?>">排行榜单</a></li>
     <li><a href="<?=$allbooks_url?>">书库榜单</a></li>
-    <li><a href="/quanben<?=$allbooks_url?>">完本小说</a></li>
+    <li><a href="<?=$full_allbooks_url_safe?>">完本小说</a></li>
     <li><a rel="nofollow" href="<?=$fake_recentread?>">阅读记录</a></li>
   </ul>
   <ul class="m-nav">
-    <li><a href="/rank/">排行</a></li>
+    <li><a href="<?=$top_url_safe?>">排行</a></li>
     <li><a href="<?=$allbooks_url?>">书库</a></li>
-    <li><a href="/quanben<?=$allbooks_url?>">完本</a></li>
+    <li><a href="<?=$full_allbooks_url_safe?>">完本</a></li>
     <li><a href="<?=$fake_recentread?>">阅读记录</a></li>
     <li><a href="/bookcase/"  rel="nofollow">书架</a></li>
   </ul>

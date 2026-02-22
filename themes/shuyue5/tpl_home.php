@@ -8,10 +8,12 @@
 <meta name="description" content="<?=SITE_NAME?>,<?=SITE_NAME?>网,最新<?=SITE_NAME?>,<?=SITE_NAME?>阅读网，是广大书友最值得收藏的网络小说阅读网，网站收录了当前最火热的网络小说，免费提供高质量的小说最新章节，是广大网络小说爱好者必备的小说阅读网。">
 <link rel="canonical" href="<?=$site_url?>">
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once 'tpl_fun.php'; ?>
+<?php $top_url_safe = !empty($fake_top) ? $fake_top : '/rank/'; ?>
+
 <div class="body_46f container body-content">
     <div class="section_46f panel panel-default">
         <div class="title_46f panel-heading">
-            <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> 推荐阅读<a class="pull-right" href="/rank/">More+</a>
+            <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> 推荐阅读<a class="pull-right" href="<?=$top_url_safe?>">More+</a>
         </div>
         <div class="content_46f panel-body">
             <div class="list_46f row">

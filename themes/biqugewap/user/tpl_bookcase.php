@@ -51,7 +51,7 @@
             <i class="icon icon-rank"></i>
             <span class="guide-nav-h">排行榜</span>
         </a>
-        <a href="/quanben<?=$allbooks_url?>" class="guide-nav-a">
+        <a href="<?=$full_allbooks_url?>" class="guide-nav-a">
             <i class="icon icon-end"></i>
             <span class="guide-nav-h">全本</span>
         </a>

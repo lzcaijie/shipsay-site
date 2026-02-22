@@ -40,19 +40,19 @@
             <i class="icon icon-home"></i>
             <span class="guide-nav-h">首页</span>
         </a>
-        <a href="/sort" class="guide-nav-a">
+        <a href="<?=$allbooks_url?>" class="guide-nav-a">
             <i class="icon icon-sort"></i>
             <span class="guide-nav-h">分类</span>
         </a>
-        <a href="/top/" class="guide-nav-a">
+        <a href="<?=$fake_top?>" class="guide-nav-a">
             <i class="icon icon-rank"></i>
             <span class="guide-nav-h">排行榜</span>
         </a>
-        <a href="/quanben/sort" class="guide-nav-a">
+        <a href="<?=$full_allbooks_url?>" class="guide-nav-a">
             <i class="icon icon-end"></i>
             <span class="guide-nav-h">全本</span>
         </a>
-        <a href="/history.html" class="guide-nav-a">
+        <a href="<?=$fake_recentread?>" class="guide-nav-a">
             <i class="icon icon-free"></i>
             <span class="guide-nav-h">记录</span>
         </a>

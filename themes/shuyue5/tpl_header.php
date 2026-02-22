@@ -7,6 +7,12 @@ $bs_ver    = @filemtime($bs_file);
 $site_ver  = @filemtime($site_file);
 ?>
 
+<?php
+$search_url_safe = function_exists('ss_search_url') ? ss_search_url() : ((isset($fake_search) && $fake_search) ? $fake_search : '/search/');
+$top_url_safe = !empty($fake_top) ? $fake_top : '/rank/';
+$full_allbooks_url_safe = !empty($full_allbooks_url) ? $full_allbooks_url : ('/quanben' . (isset($allbooks_url) ? $allbooks_url : '/sort/'));
+?>
+
 <meta http-equiv="Cache-Control" content="no-transform">
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -35,11 +41,11 @@ $site_ver  = @filemtime($site_file);
             <ul class="nav navbar-nav nav_46f">
                 <li class="46f_index"><a id="nav_index" href="/" style="">首页</a></li>
                 <li class="46f_all"><a id="nav_sort" href="<?=$allbooks_url?>">书库</a></li>
-                <li class="46f_top"><a id="nav_top" href="/rank/">排行</a></li>
-                <li class="46f_over"><a id="nav_full" href="/quanben/sort/">全本</a></li>
+                <li class="46f_top"><a id="nav_top" href="<?=$top_url_safe?>">排行</a></li>
+                <li class="46f_over"><a id="nav_full" href="<?=$full_allbooks_url_safe?>">全本</a></li>
                 <li class="46f_bookcase"><a id="nav_his" href="<?=$fake_recentread?>">轨迹</a></li>
             </ul>
-            <form class="search_46f navbar-form navbar-left" action="/search/" name="search" method="get">
+            <form class="search_46f navbar-form navbar-left" action="<?=$search_url_safe?>" name="search" method="get">
                 <div class="input-group">
                     <input type="text" class="form-control" size="10" maxlength="50" placeholder="搜索作品" name="searchkey" required>
                     <span class="input-group-btn"><button class="btn btn-info" type="submit">搜 索</button></span>
