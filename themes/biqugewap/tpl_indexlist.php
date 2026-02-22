@@ -80,7 +80,7 @@ $keywords = "{$articlename}章节目录,{$articlename}最新章节,{$author},{$a
     	        <?php foreach($list_arr as $v): ?>
                     <li><a href="<?=$v['cid_url']?>" title="<?=$v['cname']?>" rel="chapter"><?=$v['cname']?></a></li>
                     <?php endforeach ?>
-                    
+
         	    </ul>
     	    <div id="content_2"></div>
     	    <div class="listpage"><?=$htmltitle?></div>
@@ -118,7 +118,7 @@ $keywords = "{$articlename}章节目录,{$articlename}最新章节,{$author},{$a
             <i class="icon icon-rank"></i>
             <span class="guide-nav-h">排行榜</span>
         </a>
-        <a href="/quanben<?=$allbooks_url?>" class="guide-nav-a">
+        <a href="<?=$full_allbooks_url?>" class="guide-nav-a">
             <i class="icon icon-end"></i>
             <span class="guide-nav-h">全本</span>
         </a>

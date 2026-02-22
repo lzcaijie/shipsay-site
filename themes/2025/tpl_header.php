@@ -3,6 +3,7 @@
 <?php
 $search_url_safe = function_exists('ss_search_url') ? ss_search_url() : ((isset($fake_search) && $fake_search) ? $fake_search : '/search/');
 ?>
+<?php $full_allbooks_url_safe = !empty($full_allbooks_url) ? $full_allbooks_url : ('/quanben' . (isset($allbooks_url) ? $allbooks_url : '/sort/')); ?>
 <div class="header-common">
 <div class="container">
 <div class="header-common-left"><a href="/" title="<?=SITE_NAME?>" class="logo"><?=SITE_NAME?></a></div>
@@ -21,7 +22,7 @@ $search_url_safe = function_exists('ss_search_url') ? ss_search_url() : ((isset(
 <div class="container">
 <a class="active" href="/" title="<?=SITE_NAME?>">首页</a>
 <a href="<?=$allbooks_url?>" title="书库">书库</a>
-<a href="/quanben<?=$allbooks_url?>" title="全本">全本</a>
+<a href="<?=$full_allbooks_url_safe?>" title="全本">全本</a>
 <a href="<?=$search_url_safe?>">搜索</a>
 <a href="<?=$fake_recentread?>">轨迹</a>
 </div>
