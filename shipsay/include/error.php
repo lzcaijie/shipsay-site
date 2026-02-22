@@ -2,15 +2,20 @@
 http_response_code(404);
 header('Content-Type: text/html; charset=utf-8');
 
-// 兜底：部分请求可能绕过 router.php，导致 __THEME_DIR__ 未定义，从而走到无样式的 fallback。
-// 这里补齐 __THEME_DIR__，让 error.php 能优先加载主题 tpl_error.php / tpl_404.php（带主题 CSS）。
-if (!defined('__THEME_DIR__') && defined('__ROOT_DIR__')) {
-    if (isset($theme_dir) && !empty($theme_dir)) {
-        define('__THEME_DIR__', __ROOT_DIR__ . '/themes/' . $theme_dir);
+$search_url_safe = function_exists('ss_search_url') ? ss_search_url() : ((isset($fake_search)&&$fake_search)?$fake_search:'/search/');
+
+// 兜底补齐 __THEME_DIR__：有些入口绕过 router.php，导致 error.php 无法加载主题 tpl_error/tpl_404
+if (!defined('__THEME_DIR__')) {
+    global $theme_dir;
+    $root = defined('__ROOT_DIR__') ? __ROOT_DIR__ : dirname($_SERVER['DOCUMENT_ROOT']);
+    if (!empty($theme_dir)) {
+        $tmp_theme_dir = $root . '/themes/' . $theme_dir;
+        if (is_dir($tmp_theme_dir)) {
+            define('__THEME_DIR__', $tmp_theme_dir);
+        }
     }
 }
 
-$search_url_safe = function_exists('ss_search_url') ? ss_search_url() : ((isset($fake_search)&&$fake_search)?$fake_search:'/search/');
 
 // 1) 优先主题自定义 404
 if (defined('__THEME_DIR__')) {

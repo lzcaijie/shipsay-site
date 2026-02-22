@@ -28,7 +28,7 @@
 
 		<div class="content-right" id="fengyou">
 			<div class="search hidden-xs">
-				<form name="articlesearch" method="post" action="/search/">
+				<form name="articlesearch" method="post" action="<?=$search_url_safe?>">
 					<input name="searchkey" type="text" class="text" id="searchkey" size="10" maxlength="50" placeholder="搜索从这里开始...">
 					<input type="hidden" name="action" value="login"><input type="hidden" name="searchtype" value="all">
 					<button type="submit" name="submit">搜  索</button>

@@ -1,6 +1,18 @@
 <?php
 
 if(!file_exists(__THEME_DIR__.'/tpl_rank.php'))Url::ss_errpage();
+
+// /rank/（入口）如果后台配置了 fake_top，则跳到 fake_top（避免模板写死 /rank/）
+// 仅当 fake_top 不是 /rank/ 本身时才跳，避免循环。
+$rank_prefix = (isset($fake_rankstr) && $fake_rankstr) ? trim($fake_rankstr,'/') : 'rank';
+if (empty($matches[1]) && !empty($fake_top)) {
+	$ft = rtrim($fake_top,'/');
+	if ($ft !== '/'.$rank_prefix) {
+		header('Location: '.$fake_top, true, 302);
+		exit;
+	}
+}
+
 $query=$matches[1]?:'allvisit';
 $title_arr=['allvisit'=>'总排行榜','monthvisit'=>'月排行榜','weekvisit'=>'周排行榜','dayvisit'=>'日排行榜','allvote'=>'总推荐榜','monthvote'=>'月推荐榜','weekvote'=>'周推荐榜','dayvote'=>'日推荐榜','goodnum'=>'收藏榜'];
 if(!in_array($query,array_keys($title_arr)))
