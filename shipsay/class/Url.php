@@ -204,6 +204,23 @@ class Url
 	}
 	static function ss_errpage()
 	{
+		// 兜底：部分请求可能绕过 router.php（比如 Nginx/location 直进某个脚本）
+		// 这里补齐 __THEME_DIR__/site_url，保证 error.php 能走主题 tpl_error.php 并加载 CSS
+		if(!defined('__THEME_DIR__') && defined('__ROOT_DIR__'))
+		{
+			global $theme_dir;
+			if(!empty($theme_dir))
+			{
+				define('__THEME_DIR__',__ROOT_DIR__.'/themes/'.$theme_dir);
+			}
+		}
+		if(!defined('SITE_URL') && !empty($_SERVER['HTTP_HOST']))define('SITE_URL',$_SERVER['HTTP_HOST']);
+		if(empty($GLOBALS['site_url']) && !empty($_SERVER['HTTP_HOST']))
+		{
+			$is_https=(!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS']!='off') || (isset($_SERVER['SERVER_PORT']) && intval($_SERVER['SERVER_PORT'])===443);
+			$GLOBALS['site_url']=($is_https?'https://':'http://').$_SERVER['HTTP_HOST'];
+		}
+
 		// 统一从 __ROOT_DIR__ 取错误页（避免 DOCUMENT_ROOT 不一致导致引用到错误位置）
 		if(defined('__ROOT_DIR__'))
 		{
