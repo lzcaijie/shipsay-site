@@ -1,38 +1,33 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-cmn-Hans">
 <head>
 <meta charset="UTF-8">
-<meta name="robots" content="noindex,nofollow">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>404 - <?=SITE_NAME?></title>
-
+<title>404 - 页面不存在 - <?=SITE_NAME?></title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
 <link rel="stylesheet" href="/static/<?=$theme_dir?>/css/2025.css?v=<?=defined('SITE_VERSION')?SITE_VERSION:'20251207'?>" />
 </head>
 <body>
+<?php
+$search_url_safe = function_exists('ss_search_url') ? ss_search_url() : ((isset($fake_search) && $fake_search) ? $fake_search : '/search/');
+?>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
-<?php
-$search_url_safe = '/search/';
-if (function_exists('ss_search_url')) {
-    $search_url_safe = ss_search_url();
-} elseif (isset($fake_search) && $fake_search) {
-    $search_url_safe = $fake_search;
-}
-?>
-<div class="ss-404-wrap" style="max-width:720px;margin:28px auto;padding:0 16px;">
-  <div class="ss-404-box" style="background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:10px;padding:18px 16px;">
-    <h1 style="margin:0 0 8px;font-size:22px;line-height:1.2;">404 Not Found</h1>
-    <p style="margin:0 0 14px;color:#666;">页面不存在或已被删除，你可以返回首页或搜索你要看的书。</p>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-      <a href="/" style="display:inline-block;padding:10px 14px;border-radius:8px;background:#111;color:#fff;text-decoration:none;">返回首页</a>
-      <form action="<?=$search_url_safe?>" method="get" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0;">
-        <input type="text" name="searchkey" placeholder="输入书名或作者" required
-               style="padding:10px 12px;border:1px solid #ddd;border-radius:8px;min-width:220px;outline:none;">
-        <button type="submit" style="padding:10px 14px;border:0;border-radius:8px;background:#2d6cdf;color:#fff;">搜索</button>
-      </form>
+<div class="container autoheight">
+    <div class="list-index-2" style="padding:18px 0;">
+        <div class="title"><h2>页面不存在</h2><span>404 Not Found</span></div>
+        <div class="item" style="padding:18px;">
+            <p style="color:#666;line-height:1.8;margin:0 0 14px;">你访问的页面可能已删除或地址错误。</p>
+            <p style="margin:0 0 14px;">
+                <a href="/" style="margin-right:12px;">返回首页</a>
+                <a href="javascript:history.back();">返回上一页</a>
+            </p>
+            <form method="get" action="<?=$search_url_safe?>" style="max-width:520px;">
+                <input name="searchkey" type="text" placeholder="搜索书名 / 作者" style="width:70%;padding:10px;" required>
+                <button type="submit" style="padding:10px 16px;">搜索</button>
+            </form>
+        </div>
     </div>
-  </div>
 </div>
 
 <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
