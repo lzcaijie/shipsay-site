@@ -31,18 +31,23 @@
     <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
     <!-- end header -->
 
+<?php
+$rank_base = '/' . ((isset($fake_rankstr) && $fake_rankstr) ? trim($fake_rankstr, '/') : 'rank') . '/';
+$rank_allvote_url = $rank_base . 'allvote/';
+?>
+
 	<div class="hom-bd pr" id="imgload">
 		<!-- start continue reading -->
 		<div class="j_reading_wrap"></div>
 
 		<div class="cf g_wrap">
     		<h2 class="hom-h1 fl">新书推荐</h2>
-			<a href="/rank/allvote/" class="fl ml20 mt20 fs16 ttl">more<i class="i-more"></i></a>
+			<a href="<?=$rank_allvote_url?>" class="fl ml20 mt20 fs16 ttl">more<i class="i-more"></i></a>
     	</div>
 
 	    <ul class="g_row hom-books hom-gutter hom-arr">
 	        <?php if(!empty($postdate) && is_array($postdate)): ?>
-                <?php foreach($postdate as $k => $v): ?><?php if($k < 6):?>
+                <?php foreach($postdate as $k => $v): ?>
                     <li class="g_col_2">
                         <a href="<?=$v['info_url']?>" title="<?=$v['articlename']?>">
                             <i class="g_thumb hom-thumb">
@@ -52,7 +57,7 @@
                         </a>
                         <span class="_type"><?=$v['sortname']?></span>
                     </li>
-                <?php endif ?><?php endforeach ?>
+                <?php endforeach ?>
             <?php endif; ?>
 		</ul>
 
