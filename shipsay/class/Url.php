@@ -204,6 +204,9 @@ class Url
 	}
 	static function ss_errpage()
 	{
+		// 让 error.php / 主题 tpl_error.php 在函数作用域内也能拿到关键全局变量（否则 CSS 路径会空）
+		global $theme_dir, $fake_search, $fake_recentread, $fake_top, $allbooks_url, $full_allbooks_url, $site_url;
+
 		// 兜底补齐 __THEME_DIR__：有些 Nginx/入口会绕过 router.php，导致 error.php 走无样式 fallback
 		if(!defined('__THEME_DIR__'))
 		{
