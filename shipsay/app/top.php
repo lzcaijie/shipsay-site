@@ -1,6 +1,11 @@
 <?php
 
-if(!file_exists(__THEME_DIR__.'/tpl_top.php'))Url::ss_errpage();
+// tpl_top.php 某些主题没有，不能直接 404：兜底走核心默认模板
+$tpl = __THEME_DIR__ . '/tpl_top.php';
+if (!file_exists($tpl)) {
+	$tpl = __ROOT_DIR__ . '/shipsay/include/tpl_top_default.php';
+}
+
 foreach($sortarr as $k=>$v)
 {
 	$sql_allvisit=$rico_sql.'AND sortid = '.$k.' ORDER BY allvisit DESC LIMIT 50';
@@ -23,5 +28,5 @@ foreach($sortarr as $k=>$v)
 	}
 }
 ;
-require_once __THEME_DIR__.'/tpl_top.php';
+require_once $tpl;
 ?>
