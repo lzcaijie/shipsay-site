@@ -118,7 +118,7 @@
 			</dl>
 		</div>
 		<ul class="list">
-		     <?php } elseif( $k < 15 ) { ?>
+		     <?php } else { ?>
             <li><span><?=$k+1?></span><a href="<?=$v['info_url']?>" title="<?=$v['articlename']?>"><?=$v['articlename']?></a><a href="<?=$v['author_url']?>"><?=$v['author']?></a></li>
 		<?php }}} ?>
 		</ul>
@@ -127,19 +127,19 @@
 	<div class="rank">
 		<h4>最近更新<a class="pull-right" href="<?=$allbooks_url?>">More+</a></h4>
 		<div class="content">
-		    <?php foreach($lastupdate as $k => $v){ if( $k < 15 ){?>
+		    <?php foreach($lastupdate as $k => $v){ ?>
 			<dl>
             <a href="<?=$v['info_url']?>" class="cover" title="<?=$v['articlename']?>"><img class="lazy" src="/static/<?=$theme_dir?>/nocover.jpg" data-original="<?=$v['img_url']?>" alt="<?=$v['articlename']?>"></a>
 				<dt><a href="<?=$v['info_url']?>" title="<?=$v['articlename']?>"><?=$v['articlename']?></a></dt>
 				<dd><?=$v['intro_des']?></dd>
 				<dd><a href="<?=$v['author_url']?>"><?=$v['author']?></a><span><?=$v['isfull']?></span><span><?=$v['words_w']?>万字</span></dd>
 			</dl>
-		<?php }} ?>	
+		<?php } ?>	
 		</div>
 		<div class="clear"></div>
 	</div>
 	<div class="rank"><h4>友情链接:</h4> <?=$link_html?></div>
-    
+
 <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 </body>
 </html>

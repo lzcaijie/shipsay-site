@@ -96,15 +96,15 @@
 <div class="list-index-4">
 <div class="title"><h2>最新小说</h2><span>每天新书上不停</span></div>
 <ul>
-<?php if(is_array($postdate)) { foreach($postdate as $k => $v) { if( $k < 15 ){ ?>
+<?php if(is_array($postdate)) { foreach($postdate as $k => $v) { ?>
 <li><span class="s1">[<?=$v['sortname_2']?>]</span><a class="s2" href="<?=$v['info_url']?>" title="<?=$v['articlename']?>"><?=$v['articlename']?></a><span class="s3"><?=$v['author']?></span></li>
-<?php }}} ?>
+<?php }} ?>
 </ul>
 <div class="cf"></div>
 </div>
 <div class="list-index-3">
 <div class="title"><h2>最近更新</h2><span>24小时精彩不间断</span></div>
-<?php if(is_array($lastupdate)){ foreach($lastupdate as $k => $v) { if( $k < 8 ) { ?>
+<?php if(is_array($lastupdate)){ foreach($lastupdate as $k => $v) { ?>
 <div class="item">
 <div class="cover">
 <a href="<?=$v['info_url']?>" title="<?=$v['articlename']?>"><img class="lazy" src="/static/<?=$theme_dir?>/nocover.jpg" data-src="<?=$v['img_url']?>" alt="<?=$v['articlename']?>" width="120" height="150" onerror="this.src='/static/<?=$theme_dir?>/nocover.jpg';this.onerror=null;" /></a>
@@ -118,7 +118,7 @@
 </dl>
 <div class="cf"></div>
 </div>
-<?php }}} ?>
+<?php }} ?>
 <div class="cf"></div>
 </div>
 <div class="cf"></div>

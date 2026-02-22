@@ -23,7 +23,7 @@
                                 <dd style="height:90px"><a href="<?=$v['info_url']?>" style="color: #555"><?=$v['intro_des']?>…</a></dd>
                             </dl>
                         </div>
-                    <?php }}} ?></div>
+                    <?php }} ?></div>
              <div class="layout layout-col1">
                     <h2 class="layout-tit">经典推荐</h2>
                     <ul class="txt-list txt-list-row3">
@@ -37,11 +37,11 @@
 	<?php endif ?><?php endforeach ?><?php endif ?>
            </ul>
                 </div>
-                
+
         </div>
 	        <div class="row">
             <div class="layout">
-               
+
 		<!-- 分类 -->
         <?php for( $i = 1; $i <= 6; $i++) { $tmpvar = 'sort'.$i?>
       <div class="tp-box">
@@ -58,13 +58,13 @@
                                     </dl> </div>	 <ul>
 
 				<?php elseif($k < 13): ?> 
-			
+
                                 <li><a href="<?=$v['info_url']?>"><?=Text::ss_substr($v['articlename'])?></a>/<?=$v['author']?></li>         
 				<?php endif ?>
 
 			<?php endforeach ?>	<?php endif ?> </ul>
                 </div>
-			
+
         <?php }; ?> 
   </div>
              </div>
@@ -75,22 +75,22 @@
                 <ul class="txt-list txt-list-row3">
 
 
-	<?php if(is_array($postdate)) { foreach($postdate as $k => $v) { if( $k < 30 ){ ?>	
+	<?php if(is_array($postdate)) { foreach($postdate as $k => $v) { ?>	
 	<!-- 最新入库 -->
   <li>
                                 <span class="s1">[<?=$v['sortname_2']?>]</span>
                                 <span class="s2"><a href="<?=$v['info_url']?>"><?=$v['articlename']?></a></span>
                                 <span class="s5"><?=$v['author']?></span>
                             </li>
-                            
-    <?php }}} ?>
+
+    <?php }} ?>
   </ul>
             </div>
    <div class="layout layout2 layout-col2 fl">
                 <h2 class="layout-tit">最近更新小说列表</h2>
                 <ul class="txt-list txt-list-row5">
 
-	<?php if(is_array($lastupdate)){ foreach($lastupdate as $k => $v) { if( $k < 30 ) { ?>	
+	<?php if(is_array($lastupdate)){ foreach($lastupdate as $k => $v) { ?>	
 <li>
                                 <span class="s1">[<?=$v['sortname_2']?>]</span>
                                 <span class="s2">
