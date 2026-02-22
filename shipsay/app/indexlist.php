@@ -25,7 +25,7 @@ else
 {
 	$infoarr=$db->ss_getrows($sql);
 }
-if(!is_array($infoarr))Url::ss_errpage();
+if(!is_array($infoarr) || empty($infoarr) || !isset($infoarr[0])) Url::ss_errpage();
 $articlename=$sourcename=$infoarr[0]['articlename'];
 if($is_langtail===1)
 {
