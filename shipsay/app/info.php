@@ -47,10 +47,11 @@ $ratenum=$infoarr[0]['ratenum'];
 $ratesum=$infoarr[0]['ratesum'];
 $score=$infoarr[0]['score'];
 $sql='SELECT chapterid,chaptername,lastupdate,chaptertype,chapterorder FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chaptertype = 0 ORDER BY chapterorder ASC';
+$ckey=$sql.'|uo='.(int)$use_orderid.'|mul='.(int)$is_multiple.(isset($fake_chapter_url)?'|u='.md5($fake_chapter_url):'');
 $chapterrows=array();
-if(isset($redis)&&$redis->ss_get($sql))
+if(isset($redis)&&$redis->ss_get($ckey))
 {
-	$chapterrows=$redis->ss_get($sql);
+	$chapterrows=$redis->ss_get($ckey);
 }
 else
 {
@@ -61,7 +62,7 @@ else
 		while($row=mysqli_fetch_assoc($res))
 		{
 			$cid=$use_orderid?$row['chapterorder']:$row['chapterid'];
-			if($is_multiple)$cid=ss_newid($cid);
+			if(!$use_orderid && $is_multiple)$cid=ss_newid($cid);
 			$chapterrows[$k]['chaptertype']=$row['chaptertype'];
 			$chapterrows[$k]['lastupdate']=$row['lastupdate'];
 			$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$cid);
@@ -69,7 +70,7 @@ else
 			if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
 			$k++;
 		}
-		if(isset($redis))$redis->ss_setex($sql,$info_cache_time,$chapterrows);
+		if(isset($redis))$redis->ss_setex($ckey,$info_cache_time,$chapterrows);
 	}
 }
 $first_url=$chapterrows[0]['cid_url'];

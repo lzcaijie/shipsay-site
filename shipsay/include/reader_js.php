@@ -9,7 +9,11 @@ $chapterid=$sourcecid=$_POST['chapterid'];
 if($is_multiple)
 {
 	$sourceid=ss_sourceid($sourceid);
-	$sourcecid=ss_sourceid($sourcecid);
+	// use_orderid=1 时 chapterid 传的是 chapterorder（不参与混淆解混淆）
+	if(!$use_orderid)
+	{
+		$sourcecid=ss_sourceid($sourcecid);
+	}
 }
 
 $subaid=intval($sourceid/1000);
@@ -25,6 +29,7 @@ if($use_orderid)
 {
 	global $redis, $cache_time;
 	$chapterorder_real=(int)$sourcecid;
+	$mapped_ok=0;
 
 	// use_orderid 会导致每次 reader_js 请求额外做一次 chapterorder→chapterid 映射查询：
 	// 这里用 Redis 缓存映射结果，降低 DB 读放大（TTL>=1h，默认复用 cache_time）
@@ -53,6 +58,25 @@ if($use_orderid)
 	if(is_array($row)&&!empty($row['chapterid']))
 	{
 		$txt_sourcecid=$row['chapterid'];
+		$mapped_ok=1;
+		$chapterid=$chapterorder_real; // canonical: reader_js 返回的分页链接按 chapterorder
+		$chaptername=Text::ss_toutf8($row['chaptername']);
+		if($is_ft)$chaptername=Convert::jt2ft($chaptername);
+	}
+}
+
+if($use_orderid && empty($mapped_ok))
+{
+	// 兼容旧页面/缓存：POST 的 chapterid 可能仍是旧模式（混淆后的 chapterid）
+	$legacy_chapterid=$sourcecid;
+	if($is_multiple)$legacy_chapterid=ss_sourceid($legacy_chapterid);
+	$sql='SELECT chapterid,chapterorder,chaptername FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chapterid = '.$legacy_chapterid.' AND chaptertype = 0 LIMIT 1';
+	$row=$db->ss_getone($sql);
+	if(is_array($row)&&!empty($row['chapterid'])&&!empty($row['chapterorder']))
+	{
+		$txt_sourcecid=(int)$row['chapterid'];
+		$chapterorder_real=(int)$row['chapterorder'];
+		$chapterid=$chapterorder_real;
 		$chaptername=Text::ss_toutf8($row['chaptername']);
 		if($is_ft)$chaptername=Convert::jt2ft($chaptername);
 	}
