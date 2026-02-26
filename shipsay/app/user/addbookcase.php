@@ -7,7 +7,7 @@ if(isset($_REQUEST['articleid'])&&isset($_COOKIE['ss_userid'])&&isset($_COOKIE['
 	$source_aid=$is_multiple?ss_sourceid($_REQUEST['articleid']):$_REQUEST['articleid'];
 	if(isset($_REQUEST['chapterid']))
 	{
-		$source_cid=$is_multiple?ss_sourceid($_REQUEST['chapterid']):$_REQUEST['chapterid'];
+		$source_cid=($is_multiple&&!$use_orderid)?ss_sourceid($_REQUEST['chapterid']):$_REQUEST['chapterid'];
 	}
 	else
 	{

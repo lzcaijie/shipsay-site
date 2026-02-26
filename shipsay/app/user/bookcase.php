@@ -24,7 +24,7 @@ if(isset($_COOKIE['ss_userid'])&&isset($_COOKIE['ss_username'])&&isset($_COOKIE[
 				if($is_multiple)
 				{
 					$rows['articleid']=ss_newid($rows['articleid']);
-					$rows['chapterid']=ss_newid($rows['chapterid']);
+					if(!$use_orderid)$rows['chapterid']=ss_newid($rows['chapterid']);
 				}
 				$caseArr[$k]['articleid']=$rows['articleid'];
 				$caseArr[$k]['articlename']=$rows['articlename'];
