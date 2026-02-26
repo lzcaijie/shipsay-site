@@ -25,7 +25,7 @@ else
 {
 	$infoarr=$db->ss_getrows($sql);
 }
-if(!is_array($infoarr) || empty($infoarr) || !isset($infoarr[0])) Url::ss_errpage();
+if(!is_array($infoarr))Url::ss_errpage();
 $articlename=$sourcename=$infoarr[0]['articlename'];
 if($is_langtail===1)
 {
@@ -50,31 +50,31 @@ $goodnum=$infoarr[0]['goodnum'];
 $ratenum=$infoarr[0]['ratenum'];
 $ratesum=$infoarr[0]['ratesum'];
 $score=$infoarr[0]['score'];
-$sql='SELECT chapterid,chaptername,lastupdate,chaptertype,chapterorder FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chaptertype = 0 ORDER BY chapterorder ASC';
-$ckey=$sql.'|uo='.(int)$use_orderid.'|mul='.(int)$is_multiple.(isset($fake_chapter_url)?'|u='.md5($fake_chapter_url):'');
+$sql_chapter='SELECT chapterid,chaptername,lastupdate,chaptertype,chapterorder FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chaptertype = 0 ORDER BY chapterorder ASC';
 $chapterrows=array();
-if(isset($redis)&&$redis->ss_get($ckey))
+$cache_key=$sql_chapter.'|uo='.(int)$use_orderid.'|im='.(int)$is_multiple;
+if(isset($redis)&&$redis->ss_get($cache_key))
 {
-	$chapterrows=$redis->ss_get($ckey);
+	$chapterrows=$redis->ss_get($cache_key);
 }
 else
 {
-	$res=$db->ss_query($sql);
+	$res=$db->ss_query($sql_chapter);
 	if($res->num_rows)
 	{
 		$k=0;
 		while($rows=mysqli_fetch_assoc($res))
 		{
+			$cid=$use_orderid?(int)$rows['chapterorder']:(int)$rows['chapterid'];
+			if(!$use_orderid&&$is_multiple)$cid=ss_newid($cid);
 			$chapterrows[$k]['chaptertype']=$rows['chaptertype'];
 			$chapterrows[$k]['lastupdate']=$rows['lastupdate'];
 			$chapterrows[$k]['cname']=Text::ss_toutf8($rows['chaptername']);
 			if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
-			$cid=$use_orderid?$rows['chapterorder']:$rows['chapterid'];
-			if(!$use_orderid && $is_multiple)$cid=ss_newid($cid);
 			$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$cid);
 			$k++;
 		}
-		if(isset($redis))$redis->ss_setex($ckey,$info_cache_time,$chapterrows);
+		if(isset($redis))$redis->ss_setex($cache_key,$info_cache_time,$chapterrows);
 	}
 }
 $first_url=$chapterrows[0]['cid_url'];

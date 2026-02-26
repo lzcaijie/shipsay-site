@@ -43,22 +43,23 @@ $goodnum=$infoarr[0]['goodnum'];
 $ratenum=$infoarr[0]['ratenum'];
 $ratesum=$infoarr[0]['ratesum'];
 $score=$ratenum>0?sprintf("%.1f ",$ratesum/$ratenum):'0.0';
-$sql='SELECT * FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.'  ORDER BY chapterorder ASC';
+$sql_chapter='SELECT * FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.'  ORDER BY chapterorder ASC';
 $chapterrows=array();
-if(isset($redis)&&$redis->ss_get($sql))
+$cache_key=$sql_chapter.'|uo='.(int)$use_orderid.'|im='.(int)$is_multiple;
+if(isset($redis)&&$redis->ss_get($cache_key))
 {
-	$chapterrows=$redis->ss_get($sql);
+	$chapterrows=$redis->ss_get($cache_key);
 }
 else
 {
-	$res=$db->ss_query($sql);
+	$res=$db->ss_query($sql_chapter);
 	if($res->num_rows)
 	{
 		$k=0;
 		while($row=mysqli_fetch_assoc($res))
 		{
-			$cid=$use_orderid?$row['chapterorder']:$row['chapterid'];
-			if($is_multiple && !$use_orderid)$cid=ss_newid($cid);
+			$cid=$use_orderid?(int)$row['chapterorder']:(int)$row['chapterid'];
+			if(!$use_orderid&&$is_multiple)$cid=ss_newid($cid);
 			$chapterrows[$k]['chaptertype']=$row['chaptertype'];
 			$chapterrows[$k]['lastupdate']=$row['lastupdate'];
 			$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$cid);
@@ -66,7 +67,7 @@ else
 			if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
 			$k++;
 		}
-		if(isset($redis))$redis->ss_setex($sql,$info_cache_time,$chapterrows);
+		if(isset($redis))$redis->ss_setex($cache_key,$info_cache_time,$chapterrows);
 	}
 }
 $first_url=$chapterrows[0]['cid_url'];
