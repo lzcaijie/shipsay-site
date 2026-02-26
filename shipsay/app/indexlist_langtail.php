@@ -44,11 +44,13 @@ $chapterrows=array();
 $chapter_cache_key=$sql;
 if(isset($redis))
 {
-	$chapter_cache_key='chapterrows:'.md5($sql.'|use_orderid='.$use_orderid.'|is_multiple='.$is_multiple.'|is_ft='.$is_ft.'|langtail='.$is_langtail.'|pid='.$pid);
-	$cached=$redis->ss_get($chapter_cache_key);
-	if($cached)$chapterrows=$cached;
+	$chapter_cache_key='chapterrows:'.md5($sql.'|uo='.(int)$use_orderid.'|im='.(int)$is_multiple.'|ft='.(int)$is_ft.'|lt='.(int)$is_langtail.'|ac='.(int)$is_acode);
 }
-if(empty($chapterrows))
+if(isset($redis)&&$redis->ss_get($chapter_cache_key))
+{
+	$chapterrows=$redis->ss_get($chapter_cache_key);
+}
+else
 {
 	$res=$db->ss_query($sql);
 	if($res->num_rows)
@@ -60,8 +62,8 @@ if(empty($chapterrows))
 			$chapterrows[$k]['lastupdate']=$rows['lastupdate'];
 			$chapterrows[$k]['cname']=Text::ss_toutf8($rows['chaptername']);
 			if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
-			$cid=$use_orderid?(int)$rows['chapterorder']:(int)$rows['chapterid'];
-			if($is_multiple&&!$use_orderid)$cid=ss_newid($cid);
+			$cid=$use_orderid?$rows['chapterorder']:$rows['chapterid'];
+			if($is_multiple && !$use_orderid)$cid=ss_newid($cid);
 			$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$cid);
 			$k++;
 		}
