@@ -118,8 +118,32 @@ class Db
 	}
 	public function get_orderid($aid,$cid)
 	{
+		global $redis, $cache_time;
+		$aid=(int)$aid;
+		$cid=(int)$cid;
+
+		// use_orderid=1 时，列表/搜索等会频繁根据 chapterid 反查 chapterorder 以生成 last_url。
+		// 若开启 redis，这里做轻量缓存，降低每页“每本书+1查”的读放大。
+		$ckey='cp_order:aid='.$aid.'&cid='.$cid;
+		if(isset($redis))
+		{
+			$hit=$redis->ss_get($ckey);
+			if(is_array($hit)&&isset($hit['chapterorder']))
+			{
+				return (int)$hit['chapterorder'];
+			}
+		}
+
 		$sql='SELECT chapterorder FROM '.$this->dbarr['pre'].$this->get_cindex($aid).' WHERE chapterid = '.$cid;
-		return $this->ss_getone($sql)['chapterorder'];
+		$row=$this->ss_getone($sql);
+		$order=is_array($row)&&isset($row['chapterorder'])?(int)$row['chapterorder']:0;
+
+		if(isset($redis))
+		{
+			$ttl=isset($cache_time)?max(3600,(int)$cache_time):3600;
+			$redis->ss_setex($ckey,$ttl,['chapterorder'=>$order]);
+		}
+		return $order;
 	}
 }
 ?>
