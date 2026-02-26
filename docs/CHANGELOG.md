@@ -9,28 +9,12 @@
 
 ---
 
-## 2026-02-26-3 | Fix | Redis SQL 缓存 key 追加 use_orderid 维度，避免“开关已开但链接仍是混淆”
-- 背景：`SsRedis::ss_redis_getrows()` 之前以原始 `$sql` 作为缓存 key，而 `Db::ss_getrows()` 输出会随站点配置变化（尤其 `use_orderid/is_multiple` 会影响 `last_url` 等字段）。
-- 修复：缓存 key 在原 `$sql` 末尾追加 `uo/mul/ac/ft` 以及 `fake_*` 的 md5 维度；切换配置后将自动 miss 并重算，首页/分类/搜索等页面的章节链接会同步更新。
-- 涉及：`shipsay/class/SsRedis.php`、`docs/CHANGELOG.md`
-- 回滚：恢复 `SsRedis.php` 该函数实现即可（或 flush redis）。
+## 2026-02-27-1 | 修复 | 章节 use_orderid：旧混淆链接 301 + 全链路不再混淆 order
+- 修复：`shipsay/app/reader.php` 在 `use_orderid=1` 时不再对章节参数做 `ss_sourceid()` 解混淆；若传入的是旧混淆 `cid`（chapterid+550），强制 301 到新 `order` 链接（含分页 `_2/_3`）。
+- 修复：`shipsay/app/reader.php` 使用严格 `array_search(..., true)`，避免未命中章节时被误判为第 1 章；并在 `use_orderid=1` 时生成上一章/下一章链接不再 `ss_newid()` 混淆 order。
+- 修复：`shipsay/app/info.php` / `shipsay/app/info_langtail.php` 在 `use_orderid=1` 时章节列表链接不再 `ss_newid()` 混淆，确保详情页输出 `/read/{aid}/{order}.html`。
+- 回滚：回退上述文件到上一版本即可。
 
-## 2026-02-26-2 | Fix | use_orderid + is_multiple：章节 URL 固化为 chapterorder（旧链接 301 兼容）
-- 目标：开启 `use_orderid=1` 后，阅读 URL 使用 `chapterorder`（每本书从 1 开始），且 **不参与混淆/解混淆**；历史旧链接（混淆后的 `chapterid`）仍可访问并 301 跳转到新链接。
-- 修复：
-  - `reader.php`：`use_orderid=1` 时不再对 cid 做 `ss_sourceid()`；若命中旧链接（混淆 chapterid）则 301 到 `chapterorder` 新链接；上一章/下一章链接不再对 orderid 做 `ss_newid()`；附件/资源查询改用真实 `chapterid`。
-  - `reader_js.php`：`use_orderid=1` 时不对 POST cid 做 `ss_sourceid()`；增加旧 POST（混淆 chapterid）兜底解析。
-  - `info.php/indexlist.php`（含 langtail）：生成章节链接时 `chapterorder` 不混淆；Redis 缓存 key 追加 `use_orderid/is_multiple` 维度，避免切换开关后仍读旧缓存导致“链接不变”。
-- 涉及：`shipsay/app/reader.php`、`shipsay/include/reader_js.php`、`shipsay/app/info.php`、`shipsay/app/indexlist.php`、`shipsay/app/info_langtail.php`、`shipsay/app/indexlist_langtail.php`、`docs/CHANGELOG.md`
-- 回滚：恢复上述文件即可。
-
-## 2026-02-26-1 | 性能 | use_orderid：chapterorder 映射 Redis 缓存（降低 DB 读放大）
-- 背景：开启 `use_orderid=1` 后，/api/reader_js.php 需要先把 `chapterorder` 映射到真实 `chapterid`（才能读取 `${txt_url}/.../{chapterid}.txt`）。
-- 优化：当启用 Redis（`use_redis=1`）时，对 `chapterorder→chapterid` 映射结果做缓存（TTL>=1小时，默认复用 `cache_time`）。
-- 顺带：`Db::get_orderid()`（chapterid→chapterorder，用于生成 last_url）也增加轻量缓存，降低“列表每本书+1查”的读放大。
-- 说明：仅缓存“映射”，不缓存正文；缺章/短章仍按补丁表方案兜底。
-- 涉及：`shipsay/include/reader_js.php`、`shipsay/class/Db.php`、`docs/CHANGELOG.md`
-- 回滚：恢复上述文件即可。
 
 ## 2026-02-14-4 | 补丁 | v6.3.3-fz1（core_policy 写入加固 + 回包补充 + 摘要范围校验）
 - 更新：`site_sync meta.ver` 从 `6.3.2-impl` → `6.3.3-impl`。

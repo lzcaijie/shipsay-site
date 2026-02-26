@@ -10,31 +10,13 @@ if($is_acode)
 	$sql='SELECT articleid FROM '.$dbarr['pre'].'article_article WHERE articlecode = "'.$sourceid.'"';
 	$sourceid=$db->ss_getone($sql)['articleid'];
 }
-$cid_raw=$matches[2];
-$chapterid=$sourcecid=$cid_raw;
+$chapterid=$sourcecid=$matches[2];
 if(isset($matches[3]))$now_pid=str_replace('_','',$matches[3]);
-$legacy_sourcecid=null;
 if($is_multiple)
 {
+	// articleid 仍按既有混淆逻辑解混淆；use_orderid=1 时章节参数是 order，不应再解混淆
 	$sourceid=ss_sourceid($sourceid);
-	// use_orderid=1 时，URL里的 cid 是 chapterorder（不参与混淆解混淆）
-	if(!$use_orderid)
-	{
-		$sourcecid=ss_sourceid($sourcecid);
-	}
-	else
-	{
-		// 兼容旧链接：旧模式 cid=混淆后的 chapterid
-		$legacy_sourcecid=ss_sourceid($cid_raw);
-	}
-}
-else
-{
-	if($use_orderid)
-	{
-		// 非混淆站点也可能存在旧 chapterid 链接
-		$legacy_sourcecid=(int)$cid_raw;
-	}
+	if(!$use_orderid)$sourcecid=ss_sourceid($sourcecid);
 }
 $max_pid=1;
 $prevpage_url='';
@@ -49,7 +31,7 @@ else
 {
 	$infoarr=$db->ss_getrows($sql);
 }
-if(!is_array($infoarr) || empty($infoarr) || !isset($infoarr[0])) Url::ss_errpage();
+if(!is_array($infoarr))Url::ss_errpage();
 $articlename=$infoarr[0]['articlename'];
 $author=$infoarr[0]['author'];
 $author_url=$infoarr[0]['author_url'];
@@ -76,31 +58,13 @@ else
 	$res=$db->ss_query($sql);
 	$chapterorder_real=0;
 	$chapterid_real=0;
+	$chapterid2order=[]; // chapterid => chapterorder
 	if(!$res->num_rows)Url::ss_errpage();
 	while($row=mysqli_fetch_assoc($res))
 	{
+		$chapterid2order[(int)$row['chapterid']] = (int)$row['chapterorder'];
 		$chapterids[]=$_compare_id=$use_orderid?$row['chapterorder']:$row['chapterid'];
-		$matched=0;
-		$need_301=0;
-		$redirect_orderid=0;
-		if($use_orderid)
-		{
-			if((int)$sourcecid===(int)$row['chapterorder'])
-			{
-				$matched=1;
-			}
-			elseif($legacy_sourcecid!==null && (int)$legacy_sourcecid===(int)$row['chapterid'])
-			{
-				$matched=1;
-				$need_301=1;
-				$redirect_orderid=(int)$row['chapterorder'];
-			}
-		}
-		else
-		{
-			if($sourcecid==$_compare_id)$matched=1;
-		}
-		if($matched)
+		if($sourcecid==$_compare_id)
 		{
 			$txt_sourceid=$row['chapterid'];
 			$chapterorder_real=(int)$row['chapterorder'];
@@ -109,19 +73,20 @@ else
 			if($is_ft)$chaptername=Convert::jt2ft($chaptername);
 			$chapterwords=round($row[$dbarr['words']]/2);
 			$lastupdate=$row['lastupdate'];
-			if($use_orderid && $need_301 && $redirect_orderid>0)
-			{
-				// 旧链接（混淆 chapterid）-> 新链接（chapterorder）
-				$loc=$now_pid>1?Url::chapter_url($articleid,$redirect_orderid,$now_pid):Url::chapter_url($articleid,$redirect_orderid);
-				header('Location: '.$loc,true,301);
-				exit;
-			}
 		}
 	}
-	if($use_orderid && (int)$chapterorder_real<=0)
+	// use_orderid=1：如果没找到对应章节，尝试把传入的 cid 当作旧混淆 chapterid（chapterid+550）并 301 到 order 链接
+	if($use_orderid && empty($txt_sourceid) && $is_multiple)
 	{
-		// 未找到 chapterorder（新链接）或 chapterid（旧链接）匹配
-		Url::ss_errpage();
+		$real_chapterid = ss_sourceid((int)$sourcecid);
+		if($real_chapterid>0 && isset($chapterid2order[$real_chapterid]) && $chapterid2order[$real_chapterid]>0)
+		{
+			$target_order = (int)$chapterid2order[$real_chapterid];
+			$target_url = Url::chapter_url($articleid,$target_order,$now_pid);
+			if(!empty($_SERVER['QUERY_STRING']))$target_url .= '?'.$_SERVER['QUERY_STRING'];
+			header('Location: '.$target_url,true,301);
+			exit;
+		}
 	}
 	if(isset($redis))
 	{
@@ -134,16 +99,17 @@ $index_url=Url::index_url($articleid);
 $pre_cid=0;
 $next_cid=0;
 $chapters=count($chapterids);
-$offset=array_search($sourcecid,$chapterids);
-$offset==0?$pre_cid=0:$pre_cid=$chapterids[$offset-1];
-$offset==$chapters-1?$next_cid=0:$next_cid=$chapterids[$offset+1];
+$offset=array_search($sourcecid,$chapterids,true);
+if($offset===false)Url::ss_errpage();
+$offset===0?$pre_cid=0:$pre_cid=$chapterids[$offset-1];
+$offset===$chapters-1?$next_cid=0:$next_cid=$chapterids[$offset+1];
 if($pre_cid==0)
 {
 	$pre_url=$info_url;
 }
 else
 {
-	$tmpvar=$use_orderid?$pre_cid:($is_multiple?ss_newid($pre_cid):$pre_cid);
+	$tmpvar=($is_multiple && !$use_orderid)?ss_newid($pre_cid):$pre_cid;
 	$pre_url=Url::chapter_url($articleid,$tmpvar);
 }
 if($next_cid==0)
@@ -152,7 +118,7 @@ if($next_cid==0)
 }
 else
 {
-	$tmpvar=$use_orderid?$next_cid:($is_multiple?ss_newid($next_cid):$next_cid);
+	$tmpvar=($is_multiple && !$use_orderid)?ss_newid($next_cid):$next_cid;
 	$next_url=Url::chapter_url($articleid,$tmpvar);
 }
 if($use_orderid)
@@ -248,8 +214,7 @@ if($is_ft)$rico_content=Convert::jt2ft($rico_content);
 $reader_des=mb_substr(preg_replace('/<\/?p>/is','',$rico_content),0,200);
 if($is_attachment&&!empty($att_url)&&$now_pid==$max_pid)
 {
-	$att_chapterid=$use_orderid?$txt_sourceid:$sourcecid;
-	$sql='SELECT attachment FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE chapterid = '.$att_chapterid;
+	$sql='SELECT attachment FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE chapterid = '.$sourcecid;
 	if(isset($redis)&&$redis->ss_get($sql))
 	{
 		$res=$redis->ss_get($sql);
@@ -259,9 +224,9 @@ if($is_attachment&&!empty($att_url)&&$now_pid==$max_pid)
 		$res=$db->ss_getone($sql);
 		if(isset($redis))$redis->ss_setex($sql,$cache_time,$res);
 	}
-	$att_url.='/'.$subaid.'/'.$sourceid.'/'.$att_chapterid;
+	$att_url.='/'.$subaid.'/'.$sourceid.'/'.$sourcecid;
 	$attHtml='';
-	$regex='/\"postfix\";s:3:\"(.+?)\".+?\"attachid\";i:(\d+?);/i';
+	$regex='/"postfix";s:3:"(.+?)".+?"attachid";i:(\d+?);/i';
 	preg_match_all($regex,$res['attachment'],$atts);
 	foreach($atts[2]as $k=>$v)
 	{
