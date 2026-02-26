@@ -9,6 +9,12 @@
 
 ---
 
+## 2026-02-26-3 | Fix | Redis SQL 缓存 key 追加 use_orderid 维度，避免“开关已开但链接仍是混淆”
+- 背景：`SsRedis::ss_redis_getrows()` 之前以原始 `$sql` 作为缓存 key，而 `Db::ss_getrows()` 输出会随站点配置变化（尤其 `use_orderid/is_multiple` 会影响 `last_url` 等字段）。
+- 修复：缓存 key 在原 `$sql` 末尾追加 `uo/mul/ac/ft` 以及 `fake_*` 的 md5 维度；切换配置后将自动 miss 并重算，首页/分类/搜索等页面的章节链接会同步更新。
+- 涉及：`shipsay/class/SsRedis.php`、`docs/CHANGELOG.md`
+- 回滚：恢复 `SsRedis.php` 该函数实现即可（或 flush redis）。
+
 ## 2026-02-26-2 | Fix | use_orderid + is_multiple：章节 URL 固化为 chapterorder（旧链接 301 兼容）
 - 目标：开启 `use_orderid=1` 后，阅读 URL 使用 `chapterorder`（每本书从 1 开始），且 **不参与混淆/解混淆**；历史旧链接（混淆后的 `chapterid`）仍可访问并 301 跳转到新链接。
 - 修复：
