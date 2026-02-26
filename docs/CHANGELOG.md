@@ -9,12 +9,13 @@
 
 ---
 
-## 2026-02-27-1 | 修复 | 章节 use_orderid：旧混淆链接 301 + 全链路不再混淆 order
-- 修复：`shipsay/app/reader.php` 在 `use_orderid=1` 时不再对章节参数做 `ss_sourceid()` 解混淆；若传入的是旧混淆 `cid`（chapterid+550），强制 301 到新 `order` 链接（含分页 `_2/_3`）。
-- 修复：`shipsay/app/reader.php` 使用严格 `array_search(..., true)`，避免未命中章节时被误判为第 1 章；并在 `use_orderid=1` 时生成上一章/下一章链接不再 `ss_newid()` 混淆 order。
-- 修复：`shipsay/app/info.php` / `shipsay/app/info_langtail.php` 在 `use_orderid=1` 时章节列表链接不再 `ss_newid()` 混淆，确保详情页输出 `/read/{aid}/{order}.html`。
-- 回滚：回退上述文件到上一版本即可。
-
+## 2026-02-27-1 | 修复 | use_orderid：章节链接从 1 开始 + 旧混淆 cid 301
+- 修复：use_orderid=1 时，详情/目录/章节列表不再对 order 做 `ss_newid()` 混淆（输出 `/read/{aid}/{order}.html`，从 1/2/3…）。
+- 修复：阅读页支持旧混淆 cid（`mixed = chapterid + 550`）强命中 301 到新链接（含 `_2/_3` 分页）。
+- 修复：章节列表 Redis key 增加 `use_orderid/is_multiple` 维度，避免切换开关后继续命中旧缓存。
+- 修复：`Db::ss_getrows()` 在 `use_orderid=1` 时 `lastchapterid` 输出 order，避免模板使用 `lastchapterid` 生成旧链接。
+- 涉及：`shipsay/app/reader.php`、`shipsay/app/info.php`、`shipsay/app/info_langtail.php`、`shipsay/app/indexlist.php`、`shipsay/app/indexlist_langtail.php`、`shipsay/class/Db.php`
+- 回滚：回退上述文件即可。
 
 ## 2026-02-14-4 | 补丁 | v6.3.3-fz1（core_policy 写入加固 + 回包补充 + 摘要范围校验）
 - 更新：`site_sync meta.ver` 从 `6.3.2-impl` → `6.3.3-impl`。

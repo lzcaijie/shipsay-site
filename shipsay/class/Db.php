@@ -63,17 +63,18 @@ class Db
 				$ret_arr[$k]['lastupdate_cn']=Text::ss_lastupdate($row['lastupdate']);
 				$ret_arr[$k]['img_url']=Url::get_img_url($row['articleid'],$row['imgflag']);
 				$ret_arr[$k]['lastchapter']=Text::ss_toutf8($row['lastchapter']);
-				$ret_arr[$k]['lastchapterid']=$this->dbarr['is_multiple']?ss_newid($row['lastchapterid']):$row['lastchapterid'];
 				if($use_orderid)
 				{
 					$last_orderid=$this->get_orderid($row['articleid'],$row['lastchapterid']);
+					$ret_arr[$k]['lastchapterid']=$last_orderid;
 					$ret_arr[$k]['last_url']=Url::chapter_url($aid,$last_orderid);
 				}
 				else
 				{
+					$ret_arr[$k]['lastchapterid']=$this->dbarr['is_multiple']?ss_newid($row['lastchapterid']):$row['lastchapterid'];
 					$ret_arr[$k]['last_url']=Url::chapter_url($aid,$ret_arr[$k]['lastchapterid']);
 				}
-				$ret_arr[$k]['allvisit']=$row['allvisit'];
+$ret_arr[$k]['allvisit']=$row['allvisit'];
 				$ret_arr[$k]['allvote']=$row['allvote'];
 				$ret_arr[$k]['goodnum']=$row['goodnum'];
 				if($sys_ver>=2.4)
@@ -118,32 +119,8 @@ class Db
 	}
 	public function get_orderid($aid,$cid)
 	{
-		global $redis, $cache_time;
-		$aid=(int)$aid;
-		$cid=(int)$cid;
-
-		// use_orderid=1 时，列表/搜索等会频繁根据 chapterid 反查 chapterorder 以生成 last_url。
-		// 若开启 redis，这里做轻量缓存，降低每页“每本书+1查”的读放大。
-		$ckey='cp_order:aid='.$aid.'&cid='.$cid;
-		if(isset($redis))
-		{
-			$hit=$redis->ss_get($ckey);
-			if(is_array($hit)&&isset($hit['chapterorder']))
-			{
-				return (int)$hit['chapterorder'];
-			}
-		}
-
 		$sql='SELECT chapterorder FROM '.$this->dbarr['pre'].$this->get_cindex($aid).' WHERE chapterid = '.$cid;
-		$row=$this->ss_getone($sql);
-		$order=is_array($row)&&isset($row['chapterorder'])?(int)$row['chapterorder']:0;
-
-		if(isset($redis))
-		{
-			$ttl=isset($cache_time)?max(3600,(int)$cache_time):3600;
-			$redis->ss_setex($ckey,$ttl,['chapterorder'=>$order]);
-		}
-		return $order;
+		return $this->ss_getone($sql)['chapterorder'];
 	}
 }
 ?>
