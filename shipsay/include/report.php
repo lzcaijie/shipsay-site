@@ -10,7 +10,7 @@ switch($_REQUEST['do'])
 	if($is_multiple)
 	{
 		$articleid=ss_sourceid($articleid);
-		$chapterid=ss_sourceid($chapterid);
+		if(!$use_orderid)$chapterid=ss_sourceid($chapterid);
 	}
 	$articlename=empty($_REQUEST['articlename'])?'':$_REQUEST['articlename'];
 	$chaptername=empty($_REQUEST['chaptername'])?'':$_REQUEST['chaptername'];

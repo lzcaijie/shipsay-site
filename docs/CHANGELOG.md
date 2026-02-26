@@ -9,16 +9,12 @@
 
 ---
 
-## 2026-02-27-2 | 修复 | 章节链接从 1 开始：章节列表缓存 key 增加 use_orderid 维度
-- 修复：`shipsay/app/info.php` / `shipsay/app/info_langtail.php` / `shipsay/app/indexlist.php` / `shipsay/app/indexlist_langtail.php` 的章节列表缓存（Redis key 之前只用 SQL 文本，切换 `use_orderid` 后仍会命中旧缓存，导致详情/目录页章节链接仍是 550/551…）。
-- 修复：上述 4 个入口生成 `cid_url` 时统一按 `use_orderid=1 => chapterorder`（1 开始）生成，并在缓存数组里补充 `cid` 字段便于排查。
-- 回滚：回退上述文件到上一版本即可。
-
-## 2026-02-27-1 | 修复 | 章节 use_orderid：旧混淆链接 301 + 全链路不再混淆 order
-- 修复：`shipsay/app/reader.php` 在 `use_orderid=1` 时不再对章节参数做 `ss_sourceid()` 解混淆；若传入的是旧混淆 `cid`（chapterid+550），强制 301 到新 `order` 链接（含分页 `_2/_3`）。
-- 修复：`shipsay/app/reader.php` 使用严格 `array_search(..., true)`，避免未命中章节时被误判为第 1 章；并在 `use_orderid=1` 时生成上一章/下一章链接不再 `ss_newid()` 混淆 order。
-- 修复：`shipsay/app/info.php` / `shipsay/app/info_langtail.php` 在 `use_orderid=1` 时章节列表链接不再 `ss_newid()` 混淆，确保详情页输出 `/read/{aid}/{order}.html`。
-- 回滚：回退上述文件到上一版本即可。
+## 2026-02-27-1 | 修复 | use_orderid=1 章节链接从 1 开始（禁用章节混淆 + chapterrows 缓存分维度）
+- 修复：`use_orderid=1` 时章节列表/上一章下一章/书架/报错不再对章节顺序号做 `±550` 混淆（仍保留小说ID混淆）。
+- 修复：详情/目录章节列表的 Redis 缓存 key 加入 `use_orderid/is_multiple/is_ft/is_langtail` 等维度，切换开关后自动重算，不再吃旧混淆缓存。
+- 修复：阅读页附件读取在 `use_orderid=1` 时改为使用真实 `chapterid`。
+- 涉及：`shipsay/app/info*.php`、`shipsay/app/indexlist*.php`、`shipsay/app/reader.php`、`shipsay/app/user/*bookcase*.php`、`shipsay/include/report.php`
+- 回滚：回退上述文件即可。
 
 
 ## 2026-02-14-4 | 补丁 | v6.3.3-fz1（core_policy 写入加固 + 回包补充 + 摘要范围校验）
