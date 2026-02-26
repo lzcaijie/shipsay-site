@@ -9,6 +9,15 @@
 
 ---
 
+## 2026-02-26-2 | Fix | use_orderid + is_multiple：章节 URL 固化为 chapterorder（旧链接 301 兼容）
+- 目标：开启 `use_orderid=1` 后，阅读 URL 使用 `chapterorder`（每本书从 1 开始），且 **不参与混淆/解混淆**；历史旧链接（混淆后的 `chapterid`）仍可访问并 301 跳转到新链接。
+- 修复：
+  - `reader.php`：`use_orderid=1` 时不再对 cid 做 `ss_sourceid()`；若命中旧链接（混淆 chapterid）则 301 到 `chapterorder` 新链接；上一章/下一章链接不再对 orderid 做 `ss_newid()`；附件/资源查询改用真实 `chapterid`。
+  - `reader_js.php`：`use_orderid=1` 时不对 POST cid 做 `ss_sourceid()`；增加旧 POST（混淆 chapterid）兜底解析。
+  - `info.php/indexlist.php`（含 langtail）：生成章节链接时 `chapterorder` 不混淆；Redis 缓存 key 追加 `use_orderid/is_multiple` 维度，避免切换开关后仍读旧缓存导致“链接不变”。
+- 涉及：`shipsay/app/reader.php`、`shipsay/include/reader_js.php`、`shipsay/app/info.php`、`shipsay/app/indexlist.php`、`shipsay/app/info_langtail.php`、`shipsay/app/indexlist_langtail.php`、`docs/CHANGELOG.md`
+- 回滚：恢复上述文件即可。
+
 ## 2026-02-26-1 | 性能 | use_orderid：chapterorder 映射 Redis 缓存（降低 DB 读放大）
 - 背景：开启 `use_orderid=1` 后，/api/reader_js.php 需要先把 `chapterorder` 映射到真实 `chapterid`（才能读取 `${txt_url}/.../{chapterid}.txt`）。
 - 优化：当启用 Redis（`use_redis=1`）时，对 `chapterorder→chapterid` 映射结果做缓存（TTL>=1小时，默认复用 `cache_time`）。
