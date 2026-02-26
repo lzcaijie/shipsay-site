@@ -9,6 +9,14 @@
 
 ---
 
+## 2026-02-26-1 | 性能 | use_orderid：chapterorder 映射 Redis 缓存（降低 DB 读放大）
+- 背景：开启 `use_orderid=1` 后，/api/reader_js.php 需要先把 `chapterorder` 映射到真实 `chapterid`（才能读取 `${txt_url}/.../{chapterid}.txt`）。
+- 优化：当启用 Redis（`use_redis=1`）时，对 `chapterorder→chapterid` 映射结果做缓存（TTL>=1小时，默认复用 `cache_time`）。
+- 顺带：`Db::get_orderid()`（chapterid→chapterorder，用于生成 last_url）也增加轻量缓存，降低“列表每本书+1查”的读放大。
+- 说明：仅缓存“映射”，不缓存正文；缺章/短章仍按补丁表方案兜底。
+- 涉及：`shipsay/include/reader_js.php`、`shipsay/class/Db.php`、`docs/CHANGELOG.md`
+- 回滚：恢复上述文件即可。
+
 ## 2026-02-14-4 | 补丁 | v6.3.3-fz1（core_policy 写入加固 + 回包补充 + 摘要范围校验）
 - 更新：`site_sync meta.ver` 从 `6.3.2-impl` → `6.3.3-impl`。
 - 加固：`core_policy` 旧策略备份流程增加失败拦截（备份目录创建失败/复制失败返回 `backup_failed`，中止写入）。

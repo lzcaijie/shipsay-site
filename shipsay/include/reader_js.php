@@ -23,9 +23,33 @@ $author='';
 
 if($use_orderid)
 {
+	global $redis, $cache_time;
 	$chapterorder_real=(int)$sourcecid;
-	$sql='SELECT chapterid,chapterorder,chaptername FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chapterorder = '.$chapterorder_real.' AND chaptertype = 0 LIMIT 1';
-	$row=$db->ss_getone($sql);
+
+	// use_orderid 会导致每次 reader_js 请求额外做一次 chapterorder→chapterid 映射查询：
+	// 这里用 Redis 缓存映射结果，降低 DB 读放大（TTL>=1h，默认复用 cache_time）
+	$ckey='cp_map:aid='.$sourceid.'&ord='.$chapterorder_real;
+	$row=null;
+	if(isset($redis))
+	{
+		$row=$redis->ss_get($ckey);
+	}
+	if(!is_array($row)||empty($row['chapterid']))
+	{
+		$sql='SELECT chapterid,chapterorder,chaptername FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chapterorder = '.$chapterorder_real.' AND chaptertype = 0 LIMIT 1';
+		$row=$db->ss_getone($sql);
+		if(isset($redis)&&is_array($row)&&!empty($row['chapterid']))
+		{
+			$ttl=isset($cache_time)?max(3600,(int)$cache_time):3600;
+			// 仅缓存必要字段（chaptername 保留原编码，取用时再 ss_toutf8）
+			$redis->ss_setex($ckey,$ttl,[
+				'chapterid'=>(int)$row['chapterid'],
+				'chapterorder'=>(int)$row['chapterorder'],
+				'chaptername'=>(string)$row['chaptername'],
+			]);
+		}
+	}
+
 	if(is_array($row)&&!empty($row['chapterid']))
 	{
 		$txt_sourcecid=$row['chapterid'];
