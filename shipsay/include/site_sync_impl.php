@@ -220,20 +220,114 @@ function ss_http_download_to_file($url, $to_file, &$err){
 }
 
 function ss_tpl_extract_tar($tar_gz, $dest, &$err){
+  // v6.x：模板包解压（支持 tar.gz 与 zip；避免依赖 shell_exec）
   $err = '';
   @mkdir($dest, 0755, true);
 
-  // 优先：系统 tar（更稳，支持 .tar.gz）
-  if (function_exists('shell_exec') && !in_array('shell_exec', array_map('trim', explode(',', (string)ini_get('disable_functions'))), true)) {
-    $cmd = 'tar -xzf '.escapeshellarg($tar_gz).' -C '.escapeshellarg($dest).' 2>&1';
-    $out = @shell_exec($cmd);
-    if (is_dir($dest) && count(glob($dest.'/*'))>0) return true;
-    $err = 'tar_extract_failed'.($out?(':'.trim($out)):'');
-  } else {
-    $err = 'shell_exec_disabled';
+  if (!is_file($tar_gz) || filesize($tar_gz) <= 0) { $err = 'archive_missing'; return false; }
+
+  // 读取 magic bytes 判断类型
+  $fp = @fopen($tar_gz, 'rb');
+  $head = $fp ? @fread($fp, 4) : '';
+  if ($fp) @fclose($fp);
+  $b0 = isset($head[0]) ? ord($head[0]) : -1;
+  $b1 = isset($head[1]) ? ord($head[1]) : -1;
+
+  $is_zip = (strlen($head) >= 2 && $head[0] === 'P' && $head[1] === 'K');
+  $is_gz  = ($b0 === 0x1f && $b1 === 0x8b);
+
+  // 1) zip：优先用 ZipArchive（不需要 shell_exec）
+  if ($is_zip) {
+    if (!class_exists('ZipArchive')) { $err = 'ziparchive_missing'; return false; }
+    $za = new ZipArchive();
+    $rc = $za->open($tar_gz);
+    if ($rc !== true) { $err = 'zip_open_failed:'.$rc; return false; }
+    $ok = @$za->extractTo($dest);
+    $za->close();
+    if ($ok && is_dir($dest) && count(glob($dest.'/*')) > 0) return true;
+    $err = 'zip_extract_failed';
+    return false;
   }
+
+  // 2) tar.gz：禁用 shell_exec 时，尝试 zlib+PharData 解压
+  if ($is_gz) {
+    // a) 若 PharData 可直接读取（部分环境支持）
+    if (class_exists('PharData')) {
+      try {
+        $ph = new PharData($tar_gz);
+        $ph->extractTo($dest, null, true);
+        if (is_dir($dest) && count(glob($dest.'/*')) > 0) return true;
+      } catch (Exception $e) {
+        // 继续走 b) 手工解压到 .tar 再 extract
+      } catch (Throwable $e) {
+        // 兼容 PHP 7/8
+      }
+
+      // b) 手工 gunzip -> tar，再用 PharData 解 tar（不依赖 shell_exec）
+      if (function_exists('gzopen')) {
+        $tar = dirname($tar_gz).'/bundle.tar';
+        if (is_file($tar)) @unlink($tar);
+        $in = @gzopen($tar_gz, 'rb');
+        $out = @fopen($tar, 'wb');
+        if (!$in || !$out) {
+          if ($in) @gzclose($in);
+          if ($out) @fclose($out);
+          $err = 'gzopen_failed';
+          return false;
+        }
+        while (!gzeof($in)) {
+          $buf = gzread($in, 8192);
+          if ($buf === false) break;
+          fwrite($out, $buf);
+        }
+        @gzclose($in);
+        @fclose($out);
+
+        if (is_file($tar) && filesize($tar) > 0) {
+          try {
+            $ph2 = new PharData($tar);
+            $ph2->extractTo($dest, null, true);
+            @unlink($tar);
+            if (is_dir($dest) && count(glob($dest.'/*')) > 0) return true;
+            $err = 'phar_tar_extract_failed';
+            return false;
+          } catch (Exception $e) {
+            $err = 'phar_tar_extract_failed:'.trim($e->getMessage());
+            return false;
+          } catch (Throwable $e) {
+            $err = 'phar_tar_extract_failed:'.trim($e->getMessage());
+            return false;
+          }
+        }
+        $err = 'gunzip_failed';
+        return false;
+      }
+
+      $err = 'zlib_missing';
+      return false;
+    }
+
+    // c) 若没有 PharData，则只能靠系统 tar（但可能被禁用）
+    if (function_exists('shell_exec') && !in_array('shell_exec', array_map('trim', explode(',', (string)ini_get('disable_functions'))), true)) {
+      $cmd = 'tar -xzf '.escapeshellarg($tar_gz).' -C '.escapeshellarg($dest).' 2>&1';
+      $out = @shell_exec($cmd);
+      if (is_dir($dest) && count(glob($dest.'/*'))>0) return true;
+      $err = 'tar_extract_failed'.($out?(':'.trim($out)):'');
+      return false;
+    }
+
+    $err = 'shell_exec_disabled';
+    return false;
+  }
+
+  // 3) 非 zip/gz：给出可读的错误提示（避免 sha1 mismatch 误判）
+  $preview = @file_get_contents($tar_gz, false, null, 0, 120);
+  $preview = $preview === false ? '' : $preview;
+  $preview = preg_replace('/[^\x20-\x7E\r\n\t]/', '.', $preview);
+  $err = 'unknown_archive:'.trim($preview);
   return false;
 }
+
 
 function ss_tpl_locate_root($extract_dir, $theme){
   $extract_dir = rtrim($extract_dir,'/');
