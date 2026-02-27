@@ -13,15 +13,33 @@
 		$this->auth($redisarr['pass']);
 		$this->select(empty($redisarr['db'])?0:intval($redisarr['db']));
 	}
+	private function ss_hash_key($key)
+	{
+		// 默认：按站点隔离（旧逻辑：md5($site_url.$key)）
+		// 可选：按“数据库池”隔离（同库多站共享缓存，避免重复预热）
+		global $site_url,$redis_scope,$redis_pool,$dbarr;
+		if(isset($redis_scope) && $redis_scope==='dbpool')
+		{
+			$pool='';
+			if(isset($redis_pool) && $redis_pool!=='') $pool=(string)$redis_pool;
+			else
+			{
+				$h=isset($dbarr['host'])?(string)$dbarr['host']:'';
+				$p=isset($dbarr['port'])?(string)$dbarr['port']:'';
+				$n=isset($dbarr['name'])?(string)$dbarr['name']:'';
+				$pool=$h.'|'.$p.'|'.$n;
+			}
+			return md5($pool.'|'.$key);
+		}
+		return md5($site_url.$key);
+	}
 	public function ss_get($key)
 	{
-		global $site_url;
-		return json_decode($this->get(md5($site_url.$key)),true);
+		return json_decode($this->get($this->ss_hash_key($key)),true);
 	}
 	public function ss_setex($key,$cache_time,$value)
 	{
-		global $site_url;
-		return $this->setex(md5($site_url.$key),$cache_time,json_encode($value,JSON_UNESCAPED_UNICODE));
+		return $this->setex($this->ss_hash_key($key),$cache_time,json_encode($value,JSON_UNESCAPED_UNICODE));
 	}
 	private function ss_ctx_key($key)
 	{
