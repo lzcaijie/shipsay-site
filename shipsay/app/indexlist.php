@@ -5,6 +5,7 @@ $index_url=Url::index_url($articleid);
 if(!file_exists(__THEME_DIR__.'/tpl_indexlist.php'))header('Location:'.$index_url);
 $pid=1;
 if(isset($matches[2]))$pid=$matches[2];
+$per_page=$per_indexlist?:100;
 if($is_multiple)$sourceid=ss_sourceid($articleid);
 if($is_acode)
 {
@@ -43,33 +44,37 @@ $ratesum=$infoarr[0]['ratesum'];
 $score=$infoarr[0]['score'];
 
 $sql='SELECT chapterid,chaptername,lastupdate,chaptertype,chapterorder FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chaptertype = 0 ORDER BY chapterorder ASC';
-$sql_cache_key=$sql.'|uo='.(int)$use_orderid.'|m='.(int)$is_multiple.'|ft='.(int)$is_ft.'|ac='.(int)$is_acode;
-$chapterrows=array();
-if(isset($redis)&&$redis->ss_get($sql_cache_key))
+
+// 注意：不能缓存“已拼好的 cid_url”（否则切换 use_orderid / is_multiple 后会出现旧链接假象）
+// 做法：只缓存 SQL 原始行（ss_redis_getrows），再按当前开关动态生成 cid_url。
+$rows = [];
+if(isset($redis))
 {
-	$chapterrows=$redis->ss_get($sql_cache_key);
+	$rows=$redis->ss_redis_getrows($sql,$info_cache_time);
 }
 else
 {
-	$res=$db->ss_query($sql);
-	if($res->num_rows)
-	{
-		$k=0;
-		while($rows=mysqli_fetch_assoc($res))
-		{
-			$chapterrows[$k]['chaptertype']=$rows['chaptertype'];
-			$chapterrows[$k]['lastupdate']=$rows['lastupdate'];
-			$chapterrows[$k]['cname']=Text::ss_toutf8($rows['chaptername']);
-			if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
+	$rows=$db->ss_getrows($sql);
+}
 
-			$cid=$use_orderid?intval($rows['chapterorder']):intval($rows['chapterid']);
-			if($is_multiple && !$use_orderid)$cid=ss_newid($cid);
-			$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$cid);
-			$k++;
-		}
-		if(isset($redis))$redis->ss_setex($sql_cache_key,$info_cache_time,$chapterrows);
+$chapterrows=array();
+if(is_array($rows))
+{
+	$k=0;
+	foreach($rows as $row)
+	{
+		$chapterrows[$k]['chaptertype']=$row['chaptertype'];
+		$chapterrows[$k]['lastupdate']=$row['lastupdate'];
+		$chapterrows[$k]['cname']=Text::ss_toutf8($row['chaptername']);
+		if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
+
+		$cid=$use_orderid?intval($row['chapterorder']):intval($row['chapterid']);
+		if($is_multiple && !$use_orderid)$cid=ss_newid($cid);
+		$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$cid);
+		$k++;
 	}
 }
+
 $first_url=$chapterrows[0]['cid_url'];
 $chapters=count($chapterrows);
 $lastupdate=date('Y-m-d H:i:s',$chapterrows[$chapters-1]['lastupdate']);

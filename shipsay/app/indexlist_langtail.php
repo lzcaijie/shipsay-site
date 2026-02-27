@@ -40,32 +40,36 @@ $intro_p=$infoarr[0]['intro_p'];
 $allvisit=$infoarr[0]['allvisit'];
 $goodnum=$infoarr[0]['goodnum'];
 $sql='SELECT chapterid,chapterorder,chaptername,chaptertype,lastupdate FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chaptertype = 0 ORDER BY chapterorder ASC';
-$sql_cache_key=$sql.'|uo='.(int)$use_orderid.'|m='.(int)$is_multiple.'|ft='.(int)$is_ft;
-$chapterrows=array();
-if(isset($redis)&&$redis->ss_get($sql_cache_key))
+
+// 注意：不能缓存“已拼好的 cid_url”（否则切换 use_orderid / is_multiple 后会出现旧链接假象）
+// 做法：只缓存 SQL 原始行（ss_redis_getrows），再按当前开关动态生成 cid_url。
+$rows = [];
+if(isset($redis))
 {
-	$chapterrows=$redis->ss_get($sql_cache_key);
+	$rows=$redis->ss_redis_getrows($sql,$info_cache_time);
 }
 else
 {
-	$res=$db->ss_query($sql);
-	if($res->num_rows)
+	$rows=$db->ss_getrows($sql);
+}
+
+$chapterrows=array();
+if(is_array($rows))
+{
+	$k=0;
+	foreach($rows as $row)
 	{
-		$k=0;
-		while($rows=mysqli_fetch_assoc($res))
-		{
-			$chapterrows[$k]['chaptertype']=$rows['chaptertype'];
-			$chapterrows[$k]['lastupdate']=$rows['lastupdate'];
-			$chapterrows[$k]['cname']=Text::ss_toutf8($rows['chaptername']);
-			if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
-			$cid=$use_orderid?intval($rows['chapterorder']):intval($rows['chapterid']);
-			if($is_multiple && !$use_orderid)$cid=ss_newid($cid);
-			$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$cid);
-			$k++;
-		}
-		if(isset($redis))$redis->ss_setex($sql_cache_key,$info_cache_time,$chapterrows);
+		$chapterrows[$k]['chaptertype']=$row['chaptertype'];
+		$chapterrows[$k]['lastupdate']=$row['lastupdate'];
+		$chapterrows[$k]['cname']=Text::ss_toutf8($row['chaptername']);
+		if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
+		$cid=$use_orderid?intval($row['chapterorder']):intval($row['chapterid']);
+		if($is_multiple && !$use_orderid)$cid=ss_newid($cid);
+		$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$cid);
+		$k++;
 	}
 }
+
 $first_url=$chapterrows[0]['cid_url'];
 $chapters=count($chapterrows);
 $lastupdate=date('Y-m-d H:i:s',$chapterrows[$chapters-1]['lastupdate']);
