@@ -9,6 +9,12 @@
 
 ---
 
+## 2026-02-27-10 | 功能 | SEO/TDK 渲染：模板头部改为读取站点固化配置并替换变量
+- 新增：`shipsay/seo.php`（仅渲染，不生成），从站点配置读取 `seo.*.*_tpl`，按页面类型替换 `{SITE_NAME}/{articlename}/{author}/{chaptername}/{page}` 得到 title/keywords/description。
+- 目标：总控为每站“生成一次并固化”后，分站不再依赖模板默认 TDK；后续换模板 TDK 仍保持不变。
+- 接入：各主题的 `tpl_home.php / tpl_info.php / tpl_category.php / tpl_reader.php / tpl_author.php / tpl_indexlist.php / tpl_rank.php / tpl_search.php` 在 `<head>` 调用该渲染文件并输出三件套。
+- 回滚：删除 `shipsay/seo.php` 并恢复各模板头部原有 `<title>/<meta>` 输出。
+
 ## 2026-02-27-9 | 优化 | 缓存友好：详情/目录/阅读页增加 ETag + Cache-Control + 304
 - 新增：`info/indexlist/reader` 输出 `ETag` 与 `Cache-Control`（max-age 复用 `info_cache_time/cache_time` 并做上限保护），便于后续接入 CF/浏览器缓存。
 - 新增：支持 `If-None-Match / If-Modified-Since`，命中时直接返回 304（不渲染模板，减 PHP 压力）。
