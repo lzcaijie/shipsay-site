@@ -46,6 +46,17 @@
        <div class="layui-form-mid layui-word-aux">( 0-15, 默认0 ) 不清楚请百度或使用默认设置</span></div>
    </div>
 
+   <div class="layui-form-item">
+       <label class="layui-form-label">隔离方式</label>
+       <div class="layui-input-inline">
+           <select name="redis_scope">
+               <option value="site" <?php if(isset($redis_scope)&&$redis_scope==='site')echo 'selected'; ?>>按站点</option>
+               <option value="dbpool" <?php if(!isset($redis_scope)||$redis_scope==='dbpool')echo 'selected'; ?>>按库共享</option>
+           </select>
+       </div>
+       <div class="layui-form-mid layui-word-aux">推荐：按库共享（同源库多站共用缓存；以“缓存库(redisdb)”编号来区分不同源库）</span></div>
+   </div>
+
    <fieldset class="layui-elem-field layui-field-title">
        <legend>Redis 缓存时间设置</legend>
    </fieldset>

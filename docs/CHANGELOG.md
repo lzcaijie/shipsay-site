@@ -9,6 +9,15 @@
 
 ---
 
+## 2026-02-27-4 | 功能/修复 | dbpool 共享缓存完善（redisdb 作为 pool）+ langtail/301 规范化
+- 调整：`SsRedis` 的 `redis_scope=dbpool` 默认以 `redisdb` 作为“数据库池”标识（更贴合当前 1-7 固定编号用法）；当 `redisdb=0` 且你又需要隔离时，会自动退化到 `dbarr(host|port|name)`。
+- 新增：`SsRedis` 暴露 `ss_key/ss_ttl/ss_setnxex`，业务侧不再手写 `md5($site_url.$key)`，避免切换隔离策略后 key 维度不一致。
+- 修复：`langtail` 的 enqueue 锁与 TTL 矫正，改用 `SsRedis` 的 hash 规则，确保 `dbpool` 共享模式下也能正确去重/矫正。
+- 新增：`use_orderid=1` 时，如果请求的章节参数是旧混淆 cid（或 0/1-based 序号），阅读页会 `301` 到规范的 `/read/{aid}/{chapterorder}.html`。
+- 增强：`site_sync` 快照/下发支持 `redis_scope/redis_pool`，并写入 `config.ini.php`；子站后台 Redis 页面补充“隔离方式”设置。
+- 涉及：`shipsay/class/SsRedis.php`、`shipsay/include/langtail.php`、`shipsay/app/reader.php`、`shipsay/include/site_sync_impl.php`、`shipsay/configs/config.ini.php`、`www/caijie/base/cfg_redis.php`、`www/caijie/savecfgs.php`
+- 回滚：回退上述文件或在配置中把 `$redis_scope` 改回 `site`。
+
 ## 2026-02-27-3 | 功能 | Redis 缓存支持“按数据库池共享”（同库多站共用一套热缓存）
 - 新增：`SsRedis` 支持 `redis_scope=dbpool` 模式：Redis key 不再按 `site_url` 隔离，而是按“数据库池标识”隔离，从而同一源库下多个站点可共享缓存，减少重复预热与源库压力。
 - 新增：可选配置 `$redis_pool` 用于手动指定池标识；未设置时自动使用 `$dbarr[host|port|name]` 组合派生。
