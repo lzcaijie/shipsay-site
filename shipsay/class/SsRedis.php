@@ -1,5 +1,8 @@
-<?php class SsRedis extends Redis
+<?php
+class SsRedis extends Redis
 {
+	private $ss_db = 0;
+
 	public function __construct($redisarr)
 	{
 		try
@@ -11,28 +14,61 @@
 			die('连接服务器Redis出错: '.$th);
 		}
 		$this->auth($redisarr['pass']);
-		$this->select(empty($redisarr['db'])?0:intval($redisarr['db']));
+		$this->ss_db = empty($redisarr['db']) ? 0 : intval($redisarr['db']);
+		$this->select($this->ss_db);
 	}
+
 	private function ss_hash_key($key)
 	{
 		// 默认：按站点隔离（旧逻辑：md5($site_url.$key)）
 		// 可选：按“数据库池”隔离（同库多站共享缓存，避免重复预热）
+		// 说明：dbpool 模式下，优先使用 redisdb 作为 pool（你现在的用法：1-7 固定编号）；
+		//      若想同一个 redisdb 里再细分，可设置 $redis_pool 作为覆盖。
 		global $site_url,$redis_scope,$redis_pool,$dbarr;
 		if(isset($redis_scope) && $redis_scope==='dbpool')
 		{
-			$pool='';
-			if(isset($redis_pool) && $redis_pool!=='') $pool=(string)$redis_pool;
+			if(isset($redis_pool) && $redis_pool!=='')
+			{
+				$pool=(string)$redis_pool;
+			}
 			else
 			{
-				$h=isset($dbarr['host'])?(string)$dbarr['host']:'';
-				$p=isset($dbarr['port'])?(string)$dbarr['port']:'';
-				$n=isset($dbarr['name'])?(string)$dbarr['name']:'';
-				$pool=$h.'|'.$p.'|'.$n;
+				$pool='rdb:'.$this->ss_db;
+				// 如果你仍在用 redisdb=0，又希望不同源库不要共享，可自动退化到 dbarr 维度
+				if($this->ss_db===0)
+				{
+					$h=isset($dbarr['host'])?(string)$dbarr['host']:'';
+					$p=isset($dbarr['port'])?(string)$dbarr['port']:'';
+					$n=isset($dbarr['name'])?(string)$dbarr['name']:'';
+					if(($h.$p.$n)!=='') $pool='db:'.$h.'|'.$p.'|'.$n;
+				}
 			}
 			return md5($pool.'|'.$key);
 		}
 		return md5($site_url.$key);
 	}
+
+	// 供业务侧使用：拿到“最终 redis key”（避免外部手写 md5 导致维度不一致）
+	public function ss_key($key)
+	{
+		return $this->ss_hash_key($key);
+	}
+	public function ss_ttl($key)
+	{
+		return $this->ttl($this->ss_hash_key($key));
+	}
+	public function ss_setnxex($key,$value,$ttl=0)
+	{
+		$k=$this->ss_hash_key($key);
+		$ok=$this->setnx($k,$value);
+		if($ok)
+		{
+			$ttl=intval($ttl);
+			if($ttl>0)$this->expire($k,$ttl);
+		}
+		return $ok;
+	}
+
 	public function ss_get($key)
 	{
 		return json_decode($this->get($this->ss_hash_key($key)),true);

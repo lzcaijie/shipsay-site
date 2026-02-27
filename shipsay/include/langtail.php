@@ -43,7 +43,7 @@ if (!empty($langtailrows)) {
 if (!function_exists('ss_langtail_enqueue')) {
     function ss_langtail_enqueue($sourceid, $sourcename)
     {
-        global $db, $redis, $site_url;
+        global $db, $redis;
         $sourceid = intval($sourceid);
         if ($sourceid <= 0) return;
 
@@ -52,11 +52,15 @@ if (!function_exists('ss_langtail_enqueue')) {
 
         // redis 轻锁：防止同一本书被并发疯狂 enqueue
         if (isset($redis)) {
-            $lockKey = md5($site_url . 'langtail_task_' . $sourceid);
-            if (!$redis->setnx($lockKey, 1)) {
-                return;
+            // 用 SsRedis 的 hash 规则（站点隔离 / dbpool 共享），避免外部手写 md5 导致维度不一致
+            if (method_exists($redis, 'ss_setnxex')) {
+                if (!$redis->ss_setnxex('langtail_task_' . $sourceid, 1, 30)) return;
+            } else {
+                // 兼容：极老版本 SsRedis
+                $lockKey = md5('langtail_task_' . $sourceid);
+                if (!$redis->setnx($lockKey, 1)) return;
+                $redis->expire($lockKey, 30);
             }
-            $redis->expire($lockKey, 30); // 30秒足够抖动保护
         }
 
         $sourcename = addslashes($sourcename);
@@ -90,8 +94,7 @@ if (isset($redis)) {
         }
     } else {
         // 命中缓存但 TTL 异常时矫正
-        $cache_key = md5($site_url . $langsql);
-        $ttl = $redis->ttl($cache_key);
+        $ttl = method_exists($redis, 'ss_ttl') ? $redis->ss_ttl($langsql) : $redis->ttl(md5($langsql));
         if (empty($langtailrows)) {
             if ($ttl < 0 || $ttl > 300) {
                 $redis->ss_setex($langsql, 300, $langtailrows);

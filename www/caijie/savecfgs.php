@@ -68,6 +68,8 @@ define('SITE_NAME', '" . $_POST['sitename'] . "');
     ,'db' => '" . $_POST['redisdb'] . "'
     ,'pass' => '" . $_POST['redispass'] . "'
 ];
+\$redis_scope = '" . (isset($_POST['redis_scope']) ? $_POST['redis_scope'] : 'dbpool') . "';
+\$redis_pool = '" . (isset($_POST['redis_pool']) ? $_POST['redis_pool'] : '') . "';
 \$home_cache_time = " . $_POST['home_cache_time'] . ";        
 \$info_cache_time = " . $_POST['info_cache_time'] . ";        
 \$category_cache_time = " . $_POST['category_cache_time'] . ";

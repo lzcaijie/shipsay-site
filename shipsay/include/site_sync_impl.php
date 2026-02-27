@@ -1,11 +1,9 @@
 <?php
 /**
- * ShipSay CMS - site sync implementation (v6.3.x)
+ * ShipSay CMS - site sync implementation (v6.1)
  * Impl: /shipsay/include/site_sync_impl.php (loaded by /www/api/site_sync.php)
  */
 header('Content-Type: application/json; charset=utf-8');
-
-if (!defined('SS_SITE_SYNC_IMPL_VER')) define('SS_SITE_SYNC_IMPL_VER', '6.3.3-impl');
 
 function ss_resp($arr){
   echo json_encode($arr, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
@@ -136,173 +134,6 @@ function ss_core_load_state($bakdir){
   $j = json_decode((string)@file_get_contents($f), true);
   return is_array($j) ? $j : [];
 }
-
-function ss_core_save_state($bakdir, $state){
-  $f = ss_core_state_file($bakdir);
-  @mkdir(dirname($f), 0755, true);
-  @file_put_contents($f, json_encode($state, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
-}
-
-function ss_core_clean_old($bakdir, $keep){
-  $keep = (int)$keep;
-  if ($keep < 1) $keep = 1;
-  if ($keep > 60) $keep = 60;
-  $dirs = ss_core_list_backups($bakdir);
-  if (count($dirs) <= $keep) return;
-  $del = array_slice($dirs, $keep);
-  foreach ($del as $d) ss_rrmdir($d);
-}
-
-
-// ----------------- v6.3：核心策略（core_policy.json） -----------------
-
-function ss_core_policy_file($bakdir){
-  return rtrim($bakdir,'/').'/core_policy.json';
-}
-
-function ss_core_policy_default(){
-  // 默认策略：与 v6.2.2 的核心 skip 逻辑一致
-  return [
-    'policy_ver' => 1,
-    'updated_at' => time(),
-    'skip' => [
-      'protect_site_sync' => 1,
-      'ban_prefix' => [
-        'shipsay/configs/',
-        'themes/',
-        'www/static/',
-        'www/caijie/',
-        'www/uploads/',
-      ],
-      'ban_seg' => ['runtime','cache','logs','uploads'],
-      'allow_root' => ['shipsay/','www/'],
-    ],
-  ];
-}
-
-function ss_core_policy_normalize($p){
-  if (!is_array($p)) $p = [];
-  if (empty($p['skip']) || !is_array($p['skip'])) $p['skip'] = [];
-  $p['skip']['ban_prefix'] = isset($p['skip']['ban_prefix']) && is_array($p['skip']['ban_prefix']) ? array_values($p['skip']['ban_prefix']) : [];
-  $p['skip']['ban_seg'] = isset($p['skip']['ban_seg']) && is_array($p['skip']['ban_seg']) ? array_values($p['skip']['ban_seg']) : [];
-  $p['skip']['allow_root'] = isset($p['skip']['allow_root']) && is_array($p['skip']['allow_root']) ? array_values($p['skip']['allow_root']) : ['shipsay/','www/'];
-  $p['skip']['ban_prefix'] = array_values(array_filter(array_map('trim', $p['skip']['ban_prefix']), function($v){ return $v!==''; }));
-  $p['skip']['ban_seg'] = array_values(array_filter(array_map('trim', $p['skip']['ban_seg']), function($v){ return $v!==''; }));
-  $p['skip']['allow_root'] = array_values(array_filter(array_map('trim', $p['skip']['allow_root']), function($v){ return $v!==''; }));
-  $p['skip']['ban_prefix'] = array_map(function($v){ return rtrim((string)$v,'/').'/'; }, $p['skip']['ban_prefix']);
-  $p['skip']['allow_root'] = array_map(function($v){ return rtrim((string)$v,'/').'/'; }, $p['skip']['allow_root']);
-  $p['skip']['protect_site_sync'] = isset($p['skip']['protect_site_sync']) ? (int)$p['skip']['protect_site_sync'] : 1;
-  if (empty($p['policy_ver'])) $p['policy_ver'] = 1;
-  if (empty($p['updated_at'])) $p['updated_at'] = time();
-  return $p;
-}
-
-function ss_core_policy_load($bakdir, &$err){
-  $err = '';
-  $f = ss_core_policy_file($bakdir);
-  if (!is_file($f)) return ss_core_policy_default();
-  $raw = @file_get_contents($f);
-  $j = json_decode((string)$raw, true);
-  if (!is_array($j)) { $err = 'bad_json'; return ss_core_policy_default(); }
-  if (empty($j['skip']) || !is_array($j['skip'])) { $err = 'bad_policy'; return ss_core_policy_default(); }
-  return ss_core_policy_normalize($j);
-}
-
-function ss_core_policy_list_backups($bakdir){
-  $dirs = glob(rtrim($bakdir,'/').'/core_policy_*');
-  if (!$dirs) return [];
-  $dirs = array_values(array_filter($dirs, 'is_dir'));
-  rsort($dirs);
-  return $dirs;
-}
-function ss_core_policy_clean_old($bakdir, $keep){
-  $keep = (int)$keep;
-  if ($keep < 1) $keep = 1;
-  if ($keep > 60) $keep = 60;
-  $dirs = ss_core_policy_list_backups($bakdir);
-  if (count($dirs) <= $keep) return;
-  $del = array_slice($dirs, $keep);
-  foreach ($del as $d) ss_rrmdir($d);
-}
-
-function ss_core_policy_summary($bakdir){
-  $f = ss_core_policy_file($bakdir);
-  $raw = is_file($f) ? (string)@file_get_contents($f) : '';
-  $sha1 = $raw !== '' ? (string)sha1($raw) : '';
-  $size = (int)strlen($raw);
-  $applied_at = is_file($f) ? (int)filemtime($f) : 0;
-  $exists = is_file($f) ? 1 : 0;
-  $err = '';
-  $policy_ver = 1;
-  $updated_at = 0;
-  if ($exists) {
-    $j = json_decode($raw, true);
-    if (!is_array($j)) {
-      $err = 'bad_json';
-    } else if (empty($j['skip']) || !is_array($j['skip'])) {
-      $err = 'bad_policy';
-    } else {
-      $policy_ver = isset($j['policy_ver']) ? (int)$j['policy_ver'] : 1;
-      if ($policy_ver < 1) $policy_ver = 1;
-      $updated_at = isset($j['updated_at']) ? (int)$j['updated_at'] : 0;
-      if ($updated_at < 0) $updated_at = 0;
-    }
-  }
-  $bak = ss_core_policy_list_backups($bakdir);
-  return [
-    'sha1' => $sha1,
-    'size' => $size,
-    'applied_at' => $applied_at,
-    'backup_count' => count($bak),
-    'latest_backup' => ($bak ? basename($bak[0]) : ''),
-    'exists' => $exists,
-    'err' => $err,
-    'policy_ver' => $policy_ver,
-    'updated_at' => $updated_at,
-  ];
-}
-
-function ss_core_policy_write($bakdir, $policy, $keep, &$err){
-  $err = '';
-  if (!is_array($policy)) { $err = 'bad_policy'; return false; }
-  $policy = ss_core_policy_normalize($policy);
-  $f = ss_core_policy_file($bakdir);
-
-  // backup old
-  if (is_file($f)) {
-    $bak_name = 'core_policy_' . date('Ymd_His') . '_' . substr(bin2hex(random_bytes(5)), 0, 8);
-    $bak_dir = rtrim($bakdir,'/').'/'.$bak_name;
-    if (!is_dir($bak_dir) && !@mkdir($bak_dir, 0755, true)) { $err = 'backup_failed'; return false; }
-    if (!@copy($f, $bak_dir . '/core_policy.json')) { $err = 'backup_failed'; return false; }
-  }
-
-  $policy['updated_at'] = time();
-  $out = json_encode($policy, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
-  if ($out === false) { $err = 'encode_failed'; return false; }
-  $tmp = $f . '.tmp_' . substr(bin2hex(random_bytes(4)), 0, 8);
-  $fp = @fopen($tmp, 'wb');
-  if (!$fp) { $err = 'write_failed'; return false; }
-  $w = @fwrite($fp, $out);
-  if ($w === false || $w < strlen($out)) {
-    @fclose($fp);
-    @unlink($tmp);
-    $err = 'write_failed';
-    return false;
-  }
-  @fflush($fp);
-  if (function_exists('fsync')) @fsync($fp);
-  @fclose($fp);
-  if (!@rename($tmp, $f)) {
-    @unlink($tmp);
-    $err = 'rename_failed';
-    return false;
-  }
-
-  ss_core_policy_clean_old($bakdir, $keep);
-  return true;
-}
-
-
 function ss_core_list_backups($bakdir){
   $dirs = glob(rtrim($bakdir,'/').'/core_bundle_*');
   if (!$dirs) return [];
@@ -514,6 +345,10 @@ function ss_load_config_ini($root){
 
   $use_redis = 0;
   $redisarr = ['host'=>'','port'=>'6379','db'=>'0','pass'=>''];
+  // redis key 隔离方式：site=按站点隔离（旧默认）；dbpool=按数据库池共享（同库多站共用缓存）
+  $redis_scope = 'dbpool';
+  // 可选：手工指定 pool 标识（用于“多个源库复用同一个 redisdb”时做二次隔离）
+  $redis_pool = '';
   $home_cache_time = 1200;
   $info_cache_time = 7200;
   $category_cache_time = 3600;
@@ -600,6 +435,8 @@ function ss_load_config_ini($root){
     'redisport' => (string)($redisarr['port'] ?? ''),
     'redisdb' => (string)($redisarr['db'] ?? ''),
     'redispass' => (string)($redisarr['pass'] ?? ''),
+    'redis_scope' => (string)($redis_scope ?? ''),
+    'redis_pool' => (string)($redis_pool ?? ''),
     'home_cache_time' => (int)$home_cache_time,
     'info_cache_time' => (int)$info_cache_time,
     'category_cache_time' => (int)$category_cache_time,
@@ -821,6 +658,8 @@ function ss_render_config_ini($cfg){
   $saveStr .= "    ,'db' => '".ss_php_sq($cfg['redisdb'] ?? '')."'\r\n";
   $saveStr .= "    ,'pass' => '".ss_php_sq($cfg['redispass'] ?? '')."'\r\n";
   $saveStr .= "];\r\n";
+  $saveStr .= "\$redis_scope = '".ss_php_sq($cfg['redis_scope'] ?? 'dbpool')."';\r\n";
+  $saveStr .= "\$redis_pool = '".ss_php_sq($cfg['redis_pool'] ?? '')."';\r\n";
   $saveStr .= "\$home_cache_time = ".(int)($cfg['home_cache_time'] ?? 1200).";        \r\n";
   $saveStr .= "\$info_cache_time = ".(int)($cfg['info_cache_time'] ?? 7200).";        \r\n";
   $saveStr .= "\$category_cache_time = ".(int)($cfg['category_cache_time'] ?? 3600).";\r\n";
@@ -1125,7 +964,7 @@ if (!is_dir($bakdir)) @mkdir($bakdir, 0755, true);
 // - secret 为空：不验签（仅 allow_ips）
 // - secret 有值：写接口（apply/rollback）必验签；只读接口（novel_search/chapter_get/pull）默认不验签（可通过 site_sync_sign_readonly=1 强制验签）
 $sign_readonly = !empty($site_sync_sign_readonly);
-$is_readonly = !empty($data['novel_search']) || !empty($data['chapter_get']) || !empty($data['pull']) || !empty($data['tpl_status']) || !empty($data['core_status']) || !empty($data['core_check_only']);
+$is_readonly = !empty($data['novel_search']) || !empty($data['chapter_get']) || !empty($data['pull']) || !empty($data['tpl_status']) || !empty($data['core_status']);
 if (!empty($site_sync_secret) && (!$is_readonly || $sign_readonly)) {
   $ts = $_SERVER['HTTP_X_SS_TS'] ?? '';
   $nonce = $_SERVER['HTTP_X_SS_NONCE'] ?? '';
@@ -1161,10 +1000,6 @@ else if (!empty($data['chapter_get'])) $op = 'chapter_get';
 else if (!empty($data['pull'])) $op = 'pull';
 else if (!empty($data['tpl_status'])) $op = 'tpl_status';
 else if (!empty($data['core_status'])) $op = 'core_status';
-else if (!empty($data['core_check_only'])) $op = 'core_check_only';
-else if (!empty($data['core_apply'])) $op = 'core_apply';
-else if (!empty($data['core_policy_apply'])) $op = 'core_policy_apply';
-else if (!empty($data['core_rollback'])) $op = 'core_rollback';
 else if (!empty($data['tpl_apply'])) $op = 'tpl_apply';
 else if (!empty($data['tpl_rollback'])) $op = 'tpl_rollback';
 else if (!empty($data['rollback'])) $op = 'rollback';
@@ -1348,544 +1183,20 @@ if (!empty($data['tpl_status'])) {
 if (!empty($data['core_status'])) {
   $state = ss_core_load_state($bakdir);
   $bak = ss_core_list_backups($bakdir);
-  $meta = ss_site_sync_meta(SS_SITE_SYNC_IMPL_VER, $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
+  $meta = ss_site_sync_meta('6.1-impl', $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
   ss_resp([
     'ok'=>1,
-    'v'=>63,
+    'v'=>61,
     'core'=>[
       'current'=>$state,
       'backup_count'=>count($bak),
       'latest_backup'=>($bak ? basename($bak[0]) : ''),
     ],
     'site_sync'=>$meta,
-    'policy'=>ss_core_policy_summary($bakdir),
   ]);
 }
-
-
-
-
-// 核心策略下发（写操作）：写入 core_policy.json，并备份旧版本
-if (!empty($data['core_policy_apply'])) {
-  if (empty($site_sync_secret)) ss_resp(['ok'=>0,'error'=>'core_need_secret']); // 写操作强制签名
-  $policy = $data['policy'] ?? null;
-  $keep = (int)($data['keep'] ?? 10);
-  if ($keep < 1) $keep = 1;
-  if ($keep > 60) $keep = 60;
-
-  if (!is_array($policy)) ss_resp(['ok'=>0,'error'=>'bad_policy']);
-
-  $werr = '';
-  if (!ss_core_policy_write($bakdir, $policy, $keep, $werr)) {
-    ss_resp(['ok'=>0,'error'=>'policy_write_failed','detail'=>$werr ?: 'unknown']);
-  }
-
-  $meta = ss_site_sync_meta(SS_SITE_SYNC_IMPL_VER, $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
-  ss_resp([
-    'ok'=>1,
-    'v'=>63,
-    'policy'=>ss_core_policy_summary($bakdir),
-    'site_sync'=>$meta,
-  ]);
-}
-
-
-
-// 核心包预演（只读）：下载 bundle → 解压到临时目录 → 统计将新增/覆盖/跳过文件数
-function ss_guess_bundle_ext($url, $fallback=''){
-  $ext = '';
-  $p = parse_url((string)$url, PHP_URL_PATH);
-  $p = (string)$p;
-  $p = strtolower($p);
-  if (preg_match('~\.zip$~', $p)) $ext = 'zip';
-  else if (preg_match('~\.tar$~', $p)) $ext = 'tar';
-  else if (preg_match('~\.(tar\.gz|tgz)$~', $p)) $ext = 'tar.gz';
-  if ($ext === '') $ext = (string)$fallback;
-  if (!in_array($ext, ['zip','tar','tar.gz'], true)) $ext = '';
-  return $ext;
-}
-
-function ss_extract_bundle($archive_file, $ext, $dest_dir, &$err){
-  $err = '';
-  $archive_file = (string)$archive_file;
-  $dest_dir = (string)$dest_dir;
-  if (!is_file($archive_file)) { $err='bundle_not_found'; return false; }
-  if (!is_dir($dest_dir)) @mkdir($dest_dir, 0755, true);
-
-  if ($ext === 'zip') {
-    if (class_exists('ZipArchive')) {
-      $zip = new ZipArchive();
-      if ($zip->open($archive_file) !== true) { $err='zip_open_failed'; return false; }
-      if (!$zip->extractTo($dest_dir)) { $zip->close(); $err='zip_extract_failed'; return false; }
-      $zip->close();
-      return true;
-    }
-    $cmd = 'unzip -oq '.escapeshellarg($archive_file).' -d '.escapeshellarg($dest_dir).' 2>&1';
-    $out = @shell_exec($cmd);
-    if (!is_dir($dest_dir)) { $err='unzip_failed'; return false; }
-    return true;
-  }
-
-  $flag = ($ext === 'tar.gz') ? 'z' : '';
-  $cmd = 'tar -x'.$flag.'f '.escapeshellarg($archive_file).' -C '.escapeshellarg($dest_dir).' 2>&1';
-  $out = @shell_exec($cmd);
-  if (!is_dir($dest_dir)) { $err='tar_extract_failed'; return false; }
-  return true;
-}
-
-function ss_locate_extract_root($dir){
-  $dir = rtrim((string)$dir, '/');
-  if (!is_dir($dir)) return $dir;
-  $items = array_values(array_diff(scandir($dir), ['.','..']));
-  if (count($items) === 1) {
-    $one = $dir . '/' . $items[0];
-    if (is_dir($one)) return $one;
-  }
-  return $dir;
-}
-
-function ss_relpath_safe($rel){
-  $rel = str_replace('\\', '/', (string)$rel);
-  $rel = ltrim($rel, '/');
-  if ($rel === '') return false;
-  if (strpos($rel, "\0") !== false) return false;
-  $parts = explode('/', $rel);
-  foreach ($parts as $seg) {
-    if ($seg === '' || $seg === '.' || $seg === '..') return false;
-  }
-  return true;
-}
-
-function ss_core_skip_reason($rel, $overwrite_site_sync, $policy, &$is_site_sync){
-  $is_site_sync = false;
-  $rel = ltrim(str_replace('\\','/', (string)$rel), '/');
-
-  // 默认不允许覆盖 site_sync 壳文件
-  if ($rel === 'www/api/site_sync.php') {
-    $is_site_sync = true;
-    $skip = (is_array($policy) && isset($policy['skip']) && is_array($policy['skip'])) ? $policy['skip'] : [];
-    $protect = isset($skip['protect_site_sync']) ? (int)$skip['protect_site_sync'] : 1;
-    if ($protect && !(int)$overwrite_site_sync) return 'site_sync';
-    return '';
-  }
-
-  $skip = (is_array($policy) && isset($policy['skip']) && is_array($policy['skip'])) ? $policy['skip'] : [];
-
-  $ban_prefix = isset($skip['ban_prefix']) && is_array($skip['ban_prefix']) ? $skip['ban_prefix'] : [
-    'shipsay/configs/',
-    'themes/',
-    'www/static/',
-    'www/caijie/',
-    'www/uploads/',
-  ];
-  foreach ($ban_prefix as $pre) {
-    if (strpos($rel, $pre) === 0) return $pre;
-  }
-
-  // 运行时目录：只要命中路径片段就跳过
-  $ban_seg = isset($skip['ban_seg']) && is_array($skip['ban_seg']) ? $skip['ban_seg'] : ['runtime','cache','logs','uploads'];
-  foreach ($ban_seg as $seg) {
-    if (preg_match('~(^|/)'.preg_quote($seg, '~'). '(/|$)~', $rel)) return $seg;
-  }
-
-  // 仅允许 allow_root（其余视为无关文件）
-  $allow_root = isset($skip['allow_root']) && is_array($skip['allow_root']) ? $skip['allow_root'] : ['shipsay/','www/'];
-  $ok_root = false;
-  foreach ($allow_root as $r) {
-    $r = rtrim((string)$r,'/').'/';
-    if ($r!=='' && strpos($rel, $r) === 0) { $ok_root = true; break; }
-  }
-  if (!$ok_root) return 'outside_root';
-
-  return '';
-}
-
-// core_check_only：只读预演（不会写 core_current.json / 不覆盖任何线上文件）
-if (!empty($data['core_check_only'])) {
-  $core = $data['core'] ?? null;
-  if (!is_array($core)) ss_resp(['ok'=>0,'error'=>'bad_core']);
-
-  $bundle_id = trim((string)($core['id'] ?? ''));
-  $version = trim((string)($core['version'] ?? ''));
-  $sha1 = strtolower(trim((string)($core['sha1'] ?? '')));
-  $url = trim((string)($core['url'] ?? ''));
-  $ext_in = trim((string)($core['ext'] ?? ''));
-  $overwrite_site_sync = (int)($core['overwrite_site_sync'] ?? 0);
-
-  // v6.3：加载核心策略（core_policy.json）
-  $perr = '';
-  $policy = ss_core_policy_load($bakdir, $perr);
-
-
-  if ($url === '') ss_resp(['ok'=>0,'error'=>'core_url_empty']);
-
-  $ext = ss_guess_bundle_ext($url, $ext_in);
-  if ($ext === '') ss_resp(['ok'=>0,'error'=>'core_bad_ext']);
-
-  $tmp = $bakdir . '/core_check_' . date('Ymd_His') . '_' . substr(bin2hex(random_bytes(6)), 0, 8);
-  @mkdir($tmp, 0755, true);
-  $bundle_file = $tmp . '/bundle.' . ($ext === 'tar.gz' ? 'tar.gz' : $ext);
-  $xdir = $tmp . '/x';
-
-  $err = '';
-  if (!ss_http_download_to_file($url, $bundle_file, $err)) {
-    ss_rrmdir($tmp);
-    ss_resp(['ok'=>0,'error'=>'core_download_failed','detail'=>$err]);
-  }
-
-  if ($sha1 !== '') {
-    $got = @sha1_file($bundle_file);
-    if (!$got || strtolower($got) !== $sha1) {
-      ss_rrmdir($tmp);
-      ss_resp(['ok'=>0,'error'=>'core_sha1_mismatch','detail'=>($got?:'')]);
-    }
-  }
-
-  $eerr = '';
-  if (!ss_extract_bundle($bundle_file, $ext, $xdir, $eerr)) {
-    ss_rrmdir($tmp);
-    ss_resp(['ok'=>0,'error'=>'core_extract_failed','detail'=>$eerr]);
-  }
-
-  $base = ss_locate_extract_root($xdir);
-
-  $total=0; $add=0; $overwrite=0; $skip=0; $site_sync_files=0;
-  $skip_by = [];
-  $skip_samples = [];
-
-  $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($base, FilesystemIterator::SKIP_DOTS));
-  foreach ($it as $f) {
-    if (!$f->isFile()) continue;
-    $abs = $f->getPathname();
-    $rel = substr($abs, strlen($base) + 1);
-    $rel = str_replace('\\','/',$rel);
-    $rel = ltrim($rel, '/');
-    if (!ss_relpath_safe($rel)) {
-      $skip++;
-      $skip_by['unsafe'] = (int)($skip_by['unsafe'] ?? 0) + 1;
-      if (count($skip_samples) < 30) $skip_samples[] = $rel;
-      continue;
-    }
-
-    $total++;
-
-    $is_site_sync = false;
-    $why = ss_core_skip_reason($rel, $overwrite_site_sync, $policy, $is_site_sync);
-    if ($is_site_sync) $site_sync_files++;
-
-    if ($why !== '') {
-      $skip++;
-      $skip_by[$why] = (int)($skip_by[$why] ?? 0) + 1;
-      if (count($skip_samples) < 30) $skip_samples[] = $rel;
-      continue;
-    }
-
-    $dest = $root . '/' . $rel;
-    if (is_file($dest)) $overwrite++;
-    else $add++;
-  }
-
-  ss_rrmdir($tmp);
-
-  $meta = ss_site_sync_meta(SS_SITE_SYNC_IMPL_VER, $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
-  ss_resp([
-    'ok'=>1,
-    'v'=>63,
-    'current'=>ss_effective_snapshot($root),
-    'core_check'=>[
-      'id'=>$bundle_id,
-      'version'=>$version,
-      'sha1'=>$sha1,
-      'ext'=>$ext,
-      'overwrite_site_sync'=>$overwrite_site_sync ? 1 : 0,
-      'total_files'=>$total,
-      'add_files'=>$add,
-      'overwrite_files'=>$overwrite,
-      'skipped_files'=>$skip,
-      'site_sync_files'=>$site_sync_files,
-      'skipped_by'=>$skip_by,
-      'skipped_samples'=>$skip_samples,
-    ],
-    'policy_used'=>ss_core_policy_summary($bakdir),
-    'policy_load_err'=>(string)$perr,
-    'policy_fallback'=>$perr ? 1 : 0,
-    'site_sync'=>$meta,
-  ]);
-}
-
 
 // 模板应用：下载 bundle（tar.gz）→ 校验 sha1 → 解压 → 备份现有主题目录 → 覆盖 themes/<theme>/ 与 www/static/<theme>/
-// v6.2：核心下发（写操作：core_apply）
-// - 分站下载 core bundle → 校验 sha1 → 解包 → 备份将被覆盖的文件 → 覆盖写入
-// - 永远不覆盖：shipsay/configs/、themes/、www/static/、www/caijie/ 以及 runtime/cache/logs/uploads 等
-// - 默认不覆盖：www/api/site_sync.php（除非 overwrite_site_sync=1）
-if (!empty($data['core_apply'])) {
-  if (empty($site_sync_secret)) ss_resp(['ok'=>0,'error'=>'core_need_secret']); // 写操作强制签名
-
-  $core = $data['core'] ?? null;
-  if (!is_array($core)) ss_resp(['ok'=>0,'error'=>'bad_core']);
-
-  $bundle_id = trim((string)($core['id'] ?? ''));
-  $version = trim((string)($core['version'] ?? ''));
-  $sha1 = strtolower(trim((string)($core['sha1'] ?? '')));
-  $url = trim((string)($core['url'] ?? ''));
-  $ext_in = trim((string)($core['ext'] ?? ''));
-  $overwrite_site_sync = (int)($core['overwrite_site_sync'] ?? 0);
-
-  // v6.3：加载核心策略（core_policy.json）
-  $perr = '';
-  $policy = ss_core_policy_load($bakdir, $perr);
-
-  $keep = (int)($core['keep'] ?? 3);
-  if ($keep < 1) $keep = 1;
-  if ($keep > 60) $keep = 60;
-
-  if ($url === '') ss_resp(['ok'=>0,'error'=>'bad_url']);
-
-  $ext = ss_guess_bundle_ext($url, $ext_in);
-  if (!in_array($ext, ['zip','tar','tar.gz'], true)) ss_resp(['ok'=>0,'error'=>'core_bad_ext']);
-
-  $tmp = $bakdir . '/core_apply_' . date('Ymd_His') . '_' . substr(bin2hex(random_bytes(6)), 0, 8);
-  @mkdir($tmp, 0755, true);
-  $bundle_file = $tmp . '/bundle.' . ($ext === 'tar.gz' ? 'tar.gz' : $ext);
-  $xdir = $tmp . '/x';
-
-  $err = '';
-  if (!ss_http_download_to_file($url, $bundle_file, $err)) {
-    ss_rrmdir($tmp);
-    ss_resp(['ok'=>0,'error'=>'core_download_failed','detail'=>$err]);
-  }
-
-  if ($sha1 !== '') {
-    $got = @sha1_file($bundle_file);
-    if (!$got || strtolower($got) !== $sha1) {
-      ss_rrmdir($tmp);
-      ss_resp(['ok'=>0,'error'=>'core_sha1_mismatch','detail'=>($got?:'')]);
-    }
-  }
-
-  $eerr = '';
-  if (!ss_extract_bundle($bundle_file, $ext, $xdir, $eerr)) {
-    ss_rrmdir($tmp);
-    ss_resp(['ok'=>0,'error'=>'core_extract_failed','detail'=>$eerr]);
-  }
-
-  $base = ss_locate_extract_root($xdir);
-
-  // 应用前状态（用于回滚恢复）
-  $before = ss_core_load_state($bakdir);
-
-  // 备份目录（只备份会被覆盖的文件 + meta.json）
-  $ver_safe = $version !== '' ? preg_replace('~[^a-z0-9_\-\.]+~i', '_', $version) : 'v';
-  $bak_name = 'core_bundle_' . date('Ymd_His') . '_' . $ver_safe . '_' . substr(bin2hex(random_bytes(5)), 0, 8);
-  $bak = $bakdir . '/' . $bak_name;
-  @mkdir($bak, 0755, true);
-
-  $total=0; $add=0; $overwrite=0; $skip=0; $site_sync_files=0;
-  $skip_by = [];
-  $skip_samples = [];
-  $add_files = [];
-  $overwrite_files = [];
-
-  $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($base, FilesystemIterator::SKIP_DOTS));
-  foreach ($it as $f) {
-    if (!$f->isFile()) continue;
-
-    $src = (string)$f->getPathname();
-    $rel = substr($src, strlen($base) + 1);
-    $rel = str_replace('\\','/',$rel);
-    $rel = ltrim($rel, '/');
-
-    if (!ss_relpath_safe($rel)) {
-      $skip++;
-      $skip_by['unsafe'] = (int)($skip_by['unsafe'] ?? 0) + 1;
-      if (count($skip_samples) < 30) $skip_samples[] = $rel;
-      continue;
-    }
-
-    $total++;
-
-    $is_site_sync = false;
-    $why = ss_core_skip_reason($rel, $overwrite_site_sync, $policy, $is_site_sync);
-    if ($is_site_sync) $site_sync_files++;
-
-    if ($why !== '') {
-      $skip++;
-      $skip_by[$why] = (int)($skip_by[$why] ?? 0) + 1;
-      if (count($skip_samples) < 30) $skip_samples[] = $rel;
-      continue;
-    }
-
-    $dst = $root . '/' . $rel;
-
-    // 备份：仅备份将被覆盖的文件
-    if (is_file($dst)) {
-      $overwrite++;
-      $overwrite_files[] = $rel;
-      $bak_dst = $bak . '/' . $rel;
-      @mkdir(dirname($bak_dst), 0755, true);
-      if (!@copy($dst, $bak_dst)) {
-        ss_rrmdir($tmp);
-        ss_resp(['ok'=>0,'error'=>'core_backup_failed','file'=>$rel,'bak'=>$bak_name]);
-      }
-    } else {
-      $add++;
-      $add_files[] = $rel;
-    }
-
-    // 覆盖写入
-    @mkdir(dirname($dst), 0755, true);
-    if (!@copy($src, $dst)) {
-      ss_rrmdir($tmp);
-      ss_resp(['ok'=>0,'error'=>'core_write_failed','file'=>$rel]);
-    }
-  }
-
-  // 记录 meta（供回滚）
-  $meta = [
-    'created_at' => date('c'),
-    'bundle_id' => $bundle_id,
-    'version' => $version,
-    'sha1' => $sha1,
-    'ext' => $ext,
-    'overwrite_site_sync' => $overwrite_site_sync ? 1 : 0,
-    'before' => $before,
-    'add_files' => $add_files,
-    'overwrite_files' => $overwrite_files,
-    'stat' => [
-      'total_files' => $total,
-      'add_files' => $add,
-      'overwrite_files' => $overwrite,
-      'skipped_files' => $skip,
-      'site_sync_files' => $site_sync_files,
-      'skipped_by' => $skip_by,
-    ],
-  ];
-  @file_put_contents($bak . '/meta.json', json_encode($meta, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));
-
-  // 落盘 core_current.json（正式写入）
-  $st = [
-    'id' => $bundle_id,
-    'version' => $version,
-    'sha1' => $sha1,
-    'applied_at' => time(),
-    'latest_backup' => $bak_name,
-  ];
-  ss_core_save_state($bakdir, $st);
-
-  // 控量清理
-  ss_core_clean_old($bakdir, $keep);
-
-  ss_rrmdir($tmp);
-
-  $meta2 = ss_site_sync_meta(SS_SITE_SYNC_IMPL_VER, $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
-  ss_resp([
-    'ok' => 1,
-    'v'  => 63,
-    'core' => [
-      'current' => ss_core_load_state($bakdir),
-      'backup_count' => count(ss_core_list_backups($bakdir)),
-      'latest_backup' => (string)$bak_name,
-      'apply' => [
-        'id' => $bundle_id,
-        'version' => $version,
-        'sha1' => $sha1,
-        'ext' => $ext,
-        'overwrite_site_sync' => $overwrite_site_sync ? 1 : 0,
-        'backup' => (string)$bak_name,
-        'total_files' => $total,
-        'add_files' => $add,
-        'overwrite_files' => $overwrite,
-        'skipped_files' => $skip,
-        'site_sync_files' => $site_sync_files,
-        'skipped_by' => $skip_by,
-        'skipped_samples' => array_slice($skip_samples, 0, 30),
-        'add_samples' => array_slice($add_files, 0, 20),
-        'overwrite_samples' => array_slice($overwrite_files, 0, 20),
-      ],
-    ],
-    'policy_used'=>ss_core_policy_summary($bakdir),
-    'policy_load_err'=>(string)$perr,
-    'policy_fallback'=>$perr ? 1 : 0,
-    'site_sync' => $meta2,
-  ]);
-}
-
-// v6.2：核心回滚（写操作：core_rollback；回滚到最近一次 core_bundle_* 备份）
-if (!empty($data['core_rollback'])) {
-  if (empty($site_sync_secret)) ss_resp(['ok'=>0,'error'=>'core_need_secret']); // 写操作强制签名
-
-  $keep = 60;
-  if (!empty($data['core']) && is_array($data['core']) && isset($data['core']['keep'])) {
-    $keep = (int)$data['core']['keep'];
-    if ($keep < 1) $keep = 1;
-    if ($keep > 60) $keep = 60;
-  }
-
-  $dirs = ss_core_list_backups($bakdir);
-  if (!$dirs) ss_resp(['ok'=>0,'error'=>'core_no_backup']);
-  $bak = $dirs[0];
-  $bak_name = basename($bak);
-
-  $meta_file = $bak . '/meta.json';
-  if (!is_file($meta_file)) ss_resp(['ok'=>0,'error'=>'core_backup_incomplete','detail'=>'meta_missing','bak'=>$bak_name]);
-  $meta = json_decode((string)@file_get_contents($meta_file), true);
-  if (!is_array($meta)) ss_resp(['ok'=>0,'error'=>'core_backup_incomplete','detail'=>'meta_bad_json','bak'=>$bak_name]);
-
-  $add_files = isset($meta['add_files']) && is_array($meta['add_files']) ? $meta['add_files'] : [];
-  $overwrite_files = isset($meta['overwrite_files']) && is_array($meta['overwrite_files']) ? $meta['overwrite_files'] : [];
-  $before = isset($meta['before']) && is_array($meta['before']) ? $meta['before'] : [];
-
-  // 先恢复被覆盖的文件
-  foreach ($overwrite_files as $rel) {
-    $rel = (string)$rel;
-    if ($rel === '') continue;
-    $src = $bak . '/' . $rel;
-    $dst = $root . '/' . $rel;
-    if (!is_file($src)) continue;
-    @mkdir(dirname($dst), 0755, true);
-    if (!@copy($src, $dst)) {
-      ss_resp(['ok'=>0,'error'=>'core_restore_failed','file'=>$rel,'bak'=>$bak_name]);
-    }
-  }
-
-  // 再删除新增文件
-  foreach ($add_files as $rel) {
-    $rel = (string)$rel;
-    if ($rel === '') continue;
-    $dst = $root . '/' . $rel;
-    if (is_file($dst)) @unlink($dst);
-  }
-
-  // 恢复 core_current.json 到 before（首次安装可能为空）
-  ss_core_save_state($bakdir, $before);
-
-  // 控量清理
-  ss_core_clean_old($bakdir, $keep);
-
-  $meta2 = ss_site_sync_meta(SS_SITE_SYNC_IMPL_VER, $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
-  ss_resp([
-    'ok' => 1,
-    'v'  => 63,
-    'core' => [
-      'current' => ss_core_load_state($bakdir),
-      'backup_count' => count(ss_core_list_backups($bakdir)),
-      'latest_backup' => basename((string)($dirs[0] ?? '')),
-      'rollback' => [
-        'used_backup' => $bak_name,
-        'restore_files' => count($overwrite_files),
-        'delete_files' => count($add_files),
-        'bak_meta' => [
-          'bundle_id' => (string)($meta['bundle_id'] ?? ''),
-          'version' => (string)($meta['version'] ?? ''),
-          'sha1' => (string)($meta['sha1'] ?? ''),
-          'created_at' => (string)($meta['created_at'] ?? ''),
-        ],
-      ],
-    ],
-    'site_sync' => $meta2,
-  ]);
-}
 if (!empty($data['tpl_apply'])) {
   if (empty($site_sync_secret)) ss_resp(['ok'=>0,'error'=>'tpl_need_secret']); // 写操作强制签名
 

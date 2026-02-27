@@ -222,6 +222,27 @@ $chapterid=$use_orderid?$sourcecid:$chapterid;
 $info_url=Url::info_url($articleid);
 $index_url=Url::index_url($articleid);
 
+// Canonical redirect (use_orderid=1)
+// 目标：旧混淆 cid 或 0/1-based 序号访问时，统一 301 到真实 chapterorder URL
+if($use_orderid && $txt_sourceid!==null)
+{
+	$cid_raw_int=intval($sourcecid_raw);
+	$cid_norm_int=intval($sourcecid);
+	if($cid_raw_int!==$cid_norm_int)
+	{
+		$to=Url::chapter_url($articleid,$cid_norm_int,intval($now_pid));
+		$req_uri=isset($_SERVER['REQUEST_URI'])?(string)$_SERVER['REQUEST_URI']:'';
+		$req_path=$req_uri;
+		$qspos=strpos($req_path,'?');
+		if($qspos!==false)$req_path=substr($req_path,0,$qspos);
+		if($req_path===''||$req_path!==$to)
+		{
+			header('Location: '.$to,true,301);
+			exit;
+		}
+	}
+}
+
 $pre_cid=0;
 $next_cid=0;
 $chapters=count($chapterids);
