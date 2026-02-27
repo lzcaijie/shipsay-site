@@ -345,10 +345,6 @@ function ss_load_config_ini($root){
 
   $use_redis = 0;
   $redisarr = ['host'=>'','port'=>'6379','db'=>'0','pass'=>''];
-  // redis key 隔离方式：site=按站点隔离（旧默认）；dbpool=按数据库池共享（同库多站共用缓存）
-  $redis_scope = 'dbpool';
-  // 可选：手工指定 pool 标识（用于“多个源库复用同一个 redisdb”时做二次隔离）
-  $redis_pool = '';
   $home_cache_time = 1200;
   $info_cache_time = 7200;
   $category_cache_time = 3600;
@@ -435,8 +431,6 @@ function ss_load_config_ini($root){
     'redisport' => (string)($redisarr['port'] ?? ''),
     'redisdb' => (string)($redisarr['db'] ?? ''),
     'redispass' => (string)($redisarr['pass'] ?? ''),
-    'redis_scope' => (string)($redis_scope ?? ''),
-    'redis_pool' => (string)($redis_pool ?? ''),
     'home_cache_time' => (int)$home_cache_time,
     'info_cache_time' => (int)$info_cache_time,
     'category_cache_time' => (int)$category_cache_time,
@@ -658,8 +652,6 @@ function ss_render_config_ini($cfg){
   $saveStr .= "    ,'db' => '".ss_php_sq($cfg['redisdb'] ?? '')."'\r\n";
   $saveStr .= "    ,'pass' => '".ss_php_sq($cfg['redispass'] ?? '')."'\r\n";
   $saveStr .= "];\r\n";
-  $saveStr .= "\$redis_scope = '".ss_php_sq($cfg['redis_scope'] ?? 'dbpool')."';\r\n";
-  $saveStr .= "\$redis_pool = '".ss_php_sq($cfg['redis_pool'] ?? '')."';\r\n";
   $saveStr .= "\$home_cache_time = ".(int)($cfg['home_cache_time'] ?? 1200).";        \r\n";
   $saveStr .= "\$info_cache_time = ".(int)($cfg['info_cache_time'] ?? 7200).";        \r\n";
   $saveStr .= "\$category_cache_time = ".(int)($cfg['category_cache_time'] ?? 3600).";\r\n";
@@ -1095,7 +1087,7 @@ if (!empty($data['chapter_get'])) {
   $min_len = (int)($data['min_len'] ?? 100);
   if ($min_len<=0) $min_len = 100;
 
-  if ($articlename==='' || $author==='' || $chapterorder<=0 || $txt_url==='') {
+  if ($articlename==='' || $author==='' || $chapterorder<0 || $txt_url==='') {
     $db->close();
     ss_resp(['ok'=>0,'error'=>'bad_params']);
   }

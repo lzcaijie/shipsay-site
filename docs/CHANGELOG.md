@@ -9,40 +9,10 @@
 
 ---
 
-## 2026-02-27-5 | 功能 | 缺章兜底补全按“数据库池”隔离（Hub sources 带 pool_no）
-- 调整：`chapter_patch` 调 Hub sources 时携带 `pool_no`（默认取 `redisdb` 的 1~15），确保补章只在同一源库内互拉，避免跨库串书。
-- 调整：Hub sources 本地缓存文件名增加 `pool_no` 维度（`hub_sources_p{pool}_{fp}.json`），避免不同库命中同一 fp 时互相污染缓存。
-- 涉及：`shipsay/include/chapter_patch.php`
-- 回滚：回退该文件到上一版本即可。
-
-## 2026-02-27-4 | 功能/修复 | dbpool 共享缓存完善（redisdb 作为 pool）+ langtail/301 规范化
-- 调整：`SsRedis` 的 `redis_scope=dbpool` 默认以 `redisdb` 作为“数据库池”标识（更贴合当前 1-7 固定编号用法）；当 `redisdb=0` 且你又需要隔离时，会自动退化到 `dbarr(host|port|name)`。
-- 新增：`SsRedis` 暴露 `ss_key/ss_ttl/ss_setnxex`，业务侧不再手写 `md5($site_url.$key)`，避免切换隔离策略后 key 维度不一致。
-- 修复：`langtail` 的 enqueue 锁与 TTL 矫正，改用 `SsRedis` 的 hash 规则，确保 `dbpool` 共享模式下也能正确去重/矫正。
-- 新增：`use_orderid=1` 时，如果请求的章节参数是旧混淆 cid（或 0/1-based 序号），阅读页会 `301` 到规范的 `/read/{aid}/{chapterorder}.html`。
-- 增强：`site_sync` 快照/下发支持 `redis_scope/redis_pool`，并写入 `config.ini.php`；子站后台 Redis 页面补充“隔离方式”设置。
-- 涉及：`shipsay/class/SsRedis.php`、`shipsay/include/langtail.php`、`shipsay/app/reader.php`、`shipsay/include/site_sync_impl.php`、`shipsay/configs/config.ini.php`、`www/caijie/base/cfg_redis.php`、`www/caijie/savecfgs.php`
-- 回滚：回退上述文件或在配置中把 `$redis_scope` 改回 `site`。
-
-## 2026-02-27-3 | 功能 | Redis 缓存支持“按数据库池共享”（同库多站共用一套热缓存）
-- 新增：`SsRedis` 支持 `redis_scope=dbpool` 模式：Redis key 不再按 `site_url` 隔离，而是按“数据库池标识”隔离，从而同一源库下多个站点可共享缓存，减少重复预热与源库压力。
-- 新增：可选配置 `$redis_pool` 用于手动指定池标识；未设置时自动使用 `$dbarr[host|port|name]` 组合派生。
-- 默认行为不变：未开启 `redis_scope=dbpool` 时仍按站点隔离（兼容现网缓存）。
-- 涉及：`shipsay/class/SsRedis.php`
-- 回滚：关闭 `redis_scope=dbpool`（或回退该文件）即可。
-
-## 2026-02-27-2 | 修复 | use_orderid 模式下 AJAX 正文加载缺失（reader_js 章节解混淆条件修复）
-- 修复：`use_orderid=1` 时，AJAX 正文接口（`reader_js`）不再对章节参数做 `ss_sourceid/ss_newid(±550)`；仅小说ID继续按 `is_multiple` 混淆。
-- 增强：当顺序号（`chapterorder`）未命中章节时，兜底尝试按“旧混淆 chapterid”查章，避免历史直链导致正文缺失。
-- 涉及：`shipsay/include/reader_js.php`
-- 回滚：回退该文件到上一版本即可。
-
-## 2026-02-27-1 | 修复 | use_orderid 阅读页正文缺失（章节顺序号不混淆 + reader 映射兜底）
-- 修复：`use_orderid=1` 时章节参数使用 `chapterorder`，不再受 `is_multiple` 的章节 ±550 混淆影响（仅小说ID继续混淆）。
-- 修复：`reader.php` 章节内容读取在 `use_orderid=1` 模式下可靠映射 `chapterorder -> chapterid`（并兼容旧混淆章节ID直链作为兜底）。
-- 修复：阅读页章节列表缓存 key 增加 `use_orderid/is_multiple/...` 维度，避免切换开关后继续命中旧缓存导致“链接/内容不变”。
-- 涉及：`shipsay/app/reader.php`、`shipsay/app/info.php`、`shipsay/app/info_langtail.php`、`shipsay/app/indexlist.php`、`shipsay/app/indexlist_langtail.php`
-- 回滚：回退以上文件到上一版本即可。
+## 2026-02-27-6 | 修复 | chapter_patch / chapter_get 支持 chapterorder=0（兼容从0开始的顺序号）
+- 修复：`chapter_patch` 与 `site_sync chapter_get` 参数校验从 `chapterorder<=0` 调整为 `chapterorder<0`，允许顺序号从 0 开始的站点正常补章/取章。
+- 涉及：`shipsay/include/chapter_patch.php`、`shipsay/include/site_sync_impl.php`
+- 回滚：回退上述文件到上一版本即可。
 
 ## 2026-02-14-4 | 补丁 | v6.3.3-fz1（core_policy 写入加固 + 回包补充 + 摘要范围校验）
 - 更新：`site_sync meta.ver` 从 `6.3.2-impl` → `6.3.3-impl`。
