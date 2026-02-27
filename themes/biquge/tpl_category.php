@@ -5,9 +5,13 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-	<title><?php if(!empty($sortname)):?><?=$sortname?>_好看的<?=$sortname?>_<?=$year?><?=$sortname?>小说排行榜<?php else:?>小说书库<?php endif ?>_<?=SITE_NAME?></title>
-	<meta name="keywords" content="<?php if(!empty($sortname)):?><?=$sortname?>,好看的<?=$sortname?>,<?=$year?><?=$sortname?>排行榜<?php else:?>小说书库,小说大全,小说阅读<?php endif ?>" />
-	<meta name="description" content="<?php if(!empty($sortname)):?><?=SITE_NAME?>是广大书友最值得收藏的<?=$sortname?>阅读网，网站收录了当前最好看的<?=$sortname?>，免费提供高质量的<?=$year?><?=$sortname?>排行榜，是广大<?=$sortname?>爱好者必备的小说阅读网。<?php else:?><?=SITE_NAME?>为您提供小说书库、分类浏览与最新更新内容，方便快速查找好看的小说。<?php endif ?>" />
+		<?php
+	require_once __ROOT_DIR__.'/shipsay/seo.php';
+	list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
+	?>
+	<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+	<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+	<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 

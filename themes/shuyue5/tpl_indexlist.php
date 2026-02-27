@@ -6,9 +6,13 @@ $pid = (isset($pid) && (int)$pid > 0) ? (int)$pid : 1;
 <html lang="cmn-Hans">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>《<?=$articlename?>》章节目录<?php if($pid>1):?>_第<?=$pid?>页<?php endif;?> - <?=SITE_NAME?></title>
-    <meta name="keywords" content="<?=$articlename?>章节目录,<?=$articlename?>最新章节,<?=$author?>" />
-    <meta name="description" content="《<?=$articlename?>》章节目录<?php if($pid>1):?>第<?=$pid?>页<?php endif;?>，作者：<?=$author?>。" />
+        <?php
+    require_once __ROOT_DIR__.'/shipsay/seo.php';
+    list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('indexlist');
+    ?>
+    <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+    <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+    <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
     <link rel="canonical" href="<?=$site_url?><?=$uri?>">
     <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container body-content">

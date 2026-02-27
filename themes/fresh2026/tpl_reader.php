@@ -44,9 +44,13 @@
 <html lang="zh">
 <head>
 <meta charset="utf-8">
-<title><?=$chaptername?>_<?=$articlename?>_<?=SITE_NAME?></title>
-<meta name="keywords" content="<?=$chaptername?>,<?=$articlename?>,<?=$author?>">
-<meta name="description" content="<?=$reader_des?>">
+<?php
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('reader');
+?>
+<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <?php require_once 'tpl_header.php'; ?>
 </head>
 <body class="readbg" id="readbg">

@@ -3,9 +3,13 @@
 <html lang="zh-Hans">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title><?php if(!empty($sortname)):?><?=$sortname?><?php else:?>小说书库<?php endif ?>_书友最值得收藏的网络小说阅读网</title>
-<meta name="keywords" content="小说,小说网,最新章节免费阅读小说网,<?=SITE_NAME?>阅读网">
-<meta name="description" content="小说,小说网,最新章节免费阅读小说网,<?=SITE_NAME?>阅读网">
+<?php
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
+?>
+<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="applicable-device" content="pc,mobile" />
 <meta http-equiv="Cache-Control" content="no-transform" />

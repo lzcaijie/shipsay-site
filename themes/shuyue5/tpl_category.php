@@ -8,9 +8,13 @@ $curid = 0;
 <html lang="cmn-Hans">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title><?=$sortname?>小说书库 - <?=SITE_NAME?></title>
-    <meta name="keywords" content="<?=$sortname?>小说书库,<?=SITE_NAME?>小说书库" />
-    <meta name="description" content="最全<?=$sortname?>小说书库">
+        <?php
+    require_once __ROOT_DIR__.'/shipsay/seo.php';
+    list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
+    ?>
+    <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+    <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+    <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
     <link rel="canonical" href="<?=$cateurl?>">
     <?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once 'tpl_fun.php'; ?>
 <div class="class">

@@ -11,9 +11,13 @@ $__author = isset($author) ? $author : '';
 <html lang="zh-cmn-Hans">
 <head>
 <meta charset="UTF-8">
-<title><?=ss_e($__author)?>的全部作品-作者<?=ss_e($__author)?>最新小说大全-<?=SITE_NAME?></title>
-<meta name="keywords" content="<?=ss_e($__author)?>小说作品大全,作者<?=ss_e($__author)?>最新作品列表">
-<meta name="description" content="<?=ss_e($__author)?>是一个比较知名的小说作家，<?=ss_e($__author)?>的全部小说主要作品有<?php if(is_array($res)): ?><?php $__d=0; ?><?php foreach($res as $k => $v){ $__d++; if($__d>20) break; ?>《<?=ss_e($v['articlename'])?>》，<?php } ?><?php endif?>等好看的小说，<?=ss_e($__author)?>作者栏目提供共<?=$author_count?>部最新小说作品全文在线阅读以及<?=ss_e($__author)?>的小说完本免费阅读。">
+<?php
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('author');
+?>
+<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <link rel="canonical" href="<?=$site_url?><?=$uri?>">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">

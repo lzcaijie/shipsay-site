@@ -3,9 +3,13 @@
 <html lang="zh">
 <head>
 <meta charset="utf-8">
-<title><?=SITE_NAME?>_<?=SITE_NAME?>小说阅读网</title>
-<meta name="keywords" content="<?=SITE_NAME?>,小说,最新章节,免费阅读">
-<meta name="description" content="<?=SITE_NAME?>提供热门网络小说最新章节免费阅读。">
+<?php
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
+?>
+<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body>

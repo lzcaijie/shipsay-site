@@ -8,9 +8,13 @@ $search_url_safe = function_exists('ss_search_url')
 <html lang="zh-cmn-Hans">
 <head>
 <meta charset="UTF-8">
-<title>与“<?=$searchkey;?>”有关的小说-<?=SITE_NAME?></title>
-<meta name="keywords" content="<?=SITE_NAME?>搜索结果" />
-<meta name="description" content="<?=$searchkey;?>的搜索结果">
+<?php
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('search');
+?>
+<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="renderer" content="webkit|ie-comp|ie-stand">

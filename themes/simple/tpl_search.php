@@ -5,9 +5,13 @@
 <head>
 <meta charset="UTF-8">
 <?php $year_safe = isset($year) ? $year : date('Y'); ?>
-<title>搜索_<?=SITE_NAME?>_顶尖口碑的免费小说阅读网</title>
-<meta name="keywords" content="<?=SITE_NAME?>,免费小说网,手机小说,最新小说推荐,小说阅读网,免费小说阅读网,小说阅读器全本免费小说,小说网站排名,小说在线阅读" />
-<meta name="description" content="<?=SITE_NAME?>收集了<?=$year_safe?>网络热门小说的最新章节免费阅读,提供玄幻、武侠、原创、网游、都市、言情、历史、军事、科幻、恐怖、官场、穿越、重生等小说,<?=$year_safe?>最新全本免费手机小说阅读推荐,一切精彩尽在<?=SITE_NAME?>" />
+<?php
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('search');
+?>
+<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <div class="container">

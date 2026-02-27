@@ -7,7 +7,13 @@
 <?php
 $searchkey_safe = isset($searchkey) ? trim($searchkey) : '';
 ?>
-<title><?php if($searchkey_safe !== ''): ?>搜索“<?=$searchkey_safe?>”的结果<?php else: ?>搜索小说<?php endif ?>-<?=SITE_NAME?></title>
+<?php
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('search');
+?>
+<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 
 <style type="text/css">
     .list-item{border-bottom:1px dashed #D4D4D4;padding:5px;width:100%;}

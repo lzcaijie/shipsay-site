@@ -21,6 +21,9 @@ if (!function_exists('ss_seo_render')) {
     // 兼容：未配置时给一个保底，避免 <title> 为空
     if ($title_tpl === '') $title_tpl = '{SITE_NAME}';
 
+    if ($kw_tpl === '') $kw_tpl = '{SITE_NAME}';
+    if ($desc_tpl === '') $desc_tpl = '{SITE_NAME}';
+
     // 变量映射（按页面使用情况尽量覆盖）
     $map = [
       '{SITE_NAME}'   => defined('SITE_NAME') ? (string)SITE_NAME : '',
@@ -28,7 +31,7 @@ if (!function_exists('ss_seo_render')) {
       '{author}'      => isset($GLOBALS['author']) ? (string)$GLOBALS['author'] : '',
       '{chaptername}' => isset($GLOBALS['chaptername']) ? (string)$GLOBALS['chaptername'] : '',
       '{sortname}'    => isset($GLOBALS['sortname']) ? (string)$GLOBALS['sortname'] : '',
-      '{page}'        => isset($GLOBALS['page']) ? (string)$GLOBALS['page'] : (isset($GLOBALS['pid'])?(string)$GLOBALS['pid']:''),
+      '{page}'        => isset($GLOBALS['page']) ? (string)$GLOBALS['page'] : (isset($GLOBALS['pid'])?(string)$GLOBALS['pid']:(isset($GLOBALS['now_pid'])?(string)$GLOBALS['now_pid']:'')),
       '{searchkey}'   => isset($GLOBALS['searchkey']) ? (string)$GLOBALS['searchkey'] : '',
       '{ranktitle}'   => isset($GLOBALS['page_title']) ? (string)$GLOBALS['page_title'] : '',
       '{intro_p}'     => isset($GLOBALS['intro_p']) ? (string)$GLOBALS['intro_p'] : (isset($GLOBALS['intro_des'])?(string)$GLOBALS['intro_des']:''),

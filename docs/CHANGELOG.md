@@ -9,6 +9,12 @@
 
 ---
 
+## 2026-02-27-10 | 功能 | SEO/TDK 固化接入：8 页面模板头部统一使用站点配置渲染
+- 更新：`shipsay/seo.php`（仅渲染不生成）支持 `{page}` 读取 `page/pid/now_pid`，keywords/desc 为空时兜底为 `{SITE_NAME}`，并在 `page=1` 时自动去掉“第1页”字样。
+- 更新：各主题模板页头的 `<title>/<meta keywords>/<meta description>` 统一改为调用 `ss_seo_render(page)` 输出三件套，不再使用模板默认文案；覆盖页面：home/info/category/reader/author/indexlist/rank/search。
+- 目标：总控为每站生成一次并固化 `seo_*_tpl` 后，分站换任何模板 TDK 都保持不变。
+- 回滚：回退 `shipsay/seo.php` 及各主题相关 `tpl_*.php` 的 head 输出即可。
+
 ## 2026-02-27-10 | 功能 | SEO/TDK 渲染：模板头部改为读取站点固化配置并替换变量
 - 新增：`shipsay/seo.php`（仅渲染，不生成），从站点配置读取 `seo.*.*_tpl`，按页面类型替换 `{SITE_NAME}/{articlename}/{author}/{chaptername}/{page}` 得到 title/keywords/description。
 - 目标：总控为每站“生成一次并固化”后，分站不再依赖模板默认 TDK；后续换模板 TDK 仍保持不变。

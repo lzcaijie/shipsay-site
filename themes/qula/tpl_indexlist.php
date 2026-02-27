@@ -2,9 +2,13 @@
 
 <!DOCTYPE html>
 <head>
-    <title><?=$articlename?>(<?=$author?>)_<?=$articlename?>最新章节免费阅读_<?=SITE_NAME?></title>
-    <meta name="keywords" content="<?=$articlename?>,<?=$author?>,<?=$sortname?>,<?=$articlename?>小说大全">
-    <meta name="description" content="《<?=$articlename?>》/<?=$author?>著/简介：<?=$intro_des?>">
+        <?php
+    require_once __ROOT_DIR__.'/shipsay/seo.php';
+    list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('indexlist');
+    ?>
+    <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+    <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+    <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
     <meta property="og:type" content="novel">
     <meta property="og:title" content="<?=$articlename?>">
     <meta property="og:description" content="《<?=$articlename?>》<?=$intro_des?>">

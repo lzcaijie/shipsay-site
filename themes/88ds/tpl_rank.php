@@ -3,9 +3,13 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>小说排行_<?=SITE_NAME?>阅读网_<?=SITE_NAME?></title>
-  <meta name="keywords" content="排行榜<?=SITE_NAME?>" />
-  <meta name="description" content="排行榜<?=SITE_NAME?>" />
+    <?php
+  require_once __ROOT_DIR__.'/shipsay/seo.php';
+  list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('rank');
+  ?>
+  <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+  <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+  <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
   <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <body>

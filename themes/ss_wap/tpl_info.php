@@ -4,9 +4,13 @@
 <html lang='zh'>
 <head>
 <meta charset="UTF-8">
-    <title><?=$articlename?>(<?=$author?>)_<?=$articlename?>最新章节_<?=$articlename?>全文免费阅读-<?=SITE_NAME?></title>
-    <meta name="keywords" content="<?=$articlename?>最新章节,<?=$articlename?>全文阅读,<?=$sortname?>,<?=$author?>"/>
-    <meta name="description" content="<?=$articlename?>是<?=$author?>的<?=$sortname?>大作，<?=$articlename?>描述了：<?=$intro_des?>，手机阅读<?=$articlename?>就到<?=SITE_NAME?>手机版(<?=SITE_URL?>)。"/>
+        <?php
+    require_once __ROOT_DIR__.'/shipsay/seo.php';
+    list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
+    ?>
+    <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+    <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+    <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
     <meta property="og:type" content="novel">
     <meta property="og:title" content="<?=$articlename?>(<?=$author?>)_<?=$articlename?>全文免费阅读无弹窗_<?=$articlename?>最新章节阅读_<?=SITE_NAME?>">
     <meta property="og:image" content="<?=$img_url?>">

@@ -14,9 +14,13 @@ if (isset($index_url) && $index_url) {
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title><?=$articlename?>(<?=$author?>)最新章节免费阅读-<?=$articlename?><?=$author?>完整版全文免费在线阅读-<?=SITE_NAME?></title>
-    <meta name="keywords" content="<?=$articlename?>,<?=$articlename?><?=$author?>,<?=$articlename?>TXT全文免费在线阅读" />
-    <meta name="description" content="<?=$intro_p?>！<?=$articlename?>是<?=$author?>大神的最新小说，<?=SITE_NAME?>小说网提供<?=$articlename?>最新章节全文免费阅读，<?=$articlename?>完整版全文免费在线阅读，<?=$articlename?>全文免费阅读，<?=$articlename?>无弹窗全文免费阅读！请关注<?=SITE_NAME?>吧，本站最新最快更新<?=$articlename?>的最新章节。" />
+        <?php
+    require_once __ROOT_DIR__.'/shipsay/seo.php';
+    list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
+    ?>
+    <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+    <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+    <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
     
     <meta http-equiv="Cache-Control" content="no-transform">
     <meta http-equiv="Cache-Control" content="no-siteapp">
