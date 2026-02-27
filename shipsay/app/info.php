@@ -46,17 +46,14 @@ $goodnum=$infoarr[0]['goodnum'];
 $ratenum=$infoarr[0]['ratenum'];
 $ratesum=$infoarr[0]['ratesum'];
 $score=$infoarr[0]['score'];
-$sql='SELECT chapterid,chaptername,lastupdate,chaptertype,chapterorder FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chaptertype = 0 ORDER BY chapterorder ASC';
-$chapterrows=array();
-$chapter_cache_key=$sql;
-if(isset($redis))
-{
-	$chapter_cache_key='chapterrows:'.md5($sql.'|uo='.(int)$use_orderid.'|im='.(int)$is_multiple.'|ft='.(int)$is_ft.'|lt='.(int)$is_langtail.'|ac='.(int)$is_acode);
-}
 
-if(isset($redis)&&$redis->ss_get($chapter_cache_key))
+$sql='SELECT chapterid,chaptername,lastupdate,chaptertype,chapterorder FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chaptertype = 0 ORDER BY chapterorder ASC';
+$sql_cache_key=$sql.'|uo='.(int)$use_orderid.'|m='.(int)$is_multiple.'|ft='.(int)$is_ft.'|ac='.(int)$is_acode.'|lt='.(int)$is_langtail;
+
+$chapterrows=array();
+if(isset($redis)&&$redis->ss_get($sql_cache_key))
 {
-	$chapterrows=$redis->ss_get($chapter_cache_key);
+	$chapterrows=$redis->ss_get($sql_cache_key);
 }
 else
 {
@@ -66,7 +63,8 @@ else
 		$k=0;
 		while($row=mysqli_fetch_assoc($res))
 		{
-			$cid=$use_orderid?$row['chapterorder']:$row['chapterid'];
+			$cid=$use_orderid?intval($row['chapterorder']):intval($row['chapterid']);
+			// when use_orderid=1, chapter param is chapterorder and MUST NOT be mixed
 			if($is_multiple && !$use_orderid)$cid=ss_newid($cid);
 			$chapterrows[$k]['chaptertype']=$row['chaptertype'];
 			$chapterrows[$k]['lastupdate']=$row['lastupdate'];
@@ -75,9 +73,10 @@ else
 			if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
 			$k++;
 		}
-		if(isset($redis))$redis->ss_setex($chapter_cache_key,$info_cache_time,$chapterrows);
+		if(isset($redis))$redis->ss_setex($sql_cache_key,$info_cache_time,$chapterrows);
 	}
 }
+
 $first_url=$chapterrows[0]['cid_url'];
 $chapters=count($chapterrows);
 $lastupdate_stamp=$chapterrows[$chapters-1]['lastupdate'];

@@ -1,22 +1,19 @@
 <?php
 
 $articleid=$sourceid=$matches[1];
-$info_url=Url::info_url($articleid);
 $index_url=Url::index_url($articleid);
-if(!file_exists(__THEME_DIR__.'/tpl_indexlist.php'))header('Location:'.$info_url);
+if(!file_exists(__THEME_DIR__.'/tpl_indexlist.php'))header('Location:'.$index_url);
+$pid=1;
+if(isset($matches[2]))$pid=$matches[2];
+if($is_multiple)$sourceid=ss_sourceid($articleid);
 if($is_acode)
 {
-	$sql='SELECT articleid FROM '.$dbarr['pre'].'article_article WHERE articlecode = "'.$sourceid.'"';
-	$sourceid=$db->ss_getone($sql)['articleid'];
+	$sql=$rico_sql.'AND articlecode = "'.$sourceid.'"';
 }
-elseif($is_multiple)
+else
 {
-	$sourceid=ss_sourceid($articleid);
+	$sql=$rico_sql.'AND articleid = '.$sourceid;
 }
-$subaid=intval($sourceid/1000);
-$pid=isset($matches[2])?$matches[2]:1;
-$per_page=$per_indexlist?:100;
-$sql=$rico_sql.'AND articleid = '.$sourceid;
 if(isset($redis))
 {
 	$infoarr=$redis->ss_redis_getrows($sql,$info_cache_time);
@@ -26,22 +23,16 @@ else
 	$infoarr=$db->ss_getrows($sql);
 }
 if(!is_array($infoarr))Url::ss_errpage();
+if($is_acode)$sourceid=$infoarr[0]['articleid'];
 $articlename=$sourcename=$infoarr[0]['articlename'];
-if($is_langtail===1)
-{
-	if($is_ft)$sourcename=Convert::jt2ft($sourcename,1);
-	include_once __ROOT_DIR__.'/shipsay/include/langtail.php';
-}
 $author=$infoarr[0]['author'];
-$author_arr=explode(',',$author);
 $author_url=$infoarr[0]['author_url'];
-$keywords=$infoarr[0]['keywords'];
-$keywords_arr=$infoarr[0]['keywords_arr'];
 $img_url=$infoarr[0]['img_url'];
 $sortid=$infoarr[0]['sortid'];
 $sortname=$infoarr[0]['sortname'];
 $sorturl=Sort::ss_sorturl($sortid);
 $isfull=$infoarr[0]['isfull'];
+$keywords=$infoarr[0]['keywords'];
 $words_w=$infoarr[0]['words_w'];
 $intro_des=$infoarr[0]['intro_des'];
 $intro_p=$infoarr[0]['intro_p'];
@@ -50,16 +41,13 @@ $goodnum=$infoarr[0]['goodnum'];
 $ratenum=$infoarr[0]['ratenum'];
 $ratesum=$infoarr[0]['ratesum'];
 $score=$infoarr[0]['score'];
+
 $sql='SELECT chapterid,chaptername,lastupdate,chaptertype,chapterorder FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chaptertype = 0 ORDER BY chapterorder ASC';
+$sql_cache_key=$sql.'|uo='.(int)$use_orderid.'|m='.(int)$is_multiple.'|ft='.(int)$is_ft.'|ac='.(int)$is_acode;
 $chapterrows=array();
-$chapter_cache_key=$sql;
-if(isset($redis))
+if(isset($redis)&&$redis->ss_get($sql_cache_key))
 {
-	$chapter_cache_key='chapterrows:'.md5($sql.'|uo='.(int)$use_orderid.'|im='.(int)$is_multiple.'|ft='.(int)$is_ft.'|lt='.(int)$is_langtail.'|ac='.(int)$is_acode);
-}
-if(isset($redis)&&$redis->ss_get($chapter_cache_key))
-{
-	$chapterrows=$redis->ss_get($chapter_cache_key);
+	$chapterrows=$redis->ss_get($sql_cache_key);
 }
 else
 {
@@ -73,12 +61,13 @@ else
 			$chapterrows[$k]['lastupdate']=$rows['lastupdate'];
 			$chapterrows[$k]['cname']=Text::ss_toutf8($rows['chaptername']);
 			if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
-			$cid=$use_orderid?$rows['chapterorder']:$rows['chapterid'];
+
+			$cid=$use_orderid?intval($rows['chapterorder']):intval($rows['chapterid']);
 			if($is_multiple && !$use_orderid)$cid=ss_newid($cid);
 			$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$cid);
 			$k++;
 		}
-		if(isset($redis))$redis->ss_setex($chapter_cache_key,$info_cache_time,$chapterrows);
+		if(isset($redis))$redis->ss_setex($sql_cache_key,$info_cache_time,$chapterrows);
 	}
 }
 $first_url=$chapterrows[0]['cid_url'];
