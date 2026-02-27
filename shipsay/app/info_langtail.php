@@ -46,34 +46,38 @@ $goodnum=$infoarr[0]['goodnum'];
 $ratenum=$infoarr[0]['ratenum'];
 $ratesum=$infoarr[0]['ratesum'];
 $score=$infoarr[0]['score'];
-$sql='SELECT chapterid,chaptername,lastupdate,chaptertype,chapterorder FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chaptertype = 0 ORDER BY chapterorder ASC';
-$sql_cache_key=$sql.'|uo='.(int)$use_orderid.'|m='.(int)$is_multiple.'|ft='.(int)$is_ft.'|ac='.(int)$is_acode.'|lt='.(int)$is_langtail;
 
-$chapterrows=array();
-if(isset($redis)&&$redis->ss_get($sql_cache_key))
+$sql='SELECT chapterid,chaptername,lastupdate,chaptertype,chapterorder FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chaptertype = 0 ORDER BY chapterorder ASC';
+
+// 注意：不能把“已拼好的 cid_url”整体缓存到 Redis（否则切换 use_orderid / is_multiple 后会出现旧链接假象）
+// 做法：只缓存 SQL 原始行（ss_redis_getrows），再按当前开关动态生成 cid_url。
+$rows = [];
+if(isset($redis))
 {
-	$chapterrows=$redis->ss_get($sql_cache_key);
+	$rows=$redis->ss_redis_getrows($sql,$info_cache_time);
 }
 else
 {
-	$res=$db->ss_query($sql);
-	if($res->num_rows)
+	$rows=$db->ss_getrows($sql);
+}
+
+$chapterrows=array();
+if(is_array($rows))
+{
+	$k=0;
+	foreach($rows as $row)
 	{
-		$k=0;
-		while($row=mysqli_fetch_assoc($res))
-		{
-			$cid=$use_orderid?intval($row['chapterorder']):intval($row['chapterid']);
-			if($is_multiple && !$use_orderid)$cid=ss_newid($cid);
-			$chapterrows[$k]['chaptertype']=$row['chaptertype'];
-			$chapterrows[$k]['lastupdate']=$row['lastupdate'];
-			$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$cid);
-			$chapterrows[$k]['cname']=Text::ss_toutf8($row['chaptername']);
-			if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
-			$k++;
-		}
-		if(isset($redis))$redis->ss_setex($sql_cache_key,$info_cache_time,$chapterrows);
+		$cid=$use_orderid?intval($row['chapterorder']):intval($row['chapterid']);
+		if($is_multiple && !$use_orderid)$cid=ss_newid($cid);
+		$chapterrows[$k]['chaptertype']=$row['chaptertype'];
+		$chapterrows[$k]['lastupdate']=$row['lastupdate'];
+		$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$cid);
+		$chapterrows[$k]['cname']=Text::ss_toutf8($row['chaptername']);
+		if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
+		$k++;
 	}
 }
+
 $first_url=$chapterrows[0]['cid_url'];
 $chapters=count($chapterrows);
 $lastupdate_stamp=$chapterrows[$chapters-1]['lastupdate'];
