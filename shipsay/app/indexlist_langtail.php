@@ -40,15 +40,11 @@ $intro_p=$infoarr[0]['intro_p'];
 $allvisit=$infoarr[0]['allvisit'];
 $goodnum=$infoarr[0]['goodnum'];
 $sql='SELECT chapterid,chapterorder,chaptername,chaptertype,lastupdate FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chaptertype = 0 ORDER BY chapterorder ASC';
+$sql_cache_key=$sql.'|uo='.(int)$use_orderid.'|m='.(int)$is_multiple.'|ft='.(int)$is_ft;
 $chapterrows=array();
-$chapter_cache_key=$sql;
-if(isset($redis))
+if(isset($redis)&&$redis->ss_get($sql_cache_key))
 {
-	$chapter_cache_key='chapterrows:'.md5($sql.'|uo='.(int)$use_orderid.'|im='.(int)$is_multiple.'|ft='.(int)$is_ft.'|lt='.(int)$is_langtail.'|ac='.(int)$is_acode);
-}
-if(isset($redis)&&$redis->ss_get($chapter_cache_key))
-{
-	$chapterrows=$redis->ss_get($chapter_cache_key);
+	$chapterrows=$redis->ss_get($sql_cache_key);
 }
 else
 {
@@ -62,12 +58,12 @@ else
 			$chapterrows[$k]['lastupdate']=$rows['lastupdate'];
 			$chapterrows[$k]['cname']=Text::ss_toutf8($rows['chaptername']);
 			if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
-			$cid=$use_orderid?$rows['chapterorder']:$rows['chapterid'];
+			$cid=$use_orderid?intval($rows['chapterorder']):intval($rows['chapterid']);
 			if($is_multiple && !$use_orderid)$cid=ss_newid($cid);
 			$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$cid);
 			$k++;
 		}
-		if(isset($redis))$redis->ss_setex($chapter_cache_key,$info_cache_time,$chapterrows);
+		if(isset($redis))$redis->ss_setex($sql_cache_key,$info_cache_time,$chapterrows);
 	}
 }
 $first_url=$chapterrows[0]['cid_url'];

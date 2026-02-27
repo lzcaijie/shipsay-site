@@ -9,7 +9,6 @@ $chapterid=$sourcecid=$_POST['chapterid'];
 if($is_multiple)
 {
 	$sourceid=ss_sourceid($sourceid);
-	// use_orderid=1 时 chapterid 传的是 chapterorder（不参与混淆解混淆）
 	if(!$use_orderid)
 	{
 		$sourcecid=ss_sourceid($sourcecid);
@@ -27,58 +26,30 @@ $author='';
 
 if($use_orderid)
 {
-	global $redis, $cache_time;
 	$chapterorder_real=(int)$sourcecid;
-	$mapped_ok=0;
-
-	// use_orderid 会导致每次 reader_js 请求额外做一次 chapterorder→chapterid 映射查询：
-	// 这里用 Redis 缓存映射结果，降低 DB 读放大（TTL>=1h，默认复用 cache_time）
-	$ckey='cp_map:aid='.$sourceid.'&ord='.$chapterorder_real;
-	$row=null;
-	if(isset($redis))
-	{
-		$row=$redis->ss_get($ckey);
-	}
-	if(!is_array($row)||empty($row['chapterid']))
-	{
-		$sql='SELECT chapterid,chapterorder,chaptername FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chapterorder = '.$chapterorder_real.' AND chaptertype = 0 LIMIT 1';
-		$row=$db->ss_getone($sql);
-		if(isset($redis)&&is_array($row)&&!empty($row['chapterid']))
-		{
-			$ttl=isset($cache_time)?max(3600,(int)$cache_time):3600;
-			// 仅缓存必要字段（chaptername 保留原编码，取用时再 ss_toutf8）
-			$redis->ss_setex($ckey,$ttl,[
-				'chapterid'=>(int)$row['chapterid'],
-				'chapterorder'=>(int)$row['chapterorder'],
-				'chaptername'=>(string)$row['chaptername'],
-			]);
-		}
-	}
-
+	$sql='SELECT chapterid,chapterorder,chaptername FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chapterorder = '.$chapterorder_real.' AND chaptertype = 0 LIMIT 1';
+	$row=$db->ss_getone($sql);
 	if(is_array($row)&&!empty($row['chapterid']))
 	{
 		$txt_sourcecid=$row['chapterid'];
-		$mapped_ok=1;
-		$chapterid=$chapterorder_real; // canonical: reader_js 返回的分页链接按 chapterorder
 		$chaptername=Text::ss_toutf8($row['chaptername']);
 		if($is_ft)$chaptername=Convert::jt2ft($chaptername);
 	}
-}
-
-if($use_orderid && empty($mapped_ok))
-{
-	// 兼容旧页面/缓存：POST 的 chapterid 可能仍是旧模式（混淆后的 chapterid）
-	$legacy_chapterid=$sourcecid;
-	if($is_multiple)$legacy_chapterid=ss_sourceid($legacy_chapterid);
-	$sql='SELECT chapterid,chapterorder,chaptername FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chapterid = '.$legacy_chapterid.' AND chaptertype = 0 LIMIT 1';
-	$row=$db->ss_getone($sql);
-	if(is_array($row)&&!empty($row['chapterid'])&&!empty($row['chapterorder']))
+	else
 	{
-		$txt_sourcecid=(int)$row['chapterid'];
-		$chapterorder_real=(int)$row['chapterorder'];
-		$chapterid=$chapterorder_real;
-		$chaptername=Text::ss_toutf8($row['chaptername']);
-		if($is_ft)$chaptername=Convert::jt2ft($chaptername);
+		// 兜底：如果顺序号查不到，尝试按“旧混淆 chapterid”解析（仅在未命中时触发）
+		$cid_try=$chapterid;
+		if($is_multiple)$cid_try=ss_sourceid($cid_try);
+		$cid_try=(int)$cid_try;
+		$sql='SELECT chapterid,chapterorder,chaptername FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chapterid = '.$cid_try.' AND chaptertype = 0 LIMIT 1';
+		$row=$db->ss_getone($sql);
+		if(is_array($row)&&!empty($row['chapterid']))
+		{
+			$txt_sourcecid=$row['chapterid'];
+			$chapterorder_real=(int)$row['chapterorder'];
+			$chaptername=Text::ss_toutf8($row['chaptername']);
+			if($is_ft)$chaptername=Convert::jt2ft($chaptername);
+		}
 	}
 }
 
@@ -119,7 +90,7 @@ if($need_patch)
 		}
 	}
 
-	if(!empty($articlename)&&!empty($author)&&$chapterorder_real>0)
+	if(!empty($articlename)&&!empty($author)&&$chapterorder_real>=0)
 	{
 		$fb=ss_cp_get_or_fetch($sourceid,$chapterorder_real,$articlename,$author,$chaptername);
 		if(strlen($fb)>0)

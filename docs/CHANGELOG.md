@@ -9,11 +9,18 @@
 
 ---
 
-## 2026-02-27-1 | 修复 | use_orderid 章节链接从 1 开始（禁用 chapterorder 混淆 + 章节列表缓存分维度）
-- 修复：`use_orderid=1` 时章节参数使用 `chapterorder(1/2/3...)`，不再被 `is_multiple` 逻辑 `ss_newid(+550)` 混淆。
-- 修复：章节列表 `Redis` 缓存 key 加入 `use_orderid/is_multiple/is_ft/is_langtail/is_acode` 维度，避免切换开关后继续命中旧缓存导致链接不变。
-- 涉及：`shipsay/app/info.php`、`shipsay/app/info_langtail.php`、`shipsay/app/indexlist.php`、`shipsay/app/indexlist_langtail.php`
-- 回滚：还原上述文件本次改动即可。
+## 2026-02-27-2 | 修复 | use_orderid 模式下 AJAX 正文加载缺失（reader_js 章节解混淆条件修复）
+- 修复：`use_orderid=1` 时，AJAX 正文接口（`reader_js`）不再对章节参数做 `ss_sourceid/ss_newid(±550)`；仅小说ID继续按 `is_multiple` 混淆。
+- 增强：当顺序号（`chapterorder`）未命中章节时，兜底尝试按“旧混淆 chapterid”查章，避免历史直链导致正文缺失。
+- 涉及：`shipsay/include/reader_js.php`
+- 回滚：回退该文件到上一版本即可。
+
+## 2026-02-27-1 | 修复 | use_orderid 阅读页正文缺失（章节顺序号不混淆 + reader 映射兜底）
+- 修复：`use_orderid=1` 时章节参数使用 `chapterorder`，不再受 `is_multiple` 的章节 ±550 混淆影响（仅小说ID继续混淆）。
+- 修复：`reader.php` 章节内容读取在 `use_orderid=1` 模式下可靠映射 `chapterorder -> chapterid`（并兼容旧混淆章节ID直链作为兜底）。
+- 修复：阅读页章节列表缓存 key 增加 `use_orderid/is_multiple/...` 维度，避免切换开关后继续命中旧缓存导致“链接/内容不变”。
+- 涉及：`shipsay/app/reader.php`、`shipsay/app/info.php`、`shipsay/app/info_langtail.php`、`shipsay/app/indexlist.php`、`shipsay/app/indexlist_langtail.php`
+- 回滚：回退以上文件到上一版本即可。
 
 ## 2026-02-14-4 | 补丁 | v6.3.3-fz1（core_policy 写入加固 + 回包补充 + 摘要范围校验）
 - 更新：`site_sync meta.ver` 从 `6.3.2-impl` → `6.3.3-impl`。
