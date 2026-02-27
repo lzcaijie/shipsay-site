@@ -9,6 +9,12 @@
 
 ---
 
+## 2026-02-27-5 | 功能 | 缺章兜底补全按“数据库池”隔离（Hub sources 带 pool_no）
+- 调整：`chapter_patch` 调 Hub sources 时携带 `pool_no`（默认取 `redisdb` 的 1~15），确保补章只在同一源库内互拉，避免跨库串书。
+- 调整：Hub sources 本地缓存文件名增加 `pool_no` 维度（`hub_sources_p{pool}_{fp}.json`），避免不同库命中同一 fp 时互相污染缓存。
+- 涉及：`shipsay/include/chapter_patch.php`
+- 回滚：回退该文件到上一版本即可。
+
 ## 2026-02-27-4 | 功能/修复 | dbpool 共享缓存完善（redisdb 作为 pool）+ langtail/301 规范化
 - 调整：`SsRedis` 的 `redis_scope=dbpool` 默认以 `redisdb` 作为“数据库池”标识（更贴合当前 1-7 固定编号用法）；当 `redisdb=0` 且你又需要隔离时，会自动退化到 `dbarr(host|port|name)`。
 - 新增：`SsRedis` 暴露 `ss_key/ss_ttl/ss_setnxex`，业务侧不再手写 `md5($site_url.$key)`，避免切换隔离策略后 key 维度不一致。

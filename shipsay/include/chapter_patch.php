@@ -55,6 +55,19 @@ function ss_cp_fp($articlename, $author){
   return md5(ss_cp_norm($articlename).'|'.ss_cp_norm($author));
 }
 
+/**
+ * dbpool 标识（用于 Hub sources 限制在同一源库内）
+ * 约定：默认用 redisdb(1~15) 作为 pool_no；未设置则为 0（全局/兼容旧行为）
+ */
+function ss_cp_pool_no(){
+  global $redisdb;
+  $pn = isset($redisdb) ? (int)$redisdb : 0;
+  if ($pn < 0) $pn = 0;
+  if ($pn > 15) $pn = 15;
+  return $pn;
+}
+
+
 function ss_cp_strlen_trim($s){
   $s = (string)$s;
   // 去掉所有空白（包含全角空格/换行/tab）
@@ -398,13 +411,17 @@ function ss_cp_get_or_fetch($articleid, $chapterorder, $articlename, $author, $c
 function ss_cp_sources_cache_file($fp){
   $dir = __ROOT_DIR__.'/shipsay/configs/_bak';
   if (!is_dir($dir)) @mkdir($dir, 0755, true);
-  return $dir.'/hub_sources_'.$fp.'.json';
+  $pn = ss_cp_pool_no();
+  $suffix = $pn>0 ? ('p'.$pn.'_') : '';
+  return $dir.'/hub_sources_'.$suffix.$fp.'.json';
 }
 
 function ss_cp_get_sources_cached($fp){
   global $chapter_patch_hub_url, $chapter_patch_cache_ttl, $chapter_patch_insecure_ssl;
   $fp = (string)$fp;
   if ($fp==='') return [];
+  $pool_no = ss_cp_pool_no();
+
 
   $file = ss_cp_sources_cache_file($fp);
   $ttl = (int)$chapter_patch_cache_ttl;
@@ -420,7 +437,7 @@ function ss_cp_get_sources_cached($fp){
   }
 
   // 调 Hub
-  $payload = ['mode'=>'sources','fp'=>$fp,'limit'=>20];
+  $payload = ['mode'=>'sources','fp'=>$fp,'limit'=>20,'pool_no'=>$pool_no];
   [$ret, $code] = ss_cp_http_post_json((string)$chapter_patch_hub_url, $payload, [], 4, $chapter_patch_insecure_ssl);
   if ($code !== 200 || !$ret) return [];
   $j = json_decode((string)$ret, true);
