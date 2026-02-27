@@ -8,9 +8,13 @@
 $author_safe = isset($author) ? trim($author) : '';
 $res_safe = (!empty($res) && is_array($res)) ? $res : [];
 ?>
-<title><?=$author_safe?>作品集_<?=$author_safe?>全部小说_<?=SITE_NAME?></title>
-<meta name="keywords" content="<?=$author_safe?>,<?=$author_safe?>作品集,<?=$author_safe?>全部小说,<?=SITE_NAME?>">
-<meta name="description" content="<?=SITE_NAME?>为您提供<?=$author_safe?>作品集，收录<?=$author_safe?>全部小说作品，最新章节免费阅读。">
+<?php
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('author');
+?>
+<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 
 <style type="text/css">
     .list-item{border-bottom:1px dashed #D4D4D4;padding:5px;width:100%;}

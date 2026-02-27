@@ -4,9 +4,13 @@
 <html lang="zh-cmn-Hans">
 <head>
 <meta charset="UTF-8">
-<title><?=$page_title?> - <?=SITE_NAME?></title>
-<meta name="keywords" content="小说排行榜,<?=$page_title?>,<?=SITE_NAME?>" />
-<meta name="description" content="<?=SITE_NAME?>提供<?=$page_title?>，展示热门小说排行。" />
+<?php
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('rank');
+?>
+<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <link rel="canonical" href="<?=$site_url?>/rank/<?=$query?>/">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="renderer" content="webkit|ie-comp|ie-stand">

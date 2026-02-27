@@ -3,9 +3,13 @@
 <!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
-    <title><?=$author?>_<?=$author?>新书_<?=$author?>小说大全_<?=SITE_NAME?></title>
-    <meta name="keywords" content="<?=$author?>,<?=$author?>新书,<?=$author?>小说大全,<?=SITE_NAME?>">
-    <meta name="description" content="本站提供大量好看的免费小说、玄幻小说、穿越小说等各种好看的小说，小说排行榜每日更新各类小说居同类小说网站之首，是小说迷们最喜欢的全本小说阅读网！">
+        <?php
+    require_once __ROOT_DIR__.'/shipsay/seo.php';
+    list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('author');
+    ?>
+    <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+    <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+    <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
  

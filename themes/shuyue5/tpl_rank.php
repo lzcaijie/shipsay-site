@@ -8,9 +8,13 @@ $page_end_scripts = '<script>nav_sel(\'nav_top\');</script>';
 <html lang="cmn-Hans">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>小说排行榜-<?=$year?>小说排行榜-<?=SITE_NAME?></title>
-    <meta name="keywords" content="小说排行榜,<?=SITE_NAME?>排行榜" />
-    <meta name="description" content="小说排行榜" />
+        <?php
+    require_once __ROOT_DIR__.'/shipsay/seo.php';
+    list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('rank');
+    ?>
+    <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+    <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+    <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
     <link rel="canonical" href="<?=$site_url?>/rank/">
     <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container body-content">

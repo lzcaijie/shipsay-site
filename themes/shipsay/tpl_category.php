@@ -4,9 +4,13 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title><?php if($sortname !=''):?><?=$sortname?><?php else:?>小说书库<?php endif ?>_<?=SITE_NAME?>书友最值得收藏的网络小说阅读网</title>
-<meta name="keywords" content="<?=SITE_NAME?>小说,<?=SITE_NAME?>小说网,最新章节免费阅读小说网,<?=SITE_NAME?>阅读网">
-<meta name="description" content="<?=SITE_NAME?>小说,<?=SITE_NAME?>小说网,最新章节免费阅读小说网,<?=SITE_NAME?>阅读网">
+<?php
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
+?>
+<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <!-- sort -->
 <div class="store">

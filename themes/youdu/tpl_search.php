@@ -2,9 +2,13 @@
 <!DOCTYPE html>
 <html lang="zh-Hans">
 <head>
-    <title>与“<?=htmlspecialchars(isset($searchkey)?$searchkey:'', ENT_QUOTES)?>”有关的小说-<?=SITE_NAME?></title>
-    <meta name="keywords" content="<?=SITE_NAME?>搜索结果" />
-    <meta name="description" content="<?=htmlspecialchars(isset($searchkey)?$searchkey:'', ENT_QUOTES)?>的搜索结果">
+        <?php
+    require_once __ROOT_DIR__.'/shipsay/seo.php';
+    list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('search');
+    ?>
+    <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+    <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+    <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="applicable-device" content="pc,mobile">

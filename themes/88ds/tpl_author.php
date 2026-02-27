@@ -8,9 +8,13 @@ if (!function_exists('ss_e')) {
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title><?=ss_e($author)?> 的全部作品_<?=SITE_NAME?></title>
-  <meta name="keywords" content="<?=ss_e($author)?>的全部小说">
-  <meta name="description" content="<?=SITE_NAME?>为您提供作者<?=ss_e($author)?>的全部小说作品列表，共<?=intval($author_count)?>本。">
+    <?php
+  require_once __ROOT_DIR__.'/shipsay/seo.php';
+  list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('author');
+  ?>
+  <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+  <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+  <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <link rel="stylesheet" href="/static/<?=$theme_dir?>/style.css">
 </head>

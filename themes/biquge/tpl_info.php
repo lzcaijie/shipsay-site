@@ -16,9 +16,13 @@ if (isset($index_url) && $index_url) {
 <html lang='zh'>
 <head>
     <meta charset="UTF-8">
-    <title><?=$articlename?>(<?=$author?>)_<?=$articlename?>全文免费阅读无弹窗_<?=$articlename?>最新章节阅读_<?=SITE_NAME?></title>
-    <meta name="keywords" content="<?=$articlename?>,<?=$year?><?=$articlename?>最新章节,<?=$articlename?>免费阅读,<?=$author?>的小说,<?=$author?><?=$isfull?>小说阅读">
-    <meta name="description" content="<?=$articlename?>是<?=$author?><?=$year?>最热门的<?=$sortname?>类型小说，主要描写了<?=$intro_des?>，<?=SITE_NAME?>提供<?=$articlename?>最新章节,<?=$articlename?>最新更新章节,<?=SITE_NAME?>免费稳定急速专业无弹窗">
+        <?php
+    require_once __ROOT_DIR__.'/shipsay/seo.php';
+    list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
+    ?>
+    <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+    <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+    <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
     <meta property="og:type" content="novel">
     <meta property="og:title" content="<?=$articlename?>(<?=$author?>)_<?=$articlename?>全文免费阅读无弹窗_<?=$articlename?>最新章节阅读_<?=SITE_NAME?>">
     <meta property="og:image" content="<?=$img_url?>">

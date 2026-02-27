@@ -5,9 +5,13 @@
 <head>
 <meta charset="UTF-8">
 <?php $__sortname = ($sortname != '') ? $sortname : '小说'; ?>
-<title><?php if($sortname !=''):?><?=$sortname?>_<?=$sortname?>大全_<?=$sortname?>排行榜<?php else:?>小说书库<?php endif ?> - <?=SITE_NAME?></title>
-<meta name="keywords" content="<?=$__sortname?>,<?=$__sortname?>网,<?=$__sortname?>免费阅读,<?=SITE_NAME?>">
-<meta name="description" content="<?=SITE_NAME?>为您提供好看的<?=$__sortname?>,最新热门<?=$__sortname?>排行榜。">
+<?php
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
+?>
+<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <link rel="canonical" href="<?=$site_url?><?=Sort::ss_sorturl($sortid)?>">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="renderer" content="webkit|ie-comp|ie-stand">

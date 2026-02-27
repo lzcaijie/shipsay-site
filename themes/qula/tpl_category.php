@@ -3,9 +3,13 @@
 <!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
-    <title>好看的<?php if($sortname != ''):?><?=$sortname?>小说txt下载<?php endif ?><?php if($fullflag):?>已完本小说<?php endif ?>_<?=SITE_NAME?></title>
-    <meta name="keywords" content="<?php if($sortname == ''):?>分类列表,小说全部分类列表,小说书库<?php else:?><?=$sortname?>,<?=$sortname?>类型推荐,<?=$year?>热门的<?=$sortname?>小说,<?=$sortname?>的分类列表,<?=$sortname?>的小说书库<?php endif ?>">
-    <meta name="description" content="<?php if($sortname == ''):?>分类列表,小说全部分类列表,小说书库<?php else:?><?=$sortname?>,<?=$sortname?>类型推荐,<?=$year?>热门的<?=$sortname?>小说,<?=$sortname?>的分类列表,<?=$sortname?>的小说书库,<?=SITE_NAME?>为你提供免费无弹窗的阅读体验<?php endif ?>">
+        <?php
+    require_once __ROOT_DIR__.'/shipsay/seo.php';
+    list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
+    ?>
+    <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+    <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+    <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container">
         <div class="row">

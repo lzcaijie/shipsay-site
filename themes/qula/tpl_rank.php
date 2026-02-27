@@ -3,9 +3,13 @@
 <!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
-<title><?=$page_title?>_小说排行榜_<?=SITE_NAME?></title>
-<meta name="keywords" content="<?=$page_title?>小说排行榜" />
-<meta name="description" content="<?=SITE_NAME?>是广大书友最值得收藏的网络小说阅读网，网站收录了当前最火热的<?=$page_title?>小说排行榜，免费提供高质量的小说最新章节。" />
+<?php
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('rank');
+?>
+<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <body>
      <div class="container">

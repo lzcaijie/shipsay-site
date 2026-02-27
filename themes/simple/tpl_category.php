@@ -10,9 +10,13 @@ $fullflag_safe = !empty($fullflag);
 $year_safe = isset($year) ? $year : date('Y');
 $sorttitle_safe = ($sortname_safe !== '') ? $sortname_safe : '全部';
 ?>
-    <title><?php if($sortname_safe != ''):?><?=$sortname_safe?>_<?=$sortname_safe?>小说_<?php endif ?><?php if($fullflag_safe):?>已完本_<?php endif ?>小说书库_<?=SITE_NAME?></title>
-    <meta name="keywords" content="<?php if($sortname_safe == ''):?>分类列表,小说全部分类列表,小说书库<?php else:?><?=$sortname_safe?>,<?=$sortname_safe?>类型推荐,<?=$year_safe?>热门的<?=$sortname_safe?>小说,<?=$sortname_safe?>的分类列表,<?=$sortname_safe?>的小说书库<?php endif ?>">
-    <meta name="description" content="<?php if($sortname_safe == ''):?>分类列表,小说全部分类列表,小说书库<?php else:?><?=$sortname_safe?>,<?=$sortname_safe?>类型推荐,<?=$year_safe?>热门的<?=$sortname_safe?>小说,<?=$sortname_safe?>的分类列表,<?=$sortname_safe?>的小说书库,<?=SITE_NAME?>为你提供免费无弹窗的阅读体验<?php endif ?>">
+        <?php
+    require_once __ROOT_DIR__.'/shipsay/seo.php';
+    list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
+    ?>
+    <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+    <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+    <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <div class="container">

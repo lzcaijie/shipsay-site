@@ -62,9 +62,15 @@ $pageDescription .= '，作者：' . $author . '。';
 <head>
     <meta charset="UTF-8">
 
-    <title><?=$pageTitle?></title>
-    <meta name="keywords" content="<?=$articlename?>,<?=$chaptername?>,<?=$articlename?>最新章节,<?=$author?>" />
-    <meta name="description" content="<?=$pageDescription?>" />
+        <?php
+    require_once __ROOT_DIR__.'/shipsay/seo.php';
+    list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('reader');
+    $pageTitle = $seo_title;
+    $pageDescription = $seo_description;
+    ?>
+    <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+    <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+    <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 
     <meta http-equiv="Cache-Control" content="no-transform">
     <meta http-equiv="Cache-Control" content="no-siteapp">

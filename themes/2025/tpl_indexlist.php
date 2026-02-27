@@ -36,9 +36,14 @@ function getPageUrl($articleid, $page = 1) {
 // 当前页面URL
 $currentUrl = getPageUrl($articleid, $currentPage);
 ?>
-<title><?=$pageTitle?></title>
-<meta name="keywords" content="<?= $articlename ?>章节目录,<?= $articlename ?>最新章节,<?= $author ?>" />
-<meta name="description" content="《<?= $articlename ?>》章节目录第<?=$currentPage?>页，作者：<?=$author?>，总章节：<?=$chapters?>章，当前显示第<?=$startChapter?>-<?=$endChapter?>章。" />
+<?php
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('indexlist');
+$pageTitle = $seo_title;
+?>
+<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 
 <link rel="canonical" href="<?=$site_url?><?=$currentUrl?>">
 

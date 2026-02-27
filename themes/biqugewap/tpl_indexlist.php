@@ -32,9 +32,14 @@ $pageTitle = ($currentPage > 1) ?
 $description = "《{$articlename}》章节目录第{$currentPage}页，作者：{$author}，总章节：{$chapters}章。".SITE_NAME."提供{$articlename}最新章节,{$articlename}最新章节列表,{$articlename}小说目录免费阅读";
 $keywords = "{$articlename}章节目录,{$articlename}最新章节,{$author},{$articlename}免费阅读,{$articlename}小说目录,{$articlename}最新章节列表";
 ?>
-<title><?=$pageTitle?></title>
-<meta name="keywords" content="<?=$keywords?>" />
-<meta name="description" content="<?=$description?>" />
+<?php
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('indexlist');
+$pageTitle = $seo_title;
+?>
+<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 
 <link href="<?=$site_url?><?=getChapterPageUrl($articleid, $currentPage)?>" rel="canonical">
 <?php if ($currentPage > 1): ?>

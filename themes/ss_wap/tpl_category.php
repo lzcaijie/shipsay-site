@@ -10,9 +10,13 @@ $year_safe     = isset($year) ? $year : date('Y');
 $retarr_safe   = (!empty($retarr) && is_array($retarr)) ? $retarr : [];
 $jump_html_wap_safe = isset($jump_html_wap) ? $jump_html_wap : '';
 ?>
-<title><?=$sortname_safe?>小说排行榜_<?=$year_safe?>年热门<?=$sortname_safe?>小说_<?=SITE_NAME?></title>
-<meta name="keywords" content="<?=$sortname_safe?>小说排行榜,<?=$year_safe?>年热门<?=$sortname_safe?>小说,<?=$sortname_safe?>小说排行榜手机阅读" />
-<meta name="description" content="<?=SITE_NAME?>提供<?=$year_safe?>年热门<?=$sortname_safe?>，更新最快的<?=$sortname_safe?>小说、无弹窗免费阅读<?=$sortname_safe?>小说排行榜手机阅读。" />
+<?php
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
+?>
+<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <style type="text/css">
         .list-item{border-bottom:1px dashed #D4D4D4;padding:5px;width:100%;}
         .list-item .article{height:100px; overflow:hidden; line-height:20px;}
