@@ -165,7 +165,7 @@ function ss_cp_patch_save($params){
   $source_articleid = (int)($params['source_articleid'] ?? 0);
   $fetched_at = (int)($params['fetched_at'] ?? $now);
 
-  if ($articleid<=0 || $chapterorder<=0 || $content==='') return false;
+  if ($articleid<=0 || $chapterorder<0 || $content==='') return false;
   if ($fp==='') $fp = md5($articleid.'|'.$chapterorder);
   if ($content_hash==='') $content_hash = sha1($content);
   if ($content_len<=0) $content_len = ss_cp_strlen_trim($content);
@@ -281,7 +281,7 @@ function ss_cp_fail_record($articleid, $chapterorder, $error = ''){
   global $chapter_patch_fail_cooldown_base, $chapter_patch_fail_cooldown_max;
   $articleid = (int)$articleid;
   $chapterorder = (int)$chapterorder;
-  if ($articleid<=0 || $chapterorder<=0) return;
+  if ($articleid<=0 || $chapterorder<0) return;
 
   $now = time();
   $st = ss_cp_fail_state_get($articleid, $chapterorder);
@@ -328,7 +328,7 @@ function ss_cp_get_or_fetch($articleid, $chapterorder, $articlename, $author, $c
   if (empty($chapter_patch_enable)) return '';
   $articleid = (int)$articleid;
   $chapterorder = (int)$chapterorder;
-  if ($articleid<=0 || $chapterorder<=0) return '';
+  if ($articleid<=0 || $chapterorder<0) return '';
 
   // 1) 优先读补丁表
   $patch = ss_cp_patch_get($articleid, $chapterorder);
