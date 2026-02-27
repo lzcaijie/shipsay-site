@@ -3,16 +3,16 @@
 // [MODLOG 2026-02-12] 兜底补章：缺章/短章时读取补丁表并可远端拉取
 require_once __ROOT_DIR__.'/shipsay/include/chapter_patch.php';
 
+header('Content-Type: text/html; charset=utf-8');
+header('Cache-Control: public, max-age=60, s-maxage=60');
+
 $now_pid=$_POST['pid'];
 $articleid=$sourceid=$_POST['articleid'];
 $chapterid=$sourcecid=$_POST['chapterid'];
 if($is_multiple)
 {
 	$sourceid=ss_sourceid($sourceid);
-	if(!$use_orderid)
-	{
-		$sourcecid=ss_sourceid($sourcecid);
-	}
+	$sourcecid=ss_sourceid($sourcecid);
 }
 
 $subaid=intval($sourceid/1000);
@@ -34,22 +34,6 @@ if($use_orderid)
 		$txt_sourcecid=$row['chapterid'];
 		$chaptername=Text::ss_toutf8($row['chaptername']);
 		if($is_ft)$chaptername=Convert::jt2ft($chaptername);
-	}
-	else
-	{
-		// 兜底：如果顺序号查不到，尝试按“旧混淆 chapterid”解析（仅在未命中时触发）
-		$cid_try=$chapterid;
-		if($is_multiple)$cid_try=ss_sourceid($cid_try);
-		$cid_try=(int)$cid_try;
-		$sql='SELECT chapterid,chapterorder,chaptername FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chapterid = '.$cid_try.' AND chaptertype = 0 LIMIT 1';
-		$row=$db->ss_getone($sql);
-		if(is_array($row)&&!empty($row['chapterid']))
-		{
-			$txt_sourcecid=$row['chapterid'];
-			$chapterorder_real=(int)$row['chapterorder'];
-			$chaptername=Text::ss_toutf8($row['chaptername']);
-			if($is_ft)$chaptername=Convert::jt2ft($chaptername);
-		}
 	}
 }
 
@@ -90,7 +74,7 @@ if($need_patch)
 		}
 	}
 
-	if(!empty($articlename)&&!empty($author)&&$chapterorder_real>=0)
+	if(!empty($articlename)&&!empty($author)&&$chapterorder_real>0)
 	{
 		$fb=ss_cp_get_or_fetch($sourceid,$chapterorder_real,$articlename,$author,$chaptername);
 		if(strlen($fb)>0)

@@ -1,20 +1,22 @@
 <?php
 
 $articleid=$sourceid=$matches[1];
+$info_url=Url::info_url($articleid);
 $index_url=Url::index_url($articleid);
-if(!file_exists(__THEME_DIR__.'/tpl_indexlist.php'))header('Location:'.$index_url);
-$pid=1;
-if(isset($matches[2]))$pid=$matches[2];
-$per_page=$per_indexlist?:100;
-if($is_multiple)$sourceid=ss_sourceid($articleid);
+if(!file_exists(__THEME_DIR__.'/tpl_indexlist.php'))header('Location:'.$info_url);
 if($is_acode)
 {
-	$sql=$rico_sql.'AND articlecode = "'.$sourceid.'"';
+	$sql='SELECT articleid FROM '.$dbarr['pre'].'article_article WHERE articlecode = "'.$sourceid.'"';
+	$sourceid=$db->ss_getone($sql)['articleid'];
 }
-else
+elseif($is_multiple)
 {
-	$sql=$rico_sql.'AND articleid = '.$sourceid;
+	$sourceid=ss_sourceid($articleid);
 }
+$subaid=intval($sourceid/1000);
+$pid=isset($matches[2])?$matches[2]:1;
+$per_page=$per_indexlist?:100;
+$sql=$rico_sql.'AND articleid = '.$sourceid;
 if(isset($redis))
 {
 	$infoarr=$redis->ss_redis_getrows($sql,$info_cache_time);
@@ -24,16 +26,22 @@ else
 	$infoarr=$db->ss_getrows($sql);
 }
 if(!is_array($infoarr))Url::ss_errpage();
-if($is_acode)$sourceid=$infoarr[0]['articleid'];
 $articlename=$sourcename=$infoarr[0]['articlename'];
+if($is_langtail===1)
+{
+	if($is_ft)$sourcename=Convert::jt2ft($sourcename,1);
+	include_once __ROOT_DIR__.'/shipsay/include/langtail.php';
+}
 $author=$infoarr[0]['author'];
+$author_arr=explode(',',$author);
 $author_url=$infoarr[0]['author_url'];
+$keywords=$infoarr[0]['keywords'];
+$keywords_arr=$infoarr[0]['keywords_arr'];
 $img_url=$infoarr[0]['img_url'];
 $sortid=$infoarr[0]['sortid'];
 $sortname=$infoarr[0]['sortname'];
 $sorturl=Sort::ss_sorturl($sortid);
 $isfull=$infoarr[0]['isfull'];
-$keywords=$infoarr[0]['keywords'];
 $words_w=$infoarr[0]['words_w'];
 $intro_des=$infoarr[0]['intro_des'];
 $intro_p=$infoarr[0]['intro_p'];
@@ -42,39 +50,32 @@ $goodnum=$infoarr[0]['goodnum'];
 $ratenum=$infoarr[0]['ratenum'];
 $ratesum=$infoarr[0]['ratesum'];
 $score=$infoarr[0]['score'];
-
 $sql='SELECT chapterid,chaptername,lastupdate,chaptertype,chapterorder FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chaptertype = 0 ORDER BY chapterorder ASC';
-
-// 注意：不能缓存“已拼好的 cid_url”（否则切换 use_orderid / is_multiple 后会出现旧链接假象）
-// 做法：只缓存 SQL 原始行（ss_redis_getrows），再按当前开关动态生成 cid_url。
-$rows = [];
-if(isset($redis))
+$chapterrows=array();
+if(isset($redis)&&$redis->ss_get($sql))
 {
-	$rows=$redis->ss_redis_getrows($sql,$info_cache_time);
+	$chapterrows=$redis->ss_get($sql);
 }
 else
 {
-	$rows=$db->ss_getrows($sql);
-}
-
-$chapterrows=array();
-if(is_array($rows))
-{
-	$k=0;
-	foreach($rows as $row)
+	$res=$db->ss_query($sql);
+	if($res->num_rows)
 	{
-		$chapterrows[$k]['chaptertype']=$row['chaptertype'];
-		$chapterrows[$k]['lastupdate']=$row['lastupdate'];
-		$chapterrows[$k]['cname']=Text::ss_toutf8($row['chaptername']);
-		if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
-
-		$cid=$use_orderid?intval($row['chapterorder']):intval($row['chapterid']);
-		if($is_multiple && !$use_orderid)$cid=ss_newid($cid);
-		$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$cid);
-		$k++;
+		$k=0;
+		while($rows=mysqli_fetch_assoc($res))
+		{
+			$chapterrows[$k]['chaptertype']=$rows['chaptertype'];
+			$chapterrows[$k]['lastupdate']=$rows['lastupdate'];
+			$chapterrows[$k]['cname']=Text::ss_toutf8($rows['chaptername']);
+			if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
+			if($is_multiple)$rows['chapterid']=ss_newid($rows['chapterid']);
+			if($use_orderid)$rows['chapterid']=$rows['chapterorder'];
+			$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$rows['chapterid']);
+			$k++;
+		}
+		if(isset($redis))$redis->ss_setex($sql,$info_cache_time,$chapterrows);
 	}
 }
-
 $first_url=$chapterrows[0]['cid_url'];
 $chapters=count($chapterrows);
 $lastupdate=date('Y-m-d H:i:s',$chapterrows[$chapters-1]['lastupdate']);
@@ -112,6 +113,19 @@ else
 	$htmltitle.='<a class="index-container-btn disabled-btn" href="javascript:void(0);">没有了</a>';
 }
 if($count_visit)require_once __ROOT_DIR__.'/shipsay/include/articlevisit.php';
-header('Last-Modified: '.date('D, d M Y H:i:s',$chapterrows[$chapters-1]['lastupdate']-8*60*60).' GMT');
+$lastupdate_stamp=(int)$chapterrows[$chapters-1]['lastupdate'];
+$lm_ts=$lastupdate_stamp-8*60*60;
+$lm_gmt=date('D, d M Y H:i:s',$lm_ts).' GMT';
+$etag='"idx-'.$sourceid.'-'.$lastupdate_stamp.'-p'.$pid.'-uo'.(int)$use_orderid.'-m'.(int)$is_multiple.'-ft'.(int)$is_ft.'-ac'.(int)$is_acode.'"';
+header('Last-Modified: '.$lm_gmt);
+header('ETag: '.$etag);
+$max_age=(int)$info_cache_time;
+if($max_age<=0)$max_age=300;
+if($max_age>86400)$max_age=86400;
+header('Cache-Control: public, max-age='.$max_age.', s-maxage='.$max_age);
+$inm=isset($_SERVER['HTTP_IF_NONE_MATCH'])?trim($_SERVER['HTTP_IF_NONE_MATCH']):'';
+if($inm!=='' && $inm===$etag){header('HTTP/1.1 304 Not Modified');exit;}
+$ims=isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])?strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']):0;
+if($ims>0 && $ims>=$lm_ts){header('HTTP/1.1 304 Not Modified');exit;}
 require_once __THEME_DIR__.'/tpl_indexlist.php';
 ?>

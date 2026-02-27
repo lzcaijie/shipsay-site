@@ -3,49 +3,24 @@
 require_once __ROOT_DIR__.'/shipsay/configs/filter.ini.php';
 // [MODLOG 2026-02-12] 兜底补章：缺章/短章时读取补丁表并可远端拉取
 require_once __ROOT_DIR__.'/shipsay/include/chapter_patch.php';
-
 $now_pid=1;
 $articleid=$sourceid=$matches[1];
-
 if($is_acode)
 {
 	$sql='SELECT articleid FROM '.$dbarr['pre'].'article_article WHERE articlecode = "'.$sourceid.'"';
 	$sourceid=$db->ss_getone($sql)['articleid'];
 }
-
-$chapterid_raw=$matches[2];
+$chapterid=$sourcecid=$matches[2];
 if(isset($matches[3]))$now_pid=str_replace('_','',$matches[3]);
-
-// url param (chapter)
-$sourcecid_raw=$chapterid_raw;
-$sourcecid=intval($sourcecid_raw);
-$sourcecid_mixed_candidate=null; // real chapterid candidate (decoded from mixed)
-
-// decode novel id always when multiple
 if($is_multiple)
 {
 	$sourceid=ss_sourceid($sourceid);
-	// when use_orderid=1: chapter param is chapterorder, MUST NOT be decoded;
-	// but we still keep a candidate to support old mixed chapterid links.
-	if(!$use_orderid)
-	{
-		$sourcecid=ss_sourceid($sourcecid_raw);
-	}
-	else
-	{
-		$sourcecid_mixed_candidate=ss_sourceid($sourcecid_raw);
-	}
+	$sourcecid=ss_sourceid($sourcecid);
 }
-
-// keep current chapter param for paging links; if we later normalize cid, we will overwrite it
-$chapterid=$sourcecid;
-
 $max_pid=1;
 $prevpage_url='';
 $nextpage_url='';
 $subaid=intval($sourceid/1000);
-
-// article info
 $sql=$rico_sql.'AND articleid = '.$sourceid;
 if(isset($redis))
 {
@@ -56,7 +31,6 @@ else
 	$infoarr=$db->ss_getrows($sql);
 }
 if(!is_array($infoarr))Url::ss_errpage();
-
 $articlename=$infoarr[0]['articlename'];
 $author=$infoarr[0]['author'];
 $author_url=$infoarr[0]['author_url'];
@@ -69,196 +43,56 @@ $keywords=$infoarr[0]['keywords'];
 $words_w=$infoarr[0]['words_w'];
 $intro_des=$infoarr[0]['intro_des'];
 $intro_p=$infoarr[0]['intro_p'];
-
-// chapter list cache (must include use_orderid/is_multiple dimensions)
-$uri_key=$uri.'|uo='.(int)$use_orderid.'|m='.(int)$is_multiple.'|ft='.(int)$is_ft.'|ac='.(int)$is_acode;
-
-$chapterids=array();
-$chapterid_list=array();
-$chaptername_list=array();
-$chapterwords_list=array();
-$lastupdate_list=array();
-
-$chaptername='';
-$chapterwords='';
-$lastupdate='';
-$chapterorder_real=0;
-$chapterid_real=0;
-$txt_sourceid=null; // IMPORTANT: may be 0, so use null as "unset"
-
-$cache_ok=false;
-if(isset($redis))
+if(isset($redis)&&$redis->ss_get($uri))
 {
-	$ret=$redis->ss_get($uri_key);
-	if(is_array($ret))
-	{
-		// require txt_sourceid presence when use_orderid=1 (0 is valid)
-		if(!$use_orderid || array_key_exists('txt_sourceid',$ret))
-		{
-			$chapterids=$ret['chapterids'];
-			$chaptername=$ret['chaptername'];
-			$chapterwords=$ret['chapterwords'];
-			$lastupdate=$ret['lastupdate'];
-			$txt_sourceid=array_key_exists('txt_sourceid',$ret)?$ret['txt_sourceid']:null;
-			$chapterorder_real=array_key_exists('chapterorder_real',$ret)?intval($ret['chapterorder_real']):0;
-			$chapterid_real=array_key_exists('chapterid_real',$ret)?intval($ret['chapterid_real']):0;
-			if(array_key_exists('cid_norm',$ret))$sourcecid=intval($ret['cid_norm']);
-			$cache_ok=true;
-		}
-	}
+	$ret=$redis->ss_get($uri);
+	$chapterids=$ret['chapterids'];
+	$chaptername=$ret['chaptername'];
+	$chapterwords=$ret['chapterwords'];
+	$lastupdate=$ret['lastupdate'];
 }
-
-if(!$cache_ok)
+else
 {
 	$sql='SELECT chapterid,chapterorder,chaptername,'.$dbarr['words'].',lastupdate FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chaptertype = 0 ORDER BY chapterorder ASC';
 	$res=$db->ss_query($sql);
+	$chapterorder_real=0;
+	$chapterid_real=0;
 	if(!$res->num_rows)Url::ss_errpage();
-	$idx=0;
 	while($row=mysqli_fetch_assoc($res))
 	{
-		$cid_real=intval($row['chapterid']);
-		$order_val=intval($row['chapterorder']);
-		$compare_id=$use_orderid?$order_val:$cid_real;
-
-		$chapterids[]=$compare_id;
-		$chapterid_list[]=$cid_real;
-		$chaptername_list[]=$row['chaptername'];
-		$chapterwords_list[]=$row[$dbarr['words']];
-		$lastupdate_list[]=$row['lastupdate'];
-
-		if(!$use_orderid)
+		$chapterids[]=$_compare_id=$use_orderid?$row['chapterorder']:$row['chapterid'];
+		if($sourcecid==$_compare_id)
 		{
-			if($sourcecid===$cid_real)
-			{
-				$txt_sourceid=$cid_real;
-				$chapterorder_real=$order_val;
-				$chapterid_real=$cid_real;
-				$chaptername=Text::ss_toutf8($row['chaptername']);
-				if($is_ft)$chaptername=Convert::jt2ft($chaptername);
-				$chapterwords=round($row[$dbarr['words']]/2);
-				$lastupdate=$row['lastupdate'];
-			}
-		}
-		else
-		{
-			// 1) match by chapterorder
-			if($sourcecid===$order_val)
-			{
-				$txt_sourceid=$cid_real;
-				$chapterorder_real=$order_val;
-				$chapterid_real=$cid_real;
-				$chaptername=Text::ss_toutf8($row['chaptername']);
-				if($is_ft)$chaptername=Convert::jt2ft($chaptername);
-				$chapterwords=round($row[$dbarr['words']]/2);
-				$lastupdate=$row['lastupdate'];
-			}
-			// 2) fallback: old mixed chapterid link (decoded to real chapterid)
-			else if($sourcecid_mixed_candidate!==null && $cid_real===$sourcecid_mixed_candidate)
-			{
-				$sourcecid=$order_val; // normalize to order for prev/next/urls
-				$txt_sourceid=$cid_real;
-				$chapterorder_real=$order_val;
-				$chapterid_real=$cid_real;
-				$chaptername=Text::ss_toutf8($row['chaptername']);
-				if($is_ft)$chaptername=Convert::jt2ft($chaptername);
-				$chapterwords=round($row[$dbarr['words']]/2);
-				$lastupdate=$row['lastupdate'];
-			}
-		}
-		$idx++;
-	}
-
-	// 3) extra fallback: if url uses sequential index instead of chapterorder, try map by position
-	if($use_orderid && $txt_sourceid===null)
-	{
-		$cnt=count($chapterid_list);
-		// treat as 0-based index
-		if($sourcecid>=0 && $sourcecid<$cnt)
-		{
-			$i=$sourcecid;
-			$txt_sourceid=$chapterid_list[$i];
-			$sourcecid=intval($chapterids[$i]);
-			$chapterorder_real=intval($sourcecid);
-			$chapterid_real=intval($txt_sourceid);
-			$chaptername=Text::ss_toutf8($chaptername_list[$i]);
+			$txt_sourceid=$row['chapterid'];
+			$chapterorder_real=(int)$row['chapterorder'];
+			$chapterid_real=(int)$row['chapterid'];
+			$chaptername=Text::ss_toutf8($row['chaptername']);
 			if($is_ft)$chaptername=Convert::jt2ft($chaptername);
-			$chapterwords=round($chapterwords_list[$i]/2);
-			$lastupdate=$lastupdate_list[$i];
-		}
-		// treat as 1-based index
-		else if($sourcecid>0 && ($sourcecid-1)<$cnt)
-		{
-			$i=$sourcecid-1;
-			$txt_sourceid=$chapterid_list[$i];
-			$sourcecid=intval($chapterids[$i]);
-			$chapterorder_real=intval($sourcecid);
-			$chapterid_real=intval($txt_sourceid);
-			$chaptername=Text::ss_toutf8($chaptername_list[$i]);
-			if($is_ft)$chaptername=Convert::jt2ft($chaptername);
-			$chapterwords=round($chapterwords_list[$i]/2);
-			$lastupdate=$lastupdate_list[$i];
+			$chapterwords=round($row[$dbarr['words']]/2);
+			$lastupdate=$row['lastupdate'];
 		}
 	}
-
 	if(isset($redis))
 	{
-		$ret=[
-			'chapterids'=>$chapterids,
-			'chaptername'=>$chaptername,
-			'chapterwords'=>$chapterwords,
-			'lastupdate'=>$lastupdate,
-			'txt_sourceid'=>$txt_sourceid,
-			'chapterorder_real'=>$chapterorder_real,
-			'chapterid_real'=>$chapterid_real,
-			'cid_norm'=>$sourcecid
-		];
-		$redis->ss_setex($uri_key,$cache_time,$ret);
+		$ret=['chapterids'=>$chapterids,'chaptername'=>$chaptername,'chapterwords'=>$chapterwords,'lastupdate'=>$lastupdate];
+		$redis->ss_setex($uri,$cache_time,$ret);
 	}
 }
-
-// normalize current cid for paging (use order when use_orderid=1)
-$chapterid=$use_orderid?$sourcecid:$chapterid;
-
 $info_url=Url::info_url($articleid);
 $index_url=Url::index_url($articleid);
-
-// Canonical redirect (use_orderid=1)
-// 目标：旧混淆 cid 或 0/1-based 序号访问时，统一 301 到真实 chapterorder URL
-if($use_orderid && $txt_sourceid!==null)
-{
-	$cid_raw_int=intval($sourcecid_raw);
-	$cid_norm_int=intval($sourcecid);
-	if($cid_raw_int!==$cid_norm_int)
-	{
-		$to=Url::chapter_url($articleid,$cid_norm_int,intval($now_pid));
-		$req_uri=isset($_SERVER['REQUEST_URI'])?(string)$_SERVER['REQUEST_URI']:'';
-		$req_path=$req_uri;
-		$qspos=strpos($req_path,'?');
-		if($qspos!==false)$req_path=substr($req_path,0,$qspos);
-		if($req_path===''||$req_path!==$to)
-		{
-			header('Location: '.$to,true,301);
-			exit;
-		}
-	}
-}
-
 $pre_cid=0;
 $next_cid=0;
 $chapters=count($chapterids);
-
-$offset=array_search($sourcecid,$chapterids,true);
-if($offset===false)$offset=0;
+$offset=array_search($sourcecid,$chapterids);
 $offset==0?$pre_cid=0:$pre_cid=$chapterids[$offset-1];
 $offset==$chapters-1?$next_cid=0:$next_cid=$chapterids[$offset+1];
-
 if($pre_cid==0)
 {
 	$pre_url=$info_url;
 }
 else
 {
-	$tmpvar=($is_multiple&&!$use_orderid)?ss_newid($pre_cid):$pre_cid;
+	$tmpvar=$is_multiple?ss_newid($pre_cid):$pre_cid;
 	$pre_url=Url::chapter_url($articleid,$tmpvar);
 }
 if($next_cid==0)
@@ -267,29 +101,18 @@ if($next_cid==0)
 }
 else
 {
-	$tmpvar=($is_multiple&&!$use_orderid)?ss_newid($next_cid):$next_cid;
+	$tmpvar=$is_multiple?ss_newid($next_cid):$next_cid;
 	$next_url=Url::chapter_url($articleid,$tmpvar);
 }
-
-// load chapter content
 if($use_orderid)
 {
-	if($txt_sourceid===null)
-	{
-		$content='';
-	}
-	else
-	{
-		$txtfile=$txt_url.'/'.$subaid.'/'.$sourceid.'/'.$txt_sourceid.'.txt';
-		$content=Text::ss_get_contents($txtfile);
-	}
+	$txtfile=$txt_url.'/'.$subaid.'/'.$sourceid.'/'.$txt_sourceid.'.txt';
 }
 else
 {
 	$txtfile=$txt_url.'/'.$subaid.'/'.$sourceid.'/'.$sourcecid.'.txt';
-	$content=Text::ss_get_contents($txtfile);
 }
-
+$content=Text::ss_get_contents($txtfile);
 $need_patch = (strlen($content)===0||stripos($content,'not found'));
 if(!$need_patch)
 {
@@ -301,7 +124,6 @@ else
 {
 	$content='';
 }
-
 if($need_patch)
 {
 	// 兜底：补丁表 -> Hub sources -> 远端 chapter_get（写回补丁表）
@@ -316,7 +138,6 @@ if($need_patch)
 		$content='';
 	}
 }
-
 switch($readpage_split_mode)
 {
 	case 1:if($readpage_split_lines<count(explode("\n",$content)))
@@ -371,15 +192,12 @@ switch($readpage_split_mode)
 	default:$rico_content=Text::ss_txt2p($content);
 	break;
 }
-
 if($ShipSayFilter['is_filter'])$rico_content=Text::ss_filter($rico_content,$ShipSayFilter['filter_ini']);
 if($is_ft)$rico_content=Convert::jt2ft($rico_content);
 $reader_des=mb_substr(preg_replace('/<\/?p>/is','',$rico_content),0,200);
-
 if($is_attachment&&!empty($att_url)&&$now_pid==$max_pid)
 {
-	$att_chapterid=$use_orderid?($txt_sourceid===null?0:$txt_sourceid):$sourcecid;
-	$sql='SELECT attachment FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE chapterid = '.$att_chapterid;
+	$sql='SELECT attachment FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE chapterid = '.$sourcecid;
 	if(isset($redis)&&$redis->ss_get($sql))
 	{
 		$res=$redis->ss_get($sql);
@@ -389,32 +207,42 @@ if($is_attachment&&!empty($att_url)&&$now_pid==$max_pid)
 		$res=$db->ss_getone($sql);
 		if(isset($redis))$redis->ss_setex($sql,$cache_time,$res);
 	}
-	$att_url.='/'.$subaid.'/'.$sourceid.'/'.$att_chapterid;
+	$att_url.='/'.$subaid.'/'.$sourceid.'/'.$sourcecid;
 	$attHtml='';
-	$regex='/("postfix";s:3:"(.+?)".+?"attachid";i:(\d+?);)/i';
+	$regex='/"postfix";s:3:"(.+?)".+?"attachid";i:(\d+?);/i';
 	preg_match_all($regex,$res['attachment'],$atts);
-	foreach($atts[3]as $k=>$v)
+	foreach($atts[2]as $k=>$v)
 	{
-		$attHtml.='<img class="ss-image-content" src="'.$att_url.'/'.$v.'.'.$atts[2][$k].'"/>';
+		$attHtml.='<img class="ss-image-content" src="'.$att_url.'/'.$v.'.'.$atts[1][$k].'"/>';
 	}
 	$rico_content.=$attHtml;
 }
-
 if(strlen($rico_content)<=0)
 {
 	if(!isset($chaptername))$chaptername=$chapterwords=$lastupdate='';
 	$rico_content='章节内容缺失或章节不存在！请稍后重新尝试！';
 }
-
 if(isset($_REQUEST['json']))
 {
 	echo json_encode($rico_content,JSON_UNESCAPED_UNICODE);
 }
 else
 {
-	if(is_numeric($lastupdate) && $lastupdate>0)
-	{
-		header('Last-Modified: '.date('D, d M Y H:i:s',$lastupdate-8*60*60).' GMT');
-	}
-	require_once __THEME_DIR__.'/tpl_reader.php';
+	$lu=(int)$lastupdate;
+if($lu>0){
+  $lm_ts=$lu-8*60*60;
+  $lm_gmt=date('D, d M Y H:i:s',$lm_ts).' GMT';
+  $etag='"r-'.$sourceid.'-'.$sourcecid.'-p'.$now_pid.'-lu'.$lu.'-uo'.(int)$use_orderid.'-m'.(int)$is_multiple.'-ft'.(int)$is_ft.'-ac'.(int)$is_acode.'"';
+  header('Last-Modified: '.$lm_gmt);
+  header('ETag: '.$etag);
+  $max_age=(int)$cache_time;
+  if($max_age<=0)$max_age=300;
+  if($max_age>3600)$max_age=3600;
+  header('Cache-Control: public, max-age='.$max_age.', s-maxage='.$max_age);
+  $inm=isset($_SERVER['HTTP_IF_NONE_MATCH'])?trim($_SERVER['HTTP_IF_NONE_MATCH']):'';
+  if($inm!=='' && $inm===$etag){header('HTTP/1.1 304 Not Modified');exit;}
+  $ims=isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])?strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']):0;
+  if($ims>0 && $ims>=$lm_ts){header('HTTP/1.1 304 Not Modified');exit;}
+}
+require_once __THEME_DIR__.'/tpl_reader.php';
 }
