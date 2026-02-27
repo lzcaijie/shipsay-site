@@ -9,6 +9,13 @@
 
 ---
 
+## 2026-02-27-7 | 功能 | chapter_patch 调 Hub 传 pool_no(=redisdb) + discover=1（索引缺失时按需远程发现来源并回写）
+- 新增：`chapter_patch` 调 Hub sources 时增加 `pool_no=redisdb`，同库多站共享来源、跨库隔离，避免串源。
+- 新增：默认携带 `articlename/author + discover=1`，当总控索引缺失时可按需远程发现来源站并回写 `novel_fp/novel_src`（无需先全量“写入索引”）。
+- 变更：sources 本地缓存文件名增加 pool 维度：`hub_sources_p{pool}_{fp}.json`（避免不同库互相污染）。
+- 涉及：`shipsay/include/chapter_patch.php`
+- 回滚：回退上述文件与本条 changelog；并删除 `_bak/hub_sources_p*_*.json` 缓存文件即可。
+
 ## 2026-02-27-6 | 修复 | chapter_patch / chapter_get 支持 chapterorder=0（兼容从0开始的顺序号）
 - 修复：`chapter_patch` 与 `site_sync chapter_get` 参数校验从 `chapterorder<=0` 调整为 `chapterorder<0`，允许顺序号从 0 开始的站点正常补章/取章。
 - 涉及：`shipsay/include/chapter_patch.php`、`shipsay/include/site_sync_impl.php`
