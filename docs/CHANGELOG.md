@@ -9,6 +9,13 @@
 
 ---
 
+## 2026-02-27-3 | 功能 | Redis 缓存支持“按数据库池共享”（同库多站共用一套热缓存）
+- 新增：`SsRedis` 支持 `redis_scope=dbpool` 模式：Redis key 不再按 `site_url` 隔离，而是按“数据库池标识”隔离，从而同一源库下多个站点可共享缓存，减少重复预热与源库压力。
+- 新增：可选配置 `$redis_pool` 用于手动指定池标识；未设置时自动使用 `$dbarr[host|port|name]` 组合派生。
+- 默认行为不变：未开启 `redis_scope=dbpool` 时仍按站点隔离（兼容现网缓存）。
+- 涉及：`shipsay/class/SsRedis.php`
+- 回滚：关闭 `redis_scope=dbpool`（或回退该文件）即可。
+
 ## 2026-02-27-2 | 修复 | use_orderid 模式下 AJAX 正文加载缺失（reader_js 章节解混淆条件修复）
 - 修复：`use_orderid=1` 时，AJAX 正文接口（`reader_js`）不再对章节参数做 `ss_sourceid/ss_newid(±550)`；仅小说ID继续按 `is_multiple` 混淆。
 - 增强：当顺序号（`chapterorder`）未命中章节时，兜底尝试按“旧混淆 chapterid”查章，避免历史直链导致正文缺失。
