@@ -46,39 +46,32 @@ $goodnum=$infoarr[0]['goodnum'];
 $ratenum=$infoarr[0]['ratenum'];
 $ratesum=$infoarr[0]['ratesum'];
 $score=$infoarr[0]['score'];
-
 $sql='SELECT chapterid,chaptername,lastupdate,chaptertype,chapterorder FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chaptertype = 0 ORDER BY chapterorder ASC';
-
-// 注意：不能把“已拼好的 cid_url”整体缓存到 Redis（否则切换 use_orderid / is_multiple 后会出现旧链接假象）
-// 做法：只缓存 SQL 原始行（ss_redis_getrows），再按当前开关动态生成 cid_url。
-$rows = [];
-if(isset($redis))
+$chapterrows=array();
+if(isset($redis)&&$redis->ss_get($sql))
 {
-	$rows=$redis->ss_redis_getrows($sql,$info_cache_time);
+	$chapterrows=$redis->ss_get($sql);
 }
 else
 {
-	$rows=$db->ss_getrows($sql);
-}
-
-$chapterrows=array();
-if(is_array($rows))
-{
-	$k=0;
-	foreach($rows as $row)
+	$res=$db->ss_query($sql);
+	if($res->num_rows)
 	{
-		$cid=$use_orderid?intval($row['chapterorder']):intval($row['chapterid']);
-		// when use_orderid=1, chapter param is chapterorder and MUST NOT be mixed
-		if($is_multiple && !$use_orderid)$cid=ss_newid($cid);
-		$chapterrows[$k]['chaptertype']=$row['chaptertype'];
-		$chapterrows[$k]['lastupdate']=$row['lastupdate'];
-		$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$cid);
-		$chapterrows[$k]['cname']=Text::ss_toutf8($row['chaptername']);
-		if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
-		$k++;
+		$k=0;
+		while($row=mysqli_fetch_assoc($res))
+		{
+			$cid=$use_orderid?$row['chapterorder']:$row['chapterid'];
+			if($is_multiple)$cid=ss_newid($cid);
+			$chapterrows[$k]['chaptertype']=$row['chaptertype'];
+			$chapterrows[$k]['lastupdate']=$row['lastupdate'];
+			$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$cid);
+			$chapterrows[$k]['cname']=Text::ss_toutf8($row['chaptername']);
+			if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
+			$k++;
+		}
+		if(isset($redis))$redis->ss_setex($sql,$info_cache_time,$chapterrows);
 	}
 }
-
 $first_url=$chapterrows[0]['cid_url'];
 $chapters=count($chapterrows);
 $lastupdate_stamp=$chapterrows[$chapters-1]['lastupdate'];
@@ -88,6 +81,18 @@ $lastchapter=$chapterrows[$chapters-1]['cname'];
 $last_url=$chapterrows[$chapters-1]['cid_url'];
 $lastarr=array_reverse(array_slice($chapterrows,-12,12));
 if($count_visit)require_once __ROOT_DIR__.'/shipsay/include/articlevisit.php';
-header('Last-Modified: '.date('D, d M Y H:i:s',$lastupdate_stamp-8*60*60).' GMT');
+$lm_ts=$lastupdate_stamp-8*60*60;
+$lm_gmt=date('D, d M Y H:i:s',$lm_ts).' GMT';
+$etag='"info-'.$sourceid.'-'.$lastupdate_stamp.'-uo'.(int)$use_orderid.'-m'.(int)$is_multiple.'-ft'.(int)$is_ft.'-ac'.(int)$is_acode.'"';
+header('Last-Modified: '.$lm_gmt);
+header('ETag: '.$etag);
+$max_age=(int)$info_cache_time;
+if($max_age<=0)$max_age=300;
+if($max_age>86400)$max_age=86400;
+header('Cache-Control: public, max-age='.$max_age.', s-maxage='.$max_age);
+$inm=isset($_SERVER['HTTP_IF_NONE_MATCH'])?trim($_SERVER['HTTP_IF_NONE_MATCH']):'';
+if($inm!=='' && $inm===$etag){header('HTTP/1.1 304 Not Modified');exit;}
+$ims=isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])?strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']):0;
+if($ims>0 && $ims>=$lm_ts){header('HTTP/1.1 304 Not Modified');exit;}
 require_once __THEME_DIR__.'/tpl_info.php';
 ?>
