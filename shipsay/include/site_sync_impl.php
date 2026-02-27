@@ -149,11 +149,38 @@ function ss_http_download_to_file($url, $to_file, &$err){
   if ($url === '') { $err='empty_url'; return false; }
   @mkdir(dirname($to_file), 0755, true);
 
-  // 1) allow_url_fopen
+  // helper: parse HTTP code from stream headers
+  $parse_code = function($hdrs){
+    if (!is_array($hdrs) || !$hdrs) return 0;
+    $line = (string)$hdrs[0];
+    if (preg_match('~\s(\d{3})\s~', $line, $m)) return (int)$m[1];
+    return 0;
+  };
+
+  // 1) allow_url_fopen (with HTTP code check)
   if (ini_get('allow_url_fopen')) {
-    $ctx = stream_context_create(['http'=>['timeout'=>30], 'https'=>['timeout'=>30]]);
+    $ctx = stream_context_create([
+      'http'=>[
+        'timeout'=>30,
+        'header'=>"User-Agent: shipsay-site-sync\r\nAccept-Encoding: identity\r\n",
+      ],
+      'https'=>[
+        'timeout'=>30,
+        'header'=>"User-Agent: shipsay-site-sync\r\nAccept-Encoding: identity\r\n",
+      ],
+    ]);
     $in = @fopen($url, 'rb', false, $ctx);
     if ($in) {
+      // response header is a PHP global for URL wrappers
+      $code = $parse_code(isset($http_response_header) ? $http_response_header : []);
+      if ($code >= 400) {
+        $peek = @stream_get_contents($in, 256);
+        @fclose($in);
+        $peek = is_string($peek) ? trim($peek) : '';
+        $err = 'http_code:'.$code.($peek ? (':'.substr($peek,0,180)) : '');
+        return false;
+      }
+
       $out = @fopen($to_file, 'wb');
       if (!$out) { @fclose($in); $err='open_to_file_failed'; return false; }
       stream_copy_to_stream($in, $out);
@@ -162,7 +189,7 @@ function ss_http_download_to_file($url, $to_file, &$err){
     }
   }
 
-  // 2) curl fallback
+  // 2) curl fallback (with HTTP code check)
   if (function_exists('curl_init')) {
     $ch = curl_init($url);
     $fp = @fopen($to_file, 'wb');
@@ -173,6 +200,8 @@ function ss_http_download_to_file($url, $to_file, &$err){
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    // avoid middlebox compression/transform
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept-Encoding: identity', 'User-Agent: shipsay-site-sync']);
     $ok = curl_exec($ch);
     $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $ce = curl_error($ch);
@@ -1087,7 +1116,7 @@ if (!empty($data['chapter_get'])) {
   $min_len = (int)($data['min_len'] ?? 100);
   if ($min_len<=0) $min_len = 100;
 
-  if ($articlename==='' || $author==='' || $chapterorder<0 || $txt_url==='') {
+  if ($articlename==='' || $author==='' || $chapterorder<=0 || $txt_url==='') {
     $db->close();
     ss_resp(['ok'=>0,'error'=>'bad_params']);
   }
@@ -1216,11 +1245,36 @@ if (!empty($data['tpl_apply'])) {
     ss_resp(['ok'=>0,'error'=>'tpl_download_failed','detail'=>$err]);
   }
 
+  // sanity: template bundle should be a .tar.gz (gzip magic 1f8b)
+  $sig = '';
+  $fp = @fopen($tar, 'rb');
+  if ($fp) { $sig = (string)@fread($fp, 2); @fclose($fp); }
+  if ($sig !== "\x1f\x8b") {
+    $head = @file_get_contents($tar, false, null, 0, 256);
+    $head = is_string($head) ? trim($head) : '';
+    $hint = 'not_gzip_magic:' . bin2hex($sig);
+    // if it looks like JSON/HTML, pass a preview for debugging
+    $preview = '';
+    if ($head !== '' && preg_match('~^[\{\<\[]~', $head)) {
+      $preview = substr($head, 0, 200);
+      $j = json_decode($head, true);
+      if (is_array($j) && !empty($j['error'])) $hint = 'remote_error:' . (string)$j['error'];
+    }
+    $sz = is_file($tar) ? (int)filesize($tar) : 0;
+    ss_rrmdir($tmp);
+    ss_resp(['ok'=>0,'error'=>'tpl_bad_download_body','detail'=>$hint,'size'=>$sz,'head'=>$preview]);
+  }
+
   if ($want_sha1 !== '' && preg_match('/^[a-f0-9]{40}$/', $want_sha1)) {
     $got = @sha1_file($tar);
     if (!$got || strtolower($got) !== $want_sha1) {
+      $sz = is_file($tar) ? (int)filesize($tar) : 0;
+      // If the downloaded body is text (error page), include a short preview.
+      $head = @file_get_contents($tar, false, null, 0, 256);
+      $head = is_string($head) ? trim($head) : '';
+      $preview = ($head !== '' && preg_match('~^[\{\<\[]~', $head)) ? substr($head, 0, 200) : '';
       ss_rrmdir($tmp);
-      ss_resp(['ok'=>0,'error'=>'tpl_sha1_mismatch','want'=>$want_sha1,'got'=>$got ?: '']);
+      ss_resp(['ok'=>0,'error'=>'tpl_sha1_mismatch','want'=>$want_sha1,'got'=>$got ?: '','size'=>$sz,'head'=>$preview]);
     }
   }
 

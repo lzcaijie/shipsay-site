@@ -9,23 +9,11 @@
 
 ---
 
-## 2026-02-27-10 | 功能 | SEO/TDK 固化接入：8 页面模板头部统一使用站点配置渲染
-- 更新：`shipsay/seo.php`（仅渲染不生成）支持 `{page}` 读取 `page/pid/now_pid`，keywords/desc 为空时兜底为 `{SITE_NAME}`，并在 `page=1` 时自动去掉“第1页”字样。
-- 更新：各主题模板页头的 `<title>/<meta keywords>/<meta description>` 统一改为调用 `ss_seo_render(page)` 输出三件套，不再使用模板默认文案；覆盖页面：home/info/category/reader/author/indexlist/rank/search。
-- 目标：总控为每站生成一次并固化 `seo_*_tpl` 后，分站换任何模板 TDK 都保持不变。
-- 回滚：回退 `shipsay/seo.php` 及各主题相关 `tpl_*.php` 的 head 输出即可。
-
-## 2026-02-27-10 | 功能 | SEO/TDK 渲染：模板头部改为读取站点固化配置并替换变量
-- 新增：`shipsay/seo.php`（仅渲染，不生成），从站点配置读取 `seo.*.*_tpl`，按页面类型替换 `{SITE_NAME}/{articlename}/{author}/{chaptername}/{page}` 得到 title/keywords/description。
-- 目标：总控为每站“生成一次并固化”后，分站不再依赖模板默认 TDK；后续换模板 TDK 仍保持不变。
-- 接入：各主题的 `tpl_home.php / tpl_info.php / tpl_category.php / tpl_reader.php / tpl_author.php / tpl_indexlist.php / tpl_rank.php / tpl_search.php` 在 `<head>` 调用该渲染文件并输出三件套。
-- 回滚：删除 `shipsay/seo.php` 并恢复各模板头部原有 `<title>/<meta>` 输出。
-
-## 2026-02-27-9 | 优化 | 缓存友好：详情/目录/阅读页增加 ETag + Cache-Control + 304
-- 新增：`info/indexlist/reader` 输出 `ETag` 与 `Cache-Control`（max-age 复用 `info_cache_time/cache_time` 并做上限保护），便于后续接入 CF/浏览器缓存。
-- 新增：支持 `If-None-Match / If-Modified-Since`，命中时直接返回 304（不渲染模板，减 PHP 压力）。
-- 涉及：`shipsay/app/info.php`、`shipsay/app/indexlist.php`、`shipsay/app/reader.php`
-- 回滚：回退上述文件到上一版本即可。
+## 2026-02-27-11 | 修复 | v6 模板下发：下载强校验 HTTP 状态码 + 更明确的 sha1 错误
+- 修复：`shipsay/include/site_sync_impl.php` 的 `ss_http_download_to_file()` 在 `allow_url_fopen` 分支未校验 HTTP 状态码，可能把 403/404 的 JSON 错误页当作文件写入，导致 `tpl_sha1_mismatch` 误报。
+- 增强：下载请求增加 `Accept-Encoding: identity` / UA，减少中间层压缩/变换导致的字节流不一致风险。
+- 增强：模板包应用前增加 gzip magic 校验；若下载内容疑似 JSON/HTML，会在错误返回中附带简短 `head` 预览，方便定位（如 ip_not_allowed/bad_sig/expired 等）。
+- 回滚：回退本次改动文件即可（`shipsay/include/site_sync_impl.php`）。
 
 ## 2026-02-14-4 | 补丁 | v6.3.3-fz1（core_policy 写入加固 + 回包补充 + 摘要范围校验）
 - 更新：`site_sync meta.ver` 从 `6.3.2-impl` → `6.3.3-impl`。
