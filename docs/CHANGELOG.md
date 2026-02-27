@@ -9,6 +9,12 @@
 
 ---
 
+## 2026-02-27-8 | 修复 | chapter_patch 真正支持 chapterorder=0（补齐内部 <=0 误杀）
+- 修复：`chapter_patch.php` 内部多处仍用 `chapterorder<=0` 直接 return，导致 chapterorder=0 虽然“对外接口”已放开，但实际仍不触发补章/不落库。
+- 变更点：`ss_cp_get_or_fetch / ss_cp_patch_save / ss_cp_fail_record` 统一改为 `chapterorder<0` 才视为非法，允许 0。
+- 涉及：`shipsay/include/chapter_patch.php`
+- 回滚：回退上述文件与本条 changelog 记录即可。
+
 ## 2026-02-27-7 | 优化 | info/indexlist 章节列表缓存改为“缓存原始行”，避免切换开关后旧链接假象
 - 优化：详情页/目录页的章节列表缓存不再把“已拼好的 cid_url”整体写入 Redis。
 - 改为：只缓存 SQL 原始行（`ss_redis_getrows`），再按当前 `use_orderid/is_multiple/is_ft` 动态生成 `cid_url/cname`。
