@@ -55,19 +55,6 @@ function ss_cp_fp($articlename, $author){
   return md5(ss_cp_norm($articlename).'|'.ss_cp_norm($author));
 }
 
-/**
- * dbpool 标识（用于 Hub sources 限制在同一源库内）
- * 约定：默认用 redisdb(1~15) 作为 pool_no；未设置则为 0（全局/兼容旧行为）
- */
-function ss_cp_pool_no(){
-  global $redisdb;
-  $pn = isset($redisdb) ? (int)$redisdb : 0;
-  if ($pn < 0) $pn = 0;
-  if ($pn > 15) $pn = 15;
-  return $pn;
-}
-
-
 function ss_cp_strlen_trim($s){
   $s = (string)$s;
   // 去掉所有空白（包含全角空格/换行/tab）
@@ -164,7 +151,7 @@ function ss_cp_patch_save($params){
   $source_articleid = (int)($params['source_articleid'] ?? 0);
   $fetched_at = (int)($params['fetched_at'] ?? $now);
 
-  if ($articleid<=0 || $chapterorder<=0 || $content==='') return false;
+  if ($articleid<=0 || $chapterorder<0 || $content==='') return false;
   if ($fp==='') $fp = md5($articleid.'|'.$chapterorder);
   if ($content_hash==='') $content_hash = sha1($content);
   if ($content_len<=0) $content_len = ss_cp_strlen_trim($content);
@@ -280,7 +267,7 @@ function ss_cp_fail_record($articleid, $chapterorder, $error = ''){
   global $chapter_patch_fail_cooldown_base, $chapter_patch_fail_cooldown_max;
   $articleid = (int)$articleid;
   $chapterorder = (int)$chapterorder;
-  if ($articleid<=0 || $chapterorder<=0) return;
+  if ($articleid<=0 || $chapterorder<0) return;
 
   $now = time();
   $st = ss_cp_fail_state_get($articleid, $chapterorder);
@@ -327,7 +314,7 @@ function ss_cp_get_or_fetch($articleid, $chapterorder, $articlename, $author, $c
   if (empty($chapter_patch_enable)) return '';
   $articleid = (int)$articleid;
   $chapterorder = (int)$chapterorder;
-  if ($articleid<=0 || $chapterorder<=0) return '';
+  if ($articleid<=0 || $chapterorder<0) return '';
 
   // 1) 优先读补丁表
   $patch = ss_cp_patch_get($articleid, $chapterorder);
@@ -411,17 +398,13 @@ function ss_cp_get_or_fetch($articleid, $chapterorder, $articlename, $author, $c
 function ss_cp_sources_cache_file($fp){
   $dir = __ROOT_DIR__.'/shipsay/configs/_bak';
   if (!is_dir($dir)) @mkdir($dir, 0755, true);
-  $pn = ss_cp_pool_no();
-  $suffix = $pn>0 ? ('p'.$pn.'_') : '';
-  return $dir.'/hub_sources_'.$suffix.$fp.'.json';
+  return $dir.'/hub_sources_'.$fp.'.json';
 }
 
 function ss_cp_get_sources_cached($fp){
   global $chapter_patch_hub_url, $chapter_patch_cache_ttl, $chapter_patch_insecure_ssl;
   $fp = (string)$fp;
   if ($fp==='') return [];
-  $pool_no = ss_cp_pool_no();
-
 
   $file = ss_cp_sources_cache_file($fp);
   $ttl = (int)$chapter_patch_cache_ttl;
@@ -437,7 +420,7 @@ function ss_cp_get_sources_cached($fp){
   }
 
   // 调 Hub
-  $payload = ['mode'=>'sources','fp'=>$fp,'limit'=>20,'pool_no'=>$pool_no];
+  $payload = ['mode'=>'sources','fp'=>$fp,'limit'=>20];
   [$ret, $code] = ss_cp_http_post_json((string)$chapter_patch_hub_url, $payload, [], 4, $chapter_patch_insecure_ssl);
   if ($code !== 200 || !$ret) return [];
   $j = json_decode((string)$ret, true);
