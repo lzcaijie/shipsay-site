@@ -9,6 +9,14 @@
 
 ---
 
+## 2026-03-01-01 | 功能 | 缺章补丁：章节名硬校验 + 脏内容过滤 + 统计接口（只读）
+- 增强：`shipsay/include/chapter_patch.php` 补缺链路加入“书名+作者+章节名（norm=去空白+小写）”一致性硬校验；任一不一致则跳过该来源，不写补丁表。
+- 增强：补丁表命中时同时校验 `chaptername`，不一致视为未命中继续远端补缺，避免错章复用污染。
+- 新增：坏词过滤（默认内置占位句；支持在 `shipsay/configs/chapter_patch.php` 追加），写入前/命中后均会过滤，命中视为无效继续补缺。
+- 新增：`site_sync` 只读接口 `patch_stats` / `patch_book`（近 N 天高频补缺榜单 + 单书补丁章节列表），供总控“高频补缺”页面展示与排查。
+- 涉及：`shipsay/include/chapter_patch.php`、`shipsay/configs/chapter_patch.php`、`shipsay/include/site_sync_impl.php`
+- 回滚：回退上述文件改动即可（不影响主章节表）。
+
 ## 2026-02-28-01 | 修复 | v6 模板下发：解压不再依赖 shell_exec（支持 zip/tar.gz）
 - 修复：部分分站禁用 `shell_exec` 导致模板下发报错 `tpl_extract_failed - shell_exec_disabled`。
 - 更新：`shipsay/include/site_sync_impl.php` 的模板包解压逻辑改为优先使用 `ZipArchive`（zip）与 `zlib+PharData`（tar.gz→tar）完成解压，不再强依赖系统 `tar` 命令；仅在环境允许时保留 `tar` 作为兜底。
