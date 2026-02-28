@@ -1,0 +1,92 @@
+diff --git a/shipsay/include/site_sync_impl.php b/shipsay/include/site_sync_impl.php
+index 0000000..0000000 100644
+--- a/shipsay/include/site_sync_impl.php
++++ b/shipsay/include/site_sync_impl.php
+@@ -484,6 +484,36 @@ function ss_load_config_ini($root){
+
+   $is_keywords = 0;
+   $keywords_num = 5;
++
++  // SEO/TDK（总控生成一次，下发到 config.ini.php；分站 shipsay/seo.php 只做渲染替换）
++  $seo_profile = '';
++  $seo_home_title_tpl = '';    $seo_home_keywords_tpl = '';    $seo_home_desc_tpl = '';
++  $seo_info_title_tpl = '';    $seo_info_keywords_tpl = '';    $seo_info_desc_tpl = '';
++  $seo_indexlist_title_tpl = ''; $seo_indexlist_keywords_tpl = ''; $seo_indexlist_desc_tpl = '';
++  $seo_reader_title_tpl = '';  $seo_reader_keywords_tpl = '';  $seo_reader_desc_tpl = '';
++  $seo_category_title_tpl = ''; $seo_category_keywords_tpl = ''; $seo_category_desc_tpl = '';
++  $seo_author_title_tpl = '';  $seo_author_keywords_tpl = '';  $seo_author_desc_tpl = '';
++  $seo_search_title_tpl = '';  $seo_search_keywords_tpl = '';  $seo_search_desc_tpl = '';
++  $seo_rank_title_tpl = '';    $seo_rank_keywords_tpl = '';    $seo_rank_desc_tpl = '';
+
+   if (is_file($file)) {
+     include $file;
+   }
+@@ -571,6 +601,29 @@ function ss_load_config_ini($root){
+
+     'is_keywords' => (int)$is_keywords,
+     'keywords_num' => (int)$keywords_num,
++
++    // SEO/TDK（由总控写入 config.ini.php 的 seo_*_tpl，供 shipsay/seo.php 读取）
++    'seo_profile' => (string)$seo_profile,
++    'seo_home_title_tpl' => (string)$seo_home_title_tpl,
++    'seo_home_keywords_tpl' => (string)$seo_home_keywords_tpl,
++    'seo_home_desc_tpl' => (string)$seo_home_desc_tpl,
++    'seo_info_title_tpl' => (string)$seo_info_title_tpl,
++    'seo_info_keywords_tpl' => (string)$seo_info_keywords_tpl,
++    'seo_info_desc_tpl' => (string)$seo_info_desc_tpl,
++    'seo_indexlist_title_tpl' => (string)$seo_indexlist_title_tpl,
++    'seo_indexlist_keywords_tpl' => (string)$seo_indexlist_keywords_tpl,
++    'seo_indexlist_desc_tpl' => (string)$seo_indexlist_desc_tpl,
++    'seo_reader_title_tpl' => (string)$seo_reader_title_tpl,
++    'seo_reader_keywords_tpl' => (string)$seo_reader_keywords_tpl,
++    'seo_reader_desc_tpl' => (string)$seo_reader_desc_tpl,
++    'seo_category_title_tpl' => (string)$seo_category_title_tpl,
++    'seo_category_keywords_tpl' => (string)$seo_category_keywords_tpl,
++    'seo_category_desc_tpl' => (string)$seo_category_desc_tpl,
++    'seo_author_title_tpl' => (string)$seo_author_title_tpl,
++    'seo_author_keywords_tpl' => (string)$seo_author_keywords_tpl,
++    'seo_author_desc_tpl' => (string)$seo_author_desc_tpl,
++    'seo_search_title_tpl' => (string)$seo_search_title_tpl,
++    'seo_search_keywords_tpl' => (string)$seo_search_keywords_tpl,
++    'seo_search_desc_tpl' => (string)$seo_search_desc_tpl,
++    'seo_rank_title_tpl' => (string)$seo_rank_title_tpl,
++    'seo_rank_keywords_tpl' => (string)$seo_rank_keywords_tpl,
++    'seo_rank_desc_tpl' => (string)$seo_rank_desc_tpl,
+   ];
+ }
+
+@@ -722,6 +775,29 @@ function ss_render_config_ini($cfg){
+   $saveStr .= "date_default_timezone_set('Asia/ChongQing');\r\n";
+   $saveStr .= "include_once __ROOT_DIR__ . '/shipsay/version.php';\r\n";
+   $saveStr .= "define('SITE_NAME', '".ss_php_sq($cfg['sitename'] ?? '')."');\r\n";
++
++  // SEO/TDK（总控一次性生成并下发；分站 shipsay/seo.php 读取这些 seo_*_tpl 做占位符替换）
++  $saveStr .= "\$seo_profile = '".ss_php_sq($cfg['seo_profile'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_home_title_tpl = '".ss_php_sq($cfg['seo_home_title_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_home_keywords_tpl = '".ss_php_sq($cfg['seo_home_keywords_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_home_desc_tpl = '".ss_php_sq($cfg['seo_home_desc_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_info_title_tpl = '".ss_php_sq($cfg['seo_info_title_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_info_keywords_tpl = '".ss_php_sq($cfg['seo_info_keywords_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_info_desc_tpl = '".ss_php_sq($cfg['seo_info_desc_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_indexlist_title_tpl = '".ss_php_sq($cfg['seo_indexlist_title_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_indexlist_keywords_tpl = '".ss_php_sq($cfg['seo_indexlist_keywords_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_indexlist_desc_tpl = '".ss_php_sq($cfg['seo_indexlist_desc_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_reader_title_tpl = '".ss_php_sq($cfg['seo_reader_title_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_reader_keywords_tpl = '".ss_php_sq($cfg['seo_reader_keywords_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_reader_desc_tpl = '".ss_php_sq($cfg['seo_reader_desc_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_category_title_tpl = '".ss_php_sq($cfg['seo_category_title_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_category_keywords_tpl = '".ss_php_sq($cfg['seo_category_keywords_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_category_desc_tpl = '".ss_php_sq($cfg['seo_category_desc_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_author_title_tpl = '".ss_php_sq($cfg['seo_author_title_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_author_keywords_tpl = '".ss_php_sq($cfg['seo_author_keywords_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_author_desc_tpl = '".ss_php_sq($cfg['seo_author_desc_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_search_title_tpl = '".ss_php_sq($cfg['seo_search_title_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_search_keywords_tpl = '".ss_php_sq($cfg['seo_search_keywords_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_search_desc_tpl = '".ss_php_sq($cfg['seo_search_desc_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_rank_title_tpl = '".ss_php_sq($cfg['seo_rank_title_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_rank_keywords_tpl = '".ss_php_sq($cfg['seo_rank_keywords_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\$seo_rank_desc_tpl = '".ss_php_sq($cfg['seo_rank_desc_tpl'] ?? '')."';\r\n";
++  $saveStr .= "\r\n";
+
+   $saveStr .= "\$dbarr = [\r\n";
+   $saveStr .= "     'host' => '".ss_php_sq($cfg['dbhost'] ?? '')."'\r\n";
