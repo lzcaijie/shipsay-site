@@ -55,155 +55,6 @@ function ss_clean_old_bundles($bakdir, $keep = 30){
 }
 
 
-
-
-// ----------------- chapter_patch stats（只读） -----------------
-
-// patch_stats：近 N 天高频补缺榜单（按 articleid / 按来源聚合）
-if (!empty($data['patch_stats'])) {
-  $cfg = ss_load_config_ini($root);
-  $db = ss_novel_db_connect($cfg);
-  if (!$db) ss_resp(['ok'=>0,'error'=>'db_connect_failed']);
-
-  $pre = ss_novel_pre($cfg['sys_ver'] ?? '');
-  $tbl = $pre . 'article_chapter_patch';
-
-  $days = (int)($data['days'] ?? 7);
-  if ($days <= 0) $days = 7;
-  if ($days > 30) $days = 30;
-
-  $limit = (int)($data['limit'] ?? 100);
-  if ($limit <= 0) $limit = 100;
-  if ($limit > 500) $limit = 500;
-
-  $since = time() - $days * 86400;
-
-  // books_top
-  $books_top = [];
-  $sql1 = "SELECT articleid, COUNT(*) AS patch_chapters, SUM(hit_count) AS hits, MAX(last_hit) AS last_hit, MAX(updated_at) AS updated
-           FROM {$tbl}
-           WHERE last_hit >= {$since}
-           GROUP BY articleid
-           ORDER BY hits DESC
-           LIMIT {$limit}";
-  $res1 = $db->query($sql1);
-  if ($res1 && $res1->num_rows) {
-    while ($r = $res1->fetch_assoc()) {
-      $books_top[] = [
-        'articleid' => (int)($r['articleid'] ?? 0),
-        'patch_chapters' => (int)($r['patch_chapters'] ?? 0),
-        'hits' => (int)($r['hits'] ?? 0),
-        'last_hit' => (int)($r['last_hit'] ?? 0),
-        'updated' => (int)($r['updated'] ?? 0),
-      ];
-    }
-  }
-
-  // sources_top（全局）
-  $sources_top = [];
-  $sql2 = "SELECT source_base_url, SUM(hit_count) AS hits
-           FROM {$tbl}
-           WHERE last_hit >= {$since}
-           GROUP BY source_base_url
-           ORDER BY hits DESC
-           LIMIT {$limit}";
-  $res2 = $db->query($sql2);
-  if ($res2 && $res2->num_rows) {
-    while ($r = $res2->fetch_assoc()) {
-      $sources_top[] = [
-        'source_base_url' => (string)($r['source_base_url'] ?? ''),
-        'hits' => (int)($r['hits'] ?? 0),
-      ];
-    }
-  }
-
-  // 每本书 Top3 来源（按 hits）
-  $book_sources_top = [];
-  $ids = [];
-  foreach ($books_top as $b) {
-    $aid = (int)($b['articleid'] ?? 0);
-    if ($aid > 0) $ids[] = $aid;
-  }
-  $ids = array_values(array_unique($ids));
-  if ($ids) {
-    $ids_sql = implode(',', array_map('intval', $ids));
-    $sql3 = "SELECT articleid, source_base_url, SUM(hit_count) AS hits
-             FROM {$tbl}
-             WHERE last_hit >= {$since} AND articleid IN ({$ids_sql})
-             GROUP BY articleid, source_base_url
-             ORDER BY articleid ASC, hits DESC";
-    $res3 = $db->query($sql3);
-    if ($res3 && $res3->num_rows) {
-      while ($r = $res3->fetch_assoc()) {
-        $aid = (int)($r['articleid'] ?? 0);
-        $u = (string)($r['source_base_url'] ?? '');
-        if ($aid <= 0 || $u === '') continue;
-        if (!isset($book_sources_top[$aid])) $book_sources_top[$aid] = [];
-        if (count($book_sources_top[$aid]) >= 3) continue;
-        $book_sources_top[$aid][] = ['source_base_url'=>$u,'hits'=>(int)($r['hits'] ?? 0)];
-      }
-    }
-  }
-
-  $db->close();
-  ss_resp([
-    'ok'=>1,
-    'v'=>1,
-    'days'=>$days,
-    'limit'=>$limit,
-    'books_top'=>$books_top,
-    'sources_top'=>$sources_top,
-    'book_sources_top'=>$book_sources_top,
-  ]);
-}
-
-// patch_book：查看某本书补丁章节列表（默认近 7 天 Top20）
-if (!empty($data['patch_book'])) {
-  $cfg = ss_load_config_ini($root);
-  $db = ss_novel_db_connect($cfg);
-  if (!$db) ss_resp(['ok'=>0,'error'=>'db_connect_failed']);
-
-  $pre = ss_novel_pre($cfg['sys_ver'] ?? '');
-  $tbl = $pre . 'article_chapter_patch';
-
-  $articleid = (int)($data['articleid'] ?? 0);
-  if ($articleid <= 0) { $db->close(); ss_resp(['ok'=>0,'error'=>'bad_params']); }
-
-  $days = (int)($data['days'] ?? 7);
-  if ($days <= 0) $days = 7;
-  if ($days > 90) $days = 90;
-  $since = time() - $days * 86400;
-
-  $limit = (int)($data['limit'] ?? 20);
-  if ($limit <= 0) $limit = 20;
-  if ($limit > 200) $limit = 200;
-
-  $list = [];
-  $sql = "SELECT chapterorder, chaptername, hit_count, last_hit, updated_at, source_base_url, source_articleid, fetched_at
-          FROM {$tbl}
-          WHERE articleid = {$articleid} AND last_hit >= {$since}
-          ORDER BY last_hit DESC
-          LIMIT {$limit}";
-  $res = $db->query($sql);
-  if ($res && $res->num_rows) {
-    while ($r = $res->fetch_assoc()) {
-      $list[] = [
-        'chapterorder' => (int)($r['chapterorder'] ?? 0),
-        'chaptername' => (string)($r['chaptername'] ?? ''),
-        'hit_count' => (int)($r['hit_count'] ?? 0),
-        'last_hit' => (int)($r['last_hit'] ?? 0),
-        'updated_at' => (int)($r['updated_at'] ?? 0),
-        'source_base_url' => (string)($r['source_base_url'] ?? ''),
-        'source_articleid' => (int)($r['source_articleid'] ?? 0),
-        'fetched_at' => (int)($r['fetched_at'] ?? 0),
-      ];
-    }
-  }
-
-  $db->close();
-  ss_resp(['ok'=>1,'v'=>1,'articleid'=>$articleid,'days'=>$days,'limit'=>$limit,'list'=>$list]);
-}
-
 // ----------------- v6：模板分发（themes/<theme>/ + www/static/<theme>/） -----------------
 
 function ss_copydir($src, $dst){
@@ -1228,7 +1079,7 @@ if (!is_dir($bakdir)) @mkdir($bakdir, 0755, true);
 // - secret 为空：不验签（仅 allow_ips）
 // - secret 有值：写接口（apply/rollback）必验签；只读接口（novel_search/chapter_get/pull）默认不验签（可通过 site_sync_sign_readonly=1 强制验签）
 $sign_readonly = !empty($site_sync_sign_readonly);
-$is_readonly = !empty($data['novel_search']) || !empty($data['chapter_get']) || !empty($data['pull']) || !empty($data['tpl_status']) || !empty($data['core_status']) || !empty($data['patch_stats']) || !empty($data['patch_book']);
+$is_readonly = !empty($data['novel_search']) || !empty($data['chapter_get']) || !empty($data['patch_stats']) || !empty($data['patch_book']) || !empty($data['pull']) || !empty($data['tpl_status']) || !empty($data['core_status']);
 if (!empty($site_sync_secret) && (!$is_readonly || $sign_readonly)) {
   $ts = $_SERVER['HTTP_X_SS_TS'] ?? '';
   $nonce = $_SERVER['HTTP_X_SS_NONCE'] ?? '';
@@ -1261,11 +1112,11 @@ $log_path = isset($site_sync_log) ? (string)$site_sync_log : '';
 $op = 'apply';
 if (!empty($data['novel_search'])) $op = 'novel_search';
 else if (!empty($data['chapter_get'])) $op = 'chapter_get';
+else if (!empty($data['patch_stats'])) $op = 'patch_stats';
+else if (!empty($data['patch_book'])) $op = 'patch_book';
 else if (!empty($data['pull'])) $op = 'pull';
 else if (!empty($data['tpl_status'])) $op = 'tpl_status';
 else if (!empty($data['core_status'])) $op = 'core_status';
-else if (!empty($data['patch_stats'])) $op = 'patch_stats';
-else if (!empty($data['patch_book'])) $op = 'patch_book';
 else if (!empty($data['tpl_apply'])) $op = 'tpl_apply';
 else if (!empty($data['tpl_rollback'])) $op = 'tpl_rollback';
 else if (!empty($data['rollback'])) $op = 'rollback';
@@ -1426,6 +1277,177 @@ if (!empty($data['chapter_get'])) {
     'chapter'=>['chapterid'=>$cid,'chapterorder'=>(int)$c['chapterorder'],'chaptername'=>(string)$c['chaptername']],
     'content'=>$content,
     'len'=>$len,
+  ]);
+}
+
+
+
+
+// Patch stats：近 N 天补缺热度（只读，供总控展示/排查）
+if (!empty($data['patch_stats'])) {
+  $cfg = ss_load_config_ini($root);
+  $db = ss_novel_db_connect($cfg);
+  if (!$db) ss_resp(['ok'=>0,'error'=>'db_connect_failed']);
+
+  $pre = ss_novel_pre($cfg['sys_ver'] ?? '');
+  $tbl = $pre.'article_chapter_patch';
+
+  $days = (int)($data['days'] ?? 7);
+  if ($days <= 0) $days = 7;
+  if ($days > 30) $days = 30;
+
+  $limit = (int)($data['limit'] ?? 100);
+  if ($limit <= 0) $limit = 100;
+  if ($limit > 500) $limit = 500;
+
+  $since = time() - $days * 86400;
+
+  // books_top
+  $books_top = [];
+  $sql = "SELECT articleid,
+                 COUNT(*) AS patch_chapters,
+                 SUM(hit_count) AS hits,
+                 MAX(last_hit) AS last_hit,
+                 MAX(updated_at) AS updated
+          FROM {$tbl}
+          WHERE last_hit >= ?
+          GROUP BY articleid
+          ORDER BY hits DESC
+          LIMIT {$limit}";
+  $st = @$db->prepare($sql);
+  if (!$st) { $db->close(); ss_resp(['ok'=>0,'error'=>'patch_table_missing']); }
+  $st->bind_param('i', $since);
+  if ($st->execute()) {
+    $res = $st->get_result();
+    while ($res && ($r = $res->fetch_assoc())) {
+      $books_top[] = [
+        'articleid'=>(int)($r['articleid'] ?? 0),
+        'patch_chapters'=>(int)($r['patch_chapters'] ?? 0),
+        'hits'=>(int)($r['hits'] ?? 0),
+        'last_hit'=>(int)($r['last_hit'] ?? 0),
+        'updated'=>(int)($r['updated'] ?? 0),
+      ];
+    }
+  }
+  $st->close();
+
+  // sources_top
+  $sources_top = [];
+  $sql2 = "SELECT source_base_url, SUM(hit_count) AS hits
+           FROM {$tbl}
+           WHERE last_hit >= ?
+           GROUP BY source_base_url
+           ORDER BY hits DESC
+           LIMIT {$limit}";
+  $st2 = @$db->prepare($sql2);
+  if ($st2) {
+    $st2->bind_param('i', $since);
+    if ($st2->execute()) {
+      $res = $st2->get_result();
+      while ($res && ($r = $res->fetch_assoc())) {
+        $sources_top[] = [
+          'source_base_url'=>(string)($r['source_base_url'] ?? ''),
+          'hits'=>(int)($r['hits'] ?? 0),
+        ];
+      }
+    }
+    $st2->close();
+  }
+
+  // book_sources_top：Top books 每本取 Top3 sources
+  $book_sources_top = [];
+  $st3 = @$db->prepare("SELECT source_base_url, SUM(hit_count) AS hits
+                        FROM {$tbl}
+                        WHERE articleid = ? AND last_hit >= ?
+                        GROUP BY source_base_url
+                        ORDER BY hits DESC
+                        LIMIT 3");
+  if ($st3) {
+    foreach ($books_top as $b) {
+      $aid = (int)($b['articleid'] ?? 0);
+      if ($aid <= 0) continue;
+      $st3->bind_param('ii', $aid, $since);
+      $list = [];
+      if ($st3->execute()) {
+        $res = $st3->get_result();
+        while ($res && ($r = $res->fetch_assoc())) {
+          $list[] = [
+            'source_base_url'=>(string)($r['source_base_url'] ?? ''),
+            'hits'=>(int)($r['hits'] ?? 0),
+          ];
+        }
+      }
+      $book_sources_top[(string)$aid] = $list;
+    }
+    $st3->close();
+  }
+
+  $db->close();
+  ss_resp([
+    'ok'=>1,
+    'v'=>5,
+    'days'=>$days,
+    'limit'=>$limit,
+    'books_top'=>$books_top,
+    'sources_top'=>$sources_top,
+    'book_sources_top'=>$book_sources_top,
+  ]);
+}
+
+// Patch book：单书补丁章节列表（只读，供总控“查看详情”）
+if (!empty($data['patch_book'])) {
+  $cfg = ss_load_config_ini($root);
+  $db = ss_novel_db_connect($cfg);
+  if (!$db) ss_resp(['ok'=>0,'error'=>'db_connect_failed']);
+
+  $pre = ss_novel_pre($cfg['sys_ver'] ?? '');
+  $tbl = $pre.'article_chapter_patch';
+
+  $articleid = (int)($data['articleid'] ?? 0);
+  if ($articleid <= 0) { $db->close(); ss_resp(['ok'=>0,'error'=>'bad_params']); }
+
+  $days = (int)($data['days'] ?? 7);
+  if ($days <= 0) $days = 7;
+  if ($days > 30) $days = 30;
+
+  $limit = (int)($data['limit'] ?? 20);
+  if ($limit <= 0) $limit = 20;
+  if ($limit > 200) $limit = 200;
+
+  $since = time() - $days * 86400;
+
+  $list = [];
+  $sql = "SELECT chapterorder, chaptername, hit_count, last_hit, source_base_url, updated_at
+          FROM {$tbl}
+          WHERE articleid = ? AND last_hit >= ?
+          ORDER BY last_hit DESC, hit_count DESC, chapterorder DESC
+          LIMIT {$limit}";
+  $st = @$db->prepare($sql);
+  if (!$st) { $db->close(); ss_resp(['ok'=>0,'error'=>'patch_table_missing']); }
+  $st->bind_param('ii', $articleid, $since);
+  if ($st->execute()) {
+    $res = $st->get_result();
+    while ($res && ($r = $res->fetch_assoc())) {
+      $list[] = [
+        'chapterorder'=>(int)($r['chapterorder'] ?? 0),
+        'chaptername'=>(string)($r['chaptername'] ?? ''),
+        'hit_count'=>(int)($r['hit_count'] ?? 0),
+        'last_hit'=>(int)($r['last_hit'] ?? 0),
+        'source_base_url'=>(string)($r['source_base_url'] ?? ''),
+        'updated_at'=>(int)($r['updated_at'] ?? 0),
+      ];
+    }
+  }
+  $st->close();
+  $db->close();
+
+  ss_resp([
+    'ok'=>1,
+    'v'=>5,
+    'days'=>$days,
+    'limit'=>$limit,
+    'articleid'=>$articleid,
+    'list'=>$list,
   ]);
 }
 

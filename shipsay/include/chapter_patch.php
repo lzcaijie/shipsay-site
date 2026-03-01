@@ -38,26 +38,27 @@ $chapter_patch_log = __ROOT_DIR__ . '/shipsay/configs/_bak/chapter_patch.log';  
 $chapter_patch_cfg = __ROOT_DIR__ . '/shipsay/configs/chapter_patch.php';
 if (is_file($chapter_patch_cfg)) { include $chapter_patch_cfg; }
 
-// 脏补丁坏词：默认内置，配置可追加
-$__chapter_patch_bad_defaults = [
+// 坏词过滤（防脏补丁永久污染）
+// - 可在 /shipsay/configs/chapter_patch.php 里覆盖/追加 $chapter_patch_bad_phrases
+// - 默认内置占位句：命中则视为无效（不写补丁/不复用）
+$__cp_default_bad_phrases = [
   '章节内容正在处理中，后续会添加，感谢您的支持！',
 ];
 if (!isset($chapter_patch_bad_phrases) || !is_array($chapter_patch_bad_phrases)) $chapter_patch_bad_phrases = [];
-$chapter_patch_bad_phrases = array_values(array_unique(array_merge($__chapter_patch_bad_defaults, $chapter_patch_bad_phrases)));
+$chapter_patch_bad_phrases = array_values(array_unique(array_merge($__cp_default_bad_phrases, $chapter_patch_bad_phrases)));
 
 function ss_cp_is_bad_content($content){
-  global $chapter_patch_bad_phrases;
   $content = (string)$content;
   if ($content === '') return true;
-  if (!is_array($chapter_patch_bad_phrases) || empty($chapter_patch_bad_phrases)) return false;
-  foreach ($chapter_patch_bad_phrases as $ph){
+  $bad = $GLOBALS['chapter_patch_bad_phrases'] ?? [];
+  if (!is_array($bad) || !$bad) return false;
+  foreach ($bad as $ph) {
     $ph = (string)$ph;
     if ($ph === '') continue;
     if (strpos($content, $ph) !== false) return true;
   }
   return false;
 }
-
 
 function ss_cp_log($msg){
   global $chapter_patch_log;
@@ -69,7 +70,7 @@ function ss_cp_norm($s){
   $s = (string)$s;
   $s = trim($s);
   $s = preg_replace('/\s+/u', '', $s);
-  $s = function_exists('mb_strtolower') ? mb_strtolower($s, 'UTF-8') : strtolower($s);
+  $s = mb_strtolower($s, 'UTF-8');
   return $s;
 }
 
@@ -142,9 +143,6 @@ function ss_cp_patch_get($articleid, $chapterorder, $chaptername = ''){
   $tbl = ss_cp_patch_table();
   $now = time();
 
-  $req_ch = ss_cp_norm((string)$chaptername);
-  if ($req_ch === '') return null;
-
   $sql = "SELECT content, content_len, expire_at, chaptername FROM `{$tbl}` WHERE articleid=? AND chapterorder=? AND (expire_at=0 OR expire_at>?) LIMIT 1";
   $st = @$db->prepare($sql);
   if (!$st) return null;
@@ -155,12 +153,15 @@ function ss_cp_patch_get($articleid, $chapterorder, $chaptername = ''){
   $st->close();
   if (!$row) return null;
 
-  // chaptername 一致性校验（避免错章复用）
-  $hit_ch = ss_cp_norm((string)($row['chaptername'] ?? ''));
-  if ($hit_ch === '' || $hit_ch !== $req_ch) return null;
+  // 补丁表命中也做章节名一致性校验（避免错章复用）
+  $req_ch = ss_cp_norm($chaptername);
+  if ($req_ch !== '') {
+    $hit_ch = ss_cp_norm((string)($row['chaptername'] ?? ''));
+    if ($hit_ch === '' || $hit_ch !== $req_ch) return null;
+  }
 
   $content = (string)($row['content'] ?? '');
-  // 脏内容过滤：命中坏词视为无效（继续走远端补缺）
+  // 脏内容过滤：命中坏词视为无效补丁（继续走远端补缺）
   if (ss_cp_is_bad_content($content)) return null;
 
   // hit 计数（失败也不影响主流程）
@@ -190,6 +191,8 @@ function ss_cp_patch_save($params){
   $fp = (string)($params['fp'] ?? '');
   $chaptername = (string)($params['chaptername'] ?? '');
   $content = (string)($params['content'] ?? '');
+  // 脏内容过滤：命中坏词不写补丁表（防永久污染）
+  if (ss_cp_is_bad_content($content)) return false;
   $content_len = (int)($params['content_len'] ?? 0);
   $content_hash = (string)($params['content_hash'] ?? '');
   $source_site_id = (int)($params['source_site_id'] ?? 0);
@@ -417,23 +420,19 @@ function ss_cp_get_or_fetch($articleid, $chapterorder, $articlename, $author, $c
     $j = json_decode((string)$ret, true);
     if (!is_array($j) || empty($j['ok'])) continue;
 
-    // 严格一致性校验：书名 + 作者 + 章节名 必须一致（norm=去空白+小写）
+    // 严格一致性校验：书名+作者+章节名(norm) 必须与请求一致，才允许写补丁
     $req_name = ss_cp_norm($articlename);
     $req_author = ss_cp_norm($author);
     $req_chname = ss_cp_norm($chaptername);
-    if ($req_name === '' || $req_author === '' || $req_chname === '') continue;
-
+    if ($req_chname === '') continue;
     $resp_name = ss_cp_norm((string)($j['article']['articlename'] ?? $j['articlename'] ?? ''));
     $resp_author = ss_cp_norm((string)($j['article']['author'] ?? $j['author'] ?? ''));
     $resp_chname = ss_cp_norm((string)($j['chapter']['chaptername'] ?? $j['chaptername'] ?? ''));
-    if ($resp_name !== $req_name || $resp_author !== $req_author || $resp_chname !== $req_chname) {
-      continue;
-    }
+    if ($resp_name !== $req_name || $resp_author !== $req_author || $resp_chname !== $req_chname) continue;
 
     $content = (string)($j['content'] ?? '');
-
-    if (ss_cp_is_short($content, $chapter_patch_min_len)) continue;
     if (ss_cp_is_bad_content($content)) continue;
+    if (ss_cp_is_short($content, $chapter_patch_min_len)) continue;
 
     // 保存补丁
     ss_cp_patch_save([
@@ -509,4 +508,3 @@ function ss_cp_get_sources_cached($fp, $pool_no, $articlename = '', $author = ''
   @file_put_contents($file, json_encode(['pool_no'=>$pn,'sources'=>$j['sources'],'saved_at'=>time()], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
   return $j['sources'];
 }
-

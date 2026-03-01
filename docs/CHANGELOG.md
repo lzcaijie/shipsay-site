@@ -9,13 +9,12 @@
 
 ---
 
-## 2026-03-01-01 | 功能 | 缺章补丁：章节名硬校验 + 脏内容过滤 + 统计接口（只读）
-- 增强：`shipsay/include/chapter_patch.php` 补缺链路加入“书名+作者+章节名（norm=去空白+小写）”一致性硬校验；任一不一致则跳过该来源，不写补丁表。
-- 增强：补丁表命中时同时校验 `chaptername`，不一致视为未命中继续远端补缺，避免错章复用污染。
-- 新增：坏词过滤（默认内置占位句；支持在 `shipsay/configs/chapter_patch.php` 追加），写入前/命中后均会过滤，命中视为无效继续补缺。
-- 新增：`site_sync` 只读接口 `patch_stats` / `patch_book`（近 N 天高频补缺榜单 + 单书补丁章节列表），供总控“高频补缺”页面展示与排查。
-- 涉及：`shipsay/include/chapter_patch.php`、`shipsay/configs/chapter_patch.php`、`shipsay/include/site_sync_impl.php`
-- 回滚：回退上述文件改动即可（不影响主章节表）。
+## 2026-03-01-01 | 功能 | 补缺兜底增强：章节名硬校验 + 脏内容过滤 + patch_stats/patch_book 只读统计接口
+- 增强：`shipsay/include/chapter_patch.php` 补缺远端拉取时加入 `chaptername`，并严格校验返回 `articlename/author/chaptername`（norm=去空白+小写）一致才允许写补丁表；补丁表命中也校验 `chaptername` 防错章复用。
+- 增强：新增坏词过滤 `$chapter_patch_bad_phrases`（默认内置占位句），写入补丁前与补丁命中后均过滤，防“脏补丁”永久污染。
+- 新增：`shipsay/include/site_sync_impl.php` 增加只读接口 `patch_stats`（近 N 天榜）与 `patch_book`（单书补丁章节列表），供总控展示“补缺热度/查看详情”。
+- 说明：`patch_stats/patch_book` 归类只读接口，默认不验签（依赖 allow_ips；如需强制验签可启用 `site_sync_sign_readonly=1`）。
+
 
 ## 2026-02-28-01 | 修复 | v6 模板下发：解压不再依赖 shell_exec（支持 zip/tar.gz）
 - 修复：部分分站禁用 `shell_exec` 导致模板下发报错 `tpl_extract_failed - shell_exec_disabled`。
