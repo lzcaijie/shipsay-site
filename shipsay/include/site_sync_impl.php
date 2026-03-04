@@ -4,11 +4,50 @@
  * Impl: /shipsay/include/site_sync_impl.php (loaded by /www/api/site_sync.php)
  */
 header('Content-Type: application/json; charset=utf-8');
+ob_start();
+
+$GLOBALS['__SS_RESP_SENT'] = 0;
 
 function ss_resp($arr){
+  $GLOBALS['__SS_RESP_SENT'] = 1;
+
+  // 清空之前的输出，避免 JSON 前混入杂字导致面板解析失败/判空
+  if (function_exists('ob_get_length')) {
+    $len = @ob_get_length();
+    if ($len !== false && $len > 0) @ob_clean();
+  }
+
   echo json_encode($arr, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
   exit;
 }
+
+// 兜底：发生 fatal 时也尽量回 JSON，避免面板看到 resp=""
+register_shutdown_function(function () {
+  if (!empty($GLOBALS['__SS_RESP_SENT'])) return;
+
+  $e = error_get_last();
+  if (!$e) return;
+
+  $fatal = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
+  if (!in_array((int)$e['type'], $fatal, true)) return;
+
+  if (function_exists('ob_get_length')) {
+    $len = @ob_get_length();
+    if ($len !== false && $len > 0) @ob_clean();
+  }
+
+  @header('Content-Type: application/json; charset=utf-8');
+  echo json_encode([
+    'ok' => 0,
+    'error' => 'fatal_error',
+    'detail' => [
+      'type' => (int)$e['type'],
+      'message' => (string)($e['message'] ?? ''),
+      'file' => (string)($e['file'] ?? ''),
+      'line' => (int)($e['line'] ?? 0),
+    ],
+  ], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+});
 
 function ss_log_line($path, $line){
   if (!$path) return;
@@ -57,9 +96,11 @@ function ss_clean_old_bundles($bakdir, $keep = 30){
 
 // ----------------- v6：模板分发（themes/<theme>/ + www/static/<theme>/） -----------------
 
-function ss_copydir($src, $dst){
+function ss_copydir($src, $dst, $touch_mtime = false){
   if (!is_dir($src)) return false;
   if (!is_dir($dst) && !@mkdir($dst, 0755, true)) return false;
+  $touch_mtime = !empty($touch_mtime);
+  $touch_ts = time();
   $it = new RecursiveIteratorIterator(
     new RecursiveDirectoryIterator($src, FilesystemIterator::SKIP_DOTS),
     RecursiveIteratorIterator::SELF_FIRST
@@ -70,13 +111,18 @@ function ss_copydir($src, $dst){
     $to = rtrim($dst, '/').'/'.$rel;
     if ($f->isDir()) {
       if (!is_dir($to)) @mkdir($to, 0755, true);
+      if ($touch_mtime) @touch($to, $touch_ts);
     } else {
       @mkdir(dirname($to), 0755, true);
       @copy($f->getPathname(), $to);
+      if ($touch_mtime) @touch($to, $touch_ts);
     }
   }
+  if ($touch_mtime) @touch($dst, $touch_ts);
   return true;
 }
+
+
 
 function ss_tpl_state_file($bakdir){
   return rtrim($bakdir,'/').'/tpl_current.json';
@@ -140,6 +186,189 @@ function ss_core_list_backups($bakdir){
   $dirs = array_values(array_filter($dirs, 'is_dir'));
   rsort($dirs);
   return $dirs;
+}
+
+
+
+// ----------------- v6.3：核心策略 + 核心分发（core_policy_apply / core_check_only / core_apply / core_rollback） -----------------
+
+function ss_try_raise_limits(){
+  @ini_set('memory_limit', '512M');
+  @set_time_limit(120);
+}
+
+function ss_core_policy_file($bakdir){
+  return rtrim($bakdir,'/').'/core_policy.json';
+}
+
+function ss_core_policy_default(){
+  // 默认兜底：宁可多跳过一点，避免把站点本地配置覆盖掉
+  return [
+    'policy_ver' => 1,
+    'updated_at' => 0,
+    'skip' => [
+      'protect_site_sync' => 1,
+      'allow_root' => ['shipsay/','www/'],
+      'ban_prefix' => [
+        'shipsay/configs/',
+        'themes/',
+        'www/static/',
+        'www/caijie/',
+        'www/uploads/',
+      ],
+      'ban_seg' => ['runtime','cache','logs','uploads'],
+    ],
+  ];
+}
+
+function ss_norm_rel($p){
+  $p = str_replace('\\', '/', (string)$p);
+  $p = ltrim($p, '/');
+  $p = preg_replace('~/+~', '/', $p);
+  return $p;
+}
+
+function ss_norm_prefix($p){
+  $p = ss_norm_rel($p);
+  // 允许用户误写成 ".../": 先去掉尾部的多余 /
+  $p2 = rtrim($p, '/');
+  return [$p, $p2];
+}
+
+function ss_core_policy_load($bakdir, &$load_err, &$fallback){
+  $load_err = '';
+  $fallback = 0;
+  $f = ss_core_policy_file($bakdir);
+  if (!is_file($f)) { $fallback = 1; return ss_core_policy_default(); }
+  $raw = (string)@file_get_contents($f);
+  $j = json_decode($raw, true);
+  if (!is_array($j)) { $load_err = 'bad_json'; $fallback = 1; return ss_core_policy_default(); }
+  if (empty($j['skip']) || !is_array($j['skip'])) { $load_err = 'bad_skip'; $fallback = 1; return ss_core_policy_default(); }
+  // normalize arrays
+  foreach (['allow_root','ban_prefix','ban_seg'] as $k){
+    if (!isset($j['skip'][$k]) || !is_array($j['skip'][$k])) $j['skip'][$k] = [];
+  }
+  return $j;
+}
+
+function ss_core_policy_list_backups($bakdir){
+  $dirs = glob(rtrim($bakdir,'/').'/core_policy_*');
+  if (!$dirs) return [];
+  $dirs = array_values(array_filter($dirs, 'is_dir'));
+  rsort($dirs);
+  return $dirs;
+}
+
+function ss_core_policy_summary($bakdir, $policy, $load_err, $fallback){
+  $f = ss_core_policy_file($bakdir);
+  $sha1 = is_file($f) ? (string)@sha1_file($f) : '';
+  $sz = is_file($f) ? (int)@filesize($f) : 0;
+  $applied_at = is_file($f) ? (int)@filemtime($f) : 0;
+  $bak = ss_core_policy_list_backups($bakdir);
+  return [
+    'sha1' => $sha1,
+    'size' => $sz,
+    'applied_at' => $applied_at,
+    'backup_count' => count($bak),
+    'latest_backup' => $bak ? basename($bak[0]) : '',
+    'fallback' => (int)$fallback,
+    'load_err' => (string)$load_err,
+    'policy_ver' => (int)($policy['policy_ver'] ?? 0),
+    'updated_at' => (int)($policy['updated_at'] ?? 0),
+  ];
+}
+
+function ss_core_policy_should_skip($rel, $policy, $overwrite_site_sync, &$why){
+  $why = '';
+  $rel = ss_norm_rel($rel);
+
+  $skip = $policy['skip'] ?? [];
+  if (!is_array($skip)) $skip = [];
+
+  // allow_root：只处理列出的根目录
+  $allow_root = $skip['allow_root'] ?? [];
+  if (!is_array($allow_root)) $allow_root = [];
+  if ($allow_root) {
+    $ok = false;
+    foreach ($allow_root as $ar){
+      $ar = ss_norm_rel((string)$ar);
+      if ($ar === '') continue;
+      if (substr($ar, -1) !== '/') $ar .= '/';
+      if (strpos($rel, $ar) === 0) { $ok = true; break; }
+    }
+    if (!$ok) { $why = 'not_in_allow_root'; return true; }
+  }
+
+  // protect_site_sync：保护 site_sync 入口/实现文件（除非 overwrite_site_sync=1）
+  $prot = !empty($skip['protect_site_sync']);
+  if ($prot && empty($overwrite_site_sync)) {
+    if ($rel === 'www/api/site_sync.php' || $rel === 'shipsay/include/site_sync_impl.php') {
+      $why = 'protect_site_sync';
+      return true;
+    }
+  }
+
+  // ban_prefix：前缀（允许误写 "/": 会同时按 rtrim('/')" 再匹配一次）
+  $ban_prefix = $skip['ban_prefix'] ?? [];
+  if (!is_array($ban_prefix)) $ban_prefix = [];
+  foreach ($ban_prefix as $bp){
+    [$bp1, $bp2] = ss_norm_prefix((string)$bp);
+    if ($bp1 !== '' && substr($bp1, -1) === '/' && strpos($rel, $bp1) === 0) { $why = 'ban_prefix:' . $bp1; return true; }
+    if ($bp2 !== '' && ($rel === $bp2 || strpos($rel, $bp2 . '/') === 0)) { $why = 'ban_prefix:' . $bp2; return true; }
+  }
+
+  // ban_seg：路径段匹配（runtime/cache/logs/uploads 或特定文件名如 config.ini.php）
+  $ban_seg = $skip['ban_seg'] ?? [];
+  if (!is_array($ban_seg)) $ban_seg = [];
+  $segs = explode('/', $rel);
+  foreach ($segs as $seg){
+    foreach ($ban_seg as $bs){
+      $bs = trim(ss_norm_rel((string)$bs));
+      if ($bs === '') continue;
+      if ($seg === $bs) { $why = 'ban_seg:' . $bs; return true; }
+    }
+  }
+
+  return false;
+}
+
+function ss_core_locate_root($extract_dir){
+  $extract_dir = rtrim($extract_dir,'/');
+  $cands = [$extract_dir];
+
+  // 若只有一个顶级目录，允许多一层
+  $tops = glob($extract_dir.'/*');
+  $tops = $tops ? array_values(array_filter($tops, 'is_dir')) : [];
+  if (count($tops) === 1) $cands[] = $tops[0];
+
+  foreach ($cands as $base) {
+    if (is_dir($base.'/shipsay') && is_dir($base.'/www')) return $base;
+  }
+  return '';
+}
+
+function ss_core_iter_files($dir){
+  $out = [];
+  if (!is_dir($dir)) return $out;
+  $it = new RecursiveIteratorIterator(
+    new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS),
+    RecursiveIteratorIterator::LEAVES_ONLY
+  );
+  foreach ($it as $f){
+    if ($f->isDir()) continue;
+    $out[] = $f->getPathname();
+  }
+  return $out;
+}
+
+function ss_core_clean_old($bakdir, $keep){
+  $keep = (int)$keep;
+  if ($keep < 1) $keep = 1;
+  if ($keep > 60) $keep = 60;
+  $dirs = ss_core_list_backups($bakdir);
+  if (count($dirs) <= $keep) return;
+  $del = array_slice($dirs, $keep);
+  foreach ($del as $d) ss_rrmdir($d);
 }
 
 
@@ -1079,7 +1308,7 @@ if (!is_dir($bakdir)) @mkdir($bakdir, 0755, true);
 // - secret 为空：不验签（仅 allow_ips）
 // - secret 有值：写接口（apply/rollback）必验签；只读接口（novel_search/chapter_get/pull）默认不验签（可通过 site_sync_sign_readonly=1 强制验签）
 $sign_readonly = !empty($site_sync_sign_readonly);
-$is_readonly = !empty($data['novel_search']) || !empty($data['chapter_get']) || !empty($data['patch_stats']) || !empty($data['patch_book']) || !empty($data['pull']) || !empty($data['tpl_status']) || !empty($data['core_status']);
+$is_readonly = !empty($data['novel_search']) || !empty($data['chapter_get']) || !empty($data['pull']) || !empty($data['tpl_status']) || !empty($data['core_status']);
 if (!empty($site_sync_secret) && (!$is_readonly || $sign_readonly)) {
   $ts = $_SERVER['HTTP_X_SS_TS'] ?? '';
   $nonce = $_SERVER['HTTP_X_SS_NONCE'] ?? '';
@@ -1112,11 +1341,13 @@ $log_path = isset($site_sync_log) ? (string)$site_sync_log : '';
 $op = 'apply';
 if (!empty($data['novel_search'])) $op = 'novel_search';
 else if (!empty($data['chapter_get'])) $op = 'chapter_get';
-else if (!empty($data['patch_stats'])) $op = 'patch_stats';
-else if (!empty($data['patch_book'])) $op = 'patch_book';
 else if (!empty($data['pull'])) $op = 'pull';
 else if (!empty($data['tpl_status'])) $op = 'tpl_status';
 else if (!empty($data['core_status'])) $op = 'core_status';
+else if (!empty($data['core_policy_apply'])) $op = 'core_policy_apply';
+else if (!empty($data['core_check_only'])) $op = 'core_check';
+else if (!empty($data['core_apply'])) $op = 'core_apply';
+else if (!empty($data['core_rollback'])) $op = 'core_rollback';
 else if (!empty($data['tpl_apply'])) $op = 'tpl_apply';
 else if (!empty($data['tpl_rollback'])) $op = 'tpl_rollback';
 else if (!empty($data['rollback'])) $op = 'rollback';
@@ -1282,177 +1513,6 @@ if (!empty($data['chapter_get'])) {
 
 
 
-
-// Patch stats：近 N 天补缺热度（只读，供总控展示/排查）
-if (!empty($data['patch_stats'])) {
-  $cfg = ss_load_config_ini($root);
-  $db = ss_novel_db_connect($cfg);
-  if (!$db) ss_resp(['ok'=>0,'error'=>'db_connect_failed']);
-
-  $pre = ss_novel_pre($cfg['sys_ver'] ?? '');
-  $tbl = $pre.'article_chapter_patch';
-
-  $days = (int)($data['days'] ?? 7);
-  if ($days <= 0) $days = 7;
-  if ($days > 30) $days = 30;
-
-  $limit = (int)($data['limit'] ?? 100);
-  if ($limit <= 0) $limit = 100;
-  if ($limit > 500) $limit = 500;
-
-  $since = time() - $days * 86400;
-
-  // books_top
-  $books_top = [];
-  $sql = "SELECT articleid,
-                 COUNT(*) AS patch_chapters,
-                 SUM(hit_count) AS hits,
-                 MAX(last_hit) AS last_hit,
-                 MAX(updated_at) AS updated
-          FROM {$tbl}
-          WHERE last_hit >= ?
-          GROUP BY articleid
-          ORDER BY hits DESC
-          LIMIT {$limit}";
-  $st = @$db->prepare($sql);
-  if (!$st) { $db->close(); ss_resp(['ok'=>0,'error'=>'patch_table_missing']); }
-  $st->bind_param('i', $since);
-  if ($st->execute()) {
-    $res = $st->get_result();
-    while ($res && ($r = $res->fetch_assoc())) {
-      $books_top[] = [
-        'articleid'=>(int)($r['articleid'] ?? 0),
-        'patch_chapters'=>(int)($r['patch_chapters'] ?? 0),
-        'hits'=>(int)($r['hits'] ?? 0),
-        'last_hit'=>(int)($r['last_hit'] ?? 0),
-        'updated'=>(int)($r['updated'] ?? 0),
-      ];
-    }
-  }
-  $st->close();
-
-  // sources_top
-  $sources_top = [];
-  $sql2 = "SELECT source_base_url, SUM(hit_count) AS hits
-           FROM {$tbl}
-           WHERE last_hit >= ?
-           GROUP BY source_base_url
-           ORDER BY hits DESC
-           LIMIT {$limit}";
-  $st2 = @$db->prepare($sql2);
-  if ($st2) {
-    $st2->bind_param('i', $since);
-    if ($st2->execute()) {
-      $res = $st2->get_result();
-      while ($res && ($r = $res->fetch_assoc())) {
-        $sources_top[] = [
-          'source_base_url'=>(string)($r['source_base_url'] ?? ''),
-          'hits'=>(int)($r['hits'] ?? 0),
-        ];
-      }
-    }
-    $st2->close();
-  }
-
-  // book_sources_top：Top books 每本取 Top3 sources
-  $book_sources_top = [];
-  $st3 = @$db->prepare("SELECT source_base_url, SUM(hit_count) AS hits
-                        FROM {$tbl}
-                        WHERE articleid = ? AND last_hit >= ?
-                        GROUP BY source_base_url
-                        ORDER BY hits DESC
-                        LIMIT 3");
-  if ($st3) {
-    foreach ($books_top as $b) {
-      $aid = (int)($b['articleid'] ?? 0);
-      if ($aid <= 0) continue;
-      $st3->bind_param('ii', $aid, $since);
-      $list = [];
-      if ($st3->execute()) {
-        $res = $st3->get_result();
-        while ($res && ($r = $res->fetch_assoc())) {
-          $list[] = [
-            'source_base_url'=>(string)($r['source_base_url'] ?? ''),
-            'hits'=>(int)($r['hits'] ?? 0),
-          ];
-        }
-      }
-      $book_sources_top[(string)$aid] = $list;
-    }
-    $st3->close();
-  }
-
-  $db->close();
-  ss_resp([
-    'ok'=>1,
-    'v'=>5,
-    'days'=>$days,
-    'limit'=>$limit,
-    'books_top'=>$books_top,
-    'sources_top'=>$sources_top,
-    'book_sources_top'=>$book_sources_top,
-  ]);
-}
-
-// Patch book：单书补丁章节列表（只读，供总控“查看详情”）
-if (!empty($data['patch_book'])) {
-  $cfg = ss_load_config_ini($root);
-  $db = ss_novel_db_connect($cfg);
-  if (!$db) ss_resp(['ok'=>0,'error'=>'db_connect_failed']);
-
-  $pre = ss_novel_pre($cfg['sys_ver'] ?? '');
-  $tbl = $pre.'article_chapter_patch';
-
-  $articleid = (int)($data['articleid'] ?? 0);
-  if ($articleid <= 0) { $db->close(); ss_resp(['ok'=>0,'error'=>'bad_params']); }
-
-  $days = (int)($data['days'] ?? 7);
-  if ($days <= 0) $days = 7;
-  if ($days > 30) $days = 30;
-
-  $limit = (int)($data['limit'] ?? 20);
-  if ($limit <= 0) $limit = 20;
-  if ($limit > 200) $limit = 200;
-
-  $since = time() - $days * 86400;
-
-  $list = [];
-  $sql = "SELECT chapterorder, chaptername, hit_count, last_hit, source_base_url, updated_at
-          FROM {$tbl}
-          WHERE articleid = ? AND last_hit >= ?
-          ORDER BY last_hit DESC, hit_count DESC, chapterorder DESC
-          LIMIT {$limit}";
-  $st = @$db->prepare($sql);
-  if (!$st) { $db->close(); ss_resp(['ok'=>0,'error'=>'patch_table_missing']); }
-  $st->bind_param('ii', $articleid, $since);
-  if ($st->execute()) {
-    $res = $st->get_result();
-    while ($res && ($r = $res->fetch_assoc())) {
-      $list[] = [
-        'chapterorder'=>(int)($r['chapterorder'] ?? 0),
-        'chaptername'=>(string)($r['chaptername'] ?? ''),
-        'hit_count'=>(int)($r['hit_count'] ?? 0),
-        'last_hit'=>(int)($r['last_hit'] ?? 0),
-        'source_base_url'=>(string)($r['source_base_url'] ?? ''),
-        'updated_at'=>(int)($r['updated_at'] ?? 0),
-      ];
-    }
-  }
-  $st->close();
-  $db->close();
-
-  ss_resp([
-    'ok'=>1,
-    'v'=>5,
-    'days'=>$days,
-    'limit'=>$limit,
-    'articleid'=>$articleid,
-    'list'=>$list,
-  ]);
-}
-
-
-
 // ----------------- v6：模板分发 -----------------
 
 // 仅查看模板状态（只读）：返回当前模板信息与备份数量
@@ -1471,7 +1531,7 @@ if (!empty($data['tpl_status'])) {
 if (!empty($data['core_status'])) {
   $state = ss_core_load_state($bakdir);
   $bak = ss_core_list_backups($bakdir);
-  $meta = ss_site_sync_meta('6.1-impl', $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
+  $meta = ss_site_sync_meta('6.3.3-impl', $client_ip, $allow_ips, $trust_proxy, $sign_readonly);
   ss_resp([
     'ok'=>1,
     'v'=>61,
@@ -1483,6 +1543,335 @@ if (!empty($data['core_status'])) {
     'site_sync'=>$meta,
   ]);
 }
+
+
+// ----------------- v6.3：核心策略下发（core_policy_apply） -----------------
+if (!empty($data['core_policy_apply'])) {
+  if (empty($site_sync_secret)) ss_resp(['ok'=>0,'error'=>'core_need_secret']); // 写操作强制签名
+  ss_try_raise_limits();
+
+  $policy = $data['policy'] ?? null;
+  if (!is_array($policy)) ss_resp(['ok'=>0,'error'=>'bad_policy']);
+  $keep = (int)($data['keep'] ?? 10);
+  if ($keep < 1) $keep = 1;
+  if ($keep > 30) $keep = 30;
+
+  // 备份旧策略
+  $pfile = ss_core_policy_file($bakdir);
+  if (is_file($pfile)) {
+    $bakp = $bakdir.'/core_policy_'.date('Ymd_His').'_'.substr(bin2hex(random_bytes(3)),0,6);
+    @mkdir($bakp, 0755, true);
+    @copy($pfile, $bakp.'/core_policy.json');
+  }
+
+  // 写入新策略（内容保持与总控一致；用文件 mtime 表示下发时间）
+  @mkdir(dirname($pfile), 0755, true);
+  $raw = json_encode($policy, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT);
+  if ($raw === false) ss_resp(['ok'=>0,'error'=>'policy_json_encode_failed']);
+  if (!ss_write_atomic($pfile, $raw."\n")) ss_resp(['ok'=>0,'error'=>'write_failed','file'=>'core_policy.json']);
+  @touch($pfile, time());
+
+  // 清理旧备份
+  $dirs = ss_core_policy_list_backups($bakdir);
+  if (count($dirs) > $keep) {
+    $del = array_slice($dirs, $keep);
+    foreach ($del as $d) ss_rrmdir($d);
+  }
+
+  $load_err=''; $fallback=0;
+  $pol2 = ss_core_policy_load($bakdir, $load_err, $fallback);
+  $sum = ss_core_policy_summary($bakdir, $pol2, $load_err, $fallback);
+
+  ss_resp(['ok'=>1,'v'=>63,'policy'=>$sum]);
+}
+
+// ----------------- v6.1+：核心预演（core_check_only） -----------------
+if (!empty($data['core_check_only'])) {
+  if (empty($site_sync_secret)) ss_resp(['ok'=>0,'error'=>'core_need_secret']); // 写操作强制签名
+  ss_try_raise_limits();
+
+  $core = $data['core'] ?? null;
+  if (!is_array($core)) ss_resp(['ok'=>0,'error'=>'bad_core']);
+
+  $url = trim((string)($core['url'] ?? ''));
+  $want_sha1 = strtolower(trim((string)($core['sha1'] ?? '')));
+  $bundle_id = trim((string)($core['id'] ?? ''));
+  $version = trim((string)($core['version'] ?? ''));
+  $ext = trim((string)($core['ext'] ?? 'zip'));
+  if ($url==='') ss_resp(['ok'=>0,'error'=>'core_params_missing']);
+
+  $tmp = $bakdir.'/core_tmp_'.date('Ymd_His').'_'.mt_rand(1000,9999);
+  @mkdir($tmp, 0755, true);
+
+  $arc = $tmp.'/bundle.'.($ext ? $ext : 'zip');
+  $err = '';
+  if (!ss_http_download_to_file($url, $arc, $err)) { ss_rrmdir($tmp); ss_resp(['ok'=>0,'error'=>'core_download_failed','detail'=>$err]); }
+
+  if ($want_sha1 !== '' && preg_match('/^[a-f0-9]{40}$/', $want_sha1)) {
+    $got = @sha1_file($arc);
+    if (!$got || strtolower($got) !== $want_sha1) {
+      $sz = is_file($arc) ? (int)filesize($arc) : 0;
+      ss_rrmdir($tmp);
+      ss_resp(['ok'=>0,'error'=>'core_sha1_mismatch','want'=>$want_sha1,'got'=>$got ?: '','size'=>$sz]);
+    }
+  }
+
+  $extract = $tmp.'/x';
+  if (!ss_tpl_extract_tar($arc, $extract, $err)) { ss_rrmdir($tmp); ss_resp(['ok'=>0,'error'=>'core_extract_failed','detail'=>$err]); }
+
+  $base = ss_core_locate_root($extract);
+  if ($base === '') { ss_rrmdir($tmp); ss_resp(['ok'=>0,'error'=>'core_bad_structure','need'=>"shipsay/ + www/"]); }
+
+  $policy_err=''; $fallback=0;
+  $policy = ss_core_policy_load($bakdir, $policy_err, $fallback);
+  $policy_sum = ss_core_policy_summary($bakdir, $policy, $policy_err, $fallback);
+
+  $files = ss_core_iter_files($base);
+  $add=[]; $over=[]; $skip=[]; $sskip=[];
+  foreach ($files as $abs){
+    $rel = ss_norm_rel(substr($abs, strlen($base)));
+    if ($rel === '') continue;
+
+    $why = '';
+    if (ss_core_policy_should_skip($rel, $policy, 0, $why)) {
+      if ($why === 'protect_site_sync') $sskip[] = $rel;
+      else $skip[] = $rel;
+      continue;
+    }
+
+    $dst = $root . '/' . $rel;
+    if (is_file($dst)) $over[] = $rel;
+    else $add[] = $rel;
+  }
+
+  $total = count($add) + count($over) + count($skip) + count($sskip);
+  $out = [
+    'bundle_id'=>$bundle_id,
+    'version'=>$version,
+    'sha1'=>$want_sha1,
+    'ext'=>$ext,
+    'total_files'=>$total,
+    'add_files'=>count($add),
+    'overwrite_files'=>count($over),
+    'skipped_files'=>count($skip),
+    'site_sync_files'=>count($sskip),
+    'sample_add'=>array_slice($add,0,30),
+    'sample_overwrite'=>array_slice($over,0,30),
+    'sample_skipped'=>array_slice($skip,0,30),
+    'sample_site_sync'=>array_slice($sskip,0,30),
+    'checked_at'=>time(),
+    'policy_used'=>$policy_sum,
+  ];
+  ss_rrmdir($tmp);
+  ss_resp(['ok'=>1,'v'=>61,'core_check'=>$out,'policy_used'=>$policy_sum]);
+}
+
+// ----------------- v6.2+：核心应用（core_apply） -----------------
+if (!empty($data['core_apply'])) {
+  if (empty($site_sync_secret)) ss_resp(['ok'=>0,'error'=>'core_need_secret']); // 写操作强制签名
+  ss_try_raise_limits();
+
+  $core = $data['core'] ?? null;
+  if (!is_array($core)) ss_resp(['ok'=>0,'error'=>'bad_core']);
+
+  $url = trim((string)($core['url'] ?? ''));
+  $want_sha1 = strtolower(trim((string)($core['sha1'] ?? '')));
+  $bundle_id = trim((string)($core['id'] ?? ''));
+  $version = trim((string)($core['version'] ?? ''));
+  $ext = trim((string)($core['ext'] ?? 'zip'));
+  $keep = (int)($core['keep'] ?? 3); if ($keep<1) $keep=1; if ($keep>30) $keep=30;
+  $overwrite_site_sync = !empty($core['overwrite_site_sync']) ? 1 : 0;
+
+  if ($url==='') ss_resp(['ok'=>0,'error'=>'core_params_missing']);
+
+  $tmp = $bakdir.'/core_tmp_'.date('Ymd_His').'_'.mt_rand(1000,9999);
+  @mkdir($tmp, 0755, true);
+
+  $arc = $tmp.'/bundle.'.($ext ? $ext : 'zip');
+  $err = '';
+  if (!ss_http_download_to_file($url, $arc, $err)) { ss_rrmdir($tmp); ss_resp(['ok'=>0,'error'=>'core_download_failed','detail'=>$err]); }
+
+  if ($want_sha1 !== '' && preg_match('/^[a-f0-9]{40}$/', $want_sha1)) {
+    $got = @sha1_file($arc);
+    if (!$got || strtolower($got) !== $want_sha1) {
+      $sz = is_file($arc) ? (int)filesize($arc) : 0;
+      ss_rrmdir($tmp);
+      ss_resp(['ok'=>0,'error'=>'core_sha1_mismatch','want'=>$want_sha1,'got'=>$got ?: '','size'=>$sz]);
+    }
+  }
+
+  $extract = $tmp.'/x';
+  if (!ss_tpl_extract_tar($arc, $extract, $err)) { ss_rrmdir($tmp); ss_resp(['ok'=>0,'error'=>'core_extract_failed','detail'=>$err]); }
+
+  $base = ss_core_locate_root($extract);
+  if ($base === '') { ss_rrmdir($tmp); ss_resp(['ok'=>0,'error'=>'core_bad_structure','need'=>"shipsay/ + www/"]); }
+
+  $policy_err=''; $fallback=0;
+  $policy = ss_core_policy_load($bakdir, $policy_err, $fallback);
+  $policy_sum = ss_core_policy_summary($bakdir, $policy, $policy_err, $fallback);
+
+  $files = ss_core_iter_files($base);
+
+  // 备份目录（只备份被覆盖的文件；新增文件记录到 manifest，回滚时删除）
+  $backup_dir = $bakdir.'/core_bundle_'.date('Ymd_His').'_'.$version.'_'.substr(bin2hex(random_bytes(3)),0,6);
+  @mkdir($backup_dir, 0755, true);
+
+  $manifest = [
+    'id' => basename($backup_dir),
+    'ts' => time(),
+    'bundle_id' => $bundle_id,
+    'version' => $version,
+    'sha1' => $want_sha1,
+    'ext' => $ext,
+    'overwrite_site_sync' => $overwrite_site_sync,
+    'policy_used' => $policy_sum,
+    'add' => [],
+    'overwrite' => [],
+    'skipped' => [],
+    'site_sync_skipped' => [],
+  ];
+
+  $ts_touch = time();
+
+  foreach ($files as $abs){
+    $rel = ss_norm_rel(substr($abs, strlen($base)));
+    if ($rel === '') continue;
+
+    $why = '';
+    if (ss_core_policy_should_skip($rel, $policy, $overwrite_site_sync, $why)) {
+      if ($why === 'protect_site_sync') $manifest['site_sync_skipped'][] = $rel;
+      else $manifest['skipped'][] = $rel;
+      continue;
+    }
+
+    $dst = $root . '/' . $rel;
+
+    if (is_file($dst)) {
+      $manifest['overwrite'][] = $rel;
+      $bakfile = $backup_dir . '/' . $rel;
+      @mkdir(dirname($bakfile), 0755, true);
+      @copy($dst, $bakfile);
+    } else {
+      $manifest['add'][] = $rel;
+    }
+
+    @mkdir(dirname($dst), 0755, true);
+    @copy($abs, $dst);
+    @chmod($dst, 0644);
+    @touch($dst, $ts_touch);
+  }
+
+  // 写 manifest + core_current
+  @file_put_contents($backup_dir.'/manifest.json', json_encode($manifest, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));
+  $state = [
+    'id'=>$bundle_id,
+    'version'=>$version,
+    'sha1'=>$want_sha1,
+    'ext'=>$ext,
+    'applied_at'=>time(),
+    'backup_dir'=>basename($backup_dir),
+  ];
+  @file_put_contents(ss_core_state_file($bakdir), json_encode($state, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
+
+  ss_core_clean_old($bakdir, $keep);
+  ss_rrmdir($tmp);
+
+  $total = count($manifest['add']) + count($manifest['overwrite']) + count($manifest['skipped']) + count($manifest['site_sync_skipped']);
+  $write = [
+    'action'=>'core_apply',
+    'at'=>time(),
+    'bundle_id'=>$bundle_id,
+    'version'=>$version,
+    'sha1'=>$want_sha1,
+    'ext'=>$ext,
+    'backup'=>basename($backup_dir),
+    'total_files'=>$total,
+    'add_files'=>count($manifest['add']),
+    'overwrite_files'=>count($manifest['overwrite']),
+    'skipped_files'=>count($manifest['skipped']),
+    'site_sync_files'=>count($manifest['site_sync_skipped']),
+    'restore_files'=>0,
+    'delete_files'=>0,
+  ];
+
+  $bak = ss_core_list_backups($bakdir);
+  ss_resp(['ok'=>1,'v'=>62,'core_write'=>$write,'core'=>[
+    'current'=>$state,
+    'backup_count'=>count($bak),
+    'latest_backup'=>($bak ? basename($bak[0]) : ''),
+  ],'policy_used'=>$policy_sum]);
+}
+
+// ----------------- v6.2+：核心回滚（core_rollback） -----------------
+if (!empty($data['core_rollback'])) {
+  if (empty($site_sync_secret)) ss_resp(['ok'=>0,'error'=>'core_need_secret']); // 写操作强制签名
+  ss_try_raise_limits();
+
+  $bak = ss_core_list_backups($bakdir);
+  if (!$bak) ss_resp(['ok'=>0,'error'=>'no_core_backup']);
+  $latest = $bak[0];
+  $mfile = $latest.'/manifest.json';
+  if (!is_file($mfile)) ss_resp(['ok'=>0,'error'=>'bad_core_backup_no_manifest','used'=>basename($latest)]);
+  $manifest = json_decode((string)@file_get_contents($mfile), true);
+  if (!is_array($manifest)) ss_resp(['ok'=>0,'error'=>'bad_core_backup_manifest','used'=>basename($latest)]);
+
+  $add = isset($manifest['add']) && is_array($manifest['add']) ? $manifest['add'] : [];
+  $over = isset($manifest['overwrite']) && is_array($manifest['overwrite']) ? $manifest['overwrite'] : [];
+
+  $ts_touch = time();
+  $deln=0; $restn=0;
+
+  foreach ($add as $rel){
+    $rel = ss_norm_rel($rel);
+    if ($rel==='') continue;
+    $dst = $root.'/'.$rel;
+    if (is_file($dst)) { @unlink($dst); $deln++; }
+  }
+
+  foreach ($over as $rel){
+    $rel = ss_norm_rel($rel);
+    if ($rel==='') continue;
+    $src = $latest.'/'.$rel;
+    $dst = $root.'/'.$rel;
+    if (!is_file($src)) continue;
+    @mkdir(dirname($dst), 0755, true);
+    @copy($src, $dst);
+    @chmod($dst, 0644);
+    @touch($dst, $ts_touch);
+    $restn++;
+  }
+
+  // 尝试恢复 core_current 到 before（若未来 meta.json 有）
+  $state = ss_core_load_state($bakdir);
+  $state['rolled_back_at'] = time();
+  @file_put_contents(ss_core_state_file($bakdir), json_encode($state, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
+
+  $total = count($add) + count($over);
+  $write = [
+    'action'=>'core_rollback',
+    'at'=>time(),
+    'bundle_id'=>(string)($manifest['bundle_id'] ?? ''),
+    'version'=>(string)($manifest['version'] ?? ''),
+    'sha1'=>(string)($manifest['sha1'] ?? ''),
+    'ext'=>(string)($manifest['ext'] ?? ''),
+    'backup'=>basename($latest),
+    'total_files'=>$total,
+    'add_files'=>count($add),
+    'overwrite_files'=>count($over),
+    'skipped_files'=>0,
+    'site_sync_files'=>0,
+    'restore_files'=>$restn,
+    'delete_files'=>$deln,
+  ];
+
+  $bak2 = ss_core_list_backups($bakdir);
+  ss_resp(['ok'=>1,'v'=>62,'core_write'=>$write,'core'=>[
+    'current'=>$state,
+    'backup_count'=>count($bak2),
+    'latest_backup'=>($bak2 ? basename($bak2[0]) : ''),
+  ]]);
+}
+
 
 // 模板应用：下载 bundle（tar.gz）→ 校验 sha1 → 解压 → 备份现有主题目录 → 覆盖 themes/<theme>/ 与 www/static/<theme>/
 if (!empty($data['tpl_apply'])) {
@@ -1512,14 +1901,16 @@ if (!empty($data['tpl_apply'])) {
     ss_resp(['ok'=>0,'error'=>'tpl_download_failed','detail'=>$err]);
   }
 
-  // sanity: template bundle should be a .tar.gz (gzip magic 1f8b)
+  // sanity: template bundle should be tar.gz OR zip (magic: 1f8b / PK)
   $sig = '';
   $fp = @fopen($tar, 'rb');
   if ($fp) { $sig = (string)@fread($fp, 2); @fclose($fp); }
-  if ($sig !== "\x1f\x8b") {
+  $is_gz  = ($sig === "\x1f\x8b");
+  $is_zip = ($sig === "PK");
+  if (!$is_gz && !$is_zip) {
     $head = @file_get_contents($tar, false, null, 0, 256);
     $head = is_string($head) ? trim($head) : '';
-    $hint = 'not_gzip_magic:' . bin2hex($sig);
+    $hint = 'not_archive_magic:' . bin2hex($sig);
     // if it looks like JSON/HTML, pass a preview for debugging
     $preview = '';
     if ($head !== '' && preg_match('~^[\{\<\[]~', $head)) {
@@ -1606,8 +1997,8 @@ if (!empty($data['tpl_apply'])) {
   // 先 stage，再覆盖（降低失败风险）
   $stage = $bakdir.'/tpl_stage_'.date('Ymd_His').'_'.mt_rand(1000,9999);
   @mkdir($stage, 0755, true);
-  ss_copydir($src_theme, $stage.'/themes/'.$theme);
-  ss_copydir($src_static, $stage.'/www/static/'.$theme);
+  ss_copydir($src_theme, $stage.'/themes/'.$theme, true);
+  ss_copydir($src_static, $stage.'/www/static/'.$theme, true);
 
   // 覆盖
   if (is_dir($dst_theme)) ss_rrmdir($dst_theme);
