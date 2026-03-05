@@ -15,8 +15,7 @@ if(isset($matches[3]))$now_pid=str_replace('_','',$matches[3]);
 if($is_multiple)
 {
 	$sourceid=ss_sourceid($sourceid);
-	// use_orderid=1: chapterid in URL is zero-based order (do NOT ss_sourceid)
-	if(!$use_orderid)$sourcecid=ss_sourceid($sourcecid);
+	$sourcecid=ss_sourceid($sourcecid);
 }
 $max_pid=1;
 $prevpage_url='';
@@ -61,7 +60,7 @@ else
 	if(!$res->num_rows)Url::ss_errpage();
 	while($row=mysqli_fetch_assoc($res))
 	{
-		$chapterids[]=$_compare_id=$use_orderid?((int)$row['chapterorder']-1):(int)$row['chapterid'];
+		$chapterids[]=$_compare_id=$use_orderid?$row['chapterorder']:$row['chapterid'];
 		if($sourcecid==$_compare_id)
 		{
 			$txt_sourceid=$row['chapterid'];
@@ -81,30 +80,28 @@ else
 }
 $info_url=Url::info_url($articleid);
 $index_url=Url::index_url($articleid);
-$pre_cid=-1;
-$next_cid=-1;
+$pre_cid=0;
+$next_cid=0;
 $chapters=count($chapterids);
 $offset=array_search($sourcecid,$chapterids);
-if($offset===false)$offset=0;
-$offset==0?$pre_cid=-1:$pre_cid=$chapterids[$offset-1];
-$offset==$chapters-1?$next_cid=-1:$next_cid=$chapterids[$offset+1];
-
-if($pre_cid<0)
+$offset==0?$pre_cid=0:$pre_cid=$chapterids[$offset-1];
+$offset==$chapters-1?$next_cid=0:$next_cid=$chapterids[$offset+1];
+if($pre_cid==0)
 {
 	$pre_url=$info_url;
 }
 else
 {
-	$tmpvar=($is_multiple && !$use_orderid)?ss_newid($pre_cid):$pre_cid;
+	$tmpvar=$is_multiple?ss_newid($pre_cid):$pre_cid;
 	$pre_url=Url::chapter_url($articleid,$tmpvar);
 }
-if($next_cid<0)
+if($next_cid==0)
 {
 	$next_url=$info_url;
 }
 else
 {
-	$tmpvar=($is_multiple && !$use_orderid)?ss_newid($next_cid):$next_cid;
+	$tmpvar=$is_multiple?ss_newid($next_cid):$next_cid;
 	$next_url=Url::chapter_url($articleid,$tmpvar);
 }
 if($use_orderid)
@@ -200,8 +197,7 @@ if($is_ft)$rico_content=Convert::jt2ft($rico_content);
 $reader_des=mb_substr(preg_replace('/<\/?p>/is','',$rico_content),0,200);
 if($is_attachment&&!empty($att_url)&&$now_pid==$max_pid)
 {
-	$att_cid = $use_orderid ? (int)$chapterid_real : (int)$sourcecid;
-	$sql='SELECT attachment FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE chapterid = '.$att_cid;
+	$sql='SELECT attachment FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE chapterid = '.$sourcecid;
 	if(isset($redis)&&$redis->ss_get($sql))
 	{
 		$res=$redis->ss_get($sql);
@@ -211,7 +207,7 @@ if($is_attachment&&!empty($att_url)&&$now_pid==$max_pid)
 		$res=$db->ss_getone($sql);
 		if(isset($redis))$redis->ss_setex($sql,$cache_time,$res);
 	}
-	$att_url.='/'.$subaid.'/'.$sourceid.'/'.$att_cid;
+	$att_url.='/'.$subaid.'/'.$sourceid.'/'.$sourcecid;
 	$attHtml='';
 	$regex='/"postfix";s:3:"(.+?)".+?"attachid";i:(\d+?);/i';
 	preg_match_all($regex,$res['attachment'],$atts);

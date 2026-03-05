@@ -47,48 +47,31 @@ $ratenum=$infoarr[0]['ratenum'];
 $ratesum=$infoarr[0]['ratesum'];
 $score=$infoarr[0]['score'];
 $sql='SELECT chapterid,chaptername,lastupdate,chaptertype,chapterorder FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chaptertype = 0 ORDER BY chapterorder ASC';
-
-// v6.3.3: use_orderid=1 => public cid is zero-based (chapterorder-1), but patch uses real chapterorder (1-based)
-// Do NOT cache pre-built cid_url into Redis (switching use_orderid/is_multiple would show stale links).
-// Cache raw rows only, then build cid_url dynamically.
-$sql_rows = $sql.' /*chrows_v3*/';
-
-$rows = [];
-if(isset($redis))
+$chapterrows=array();
+if(isset($redis)&&$redis->ss_get($sql))
 {
-	$rows = $redis->ss_redis_getrows($sql_rows,$info_cache_time);
+	$chapterrows=$redis->ss_get($sql);
 }
 else
 {
-	$rows = $db->ss_getrows($sql_rows);
-}
-
-$chapterrows=array();
-if(is_array($rows))
-{
-	$k=0;
-	foreach($rows as $row)
+	$res=$db->ss_query($sql);
+	if($res->num_rows)
 	{
-		if($use_orderid)
+		$k=0;
+		while($row=mysqli_fetch_assoc($res))
 		{
-			$cid = (int)$row['chapterorder'] - 1;
-			if($cid < 0) $cid = 0;
+			$cid=$use_orderid?$row['chapterorder']:$row['chapterid'];
+			if($is_multiple)$cid=ss_newid($cid);
+			$chapterrows[$k]['chaptertype']=$row['chaptertype'];
+			$chapterrows[$k]['lastupdate']=$row['lastupdate'];
+			$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$cid);
+			$chapterrows[$k]['cname']=Text::ss_toutf8($row['chaptername']);
+			if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
+			$k++;
 		}
-		else
-		{
-			$cid = (int)$row['chapterid'];
-			if($is_multiple) $cid = ss_newid($cid);
-		}
-
-		$chapterrows[$k]['chaptertype']=$row['chaptertype'];
-		$chapterrows[$k]['lastupdate']=$row['lastupdate'];
-		$chapterrows[$k]['cid_url']=Url::chapter_url($articleid,$cid);
-		$chapterrows[$k]['cname']=Text::ss_toutf8($row['chaptername']);
-		if($is_ft)$chapterrows[$k]['cname']=Convert::jt2ft($chapterrows[$k]['cname']);
-		$k++;
+		if(isset($redis))$redis->ss_setex($sql,$info_cache_time,$chapterrows);
 	}
 }
-
 $first_url=$chapterrows[0]['cid_url'];
 $chapters=count($chapterrows);
 $lastupdate_stamp=$chapterrows[$chapters-1]['lastupdate'];
