@@ -1,3 +1,7 @@
+## 2026-03-05 | S5 | hotfix info/indexlist blank
+- avoid SQL comment suffix for ss_redis_getrows/ss_getrows; add empty-rows guard to prevent blank info/indexlist pages
+- touched: shipsay/app/info.php, shipsay/app/indexlist.php
+
 ## 2026-03-05 | S4 | cid zero-based when use_orderid
 - use_orderid=1: public chapter cid becomes zero-based (chapterorder-1), keeping patch/DB chapterorder 1-based
 - unify link generation across info/indexlist/reader/reader_js; avoid stale Redis cache of pre-built cid_url

@@ -51,20 +51,18 @@ $sql='SELECT chapterid,chaptername,lastupdate,chaptertype,chapterorder FROM '.$d
 // v6.3.3: use_orderid=1 => public cid is zero-based (chapterorder-1), but patch uses real chapterorder (1-based)
 // Do NOT cache pre-built cid_url into Redis (switching use_orderid/is_multiple would show stale links).
 // Cache raw rows only, then build cid_url dynamically.
-$sql_rows = $sql.' /*chrows_v3*/';
-
 $rows = [];
 if(isset($redis))
 {
-	$rows = $redis->ss_redis_getrows($sql_rows,$info_cache_time);
+	$rows = $redis->ss_redis_getrows($sql,$info_cache_time);
 }
 else
 {
-	$rows = $db->ss_getrows($sql_rows);
+	$rows = $db->ss_getrows($sql);
 }
+if(!is_array($rows) || count($rows)===0) Url::ss_errpage();
 
 $chapterrows=array();
-if(is_array($rows))
 {
 	$k=0;
 	foreach($rows as $row)
