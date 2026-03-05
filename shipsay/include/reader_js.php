@@ -12,8 +12,7 @@ $chapterid=$sourcecid=$_POST['chapterid'];
 if($is_multiple)
 {
 	$sourceid=ss_sourceid($sourceid);
-	// use_orderid=1: chapterid in POST is zero-based order (do NOT ss_sourceid)
-	if(!$use_orderid)$sourcecid=ss_sourceid($sourcecid);
+	$sourcecid=ss_sourceid($sourcecid);
 }
 
 $subaid=intval($sourceid/1000);
@@ -27,7 +26,7 @@ $author='';
 
 if($use_orderid)
 {
-	$chapterorder_real=(int)$sourcecid + 1;
+	$chapterorder_real=(int)$sourcecid;
 	$sql='SELECT chapterid,chapterorder,chaptername FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND chapterorder = '.$chapterorder_real.' AND chaptertype = 0 LIMIT 1';
 	$row=$db->ss_getone($sql);
 	if(is_array($row)&&!empty($row['chapterid']))
