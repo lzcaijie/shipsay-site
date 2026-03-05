@@ -1,3 +1,8 @@
+## 2026-03-05 | S4 | cid zero-based when use_orderid
+- use_orderid=1: public chapter cid becomes zero-based (chapterorder-1), keeping patch/DB chapterorder 1-based
+- unify link generation across info/indexlist/reader/reader_js; avoid stale Redis cache of pre-built cid_url
+- touched: shipsay/app/info.php, shipsay/app/indexlist.php, shipsay/app/reader.php, shipsay/include/reader_js.php
+
 # CHANGELOG（分站 shipsay-site，最新在最前）
 
 > 说明：
