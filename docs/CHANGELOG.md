@@ -9,12 +9,40 @@
 
 ---
 
-## 2026-03-01-01 | 功能 | 补缺兜底增强：章节名硬校验 + 脏内容过滤 + patch_stats/patch_book 只读统计接口
-- 增强：`shipsay/include/chapter_patch.php` 补缺远端拉取时加入 `chaptername`，并严格校验返回 `articlename/author/chaptername`（norm=去空白+小写）一致才允许写补丁表；补丁表命中也校验 `chaptername` 防错章复用。
-- 增强：新增坏词过滤 `$chapter_patch_bad_phrases`（默认内置占位句），写入补丁前与补丁命中后均过滤，防“脏补丁”永久污染。
-- 新增：`shipsay/include/site_sync_impl.php` 增加只读接口 `patch_stats`（近 N 天榜）与 `patch_book`（单书补丁章节列表），供总控展示“补缺热度/查看详情”。
-- 说明：`patch_stats/patch_book` 归类只读接口，默认不验签（依赖 allow_ips；如需强制验签可启用 `site_sync_sign_readonly=1`）。
+## 2026-03-06-v5.2-1 | 模板 | shipsay 母模板第二轮纠偏 + docs 修订
+- 目标：修正 v5.1 第一轮里“加了但不该加、该保留却没保留、模板显示与程序真实变量不一致”的问题。
+- 模板调整：
+  - `tpl_footer.php`：移除前端可见 HTML 注释，母模板不再输出用户可见注释。
+  - `tpl_home.php`：移除页面正文里的“更多排行”入口，排行仅保留全站顶部入口。
+  - `tpl_top.php / tpl_rank.php`：移除解释性说明文案，只保留页面标题与真实榜单内容。
+  - `tpl_info.php`：简介改为优先读实际存在变量；恢复详情页前 50 章预览，PC 双列 / 手机单列；保留最近 12 章与相关推荐。
+  - `tpl_category.php`：移除正文区域多余排行入口；恢复真实分页输出（桌面页码 + 手机上一页/下一页/跳页）。
+  - `tpl_reader.php`：调整面包屑、分页信息、标题与正文的左右对齐，优先修正阅读流。
+- 程序调整：
+  - `shipsay/app/category.php`：取消“分类页最多只展示 10 页”的硬限制，恢复按真实总页数分页。
+- 样式调整：
+  - `www/static/shipsay/style.css`：补 `v5.2` 覆盖样式，修正分类分页、阅读页对齐、详情页简介与预览区节奏。
+- 文档调整：
+  - 更新 `docs/V5_1_TEMPLATE_STANDARD.md`
+  - 更新 `docs/VARIABLE_MAP.md`
+- 原则：模板纠偏优先于“为了统一继续加模块”；用户能看到的注释与说明文案一律去掉。
 
+## 2026-03-06-v5.1-1 | 模板 | shipsay 母模板第一轮收口 + docs 更新
+- 目标：继续以 `themes/shipsay/` 作为母模板基线，先修正 v5.0 中“改动过重、影响页面协调性”的部分，再沉淀到 v5.1 / v5.2 文档。
+- 模板调整：
+  - `tpl_header.php`：顶部入口新增“排行”，保留后台可变 `fake_top`，不写死路由。
+  - `tpl_home.php`：移除首页强插的完整排行榜块，仅保留顶部/头部排行榜入口；热门模块增加“更多排行”入口。
+  - `tpl_info.php`：恢复详情页最新章节区；修正章节列表变量兼容（优先 `lastarr`）；补回长尾相关推荐入口。
+  - `tpl_indexlist.php`：目录页改为 PC 双列/手机单列；分页改回复用 app 已生成的 `$htmltitle`；补充长尾目录入口。
+  - `tpl_category.php`：栏目页增加顶部扩展入口；PC 双列卡片；标题与简介长度收口；保持手机端单列。
+  - `tpl_recentread.php`：阅读记录页改为主内容 + 侧栏结构，统一头部与面包屑。
+  - `tpl_top.php`：改为复用 SEO 渲染链路。
+- 静态样式：`www/static/shipsay/style.css` 同步补齐首页、栏目页、详情页、目录页、阅读记录页的收口样式与移动端规则。
+- 文档调整：
+  - 更新 `docs/V5_1_TEMPLATE_STANDARD.md`
+  - 更新 `docs/VARIABLE_MAP.md`
+  - 本条写入 `docs/CHANGELOG.md`
+- 原则：不为了“更像标准”而破坏原本正确逻辑；SEO 继续服从程序链路。
 
 ## 2026-02-28-01 | 修复 | v6 模板下发：解压不再依赖 shell_exec（支持 zip/tar.gz）
 - 修复：部分分站禁用 `shell_exec` 导致模板下发报错 `tpl_extract_failed - shell_exec_disabled`。

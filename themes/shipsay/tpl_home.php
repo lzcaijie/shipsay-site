@@ -6,9 +6,6 @@
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
-$rank_base = (isset($fake_top) && $fake_top)
-    ? rtrim($fake_top, '/') . '/'
-    : ('/' . ((isset($fake_rankstr) && $fake_rankstr) ? trim($fake_rankstr, '/') : 'rank') . '/');
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
@@ -60,30 +57,6 @@ $rank_base = (isset($fake_top) && $fake_top)
             <?php endforeach; endif; ?>
         </ul></div>
         <?php } ?>
-    </div>
-</div>
-
-<div class="container">
-    <div class="section rank-quick-section">
-        <div class="rank-quick-head">
-            <p class="title"><i class="fa fa-bar-chart fa-lg">&nbsp;</i>排行榜</p>
-            <div class="rank-quick-tabs">
-                <a href="<?=$rank_base?>allvisit/">总榜</a>
-                <a href="<?=$rank_base?>monthvisit/">月榜</a>
-                <a href="<?=$rank_base?>weekvisit/">周榜</a>
-                <a href="<?=$rank_base?>allvote/">推荐</a>
-                <a href="<?=$rank_base?>goodnum/">收藏</a>
-            </div>
-        </div>
-        <ol class="rank-quick-list">
-            <?php if (is_array($popular)): foreach ($popular as $k => $v): if ($k < 10): ?>
-                <li>
-                    <span><?=($k + 1)?></span>
-                    <a href="<?=$v['info_url']?>"><?=$v['articlename']?></a>
-                    <em><?=$v['author']?></em>
-                </li>
-            <?php endif; endforeach; endif; ?>
-        </ol>
     </div>
 </div>
 
