@@ -8,6 +8,8 @@ if (isset($index_url) && $index_url) {
 }
 $latest12 = (!empty($lastchapter_arr) && is_array($lastchapter_arr)) ? array_slice($lastchapter_arr, 0, 12) : [];
 $latest50 = (!empty($preview_chapters) && is_array($preview_chapters)) ? array_slice($preview_chapters, 0, 50) : [];
+$info_url_safe = (isset($uri) && $uri) ? $uri : ((isset($info_url) && $info_url) ? $info_url : '');
+$intro_plain = !empty($intro_p) ? trim(strip_tags($intro_p)) : trim(strip_tags(!empty($intro) ? $intro : $intro_des));
 ?>
 <!DOCTYPE html>
 <html lang="zh">
@@ -25,6 +27,29 @@ if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
 if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
     $seo_description = '《' . $articlename . '》作者：' . $author . '，简介：' . (!empty($intro_p) ? $intro_p : $intro_des);
 }
+
+$info_breadcrumb_ld = [
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => !empty($site_url) ? $site_url : '/'],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => $sortname, 'item' => Sort::ss_sorturl($sortid)],
+        ['@type' => 'ListItem', 'position' => 3, 'name' => $articlename, 'item' => $info_url_safe !== '' ? $info_url_safe : $info_url],
+    ],
+];
+$info_book_ld = [
+    '@context' => 'https://schema.org',
+    '@type' => 'Book',
+    'name' => $articlename,
+    'author' => ['@type' => 'Person', 'name' => $author],
+    'bookFormat' => 'EBook',
+    'datePublished' => (string)$lastupdate,
+    'numberOfPages' => (string)$chapters,
+    'publisher' => ['@type' => 'Organization', 'name' => SITE_NAME],
+    'image' => $img_url,
+    'description' => $intro_plain,
+    'url' => $info_url_safe !== '' ? $info_url_safe : $info_url,
+];
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
@@ -32,16 +57,16 @@ if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
 <meta http-equiv="Cache-Control" content="no-transform">
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <meta name="applicable-device" content="pc,mobile">
-<meta name="mobile-agent" content="format=html5;url=<?=$uri?>">
+<meta name="mobile-agent" content="format=html5;url=<?=$info_url_safe?>">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<link rel="canonical" href="<?=$uri?>">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Book","name":"<?=$articlename?>","author":{"@type":"Person","name":"<?=$author?>"},"bookFormat":"EBook","datePublished":"<?=$lastupdate?>","numberOfPages":"<?=$chapters?>","publisher":{"@type":"Organization","name":"<?=SITE_NAME?>"},"image":"<?=$img_url?>","description":"<?=$intro_p?>"}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"<?=SITE_NAME?>","item":"<?=$site_url?>"},{"@type":"ListItem","position":2,"name":"<?=$sortname?>","item":"<?=Sort::ss_sorturl($sortid)?>"},{"@type":"ListItem","position":3,"name":"<?=$articlename?>","item":"<?=$info_url?>"}]}</script>
+<link rel="canonical" href="<?=$info_url_safe?>">
+<script type="application/ld+json"><?=json_encode($info_book_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
+<script type="application/ld+json"><?=json_encode($info_breadcrumb_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 <meta property="og:type" content="novel">
-<meta property="og:title" content="<?=$articlename?>">
-<meta property="og:description" content="《<?=$articlename?>》最新章节由<?=$author?>创作，<?=$intro_p?>">
-<meta property="og:url" content="<?=$info_url?>">
+<meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:url" content="<?=$info_url_safe?>">
 <meta property="og:image" content="<?=$img_url?>">
 <meta property="og:image:alt" content="<?=$articlename?>封面">
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
