@@ -9,6 +9,9 @@ $search_url_safe = function_exists('ss_search_url')
 $search_placeholder = isset($search_placeholder) && $search_placeholder !== ''
     ? $search_placeholder
     : '输入书名/作者';
+$rank_entry_safe = (isset($fake_top) && $fake_top)
+    ? rtrim($fake_top, '/') . '/'
+    : ('/' . ((isset($fake_rankstr) && $fake_rankstr) ? trim($fake_rankstr, '/') : 'rank') . '/');
 ?>
 <meta name="robots" content="all">
 <meta name="bingbot" content="all">
@@ -45,6 +48,7 @@ $search_placeholder = isset($search_placeholder) && $search_placeholder !== ''
             <a id="home" href="/"><i class="fa fa-home fa-lg"></i><br>首页</a>
             <a href="<?=$allbooks_url?>"><i class="fa fa-book fa-lg"></i><br>书库</a>
             <a href="<?=$full_allbooks_url_safe?>"><i class="fa fa-coffee fa-lg"></i><br>完本</a>
+            <a href="<?=$rank_entry_safe?>"><i class="fa fa-bar-chart fa-lg"></i><br>排行</a>
             <a href="<?=$fake_recentread?>" rel="nofollow"><i class="fa fa-history fa-lg"></i><br>足迹</a>
         </div>
     </div>
@@ -52,6 +56,7 @@ $search_placeholder = isset($search_placeholder) && $search_placeholder !== ''
 <div class="navigation">
     <nav class="container">
         <a href="/">首页</a>
+        <a href="<?=$rank_entry_safe?>">排行</a>
         <?php foreach (Sort::ss_sorthead() as $v): ?>
             <a href="<?=$v['sorturl']?>"><?=$v['sortname_2']?></a>
         <?php endforeach ?>

@@ -3,8 +3,14 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>排行榜_<?=SITE_NAME?></title>
-<meta name="description" content="<?=SITE_NAME?>小说排行榜聚合页，按分类查看热门作品。">
+<?php
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+$GLOBALS['page_title'] = '排行榜';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('rank');
+?>
+<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container">
     <section class="section">
@@ -13,7 +19,7 @@
         </div>
         <div class="rank-page-head">
             <h1>排行榜</h1>
-            <p>按分类查看热门作品，作为母模板聚合榜入口。</p>
+            <p>按分类查看热门作品，作为母模板统一排行榜入口。</p>
         </div>
         <div class="top-grid">
             <?php $sortCount = is_array($sortarr) ? count($sortarr) : 0; ?>
