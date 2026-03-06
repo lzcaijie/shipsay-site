@@ -6,35 +6,39 @@
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
+$category_name_safe = isset($sortname) && $sortname !== '' ? $sortname : '全部小说';
+if (trim($seo_title) === '' || trim($seo_title) === SITE_NAME) {
+    $seo_title = $category_name_safe . (isset($page) && intval($page) > 1 ? '_第'.intval($page).'页' : '') . '_' . SITE_NAME;
+}
+if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
+    $seo_keywords = $category_name_safe . ',小说,' . SITE_NAME;
+}
+if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
+    $seo_description = $category_name_safe . '小说列表，尽在' . SITE_NAME . '。';
+}
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
 <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
-<div class="store shipsay-store">
+<div class="store">
     <div class="store_left">
         <i id="store_menu" class="fa fa-bars fa-3x" onclick="javascript: store_menu();" title="筛选菜单"></i>
-        <div class="side_commend category-panel">
-            <div class="title"><span><?=$sortname?></span></div>
-            <div class="category-entry-links">
-                <a href="<?=$allbooks_url?>">全部小说</a>
-                <a href="<?=$full_url?>"><?=$fullflag ? '当前已筛全本' : '只看全本'?></a>
-                <a href="<?=$fake_recentread?>">阅读记录</a>
-            </div>
+        <div class="side_commend">
+            <div class="title"><?=$sortname?></div>
             <div id="after_menu">
-                <div><a href="javascript:" onclick="document.location='<?=$full_url?>'"><label><input type="checkbox"<?php if($fullflag): ?> checked="checked"<?php endif ?> /> 只看全本</label></a></div>
+                <div><a href="#"></a><a href="javascript:" onclick="document.location='<?=$full_url?>'"><label><input type="checkbox"<?php if($fullflag): ?> checked="checked"<?php endif ?> /> 只看全本</label></a></div>
                 <div><a href="<?=$allbooks_url?>" <?php if($sortid == -1): ?> class="onselect"<?php endif?>>全部分类</a>
                     <?php foreach($sortcategory as $k => $v): ?>
                         <a href="<?=$v['sorturl']?>"<?php if($sortid == $k): ?> class="onselect"<?php endif?>><?=$v['sortname']?></a>
                     <?php endforeach ?>
                 </div>
             </div>
-            <ul class="flex category-card-list">
-                <?php if(is_array($retarr)): ?>
-                <?php foreach($retarr as $k => $v): ?>
-                <li class="category-card">
+            <ul class="flex">
+                <?php if(is_array($retarr)): foreach($retarr as $k => $v): ?>
+                <li>
                     <div class="img_span"><a href="<?=$v['info_url']?>"><img class="lazy" src="<?=Url::nocover_url()?>" data-original="<?=$v['img_url']?>" title="<?=$v['articlename']?>" loading="lazy" /><span<?php if($v['isfull'] != '连载'): ?> class="full"<?php endif ?>><?=$v['sortname_2']?> / <?=$v['isfull']?></span></a></div>
-                    <div class="w100 category-card-main">
+                    <div class="w100">
                         <a href="<?=$v['info_url']?>"><h2><?=$v['articlename']?></h2></a>
                         <p class="indent"><?=$v['intro_des']?></p>
                         <div class="li_bottom">
@@ -45,13 +49,17 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
                         </div>
                     </div>
                 </li>
-                <?php endforeach ?>
-                <?php endif ?>
+                <?php endforeach; endif ?>
             </ul>
+
+            <?php if (!empty($allpage) && $allpage > 1): ?>
             <div class="category-pagination">
-                <div class="index-container category-page-desktop"><ul><?=$jump_html?></ul></div>
-                <div class="index-container category-page-mobile"><?=$jump_html_wap?></div>
+                <div class="pages pagination-pc-wrap">
+                    <ul class="pagination-pc"><?=$jump_html?></ul>
+                </div>
+                <div class="index-container pagination-mobile"><?=$jump_html_wap?></div>
             </div>
+            <?php endif; ?>
         </div>
     </div>
     <div id="store_right">
@@ -65,9 +73,6 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
             <li onclick="javascript: document.location='<?=$full_url?>'">
                 <label><input type="checkbox"<?php if($fullflag): ?> checked="checked"<?php endif ?> /> 只看全本</label>
             </li>
-        </ul>
-        <ul>
-            <li><a href="<?=$fake_recentread?>">阅读记录</a></li>
         </ul>
     </div>
 </div>

@@ -9,13 +9,16 @@ $search_url_safe = function_exists('ss_search_url')
 $search_placeholder = isset($search_placeholder) && $search_placeholder !== ''
     ? $search_placeholder
     : '输入书名/作者';
-$rank_entry_safe = (isset($fake_top) && $fake_top)
-    ? rtrim($fake_top, '/') . '/'
-    : ('/' . ((isset($fake_rankstr) && $fake_rankstr) ? trim($fake_rankstr, '/') : 'rank') . '/');
+$rank_entry_safe = '';
+if (isset($fake_top) && $fake_top) {
+    $rank_entry_safe = $fake_top;
+} elseif (isset($fake_rankstr) && $fake_rankstr) {
+    $rank_entry_safe = '/' . trim($fake_rankstr, '/') . '/';
+} else {
+    $rank_entry_safe = '/rank/';
+}
 ?>
 <meta name="robots" content="all">
-<meta name="bingbot" content="all">
-<meta name="baiduspider" content="all">
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <meta http-equiv="Cache-Control" content="no-transform">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, user-scalable=no">
@@ -56,8 +59,8 @@ $rank_entry_safe = (isset($fake_top) && $fake_top)
 <div class="navigation">
     <nav class="container">
         <a href="/">首页</a>
-        <a href="<?=$rank_entry_safe?>">排行</a>
         <?php foreach (Sort::ss_sorthead() as $v): ?>
+            <?php if ((isset($fake_top) && rtrim($v['sorturl'], '/') === rtrim($fake_top, '/')) || (isset($v['sortname']) && mb_strpos($v['sortname'], '排行') !== false)) continue; ?>
             <a href="<?=$v['sorturl']?>"><?=$v['sortname_2']?></a>
         <?php endforeach ?>
         <div id="user_panel"></div>

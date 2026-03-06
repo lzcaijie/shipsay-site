@@ -22,6 +22,15 @@ $title_arr = [
 ];
 $current_query = isset($query) && $query ? $query : 'allvisit';
 $current_title = isset($title_arr[$current_query]) ? $title_arr[$current_query] : '排行榜';
+if (trim($seo_title) === '' || trim($seo_title) === SITE_NAME) {
+    $seo_title = $current_title . '_' . SITE_NAME;
+}
+if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
+    $seo_keywords = $current_title . ',' . SITE_NAME . ',排行榜,热门小说';
+}
+if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
+    $seo_description = $current_title . '榜单，尽在' . SITE_NAME . '。';
+}
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
