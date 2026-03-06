@@ -16,6 +16,9 @@ if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
 if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
     $seo_description = '作者' . $author . '作品列表与最新章节，尽在' . SITE_NAME . '。';
 }
+$author_name_raw = isset($author) ? (string)$author : '';
+$author_safe = htmlspecialchars($author_name_raw, ENT_QUOTES, 'UTF-8');
+$author_count_safe = isset($author_count) ? intval($author_count) : 0;
 $author_url_safe = isset($uri) && $uri ? $uri : '';
 $author_ld = [
     '@context' => 'https://schema.org',
@@ -31,9 +34,9 @@ $author_ld = [
 <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <?php if ($author_url_safe !== ''): ?>
 <meta name="applicable-device" content="pc,mobile">
-<meta name="mobile-agent" content="format=html5;url=<?=$author_url_safe?>">
-<link rel="canonical" href="<?=$author_url_safe?>">
-<meta property="og:url" content="<?=$author_url_safe?>">
+<meta name="mobile-agent" content="format=html5;url=<?=htmlspecialchars($author_url_safe, ENT_QUOTES, 'UTF-8')?>">
+<link rel="canonical" href="<?=htmlspecialchars($author_url_safe, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:url" content="<?=htmlspecialchars($author_url_safe, ENT_QUOTES, 'UTF-8')?>">
 <?php endif; ?>
 <meta property="og:type" content="website">
 <meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
@@ -44,7 +47,7 @@ $author_ld = [
 
 <div class="container">
 	<div class="side_commend" style="width:100%;">
-		<p class="title"><i class="fa fa-user-circle-o">&nbsp;</i> "<?=$author?>" 共有 "<?=$author_count?>" 部作品：</p>
+		<p class="title"><i class="fa fa-user-circle-o">&nbsp;</i>“<?=$author_safe?>” 共有 “<?=$author_count_safe?>” 部作品：</p>
 		<ul class="flex">
 			<?php if(is_array($res)): ?><?php foreach($res as $k => $v): ?>	
 			<li class="searchresult">

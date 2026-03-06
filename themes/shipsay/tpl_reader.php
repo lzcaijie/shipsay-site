@@ -5,8 +5,12 @@ if ($max_pid > 1) {
     $pageTitle .= '（' . $now_pid . '/' . $max_pid . '）';
 }
 $pageTitle .= ' - ' . SITE_NAME;
-$index_url_safe = isset($index_url) && $index_url ? $index_url : $info_url;
-$reader_url_safe = isset($uri) && $uri ? $uri : '';
+$info_url_safe = isset($info_url) && $info_url ? $info_url : '/';
+$index_url_safe = isset($index_url) && $index_url ? $index_url : $info_url_safe;
+$reader_url_safe = isset($uri) && $uri ? $uri : $info_url_safe;
+$chapterwords_safe = isset($chapterwords) ? intval($chapterwords) : 0;
+$now_pid_safe = isset($now_pid) ? intval($now_pid) : 1;
+$max_pid_safe = isset($max_pid) ? intval($max_pid) : 1;
 ?>
 <!DOCTYPE html>
 <html lang="zh">
@@ -31,7 +35,7 @@ $reader_breadcrumb_ld = [
     'itemListElement' => [
         ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => !empty($site_url) ? $site_url : '/'],
         ['@type' => 'ListItem', 'position' => 2, 'name' => $sortname, 'item' => Sort::ss_sorturl($sortid)],
-        ['@type' => 'ListItem', 'position' => 3, 'name' => $articlename, 'item' => $info_url],
+        ['@type' => 'ListItem', 'position' => 3, 'name' => $articlename, 'item' => $info_url_safe],
         ['@type' => 'ListItem', 'position' => 4, 'name' => $chaptername, 'item' => $reader_url_safe !== '' ? $reader_url_safe : $info_url],
     ],
 ];
@@ -45,19 +49,19 @@ $reader_breadcrumb_ld = [
 <meta http-equiv="Cache-Control" content="no-transform">
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <meta name="applicable-device" content="pc,mobile">
-<meta name="mobile-agent" content="format=html5;url=<?=$reader_url_safe?>">
+<meta name="mobile-agent" content="format=html5;url=<?=htmlspecialchars($reader_url_safe, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:type" content="novel">
-<link rel="canonical" href="<?=$reader_url_safe?>">
+<link rel="canonical" href="<?=htmlspecialchars($reader_url_safe, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-<meta property="og:novel:category" content="<?=$sortname?>小说">
-<meta property="og:novel:author" content="<?=$author?>">
-<meta property="og:novel:book_name" content="<?=$articlename?>">
-<meta property="og:novel:index_url" content="<?=$info_url?>">
-<meta property="og:novel:info_url" content="<?=$info_url?>">
-<meta property="og:novel:status" content="<?=$isfull?>">
-<meta property="og:novel:chapter_name" content="<?=$chaptername?>">
-<meta property="og:novel:chapter_url" content="<?=$reader_url_safe?>">
+<meta property="og:novel:category" content="<?=htmlspecialchars($sortname . '小说', ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:novel:author" content="<?=htmlspecialchars($author, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:novel:book_name" content="<?=htmlspecialchars($articlename, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:novel:index_url" content="<?=htmlspecialchars($info_url_safe, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:novel:info_url" content="<?=htmlspecialchars($info_url_safe, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:novel:status" content="<?=htmlspecialchars($isfull, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:novel:chapter_name" content="<?=htmlspecialchars($chaptername, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:novel:chapter_url" content="<?=htmlspecialchars($reader_url_safe, ENT_QUOTES, 'UTF-8')?>">
 <script type="application/ld+json"><?=json_encode($reader_breadcrumb_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="read_bg">
@@ -89,11 +93,11 @@ $reader_breadcrumb_ld = [
                     <div class="text_info">
                         <span><a href="<?=$info_url?>"><i class="fa fa-book"> <?=$articlename?></i></a></span>
                         <span><a href="<?=$author_url?>"><i class="fa fa-user-circle-o"> <?=$author?></i></a></span>
-                        <span><i class="fa fa-list-ol"> <?=$chapterwords?> 字</i></span>
+                        <span><i class="fa fa-list-ol"> <?=$chapterwords_safe?> 字</i></span>
                         <span><i class="fa fa-clock-o"> <?=Text::ss_lastupdate($lastupdate)?></i></span>
                     </div>
                     <?php if ($max_pid > 1): ?>
-                    <div class="page-info reader-page-inline">当前第 <?=$now_pid?> 页 / 共 <?=$max_pid?> 页</div>
+                    <div class="page-info reader-page-inline">当前第 <?=$now_pid_safe?> 页 / 共 <?=$max_pid_safe?> 页</div>
                     <?php endif; ?>
                 </div>
             </div>
@@ -119,6 +123,6 @@ $reader_breadcrumb_ld = [
 <script src="/static/<?=$theme_dir?>/style.js"></script>
 <script>
 if (window.lastread && typeof window.lastread.set === 'function') {
-    lastread.set(<?=json_encode($info_url, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($uri, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($articlename, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($chaptername, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($author, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($img_url, JSON_UNESCAPED_UNICODE)?>);
+    lastread.set(<?=json_encode($info_url_safe, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($reader_url_safe, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($articlename, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($chaptername, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($author, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($img_url, JSON_UNESCAPED_UNICODE)?>);
 }
 </script>
