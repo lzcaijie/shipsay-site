@@ -471,3 +471,10 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - `tpl_indexlist.php` 中的 BreadcrumbList 链接必须使用 `$indexlist_breadcrumb_item` 这类明确兜底值，不能回退引用未定义原始变量。
 - `tpl_reader.php` 中的本地阅读记录写入应使用 `$reader_url_safe`，不要直接把原始 `$uri` 当成稳定链接。
 - `tpl_author.php` 中的作者名与作品数展示建议先整理为 `$author_safe / $author_count_safe`，再输出到前台。
+
+### Footer / recentread / error 模板本地 safe 变量（本轮补充）
+- `$site_url_safe`：Footer 首页入口安全链接，优先用 `$site_url`，否则回退 `/`。
+- `$home_url_safe`：recentread / error 页面返回首页与面包屑入口的安全链接。
+- `$recentread_page_title` / `$recentread_page_description`：阅读记录页本地标题与描述兜底。
+- `$recent_info_url_safe` / `$recent_author_url_safe`：阅读记录页猜你喜欢列表的安全链接。
+- `$recent_articlename_safe` / `$recent_author_safe`：阅读记录页猜你喜欢列表的安全展示文案。
