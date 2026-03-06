@@ -13,13 +13,14 @@ if (trim($seo_title) === '' || trim($seo_title) === SITE_NAME) {
     $seo_title = $rank_page_title . '_' . SITE_NAME;
 }
 if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
-    $seo_keywords = '排行榜,周榜,月榜,总榜,推荐榜,收藏榜,' . SITE_NAME;
+    $seo_keywords = '排行榜,日榜,周榜,月榜,总榜,推荐榜,收藏榜,' . SITE_NAME;
 }
 if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
-    $seo_description = SITE_NAME . '小说排行榜聚合页，查看周榜、月榜、总榜、推荐榜、收藏榜。';
+    $seo_description = SITE_NAME . '小说排行榜聚合页，查看日榜、周榜、月榜、总榜、推荐榜、收藏榜。';
 }
 $canonical_top = $rank_entry_url ?: '/rank/';
 $rank_sections = isset($top_sections) && is_array($top_sections) ? $top_sections : [
+    'dayvisit'   => ['title' => '日榜',   'field' => 'dayvisit',   'more' => $rank_detail_base . 'dayvisit/'],
     'weekvisit'  => ['title' => '周榜',   'field' => 'weekvisit',  'more' => $rank_detail_base . 'weekvisit/'],
     'monthvisit' => ['title' => '月榜',   'field' => 'monthvisit', 'more' => $rank_detail_base . 'monthvisit/'],
     'allvisit'   => ['title' => '总榜',   'field' => 'allvisit',   'more' => $rank_detail_base . 'allvisit/'],
