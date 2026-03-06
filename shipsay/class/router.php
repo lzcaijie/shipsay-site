@@ -68,26 +68,14 @@ if(preg_match(Url::tag2real($fake_tag),urldecode($uri),$matches)||strpos($uri,$t
 	exit;
 }
 
-// fake_top 兼容：支持 /top/ 与 /top.html 互为别名（避免后台切换后旧链接 404）
-$fake_top_alt='';
-if(!empty($fake_top))
+$fake_top_match=ss_match_fake_top_uri($uri,$fake_top);
+if($fake_top_match!==false)
 {
-	$ft=rtrim($fake_top,'/');
-	if(substr($ft,-5)==='.html')
-	{
-		$fake_top_alt=substr($ft,0,-5);
-	}
-	else
-	{
-		$fake_top_alt=$ft.'.html';
-	}
-}
-if(decide_uri($uri,$fake_top) || (!empty($fake_top_alt) && decide_uri($uri,$fake_top_alt)))
-{
+	$matches=['', $fake_top_match];
 	require_once __ROOT_DIR__.'/shipsay/app/top.php';
 	exit;
 }
-if(preg_match('/\/'.$fake_rankstr.'\/?([^\/]*)\/?/i',$uri,$matches))
+if(preg_match('/\/'.preg_quote($fake_rankstr,'/').'\/?([^\/]*)\/?/i',$uri,$matches))
 {
 	require_once __ROOT_DIR__.'/shipsay/app/rank.php';
 	exit;
@@ -190,5 +178,65 @@ function ss_void()
 function ss_autoload($classname)
 {
 	if(!class_exists($classname))require __ROOT_DIR__.'/shipsay/class/'.$classname.'.php';
+}
+function ss_match_fake_top_uri($uri,$fake_top)
+{
+	$meta=ss_get_fake_top_meta($fake_top);
+	$path=parse_url((string)$uri,PHP_URL_PATH);
+	if($path===null||$path===false)$path=(string)$uri;
+	$path='/'.ltrim((string)$path,'/');
+	$path=preg_replace('#/+#','/',$path);
+	$path_no_slash=rtrim($path,'/');
+	if($path_no_slash==='')$path_no_slash='/';
+
+	foreach($meta['entry_aliases'] as $alias)
+	{
+		if($path_no_slash===rtrim($alias,'/'))
+		{
+			return '';
+		}
+	}
+
+	if(preg_match('#^'.preg_quote($meta['detail_root'],'#').'/([a-z0-9_]+)/?$#i',$path,$m))
+	{
+		return strtolower($m[1]);
+	}
+
+	return false;
+}
+function ss_get_fake_top_meta($fake_top,$fake_rankstr='rank')
+{
+	$rank_prefix=trim((string)$fake_rankstr,'/');
+	if($rank_prefix==='')$rank_prefix='rank';
+
+	$entry=(string)$fake_top;
+	if($entry==='')$entry='/'.$rank_prefix.'/';
+	$entry_path=parse_url($entry,PHP_URL_PATH);
+	if($entry_path===null||$entry_path===false||$entry_path==='')$entry_path=$entry;
+	$entry_path='/'.ltrim((string)$entry_path,'/');
+	$entry_path=preg_replace('#/+#','/',$entry_path);
+	if($entry_path==='/')$entry_path='/'.$rank_prefix.'/';
+
+	$is_html=substr($entry_path,-5)==='.html';
+	$detail_root=$is_html?substr($entry_path,0,-5):rtrim($entry_path,'/');
+	if($detail_root==='')$detail_root='/'.$rank_prefix;
+
+	$entry_url=$entry_path;
+	if(!$is_html&&substr($entry_url,-1)!=='/')$entry_url.='/';
+
+	$aliases=array_values(array_unique(array_filter([
+		rtrim($entry_url,'/'),
+		$entry_url,
+		rtrim($detail_root,'/'),
+		rtrim($detail_root,'/').'.html'
+	])));
+
+	return [
+		'entry_url'=>$entry_url,
+		'detail_root'=>rtrim($detail_root,'/'),
+		'detail_base'=>rtrim($detail_root,'/').'/',
+		'entry_aliases'=>$aliases,
+		'rank_prefix'=>$rank_prefix,
+	];
 }
 ?>
