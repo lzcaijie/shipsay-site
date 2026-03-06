@@ -113,6 +113,7 @@ if($is_rank_detail)
 }
 
 $top_sections=[
+	'dayvisit'=>['title'=>'日榜','field'=>'dayvisit','more'=>$rank_detail_base.'dayvisit/'],
 	'weekvisit'=>['title'=>'周榜','field'=>'weekvisit','more'=>$rank_detail_base.'weekvisit/'],
 	'monthvisit'=>['title'=>'月榜','field'=>'monthvisit','more'=>$rank_detail_base.'monthvisit/'],
 	'allvisit'=>['title'=>'总榜','field'=>'allvisit','more'=>$rank_detail_base.'allvisit/'],
