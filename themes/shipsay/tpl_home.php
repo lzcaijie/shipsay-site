@@ -6,13 +6,31 @@
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
+$home_url_safe = (isset($uri) && $uri) ? $uri : (!empty($site_url) ? rtrim($site_url, '/') . '/' : '/');
 $rank_base = (isset($fake_top) && $fake_top)
     ? rtrim($fake_top, '/') . '/'
     : ('/' . ((isset($fake_rankstr) && $fake_rankstr) ? trim($fake_rankstr, '/') : 'rank') . '/');
+$home_ld = [
+    '@context' => 'https://schema.org',
+    '@type' => 'WebSite',
+    'name' => SITE_NAME,
+    'url' => $home_url_safe,
+    'description' => $seo_description,
+];
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
 <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta name="applicable-device" content="pc,mobile">
+<meta name="mobile-agent" content="format=html5;url=<?=$home_url_safe?>">
+<link rel="canonical" href="<?=$home_url_safe?>">
+<meta property="og:type" content="website">
+<meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:url" content="<?=$home_url_safe?>">
+<script type="application/ld+json"><?=json_encode($home_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container">
     <div class="side_commend side_commend_width">

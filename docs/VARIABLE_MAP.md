@@ -378,51 +378,64 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 这样才能减少“变量写对了但层级写错了”的问题。
 
 
-## 6. 本轮补充修正（2026-03-06）
+---
 
-### 6.1 详情页章节变量
-- `shipsay/app/info.php` 当前实际提供的是：`$lastarr`
-- 模板兼容可读：`$lastarr`、`$lastchapter_arr`
-- 优先级建议：先读 `$lastarr`，不存在时再兼容旧写法
+## 6. 本轮全目录扫描补充（2026-03-07）
 
-### 6.2 长尾变量
-- `shipsay/include/langtail.php` 实际输出：`$langtailrows`
-- 常见字段：
-  - `langname`
-  - `info_url`
-  - `index_url`
-  - `uptime`
+### 6.1 路由/入口层真实变量补充
 
-### 6.3 目录分页变量
-- `shipsay/app/indexlist.php` 已准备：`$htmltitle`
-- 模板优先直接复用 `$htmltitle`，不要再手写一套分页 URL 推导，避免与后台伪静态配置脱节。
+| 变量 | 层级 | 说明 |
+|---|---|---|
+| `$site_url` | 路由/公共 | 站点根地址，多个模板会用于 canonical / breadcrumb / OG 链路 |
+| `$allbooks_url` | 路由派生 | 书库入口，由分类伪静态模板派生 |
+| `$full_allbooks_url` | 路由派生 | 完本入口，由 `fake_fullstr + allbooks_url` 组合 |
+| `$fake_recentread` | 配置 | 阅读记录入口 |
+| `$fake_top` | 配置 | 排行聚合入口 |
+| `$fake_rankstr` | 路由兼容 | 旧排行明细前缀兼容值 |
+| `$rico_sql` | app 数据准备 | 列表查询公共 SQL 前缀，不是模板变量标准 |
 
-### 6.4 排行入口变量
-- 聚合排行前缀优先使用：`$fake_top`
-- 兼容旧逻辑时才使用：`$fake_rankstr`
-- 模板层不允许写死 `/top/` 或 `/rank/`。
+### 6.2 Header/模板局部派生变量补充
 
+| 变量 | 层级 | 说明 |
+|---|---|---|
+| `$full_allbooks_url_safe` | 模板局部 | Header 对完本入口的兜底值 |
+| `$search_url_safe` | 模板局部 | 搜索入口安全兜底值 |
+| `$search_placeholder` | 模板局部 | 搜索框占位文案 |
+| `$rank_entry_safe` | 模板局部 | Header 中排行入口兜底值 |
+| `$home_url_safe` | 模板局部 | 首页 canonical / OG / 结构化数据使用 |
+| `$category_url_safe` | 模板局部 | 分类页 canonical / OG / breadcrumb 使用 |
+| `$author_url_safe` | 模板局部 | 作者页 canonical / OG / breadcrumb 使用 |
+| `$rank_url_safe` | 模板局部 | 榜单详情页 canonical / OG / breadcrumb 使用 |
+| `$top_url_safe` | 模板局部 | 榜单聚合页 canonical / OG / breadcrumb 使用 |
 
-## 6.5 v5.2 纠偏补充（2026-03-06）
+### 6.3 详情页/目录页局部变量补充
 
-### 详情页简介
-- `tpl_info.php` 不应只假定 `$intro` 一定存在。
-- 当前母模板兼容顺序建议：
-  1. `$intro`
-  2. `$intro_des`
-  3. `$intro_p`
+| 变量 | 层级 | 说明 |
+|---|---|---|
+| `$index_url_safe` | 模板局部 | 详情页/阅读页目录入口兜底 |
+| `$latest12` | 模板局部 | 详情页展示用“最新 12 章”数组 |
+| `$latest50` | 模板局部 | 详情页展示用“前 50 章”数组 |
+| `$intro_html` | 模板局部 | 简介输出优先级合并值 |
+| `$total_pages_safe` | 模板局部 | 目录页总页数安全值 |
 
-### 详情页章节预览
-- `shipsay/app/info.php` 已提供完整 `$chapterrows`。
-- 详情页如需展示“前 50 章”，应直接从 `$chapterrows` 取，不要误用 `$lastarr`。
-- `$lastarr` 只表示最近章节切片。
+### 6.4 排行链路变量补充
 
-### 分类页分页
-- `shipsay/app/category.php` 当前真实分页变量：
-  - `$jump_html`：桌面页码
-  - `$jump_html_wap`：手机端上一页/下一页/跳页
-- 模板层应直接复用，不再额外写死页数上限。
+| 变量 | 层级 | 说明 |
+|---|---|---|
+| `$rank_meta` | app 输出 | `fake_top` / `fake_rankstr` 解析后的排行元数据 |
+| `$rank_entry_url` | app 输出 | 排行聚合入口 |
+| `$rank_detail_base` | app 输出 | 排行明细页基础前缀 |
+| `$rank_legacy_base` | app 输出 | 旧排行前缀兼容值 |
+| `$query` | app 输出 | 当前榜单 key |
+| `$page_title` | app 输出 | 榜单标题，用于 SEO 占位符 `{ranktitle}` |
 
-### 排行入口
-- v5.2 起，正文区不再重复放排行入口。
-- 排行入口保留在全站顶部导航/顶部功能区即可。
+### 6.5 本轮纠错：不能只按数组切片字面解释章节语义
+
+Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运行规则。
+
+因此：
+- 不能只看 `array_slice()` / `array_reverse()` 的字面写法
+- 不能只看 `chapterorder ASC` 就直接断言“前 50 章 / 最新 50 章”
+- 必须结合 **真实运行页、章节 URL 映射、最终页面输出结果** 一起判断
+
+这条属于变量/数据语义判断红线，后续写标准时必须保留。
