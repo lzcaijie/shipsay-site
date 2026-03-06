@@ -1,9 +1,26 @@
 <?php
 
-$articleid=$sourceid=$matches[1];
-$index_url=Url::index_url($articleid);
+$langtail_articleid=$langtail_sourceid=$matches[1];
+$info_url=Url::info_url($langtail_articleid,true);
+$index_url=Url::index_url($langtail_articleid,1,true);
 if(!file_exists(__THEME_DIR__.'/tpl_info.php'))header('Location:'.$index_url);
-if($is_multiple)$sourceid=ss_sourceid($articleid);
+if($is_multiple)$langtail_sourceid=ss_sourceid($langtail_sourceid);
+
+$langtail_sql='SELECT sourceid,langname,sourcename FROM shipsay_article_langtail WHERE langid = '.intval($langtail_sourceid);
+$lang_res=$db->ss_getone($langtail_sql);
+if(!is_array($lang_res) || empty($lang_res['sourceid']))Url::ss_errpage();
+
+$sourceid=intval($lang_res['sourceid']);
+$articleid=$sourceid;
+if($is_multiple)$articleid=ss_newid($articleid);
+$articlename=$lang_res['langname'];
+$sourcename=$lang_res['sourcename'];
+if($is_ft)
+{
+    $articlename=Convert::jt2ft($articlename,1);
+    $sourcename=Convert::jt2ft($sourcename,1);
+}
+
 if($is_acode)
 {
 	$sql=$rico_sql.'AND articlecode = "'.$sourceid.'"';
@@ -20,12 +37,10 @@ else
 {
 	$infoarr=$db->ss_getrows($sql);
 }
-if(!is_array($infoarr))Url::ss_errpage();
-if($is_acode)$sourceid=$infoarr[0]['articleid'];
-$articlename=$sourcename=$infoarr[0]['articlename'];
+if(!is_array($infoarr) || empty($infoarr[0]))Url::ss_errpage();
+
 if($is_langtail===1)
 {
-	if($is_ft)$sourcename=Convert::jt2ft($sourcename,1);
 	include_once __ROOT_DIR__.'/shipsay/include/langtail.php';
 }
 $author=$infoarr[0]['author'];
@@ -78,6 +93,7 @@ if(is_array($rows))
 		$k++;
 	}
 }
+if(empty($chapterrows))Url::ss_errpage();
 
 $first_url=$chapterrows[0]['cid_url'];
 $chapters=count($chapterrows);
@@ -89,7 +105,7 @@ $last_url=$chapterrows[$chapters-1]['cid_url'];
 $lastarr=array_reverse(array_slice($chapterrows,-12,12));
 $lastchapter_arr=$lastarr;
 $preview_chapters=array_reverse(array_slice($chapterrows,-50,50));
-require_once __ROOT_DIR__.'/shipsay/include/articlevisit.php';
+if($count_visit)require_once __ROOT_DIR__.'/shipsay/include/articlevisit.php';
 header('Last-Modified: '.date('D, d M Y H:i:s',$lastupdate_stamp-8*60*60).' GMT');
 require_once __THEME_DIR__.'/tpl_info.php';
 ?>

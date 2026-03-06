@@ -90,12 +90,11 @@ if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
             <div class="catalog-header">
                 <div>
                     <h2 class="block-title">相关推荐</h2>
-                    <div class="page-info">与本书相关的推荐内容</div>
                 </div>
             </div>
             <div class="tail-link-list">
                 <?php foreach ($langtail_list as $v): ?>
-                    <a href="<?=$v['index_url']?>"><?=$v['langname']?>目录</a>
+                    <a href="<?=$v['info_url']?>"><?=$v['langname']?></a>
                 <?php endforeach; ?>
             </div>
         </div>
