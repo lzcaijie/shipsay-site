@@ -1,16 +1,20 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
+<?php
+$total_pages_safe = 1;
+if (isset($chapters) && isset($per_page) && intval($per_page) > 0) {
+    $total_pages_safe = max(1, (int)ceil($chapters / $per_page));
+} elseif (isset($pid) && $pid > 1) {
+    $total_pages_safe = (int)$pid;
+}
+$langtail_list = (!empty($langtailrows) && is_array($langtailrows)) ? $langtailrows : [];
+?>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
 <?php
-$pageTitle = '《' . $articlename . '》章节目录_' . SITE_NAME;
-if (isset($pid) && $pid > 1) {
-    $pageTitle = '《' . $articlename . '》章节目录_第' . $pid . '页_' . SITE_NAME;
-}
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('indexlist');
-$pageTitle = $seo_title;
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
@@ -41,24 +45,22 @@ $pageTitle = $seo_title;
                     <span>状态：<?=$isfull?></span>
                     <span>字数：<?=$words_w?>万</span>
                 </p>
-                <p>最新章节：<a href="<?=$last_url?>"><?=$lastchapter?></a> <em style="color:#999;"><?=$lastupdate_cn?></em></p>
+                <p>最新章节：<a href="<?=$last_url?>"><?=$lastchapter?></a> <em class="meta-time"><?=$lastupdate_cn?></em></p>
                 <p>总章节：<?=$chapters?>章</p>
             </div>
         </div>
         <div class="catalog-header">
             <div>
-                <h2 style="margin:0;color:#333;">《<?=$articlename?>》章节目录</h2>
-                <?php if (isset($pid) && $pid > 1): ?>
-                <div class="page-info" style="margin-top:5px;">当前第 <?=$pid?> 页，共 <?=ceil($chapters / 50)?> 页</div>
-                <?php endif; ?>
+                <h2 class="block-title">《<?=$articlename?>》章节目录</h2>
+                <div class="page-info">当前第 <?=$pid?> 页，共 <?=$total_pages_safe?> 页</div>
             </div>
-            <div>
+            <div class="catalog-actions">
                 <a href="<?=$first_url?>" class="back-link"><i class="fa fa-book"></i> 开始阅读</a>
                 <a href="<?=$info_url?>" class="back-link"><i class="fa fa-arrow-left"></i> 返回详情</a>
             </div>
         </div>
         <div class="chapter-list-container">
-            <ul style="list-style:none;padding:0;margin:0;">
+            <ul class="chapter-grid">
                 <?php if (isset($list_arr) && !empty($list_arr)): ?>
                     <?php foreach ($list_arr as $v): ?>
                         <?php if (isset($v['chaptertype']) && $v['chaptertype'] == 1): ?>
@@ -68,44 +70,27 @@ $pageTitle = $seo_title;
                         <?php endif; ?>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <li style="text-align:center;padding:40px 20px;color:#999;">暂无章节数据</li>
+                    <li class="chapter-item chapter-item-empty">暂无章节数据</li>
                 <?php endif; ?>
             </ul>
-            <div class="index-container">
-                <?php
-                $currentPage = isset($pid) ? $pid : 1;
-                $totalChapters = $chapters;
-                $chaptersPerPage = 50;
-                $totalPages = max(1, (int)ceil($totalChapters / $chaptersPerPage));
-                if ($currentPage > 1):
-                    $prevPage = $currentPage - 1;
-                    $prevUrl = ($prevPage == 1) ? $index_url : $index_url . $prevPage . '/';
-                ?>
-                    <a class="index-container-btn" href="<?=$prevUrl?>">上一页</a>
-                <?php else: ?>
-                    <a class="index-container-btn disabled-btn" href="javascript:void(0);">没有了</a>
-                <?php endif; ?>
-                <select id="indexselect" onchange="self.location.href=options[selectedIndex].value">
-                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                        <?php
-                        $startChapter = ($i - 1) * $chaptersPerPage + 1;
-                        $endChapter = min($i * $chaptersPerPage, $totalChapters);
-                        $pageUrl = ($i == 1) ? $index_url : $index_url . $i . '/';
-                        ?>
-                        <option value="<?=$pageUrl?>" <?=($i == $currentPage) ? 'selected="selected"' : ''?>><?=$startChapter?> - <?=$endChapter?>章</option>
-                    <?php endfor; ?>
-                </select>
-                <?php if ($currentPage < $totalPages): ?>
-                    <a class="index-container-btn" href="<?=$index_url . ($currentPage + 1) . '/'?>">下一页</a>
-                <?php else: ?>
-                    <a class="index-container-btn disabled-btn" href="javascript:void(0);">没有了</a>
-                <?php endif; ?>
+            <div class="index-container"><?=$htmltitle?></div>
+        </div>
+
+        <?php if (!empty($langtail_list)): ?>
+        <div class="section sub-section section-info-block">
+            <div class="catalog-header">
+                <div>
+                    <h2 class="block-title">目录延伸</h2>
+                    <div class="page-info">与当前书籍目录相关的长尾入口</div>
+                </div>
             </div>
-            <div class="page-navigation">
-                <div class="page-info">共 <?=$chapters?> 章，每页显示 50 章</div>
-                <div><a href="<?=$first_url?>" class="back-link"><i class="fa fa-play-circle"></i> 从第一章开始阅读</a></div>
+            <div class="tail-link-list">
+                <?php foreach ($langtail_list as $v): ?>
+                    <a href="<?=$v['index_url']?>"><?=$v['langname']?>目录</a>
+                <?php endforeach; ?>
             </div>
         </div>
+        <?php endif; ?>
     </section>
 </div>
 <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
