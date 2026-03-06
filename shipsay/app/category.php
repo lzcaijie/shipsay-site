@@ -84,6 +84,7 @@ else
 	}
 }
 
+$category_jump_num = 10;
 if($page < 1) $page = 1;
 
 $sql='SELECT COUNT(articleid) as allbooks FROM '.$dbarr['pre'].'article_article WHERE '.$dbarr['words'].' > 0 '.$sortidstr.$fullstr;
@@ -98,7 +99,11 @@ else
 }
 $allpage=ceil($allbooks/$category_per_page);
 if($allpage < 1)$allpage = 1;
-if($page>$allpage)$page=$allpage;
+if($page>$allpage)
+{
+	require_once __ROOT_DIR__.'/shipsay/include/error.php';
+}
+
 $sql=$rico_sql.$sortidstr.$fullstr.' ORDER BY lastupdate DESC LIMIT '.(($page-1)*$category_per_page).','.$category_per_page;
 if(isset($redis)&&!isset($_REQUEST['nocache']))
 {
@@ -122,7 +127,7 @@ function ss_category_page_url($pid)
 	if($fullflag) $u = '/'.$fake_fullstr.$u;
 	return $u;
 }
-$jump_page=Page::ss_jumppage($allpage,$page);
+$jump_page=Page::ss_jumppage($allpage,$page,$category_jump_num);
 $jump_html='';
 $jump_html_wap='';
 if($sortid==-1)
@@ -131,7 +136,6 @@ if($sortid==-1)
 	$last_page_url=replace_all_num($allpage);
 	$pre_url=$page>1?replace_all_num($page-1):'javascript:void(0);';
 	$next_url=$page<$allpage?replace_all_num($page+1):'javascript:void(0);';
-	$jump_html.='<li><a href="'.replace_all_num(1).'">1</a></li>';
 	$jump_html.='<li><a href="'.$pre_url.'">&lt;&lt;</a></li>';
 	$jump_html_wap.='<a class="index-container-btn" href="'.$pre_url.'">上一页</a>';
 	$jump_html_wap.='<select id="indexselect" onchange="self.location.href=options[selectedIndex].value">';
@@ -150,7 +154,6 @@ if($sortid==-1)
 		$jump_html_wap.='第'.$v.'页</option>';
 	}
 	$jump_html.='<li><a href="'.$next_url.'">&gt;&gt;</a></li>';
-	$jump_html.='<li><a href="'.replace_all_num($allpage).'">'.$allpage.'</a></li>';
 	$jump_html_wap.='</select><a class="index-container-btn" href="'.$next_url.'">下一页</a>';
 }
 else
@@ -159,7 +162,6 @@ else
 	$last_page_url=ss_category_page_url($allpage);
 	$pre_url=$page>1?ss_category_page_url($page-1):'javascript:void(0);';
 	$next_url=$page<$allpage?ss_category_page_url($page+1):'javascript:void(0);';
-	$jump_html.='<li><a href="'.ss_category_page_url(1).'">1</a></li>';
 	$jump_html.='<li><a href="'.$pre_url.'">&lt;&lt;</a></li>';
 	$jump_html_wap.='<a class="index-container-btn" href="'.$pre_url.'">上一页</a>';
 	$jump_html_wap.='<select id="indexselect" onchange="self.location.href=options[selectedIndex].value">';
@@ -178,7 +180,6 @@ else
 		$jump_html_wap.='第'.$v.'页</option>';
 	}
 	$jump_html.='<li><a href="'.$next_url.'">&gt;&gt;</a></li>';
-	$jump_html.='<li><a href="'.ss_category_page_url($allpage).'">'.$allpage.'</a></li>';
 	$jump_html_wap.='</select><a class="index-container-btn" href="'.$next_url.'">下一页</a>';
 }
 $sql=$rico_sql.$sortidstr.' ORDER BY postdate DESC LIMIT '.$category_per_page;

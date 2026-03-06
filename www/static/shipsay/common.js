@@ -90,13 +90,15 @@ function LastRead(){this.bookList="bookList"} LastRead.prototype={ set:function(
 function removebook(k){lastread.remove(k);showtempbooks();}function removeall(){lastread.removeAll();showtempbooks();}
 function showtempbooks(){
 	var books=lastread.getBook().reverse(); //倒序
-	var cover = '';
 	var bookhtml = '<p class="title jcc">阅读记录：'+books.length+' / '+bookmax+' &nbsp;&nbsp;<a href="javascript:removeall();" onclick="return confirm(\'确定要移除全部记录吗？\')"><i class="fa fa-trash-o fa-lg">&nbsp;</i>清空</a></p><p class="jcc s_gray">本机有效 最近阅读排在最前 到达上限删掉最后</p><ul>';
 	if (books.length){
 		for(var i=0 ;i<books.length;i++){
-     		 if( i < bookmax ){
-				bookhtml += '<li><div class="img_span"><a href="'+books[i][0]+'"><img src="'+books[i][5]+'" /></a></div><div class="bookcase-items"><p><a href="'+books[i][0]+'"><b>'+books[i][2]+'</b></a><span>&nbsp;&nbsp;<i class="fa fa-user-circle"></i>&nbsp;'+books[i][4]+'</span></p><p>读到：'+books[i][3]+'</p><p><a class="bookcase_btn red" href="'+books[i][1]+'"><i class="fa fa-file-text-o">&nbsp;</i>继续阅读</a>&nbsp;<a class="bookcase_btn gray" href="javascript:removebook(\''+books[i][0]+'\')" onclick="return confirm(\'确定要将本书移除吗？\')"><i class="fa fa-trash-o">&nbsp;</i>移除记录</a></p></div></li>';
-				} 
+	 		 if( i < bookmax ){
+				var infoUrl = books[i][0] || 'javascript:void(0)';
+				var readUrl = books[i][1] || infoUrl;
+				var cover = books[i][5] || '/static/shipsay/nocover.jpg';
+				bookhtml += '<li><div class="img_span"><a href="'+infoUrl+'"><img src="'+cover+'" onerror="this.src=\'/static/shipsay/nocover.jpg\'" /></a></div><div class="bookcase-items"><p><a href="'+infoUrl+'"><b>'+books[i][2]+'</b></a><span>&nbsp;&nbsp;<i class="fa fa-user-circle"></i>&nbsp;'+books[i][4]+'</span></p><p>读到：'+books[i][3]+'</p><p><a class="bookcase_btn red" href="'+readUrl+'"><i class="fa fa-file-text-o">&nbsp;</i>继续阅读</a>&nbsp;<a class="bookcase_btn gray" href="javascript:removebook(\''+infoUrl+'\')" onclick="return confirm(\'确定要将本书移除吗？\')"><i class="fa fa-trash-o">&nbsp;</i>移除记录</a></p></div></li>';
+			}
 		}
 		bookhtml += '</ul>';
    	}else{

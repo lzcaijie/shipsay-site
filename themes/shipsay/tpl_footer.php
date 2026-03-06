@@ -1,6 +1,4 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
-
-
 <div id="footer">
     <footer class="container">
         <p><a href="/sitemap/sm_sitemap.xml" title="神马 SiteMap" target="_blank">神马SiteMap</a> | <a href="/sitemap/sitemap.xml" title="XML SiteMap" target="_blank">SiteMap</a></p>

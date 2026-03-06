@@ -6,6 +6,9 @@
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
+$rank_base = (isset($fake_top) && $fake_top)
+    ? rtrim($fake_top, '/') . '/'
+    : ('/' . ((isset($fake_rankstr) && $fake_rankstr) ? trim($fake_rankstr, '/') : 'rank') . '/');
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
@@ -59,6 +62,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
         <?php } ?>
     </div>
 </div>
+
 
 <div class="container">
     <div class="lastupdate">

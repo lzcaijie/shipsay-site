@@ -68,7 +68,7 @@ $pageTitle = $seo_title;
                 </div>
             </div>
             <?php if ($max_pid > 1): ?>
-            <div class="reader-page-info">当前第 <?=$now_pid?> 页 / 共 <?=$max_pid?> 页</div>
+            <div class="page-info" style="margin-bottom:15px;">当前第 <?=$now_pid?> 页 / 共 <?=$max_pid?> 页</div>
             <?php endif; ?>
             <article id="article" class="content"><?=$rico_content?></article>
             <div class="s_gray tc"><script>tips('<?=$articlename?>');</script></div>
@@ -90,3 +90,8 @@ $pageTitle = $seo_title;
 </div>
 <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 <script src="/static/<?=$theme_dir?>/style.js"></script>
+<script>
+if (window.lastread && typeof window.lastread.set === 'function') {
+    lastread.set(<?=json_encode($info_url, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($uri, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($articlename, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($chaptername, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($author, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($img_url, JSON_UNESCAPED_UNICODE)?>);
+}
+</script>
