@@ -15,6 +15,15 @@ $langtail_list = (!empty($langtailrows) && is_array($langtailrows)) ? $langtailr
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('indexlist');
+if (trim($seo_title) === '' || trim($seo_title) === SITE_NAME) {
+    $seo_title = '《' . $articlename . '》章节目录' . ($pid > 1 ? '_第' . intval($pid) . '页' : '') . '_' . SITE_NAME;
+}
+if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
+    $seo_keywords = $articlename . ',目录,' . SITE_NAME . ',章节列表';
+}
+if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
+    $seo_description = '《' . $articlename . '》章节目录' . ($pid > 1 ? '第' . intval($pid) . '页，' : '') . '尽在' . SITE_NAME . '。';
+}
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
@@ -81,12 +90,12 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('indexlist');
             <div class="catalog-header">
                 <div>
                     <h2 class="block-title">相关推荐</h2>
-                    
+                    <div class="page-info">与本书相关的推荐内容</div>
                 </div>
             </div>
             <div class="tail-link-list">
                 <?php foreach ($langtail_list as $v): ?>
-                    <a href="<?=$v['info_url']?>"><?=$v['langname']?></a>
+                    <a href="<?=$v['index_url']?>"><?=$v['langname']?>目录</a>
                 <?php endforeach; ?>
             </div>
         </div>
