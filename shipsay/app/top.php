@@ -112,6 +112,33 @@ if($is_rank_detail)
 	exit;
 }
 
+$top_sections=[
+	'dayvisit'=>['title'=>'日榜','field'=>'dayvisit','more'=>$rank_detail_base.'dayvisit/'],
+	'weekvisit'=>['title'=>'周榜','field'=>'weekvisit','more'=>$rank_detail_base.'weekvisit/'],
+	'monthvisit'=>['title'=>'月榜','field'=>'monthvisit','more'=>$rank_detail_base.'monthvisit/'],
+	'allvisit'=>['title'=>'总榜','field'=>'allvisit','more'=>$rank_detail_base.'allvisit/'],
+	'allvote'=>['title'=>'推荐榜','field'=>'allvote','more'=>$rank_detail_base.'allvote/'],
+	'goodnum'=>['title'=>'收藏榜','field'=>'goodnum','more'=>$rank_detail_base.'goodnum/'],
+];
+$top_rank_limit=isset($category_per_page)&&intval($category_per_page)>0?intval($category_per_page):10;
+$top_rank_lists=[];
+foreach($top_sections as $top_key=>$top_conf)
+{
+	$top_rank_lists[$top_key]=[];
+	$field=preg_replace('/[^a-z0-9_]/i','',(string)$top_conf['field']);
+	if($field===''||!isset($rico_sql))continue;
+	$top_sql=$rico_sql.'ORDER BY '.$field.' DESC LIMIT '.$top_rank_limit;
+	if(isset($redis))
+	{
+		$rows=$redis->ss_redis_getrows($top_sql,isset($home_cache_time)?$home_cache_time:300);
+	}
+	else
+	{
+		$rows=$db->ss_getrows($top_sql);
+	}
+	$top_rank_lists[$top_key]=is_array($rows)?$rows:[];
+}
+
 foreach($sortarr as $k=>$v)
 {
 	$sql_allvisit=$rico_sql.'AND sortid = '.$k.' ORDER BY allvisit DESC LIMIT 50';

@@ -13,33 +13,22 @@ if (trim($seo_title) === '' || trim($seo_title) === SITE_NAME) {
     $seo_title = $rank_page_title . '_' . SITE_NAME;
 }
 if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
-    $seo_keywords = '排行榜,周榜,月榜,总榜,推荐榜,收藏榜,' . SITE_NAME;
+    $seo_keywords = '排行榜,日榜,周榜,月榜,总榜,推荐榜,收藏榜,' . SITE_NAME;
 }
 if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
-    $seo_description = SITE_NAME . '小说排行榜聚合页，查看周榜、月榜、总榜、推荐榜、收藏榜。';
+    $seo_description = SITE_NAME . '小说排行榜聚合页，查看日榜、周榜、月榜、总榜、推荐榜、收藏榜。';
 }
 $canonical_top = $rank_entry_url ?: '/rank/';
-$rank_sections = [
+$rank_sections = isset($top_sections) && is_array($top_sections) ? $top_sections : [
+    'dayvisit'   => ['title' => '日榜',   'field' => 'dayvisit',   'more' => $rank_detail_base . 'dayvisit/'],
     'weekvisit'  => ['title' => '周榜',   'field' => 'weekvisit',  'more' => $rank_detail_base . 'weekvisit/'],
     'monthvisit' => ['title' => '月榜',   'field' => 'monthvisit', 'more' => $rank_detail_base . 'monthvisit/'],
     'allvisit'   => ['title' => '总榜',   'field' => 'allvisit',   'more' => $rank_detail_base . 'allvisit/'],
     'allvote'    => ['title' => '推荐榜', 'field' => 'allvote',    'more' => $rank_detail_base . 'allvote/'],
     'goodnum'    => ['title' => '收藏榜', 'field' => 'goodnum',    'more' => $rank_detail_base . 'goodnum/'],
 ];
-$rank_lists = [];
-$rank_limit = isset($category_per_page) && (int)$category_per_page > 0 ? (int)$category_per_page : 10;
-foreach ($rank_sections as $key => $conf) {
-    $rank_lists[$key] = [];
-    $field = preg_replace('/[^a-z0-9_]/i', '', $conf['field']);
-    if ($field === '' || !isset($rico_sql)) continue;
-    $sql = $rico_sql . 'ORDER BY ' . $field . ' DESC LIMIT ' . $rank_limit;
-    if (isset($redis)) {
-        $rank_lists[$key] = $redis->ss_redis_getrows($sql, isset($home_cache_time) ? $home_cache_time : 300);
-    } elseif (isset($db)) {
-        $rank_lists[$key] = $db->ss_getrows($sql);
-    }
-    if (!is_array($rank_lists[$key])) $rank_lists[$key] = [];
-}
+$rank_lists = isset($top_rank_lists) && is_array($top_rank_lists) ? $top_rank_lists : [];
+$rank_limit = isset($top_rank_limit) && (int)$top_rank_limit > 0 ? (int)$top_rank_limit : 10;
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
