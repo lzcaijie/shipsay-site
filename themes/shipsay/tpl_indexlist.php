@@ -6,7 +6,7 @@ if (isset($chapters) && isset($per_page) && intval($per_page) > 0) {
 } elseif (isset($pid) && $pid > 1) {
     $total_pages_safe = (int)$pid;
 }
-$langtail_list = (!empty($langtailrows) && is_array($langtailrows)) ? $langtailrows : [];
+$indexlist_url_safe = (isset($uri) && $uri) ? $uri : ((isset($index_url) && $index_url) ? $index_url : '');
 ?>
 <!DOCTYPE html>
 <html lang="zh">
@@ -15,6 +15,25 @@ $langtail_list = (!empty($langtailrows) && is_array($langtailrows)) ? $langtailr
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('indexlist');
+if (trim($seo_title) === '' || trim($seo_title) === SITE_NAME) {
+    $seo_title = $articlename . '章节目录' . (($pid > 1) ? '_第' . intval($pid) . '页' : '') . '_' . SITE_NAME;
+}
+if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
+    $seo_keywords = $articlename . ',章节目录,' . $author . ',' . SITE_NAME;
+}
+if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
+    $seo_description = '《' . $articlename . '》章节目录，作者：' . $author . '，共' . intval($chapters) . '章。';
+}
+$indexlist_breadcrumb_ld = [
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => !empty($site_url) ? $site_url : '/'],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => $sortname, 'item' => Sort::ss_sorturl($sortid)],
+        ['@type' => 'ListItem', 'position' => 3, 'name' => $articlename, 'item' => $info_url],
+        ['@type' => 'ListItem', 'position' => 4, 'name' => '章节目录' . (($pid > 1) ? '第' . intval($pid) . '页' : ''), 'item' => $indexlist_url_safe !== '' ? $indexlist_url_safe : $uri],
+    ],
+];
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
@@ -22,11 +41,15 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('indexlist');
 <meta http-equiv="Cache-Control" content="no-transform">
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <meta name="applicable-device" content="pc,mobile">
-<meta name="mobile-agent" content="format=html5;url=<?=$uri?>">
+<meta name="mobile-agent" content="format=html5;url=<?=$indexlist_url_safe?>">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<link rel="canonical" href="<?=$uri?>">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"<?=SITE_NAME?>","item":"<?=$site_url?>"},{"@type":"ListItem","position":2,"name":"<?=$sortname?>","item":"<?=Sort::ss_sorturl($sortid)?>"},{"@type":"ListItem","position":3,"name":"<?=$articlename?>","item":"<?=$info_url?>"},{"@type":"ListItem","position":4,"name":"章节目录<?=($pid > 1) ? '第' . $pid . '页' : ''?>","item":"<?=$uri?>"}]}</script>
+<link rel="canonical" href="<?=$indexlist_url_safe?>">
+<meta property="og:type" content="website">
+<meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:url" content="<?=$indexlist_url_safe?>">
+<script type="application/ld+json"><?=json_encode($indexlist_breadcrumb_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container">
     <section class="section">
@@ -76,16 +99,11 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('indexlist');
             <div class="index-container"><?=$htmltitle?></div>
         </div>
 
-        <?php if (!empty($langtail_list)): ?>
-        <div class="section sub-section section-info-block">
-            <div class="catalog-header">
-                <div>
-                    <h2 class="block-title">相关推荐</h2>
-                    
-                </div>
-            </div>
-            <div class="tail-link-list">
-                <?php foreach ($langtail_list as $v): ?>
+        <?php if (isset($is_langtail) && $is_langtail == 1 && !empty($langtailrows) && is_array($langtailrows)): ?>
+        <div class="section section-info-block">
+            <h2 class="sub_title">相关推荐</h2>
+            <div class="langtail-box">
+                <?php foreach ($langtailrows as $v): ?>
                     <a href="<?=$v['info_url']?>"><?=$v['langname']?></a>
                 <?php endforeach; ?>
             </div>

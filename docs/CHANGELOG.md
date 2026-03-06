@@ -9,6 +9,13 @@
 
 ---
 
+## 2026-03-07-2 | 模板/文档 | Shipsay SEO 收尾第二轮 + 变量边界校准
+- 修复：`themes/shipsay/tpl_header.php` 增加书库/完本/足迹入口 safe 兜底，避免头部直接依赖未兜底变量。
+- 修复：`themes/shipsay/tpl_info.php` 详情页 SEO 输出与页面 TDK 对齐，`canonical / og / JSON-LD` 改为走安全链接和纯文本简介。
+- 修复：`themes/shipsay/tpl_indexlist.php` 目录页补齐 TDK 兜底、OG 基础项与 BreadcrumbList 结构化数据，并去掉未使用的局部变量。
+- 修复：`themes/shipsay/tpl_reader.php` 阅读页补齐 `canonical` 与 BreadcrumbList，并让 `og:title / og:description` 与页面 SEO 输出保持一致。
+- 文档：继续补强 `docs/V5_1_TEMPLATE_STANDARD.md` 与 `docs/VARIABLE_MAP.md`，记录 safe 变量、目录页/阅读页 SEO 最低标准与变量判定红线。
+
 ## 2026-03-07-1 | 模板/文档 | Shipsay SEO 首轮收口 + v5.1 文档补充
 - 修复：`themes/shipsay/tpl_info.php` 前台不再展示内部实现说明文案，并将章节块标题统一为“前 50 章”。
 - 完善：补强首页、分类页、作者页、排行聚合页、榜单详情页的基础 SEO 输出（canonical / device / OG / 结构化数据）。

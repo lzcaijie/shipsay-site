@@ -6,6 +6,7 @@ if ($max_pid > 1) {
 }
 $pageTitle .= ' - ' . SITE_NAME;
 $index_url_safe = isset($index_url) && $index_url ? $index_url : $info_url;
+$reader_url_safe = isset($uri) && $uri ? $uri : '';
 ?>
 <!DOCTYPE html>
 <html lang="zh">
@@ -24,6 +25,16 @@ if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
     $seo_description = '《' . $articlename . '》最新章节：' . $chaptername . '，作者：' . $author . '。';
 }
 $pageTitle = $seo_title;
+$reader_breadcrumb_ld = [
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => !empty($site_url) ? $site_url : '/'],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => $sortname, 'item' => Sort::ss_sorturl($sortid)],
+        ['@type' => 'ListItem', 'position' => 3, 'name' => $articlename, 'item' => $info_url],
+        ['@type' => 'ListItem', 'position' => 4, 'name' => $chaptername, 'item' => $reader_url_safe !== '' ? $reader_url_safe : $info_url],
+    ],
+];
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
@@ -34,10 +45,11 @@ $pageTitle = $seo_title;
 <meta http-equiv="Cache-Control" content="no-transform">
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <meta name="applicable-device" content="pc,mobile">
-<meta name="mobile-agent" content="format=html5;url=<?=$uri?>">
+<meta name="mobile-agent" content="format=html5;url=<?=$reader_url_safe?>">
 <meta property="og:type" content="novel">
-<meta property="og:title" content="<?=$pageTitle?>">
-<meta property="og:description" content="《<?=$articlename?>》<?=$chaptername?>：<?=$reader_des?>">
+<link rel="canonical" href="<?=$reader_url_safe?>">
+<meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:novel:category" content="<?=$sortname?>小说">
 <meta property="og:novel:author" content="<?=$author?>">
 <meta property="og:novel:book_name" content="<?=$articlename?>">
@@ -45,7 +57,8 @@ $pageTitle = $seo_title;
 <meta property="og:novel:info_url" content="<?=$info_url?>">
 <meta property="og:novel:status" content="<?=$isfull?>">
 <meta property="og:novel:chapter_name" content="<?=$chaptername?>">
-<meta property="og:novel:chapter_url" content="<?=$uri?>">
+<meta property="og:novel:chapter_url" content="<?=$reader_url_safe?>">
+<script type="application/ld+json"><?=json_encode($reader_breadcrumb_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="read_bg">
     <main class="container">
