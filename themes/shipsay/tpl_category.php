@@ -17,6 +17,7 @@ if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
     $seo_description = $category_name_safe . '小说列表，尽在' . SITE_NAME . '。';
 }
 $category_url_safe = (isset($uri) && $uri) ? $uri : Sort::ss_sorturl($sortid);
+$allbooks_url_safe = !empty($allbooks_url) ? $allbooks_url : '/sort/';
 $category_ld = [
     '@context' => 'https://schema.org',
     '@type' => 'BreadcrumbList',
@@ -47,7 +48,7 @@ $category_ld = [
             <div class="title"><?=$sortname?></div>
             <div id="after_menu">
                 <div><a href="#"></a><a href="javascript:" onclick="document.location='<?=$full_url?>'"><label><input type="checkbox"<?php if($fullflag): ?> checked="checked"<?php endif ?> /> 只看全本</label></a></div>
-                <div><a href="<?=$allbooks_url?>" <?php if($sortid == -1): ?> class="onselect"<?php endif?>>全部分类</a>
+                <div><a href="<?=$allbooks_url_safe?>" <?php if($sortid == -1): ?> class="onselect"<?php endif?>>全部分类</a>
                     <?php foreach($sortcategory as $k => $v): ?>
                         <a href="<?=$v['sorturl']?>"<?php if($sortid == $k): ?> class="onselect"<?php endif?>><?=$v['sortname']?></a>
                     <?php endforeach ?>
@@ -82,7 +83,7 @@ $category_ld = [
         </div>
     </div>
     <div id="store_right">
-        <ul><li><a href="<?=$allbooks_url?>" <?php if($sortid == -1): ?> class="onselect"<?php endif?>>全部分类</a></li></ul>
+        <ul><li><a href="<?=$allbooks_url_safe?>" <?php if($sortid == -1): ?> class="onselect"<?php endif?>>全部分类</a></li></ul>
         <ul>
             <?php foreach($sortcategory as $k => $v): ?>
                 <li><a href="<?=$v['sorturl']?>"<?php if($sortid == $k): ?> class="onselect"<?php endif?>><?=$v['sortname']?></a></li>

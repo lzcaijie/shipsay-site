@@ -1,5 +1,8 @@
 # CHANGELOG（分站 shipsay-site，最新在最前）
 
+- 修复：`shipsay/app/top.php` 接管排行聚合页榜单数据准备，`themes/shipsay/tpl_top.php` 不再直接拼 SQL / 读 Redis / 查库。
+- 修复：`themes/shipsay/tpl_category.php` 的书库入口统一改走 `$allbooks_url_safe`，避免模板直接吃未兜底链路。
+- 修复：`themes/shipsay/tpl_search.php` 的搜索词输出改为安全高亮，避免前台直接裸输出搜索词。
 > 说明：
 > - 本文件只记录“分站侧功能/接口/安全策略”变更（新增写在最前）。
 > - 日常操作流程/部署/一致性验证：见 `docs/OPS.md`。
