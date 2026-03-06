@@ -74,8 +74,25 @@ else
 	}
 	if(isset($redis))
 	{
-		$ret=['chapterids'=>$chapterids,'chaptername'=>$chaptername,'chapterwords'=>$chapterwords,'lastupdate'=>$lastupdate];
+		$ret=['chapterids'=>$chapterids,'chaptername'=>$chaptername,'chapterwords'=>$chapterwords,'lastupdate'=>$lastupdate,'txt_sourceid'=>$txt_sourceid,'chapterorder_real'=>$chapterorder_real,'chapterid_real'=>$chapterid_real];
 		$redis->ss_setex($uri,$cache_time,$ret);
+	}
+}
+if(empty($chaptername) || empty($txt_sourceid))
+{
+	$lookupField=$use_orderid?'chapterorder':'chapterid';
+	$lookupId=(int)$sourcecid;
+	$sql='SELECT chapterid,chapterorder,chaptername,'.$dbarr['words'].',lastupdate FROM '.$dbarr['pre'].$db->get_cindex($sourceid).' WHERE articleid = '.$sourceid.' AND '.$lookupField.' = '.$lookupId.' LIMIT 1';
+	$row=$db->ss_getone($sql);
+	if(is_array($row) && !empty($row['chapterid']))
+	{
+		$txt_sourceid=(int)$row['chapterid'];
+		$chapterorder_real=(int)$row['chapterorder'];
+		$chapterid_real=(int)$row['chapterid'];
+		$chaptername=Text::ss_toutf8($row['chaptername']);
+		if($is_ft)$chaptername=Convert::jt2ft($chaptername);
+		$chapterwords=round($row[$dbarr['words']]/2);
+		$lastupdate=$row['lastupdate'];
 	}
 }
 $info_url=Url::info_url($articleid);
