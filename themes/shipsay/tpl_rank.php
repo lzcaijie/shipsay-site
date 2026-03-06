@@ -6,9 +6,11 @@
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('rank');
-$rank_base = (isset($fake_top) && $fake_top)
-    ? rtrim($fake_top, '/') . '/'
-    : ('/' . ((isset($fake_rankstr) && $fake_rankstr) ? trim($fake_rankstr, '/') : 'rank') . '/');
+$rank_base = (isset($rank_entry_url) && $rank_entry_url)
+    ? rtrim($rank_entry_url, '/') . '/'
+    : ((isset($fake_top) && $fake_top)
+        ? rtrim($fake_top, '/') . '/'
+        : ('/' . ((isset($fake_rankstr) && $fake_rankstr) ? trim($fake_rankstr, '/') : 'rank') . '/'));
 $title_arr = [
     'allvisit' => '总点击榜',
     'monthvisit' => '月点击榜',
@@ -48,12 +50,12 @@ $rank_ld = [
 <meta http-equiv="Cache-Control" content="no-transform">
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <meta name="applicable-device" content="pc,mobile">
-<meta name="mobile-agent" content="format=html5;url=<?=$rank_url_safe?>">
-<link rel="canonical" href="<?=$rank_url_safe?>">
+<meta name="mobile-agent" content="format=html5;url=<?=htmlspecialchars($rank_url_safe, ENT_QUOTES, 'UTF-8')?>">
+<link rel="canonical" href="<?=htmlspecialchars($rank_url_safe, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:type" content="website">
 <meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-<meta property="og:url" content="<?=$rank_url_safe?>">
+<meta property="og:url" content="<?=htmlspecialchars($rank_url_safe, ENT_QUOTES, 'UTF-8')?>">
 <script type="application/ld+json"><?=json_encode($rank_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container">

@@ -1,5 +1,9 @@
 # CHANGELOG（分站 shipsay-site，最新在最前）
 
+- 修复：`shipsay/app/home.php` 的热门小说数据改为按实际展示数量取 `12` 条，去掉首页无意义的奇数超取。
+- 修复：`themes/shipsay/tpl_home.php` 移除未使用的 `$rank_base` 历史变量，并统一首页 canonical / `mobile-agent` / `og:url` 的安全输出。
+- 修复：`themes/shipsay/tpl_header.php` 顶部导航过滤排行入口时改用 `$rank_entry_safe`，不再依赖原始 `fake_top` 判断。
+- 修复：`themes/shipsay/tpl_rank.php` 榜单详情页优先复用程序已准备的 `$rank_entry_url`，并统一 `canonical / mobile-agent / og:url` 的安全输出。
 - 修复：`shipsay/app/top.php` 接管排行聚合页榜单数据准备，`themes/shipsay/tpl_top.php` 不再直接拼 SQL / 读 Redis / 查库。
 - 修复：`themes/shipsay/tpl_category.php` 的书库入口统一改走 `$allbooks_url_safe`，避免模板直接吃未兜底链路。
 - 修复：`themes/shipsay/tpl_search.php` 的搜索词输出改为安全高亮，避免前台直接裸输出搜索词。
