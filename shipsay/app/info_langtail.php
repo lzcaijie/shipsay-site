@@ -89,7 +89,7 @@ $lastchapter=$chapterrows[$chapters-1]['cname'];
 $last_url=$chapterrows[$chapters-1]['cid_url'];
 $lastarr=array_reverse(array_slice($chapterrows,-12,12));
 $lastchapter_arr=$lastarr;
-$preview_chapters=array_reverse(array_slice($chapterrows,-50,50));
+$preview_chapters=array_slice($chapterrows,0,50);
 if($count_visit)require_once __ROOT_DIR__.'/shipsay/include/articlevisit.php';
 $lm_ts=$lastupdate_stamp-8*60*60;
 $lm_gmt=date('D, d M Y H:i:s',$lm_ts).' GMT';

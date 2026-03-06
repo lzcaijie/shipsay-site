@@ -80,7 +80,7 @@ if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
             <div class="catalog-header info-catalog-header">
                 <div>
                     <h2 class="block-title">最新章节</h2>
-                    <div class="page-info">共 <?=$chapters?> 章，默认展示最新 12 章与最新 50 章</div>
+                    <div class="page-info">共 <?=$chapters?> 章，默认展示最新 12 章与前 50 章</div>
                 </div>
                 <div><a href="<?=$index_url_safe?>" class="back-link"><i class="fa fa-list"></i> 全部目录</a></div>
             </div>
@@ -103,7 +103,7 @@ if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
 
             <?php if (!empty($latest50)): ?>
             <div class="info-chapter-block">
-                <h3 class="info-mini-title">最新 50 章</h3>
+                <h3 class="info-mini-title">前 50 章</h3>
                 <ul class="info-chapter-list latest50-list">
                     <?php foreach ($latest50 as $v): ?>
                         <li class="chapter-item"><a href="<?=$v['cid_url']?>"><?=$v['cname']?></a></li>
