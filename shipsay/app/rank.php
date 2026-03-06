@@ -1,36 +1,16 @@
 <?php
 
-if(!file_exists(__THEME_DIR__.'/tpl_rank.php'))Url::ss_errpage();
+$rank_meta=ss_get_fake_top_meta(isset($fake_top)?$fake_top:'',isset($fake_rankstr)?$fake_rankstr:'rank');
+$legacy_base='/'.$rank_meta['rank_prefix'];
+$new_base=rtrim($rank_meta['detail_root'],'/');
+$query=isset($matches[1])?trim((string)$matches[1]):'';
 
-// /rank/（入口）如果后台配置了 fake_top，则跳到 fake_top（避免模板写死 /rank/）
-// 仅当 fake_top 不是 /rank/ 本身时才跳，避免循环。
-$rank_prefix = (isset($fake_rankstr) && $fake_rankstr) ? trim($fake_rankstr,'/') : 'rank';
-if (empty($matches[1]) && !empty($fake_top)) {
-	$ft = rtrim($fake_top,'/');
-	if ($ft !== '/'.$rank_prefix) {
-		header('Location: '.$fake_top, true, 302);
-		exit;
-	}
+if($new_base!==$legacy_base)
+{
+	$target=$query!==''?$rank_meta['detail_base'].strtolower($query).'/':$rank_meta['entry_url'];
+	header('Location: '.$target,true,302);
+	exit;
 }
 
-$query=$matches[1]?:'allvisit';
-$title_arr=['allvisit'=>'总排行榜','monthvisit'=>'月排行榜','weekvisit'=>'周排行榜','dayvisit'=>'日排行榜','allvote'=>'总推荐榜','monthvote'=>'月推荐榜','weekvote'=>'周推荐榜','dayvote'=>'日推荐榜','goodnum'=>'收藏榜'];
-if(!in_array($query,array_keys($title_arr)))
-{
-	Url::ss_errpage();
-	die;
-}
-$tmpvar=' WHERE '.$dbarr['words'].' > 0 ';
-$page_title=$title_arr[$query];
-if($is_ft)$page_title=Convert::jt2ft($page_title);
-$sql=$rico_sql.'ORDER BY '.$query.' DESC LIMIT 50 ';
-if(isset($redis))
-{
-	$articlerows=$redis->ss_redis_getrows($sql,$home_cache_time,1);
-}
-else
-{
-	$articlerows=$db->ss_getrows($sql);
-}
-require_once __THEME_DIR__.'/tpl_rank.php';
+require_once __ROOT_DIR__.'/shipsay/app/top.php';
 ?>
