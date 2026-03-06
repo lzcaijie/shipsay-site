@@ -66,6 +66,8 @@
 2. 模板只负责输出已经准备好的 `seo_title / seo_keywords / seo_description`
 3. 只有在程序未提供时，才允许模板给极轻的兜底值
 4. 不允许模板层强行覆盖公共 SEO 逻辑
+5. `tpl_recentread.php` 与 `tpl_error.php` 当前阶段只要求可用，不作为 SEO 优先强化页
+6. `tpl_top.php` 可先在模板层做 SEO 兜底，但 `shipsay/seo.php` 与 `shipsay/configs/seo_tpl.php` 的总控联调留到模板整体测试阶段
 
 ### 2.4 页面添加内容必须与页面气质一致
 
@@ -148,6 +150,7 @@
 - 模板页统一使用 `__THEME_DIR__` include
 - 静态资源统一走：`/static/<?=$theme_dir?>/`
 - 搜索入口必须走程序/配置生成的可变链接，不能写死 `/search/`
+- 头部导航链接必须优先走 safe 变量（如 `$allbooks_url_safe`、`$full_allbooks_url_safe`、`$recentread_url_safe`、`$rank_entry_safe`），不能直接信任未兜底变量
 
 ## 5.2 手机端优先
 
@@ -234,6 +237,8 @@
 - 目录列表不能出现右半边大面积无意义留白
 - 章节列表区宽度要贴合主内容
 - 手机端目录按钮优先竖排或自然换行
+- 目录页长尾相关推荐必须与详情页保持同一套：同标题、同判断条件、同链接字段、同展示字段
+- 目录页 SEO 至少要有：canonical、TDK、OG 基础项、BreadcrumbList 结构化数据
 
 ## 6.5 阅读页 `tpl_reader.php`
 
@@ -249,6 +254,8 @@
 - 正文区必须优先保证阅读体验
 - 面包屑、分页、设置按钮不能压主阅读内容
 - 不能因为“加功能”破坏正文可读性
+- 阅读页 SEO 以当前章节页为准，至少输出：canonical、TDK、OG 基础项、BreadcrumbList 结构化数据
+- `og:title / og:description` 优先跟随当前页面 SEO 结果，不再额外拼出一套与 TDK 不一致的文案
 
 ## 6.6 搜索页 `tpl_search.php`
 
@@ -410,7 +417,12 @@
 - 模板中直接读 Redis
 - 模板中直接查数据库
 
-**当前 Shipsay 的 `themes/shipsay/tpl_top.php` 属于历史例外，只能记录，不能作为后续模板标准照抄。**
+当前基线已将排行聚合页的数据准备迁回 `shipsay/app/top.php`，`themes/shipsay/tpl_top.php` 只保留展示职责。后续模板必须沿用这种边界，不得再把榜单查询写回模板。
+
+
+补充要求：
+- 搜索页模板不得直接裸输出 `$searchkey`，必须先做安全转义；需要高亮时，也必须在转义后输出。
+- 分类页、头部、排行入口这类公共链接必须优先走 `*_safe` 兜底变量，不能直接假定链路变量一定存在。
 
 ### 7.4 文档真源固定
 

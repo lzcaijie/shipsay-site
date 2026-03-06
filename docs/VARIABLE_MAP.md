@@ -22,6 +22,17 @@
 - 把 `$seo_title` 当成后台设置项
 - 把 `$fake_top` 写死成 `/top/`
 
+### 1.3 不确定变量先看真实运行结果
+
+像章节区、分页页码、混淆后的 `cid` 这类变量，不能只靠局部代码字面判断真实语义。
+必须结合：
+- 真实运行页面
+- 路由映射
+- 当前模板输出结果
+- 对应 `app/*` 的数据准备方式
+
+确认后再写进标准；不确定时宁可暂缺，也不能写错。
+
 ---
 
 ## 2. 后台配置变量（`www/caijie/base/*`）
@@ -179,11 +190,15 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 |---|---|
 | `$theme_dir` | 当前主题目录 |
 | `$allbooks_url` | 书库入口 |
+| `$allbooks_url_safe` | 书库入口安全兜底 |
 | `$full_allbooks_url` | 完本入口基础值 |
+| `$full_allbooks_url_safe` | 完本入口安全兜底 |
 | `$fake_recentread` | 足迹/阅读记录入口 |
+| `$recentread_url_safe` | 足迹入口安全兜底 |
 | `$fake_search` | 搜索入口（若存在） |
 | `$search_url_safe` | 搜索提交地址（安全兜底） |
 | `$search_placeholder` | 搜索框占位文案 |
+| `$rank_entry_safe` | 排行入口安全兜底 |
 
 ## 5.2 首页 `tpl_home.php`
 
@@ -205,7 +220,7 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$retarr` | 当前分类书籍列表 |
 | `$sortcategory` | 分类导航集合 |
 | `$sortid / $sortname` | 当前分类 |
-| `$fullflag / $full_url / $allbooks_url` | 完本/书库链路 |
+| `$fullflag / $full_url / $allbooks_url / $allbooks_url_safe` | 完本/书库链路（模板展示优先用 safe 变量） |
 | `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
 ## 5.4 详情页 `tpl_info.php`
@@ -224,7 +239,8 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$lastchapter_arr` 或 `$lastarr` | 最新章节列表（模板实际用前需核对） |
 | `$first_url` | 开始阅读链接 |
 | `$index_url / $index_url_safe` | 目录页链接 |
-| `$info_url` | 详情页当前链接 |
+| `$info_url / $info_url_safe` | 详情页当前链接（安全兜底） |
+| `$intro_plain` | 详情页用于 SEO/结构化数据的简介纯文本 |
 | `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
 ## 5.5 目录页 `tpl_indexlist.php`
@@ -242,7 +258,7 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$pid` | 当前目录分页页码 |
 | `$first_url` | 开始阅读链接 |
 | `$info_url` | 返回详情链接 |
-| `$index_url` | 当前目录基础链接 |
+| `$index_url / $indexlist_url_safe` | 当前目录基础链接 / 当前目录安全链接 |
 | `$lastchapter / $last_url` | 最新章节信息 |
 | `$lastupdate_cn` | 最新更新时间中文文案 |
 | `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
@@ -257,6 +273,7 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$sortid / $sortname` | 分类信息 |
 | `$chapterwords` | 当前章字数 |
 | `$rico_content` | 正文 HTML（核心变量） |
+| `$reader_url_safe` | 当前阅读页安全链接 |
 | `$pre_url / $next_url` | 上一章 / 下一章 |
 | `$prevpage_url / $nextpage_url` | 阅读分页链接 |
 | `$now_pid / $max_pid` | 阅读分页当前页 / 总页数 |
@@ -268,9 +285,11 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 
 | 变量 | 含义 |
 |---|---|
-| `$searchkey` | 搜索词 |
+| `$searchkey` | 搜索词（原始值，不能直接裸输出） |
+| `$searchkey_safe` | 搜索词安全转义后的显示值 |
+| `$search_highlight()` | 搜索结果高亮 helper（模板局部闭包） |
 | `$search_res` | 搜索结果列表 |
-| `$search_count` | 结果数 |
+| `$search_count / $search_count_safe` | 结果数 / 安全展示值 |
 | `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
 ## 5.8 作者页 `tpl_author.php`
@@ -288,6 +307,9 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | 变量 | 含义 |
 |---|---|
 | `$sortarr` | 全部分类 |
+| `$top_sections` | 排行聚合页榜单配置（由 `shipsay/app/top.php` 准备） |
+| `$top_rank_lists` | 排行聚合页榜单数据（由 `shipsay/app/top.php` 准备） |
+| `$top_rank_limit` | 排行聚合页单榜展示数量上限 |
 | `allvisit{sortid}` | 某分类总榜列表（由 `top.php` 动态变量准备） |
 | `monthvisit{sortid}` | 某分类月榜 |
 | `weekvisit{sortid}` | 某分类周榜 |
@@ -439,3 +461,7 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - 必须结合 **真实运行页、章节 URL 映射、最终页面输出结果** 一起判断
 
 这条属于变量/数据语义判断红线，后续写标准时必须保留。
+
+补充说明：
+- `tpl_top.php` 当前基线不再直接查库，榜单数据应由 `shipsay/app/top.php` 预先准备。
+- `tpl_search.php` 中的 `$searchkey` 仅视为原始输入，模板前台展示必须改用 `$searchkey_safe` 或局部高亮 helper。

@@ -1,5 +1,8 @@
 # CHANGELOG（分站 shipsay-site，最新在最前）
 
+- 修复：`shipsay/app/top.php` 接管排行聚合页榜单数据准备，`themes/shipsay/tpl_top.php` 不再直接拼 SQL / 读 Redis / 查库。
+- 修复：`themes/shipsay/tpl_category.php` 的书库入口统一改走 `$allbooks_url_safe`，避免模板直接吃未兜底链路。
+- 修复：`themes/shipsay/tpl_search.php` 的搜索词输出改为安全高亮，避免前台直接裸输出搜索词。
 > 说明：
 > - 本文件只记录“分站侧功能/接口/安全策略”变更（新增写在最前）。
 > - 日常操作流程/部署/一致性验证：见 `docs/OPS.md`。
@@ -8,6 +11,13 @@
 > - 写清：日期、类型、版本号（可自定义）、涉及路径、回滚方式/要点。
 
 ---
+
+## 2026-03-07-2 | 模板/文档 | Shipsay SEO 收尾第二轮 + 变量边界校准
+- 修复：`themes/shipsay/tpl_header.php` 增加书库/完本/足迹入口 safe 兜底，避免头部直接依赖未兜底变量。
+- 修复：`themes/shipsay/tpl_info.php` 详情页 SEO 输出与页面 TDK 对齐，`canonical / og / JSON-LD` 改为走安全链接和纯文本简介。
+- 修复：`themes/shipsay/tpl_indexlist.php` 目录页补齐 TDK 兜底、OG 基础项与 BreadcrumbList 结构化数据，并去掉未使用的局部变量。
+- 修复：`themes/shipsay/tpl_reader.php` 阅读页补齐 `canonical` 与 BreadcrumbList，并让 `og:title / og:description` 与页面 SEO 输出保持一致。
+- 文档：继续补强 `docs/V5_1_TEMPLATE_STANDARD.md` 与 `docs/VARIABLE_MAP.md`，记录 safe 变量、目录页/阅读页 SEO 最低标准与变量判定红线。
 
 ## 2026-03-07-1 | 模板/文档 | Shipsay SEO 首轮收口 + v5.1 文档补充
 - 修复：`themes/shipsay/tpl_info.php` 前台不再展示内部实现说明文案，并将章节块标题统一为“前 50 章”。
