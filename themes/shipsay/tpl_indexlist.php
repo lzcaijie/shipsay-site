@@ -7,11 +7,23 @@ if (isset($chapters) && isset($per_page) && intval($per_page) > 0) {
     $total_pages_safe = (int)$pid;
 }
 $indexlist_url_safe = (isset($uri) && $uri) ? $uri : ((isset($index_url) && $index_url) ? $index_url : '');
-$indexlist_breadcrumb_item = $indexlist_url_safe !== ''
-    ? $indexlist_url_safe
-    : ((isset($index_url) && $index_url) ? $index_url : ((isset($info_url) && $info_url) ? $info_url : '/'));
-$current_pid_safe = isset($pid) ? intval($pid) : 1;
-$chapters_safe = isset($chapters) ? intval($chapters) : 0;
+$indexlist_url_attr = htmlspecialchars($indexlist_url_safe, ENT_QUOTES, 'UTF-8');
+$home_url_attr = !empty($site_url) ? htmlspecialchars($site_url, ENT_QUOTES, 'UTF-8') : '/';
+$sort_url_attr = htmlspecialchars(Sort::ss_sorturl($sortid), ENT_QUOTES, 'UTF-8');
+$info_url_attr = htmlspecialchars((string)$info_url, ENT_QUOTES, 'UTF-8');
+$img_url_attr = htmlspecialchars((string)$img_url, ENT_QUOTES, 'UTF-8');
+$article_title_html = htmlspecialchars((string)$articlename, ENT_QUOTES, 'UTF-8');
+$author_url_attr = htmlspecialchars((string)$author_url, ENT_QUOTES, 'UTF-8');
+$author_html = htmlspecialchars((string)$author, ENT_QUOTES, 'UTF-8');
+$sortname_html = htmlspecialchars((string)$sortname, ENT_QUOTES, 'UTF-8');
+$status_html = htmlspecialchars((string)$isfull, ENT_QUOTES, 'UTF-8');
+$words_html = intval($words_w);
+$last_url_attr = htmlspecialchars((string)$last_url, ENT_QUOTES, 'UTF-8');
+$lastchapter_html = htmlspecialchars((string)$lastchapter, ENT_QUOTES, 'UTF-8');
+$lastupdate_cn_html = htmlspecialchars((string)$lastupdate_cn, ENT_QUOTES, 'UTF-8');
+$chapters_safe = intval($chapters);
+$pid_safe = intval($pid);
+$first_url_attr = htmlspecialchars((string)$first_url, ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
 <html lang="zh">
@@ -36,7 +48,7 @@ $indexlist_breadcrumb_ld = [
         ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => !empty($site_url) ? $site_url : '/'],
         ['@type' => 'ListItem', 'position' => 2, 'name' => $sortname, 'item' => Sort::ss_sorturl($sortid)],
         ['@type' => 'ListItem', 'position' => 3, 'name' => $articlename, 'item' => $info_url],
-        ['@type' => 'ListItem', 'position' => 4, 'name' => '章节目录' . (($pid > 1) ? '第' . intval($pid) . '页' : ''), 'item' => $indexlist_breadcrumb_item],
+        ['@type' => 'ListItem', 'position' => 4, 'name' => '章节目录' . (($pid > 1) ? '第' . intval($pid) . '页' : ''), 'item' => $indexlist_url_safe !== '' ? $indexlist_url_safe : $uri],
     ],
 ];
 ?>
@@ -46,45 +58,45 @@ $indexlist_breadcrumb_ld = [
 <meta http-equiv="Cache-Control" content="no-transform">
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <meta name="applicable-device" content="pc,mobile">
-<meta name="mobile-agent" content="format=html5;url=<?=htmlspecialchars($indexlist_url_safe, ENT_QUOTES, 'UTF-8')?>">
+<meta name="mobile-agent" content="format=html5;url=<?=$indexlist_url_attr?>">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<link rel="canonical" href="<?=htmlspecialchars($indexlist_url_safe, ENT_QUOTES, 'UTF-8')?>">
+<link rel="canonical" href="<?=$indexlist_url_attr?>">
 <meta property="og:type" content="website">
 <meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-<meta property="og:url" content="<?=htmlspecialchars($indexlist_url_safe, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:url" content="<?=$indexlist_url_attr?>">
 <script type="application/ld+json"><?=json_encode($indexlist_breadcrumb_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container">
     <section class="section">
         <div class="bread_crumbs">
-            <a href="/">首页</a> &gt; <a href="<?=Sort::ss_sorturl($sortid)?>"><?=$sortname?></a> &gt; <a href="<?=$info_url?>"><?=$articlename?></a> &gt; <span>目录</span>
+            <a href="<?=$home_url_attr?>">首页</a> &gt; <a href="<?=$sort_url_attr?>"><?=$sortname_html?></a> &gt; <a href="<?=$info_url_attr?>"><?=$article_title_html?></a> &gt; <span>目录</span>
         </div>
         <div class="novel-basic-info">
             <div class="novel-cover">
-                <img src="<?=$img_url?>" alt="<?=$articlename?>" loading="lazy" width="100" height="140" onerror="this.src='/static/<?=$theme_dir?>/nocover.jpg'; this.onerror=null;">
+                <img src="<?=$img_url_attr?>" alt="<?=$article_title_html?>" loading="lazy" width="100" height="140" onerror="this.src='/static/<?=$theme_dir?>/nocover.jpg'; this.onerror=null;">
             </div>
             <div class="novel-meta">
-                <h1><?=$articlename?></h1>
+                <h1><?=$article_title_html?></h1>
                 <p>
-                    <span>作者：<a href="<?=$author_url?>"><?=$author?></a></span>
-                    <span>分类：<a href="<?=Sort::ss_sorturl($sortid)?>"><?=$sortname?></a></span>
-                    <span>状态：<?=$isfull?></span>
-                    <span>字数：<?=$words_w?>万</span>
+                    <span>作者：<a href="<?=$author_url_attr?>"><?=$author_html?></a></span>
+                    <span>分类：<a href="<?=$sort_url_attr?>"><?=$sortname_html?></a></span>
+                    <span>状态：<?=$status_html?></span>
+                    <span>字数：<?=$words_html?>万</span>
                 </p>
-                <p>最新章节：<a href="<?=$last_url?>"><?=$lastchapter?></a> <em class="meta-time"><?=$lastupdate_cn?></em></p>
+                <p>最新章节：<a href="<?=$last_url_attr?>"><?=$lastchapter_html?></a> <em class="meta-time"><?=$lastupdate_cn_html?></em></p>
                 <p>总章节：<?=$chapters_safe?>章</p>
             </div>
         </div>
         <div class="catalog-header">
             <div>
-                <h2 class="block-title">《<?=$articlename?>》章节目录</h2>
-                <div class="page-info">当前第 <?=$current_pid_safe?> 页，共 <?=$total_pages_safe?> 页</div>
+                <h2 class="block-title">《<?=$article_title_html?>》章节目录</h2>
+                <div class="page-info">当前第 <?=$pid_safe?> 页，共 <?=$total_pages_safe?> 页</div>
             </div>
             <div class="catalog-actions">
-                <a href="<?=$first_url?>" class="back-link"><i class="fa fa-book"></i> 开始阅读</a>
-                <a href="<?=$info_url?>" class="back-link"><i class="fa fa-arrow-left"></i> 返回详情</a>
+                <a href="<?=$first_url_attr?>" class="back-link"><i class="fa fa-book"></i> 开始阅读</a>
+                <a href="<?=$info_url_attr?>" class="back-link"><i class="fa fa-arrow-left"></i> 返回详情</a>
             </div>
         </div>
         <div class="chapter-list-container">
@@ -92,9 +104,11 @@ $indexlist_breadcrumb_ld = [
                 <?php if (isset($list_arr) && !empty($list_arr)): ?>
                     <?php foreach ($list_arr as $v): ?>
                         <?php if (isset($v['chaptertype']) && $v['chaptertype'] == 1): ?>
-                            <li class="volume-title"><?=$v['cname']?></li>
+                            <?php $cname_html = htmlspecialchars((string)$v['cname'], ENT_QUOTES, 'UTF-8'); ?>
+                            <li class="volume-title"><?=$cname_html?></li>
                         <?php else: ?>
-                            <li class="chapter-item"><a href="<?=$v['cid_url']?>" title="<?=$articlename?> <?=$v['cname']?>"><?=$v['cname']?></a></li>
+                            <?php $cid_url_attr = htmlspecialchars((string)$v['cid_url'], ENT_QUOTES, 'UTF-8'); $cname_html = htmlspecialchars((string)$v['cname'], ENT_QUOTES, 'UTF-8'); ?>
+                            <li class="chapter-item"><a href="<?=$cid_url_attr?>" title="<?=$article_title_html?> <?=$cname_html?>"><?=$cname_html?></a></li>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 <?php else: ?>
@@ -109,7 +123,8 @@ $indexlist_breadcrumb_ld = [
             <h2 class="sub_title">相关推荐</h2>
             <div class="langtail-box">
                 <?php foreach ($langtailrows as $v): ?>
-                    <a href="<?=$v['info_url']?>"><?=$v['langname']?></a>
+                    <?php $langtail_url_attr = htmlspecialchars((string)$v['info_url'], ENT_QUOTES, 'UTF-8'); $langname_html = htmlspecialchars((string)$v['langname'], ENT_QUOTES, 'UTF-8'); ?>
+                    <a href="<?=$langtail_url_attr?>"><?=$langname_html?></a>
                 <?php endforeach; ?>
             </div>
         </div>
