@@ -1954,3 +1954,50 @@ kbd input {
         align-items:flex-start;
     }
 }
+
+
+/* v3 round2 fixes */
+.category-pagination .pages.pagination-pc{
+    display:flex !important;
+    flex-direction:row !important;
+    flex-wrap:wrap !important;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    margin:0;
+    padding:0;
+    text-align:center;
+}
+.category-pagination .pages.pagination-pc li,
+.side_commend .category-pagination li{
+    width:auto !important;
+    display:block !important;
+    margin:0 !important;
+    line-height:normal !important;
+}
+.category-pagination .pages.pagination-pc li a,
+.category-pagination .pages.pagination-pc li span{
+    min-width:42px;
+}
+.read_bg .reader-page-head{
+    display:block;
+    margin-bottom:14px;
+}
+.read_bg .text_title .reader-page-inline{
+    display:block;
+    margin:8px 0 0;
+    color:#666;
+    text-align:left;
+    white-space:normal;
+}
+.read_bg .page-info.reader-page-inline{
+    margin-bottom:0;
+}
+@media (max-width:768px){
+    .category-pagination .pages.pagination-pc{
+        display:none !important;
+    }
+    .read_bg .text_title{
+        padding-right:18px;
+    }
+}

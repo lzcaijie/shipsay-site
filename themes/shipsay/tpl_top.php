@@ -17,11 +17,12 @@ $rank_sections = [
     'goodnum'    => ['title' => '收藏榜', 'field' => 'goodnum',    'more' => $rank_detail_base . 'goodnum/'],
 ];
 $rank_lists = [];
+$rank_limit = isset($category_per_page) && (int)$category_per_page > 0 ? (int)$category_per_page : 10;
 foreach ($rank_sections as $key => $conf) {
     $rank_lists[$key] = [];
     $field = preg_replace('/[^a-z0-9_]/i', '', $conf['field']);
     if ($field === '' || !isset($rico_sql)) continue;
-    $sql = $rico_sql . 'ORDER BY ' . $field . ' DESC LIMIT 10';
+    $sql = $rico_sql . 'ORDER BY ' . $field . ' DESC LIMIT ' . $rank_limit;
     if (isset($redis)) {
         $rank_lists[$key] = $redis->ss_redis_getrows($sql, isset($home_cache_time) ? $home_cache_time : 300);
     } elseif (isset($db)) {
@@ -58,7 +59,7 @@ foreach ($rank_sections as $key => $conf) {
                     </div>
                     <ol>
                         <?php if (!empty($list)): ?>
-                            <?php foreach ($list as $k => $v): if ($k >= 10) break; ?>
+                            <?php foreach ($list as $k => $v): if ($k >= $rank_limit) break; ?>
                                 <li>
                                     <span><?=($k + 1)?></span>
                                     <a href="<?=$v['info_url']?>"><?=$v['articlename']?></a>

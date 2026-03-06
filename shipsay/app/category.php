@@ -99,10 +99,10 @@ else
 }
 $allpage=ceil($allbooks/$category_per_page);
 if($allpage < 1)$allpage = 1;
-if($page>$allpage)
-{
-	require_once __ROOT_DIR__.'/shipsay/include/error.php';
-}
+$category_max_page = 10;
+if($allpage > $category_max_page)$allpage = $category_max_page;
+if($page > $category_max_page)$page = $category_max_page;
+if($page>$allpage)$page = $allpage;
 
 $sql=$rico_sql.$sortidstr.$fullstr.' ORDER BY lastupdate DESC LIMIT '.(($page-1)*$category_per_page).','.$category_per_page;
 if(isset($redis)&&!isset($_REQUEST['nocache']))

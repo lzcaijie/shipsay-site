@@ -79,10 +79,10 @@ $pageTitle = $seo_title;
                         <span><i class="fa fa-list-ol"> <?=$chapterwords?> 字</i></span>
                         <span><i class="fa fa-clock-o"> <?=Text::ss_lastupdate($lastupdate)?></i></span>
                     </div>
+                    <?php if ($max_pid > 1): ?>
+                    <div class="page-info reader-page-inline">当前第 <?=$now_pid?> 页 / 共 <?=$max_pid?> 页</div>
+                    <?php endif; ?>
                 </div>
-                <?php if ($max_pid > 1): ?>
-                <div class="page-info reader-page-info">当前第 <?=$now_pid?> 页 / 共 <?=$max_pid?> 页</div>
-                <?php endif; ?>
             </div>
             <article id="article" class="content"><?=$rico_content?></article>
             <div class="s_gray tc"><script>tips('<?=$articlename?>');</script></div>

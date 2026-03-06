@@ -89,8 +89,8 @@ if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
         <div class="section sub-section section-info-block">
             <div class="catalog-header">
                 <div>
-                    <h2 class="block-title">目录延伸</h2>
-                    <div class="page-info">与当前书籍目录相关的长尾入口</div>
+                    <h2 class="block-title">相关推荐</h2>
+                    <div class="page-info">与本书相关的推荐内容</div>
                 </div>
             </div>
             <div class="tail-link-list">
