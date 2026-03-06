@@ -90,6 +90,7 @@ if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
             <div class="catalog-header">
                 <div>
                     <h2 class="block-title">相关推荐</h2>
+                    
                 </div>
             </div>
             <div class="tail-link-list">

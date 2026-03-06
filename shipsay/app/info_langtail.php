@@ -21,14 +21,9 @@ if($is_ft)
     $sourcename=Convert::jt2ft($sourcename,1);
 }
 
-if($is_acode)
-{
-	$sql=$rico_sql.'AND articlecode = "'.$sourceid.'"';
-}
-else
-{
-	$sql=$rico_sql.'AND articleid = '.$sourceid;
-}
+// 长尾表的 sourceid 保存的是真实 articleid，这里必须始终按 articleid 查询。
+// 不能套用普通详情页里的 articlecode 分支，否则在 is_acode=1 时会查空，页面直接空白。
+$sql=$rico_sql.'AND articleid = '.$sourceid;
 if(isset($redis))
 {
 	$infoarr=$redis->ss_redis_getrows($sql,$info_cache_time);
@@ -47,7 +42,7 @@ $author=$infoarr[0]['author'];
 $author_arr=explode(',',$author);
 $author_url=$infoarr[0]['author_url'];
 $keywords=$infoarr[0]['keywords'];
-$keywords_arr=$infoarr[0]['keywords_arr'];
+$keywords_arr=is_array($infoarr[0]['keywords_arr'])?$infoarr[0]['keywords_arr']:explode(',',$keywords);
 $img_url=$infoarr[0]['img_url'];
 $sortid=$infoarr[0]['sortid'];
 $sortname=$infoarr[0]['sortname'];
