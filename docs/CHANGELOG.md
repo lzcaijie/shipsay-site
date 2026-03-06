@@ -1,5 +1,8 @@
 # CHANGELOG（分站 shipsay-site，最新在最前）
 
+- 修复：`themes/shipsay/tpl_author.php` 的作者名/作品数改走本地安全显示值，并统一作者页 canonical / OG URL 的转义输出。
+- 修复：`themes/shipsay/tpl_indexlist.php` 的目录页 BreadcrumbList 不再回退引用未定义原始变量，并把分页/总章节展示统一为本地安全数值。
+- 修复：`themes/shipsay/tpl_reader.php` 的阅读页本地记录脚本改用 `$reader_url_safe`，并统一阅读页 novel OG 属性与分页数字的安全输出。
 - 修复：`shipsay/app/home.php` 的热门小说数据改为按实际展示数量取 `12` 条，去掉首页无意义的奇数超取。
 - 修复：`themes/shipsay/tpl_home.php` 移除未使用的 `$rank_base` 历史变量，并统一首页 canonical / `mobile-agent` / `og:url` 的安全输出。
 - 修复：`themes/shipsay/tpl_header.php` 顶部导航过滤排行入口时改用 `$rank_entry_safe`，不再依赖原始 `fake_top` 判断。

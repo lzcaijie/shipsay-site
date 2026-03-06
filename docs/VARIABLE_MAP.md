@@ -274,6 +274,9 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$chapterwords` | 当前章字数 |
 | `$rico_content` | 正文 HTML（核心变量） |
 | `$reader_url_safe` | 当前阅读页安全链接 |
+| `$author_safe / $author_count_safe` | 作者页本地安全显示值（作者名 / 作品数） |
+| `$indexlist_breadcrumb_item` | 目录页 BreadcrumbList 使用的安全目录链接 |
+| `$chapterwords_safe / $now_pid_safe / $max_pid_safe` | 阅读页字数 / 分页本地安全数值 |
 | `$pre_url / $next_url` | 上一章 / 下一章 |
 | `$prevpage_url / $nextpage_url` | 阅读分页链接 |
 | `$now_pid / $max_pid` | 阅读分页当前页 / 总页数 |
@@ -465,3 +468,6 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 补充说明：
 - `tpl_top.php` 当前基线不再直接查库，榜单数据应由 `shipsay/app/top.php` 预先准备。
 - `tpl_search.php` 中的 `$searchkey` 仅视为原始输入，模板前台展示必须改用 `$searchkey_safe` 或局部高亮 helper。
+- `tpl_indexlist.php` 中的 BreadcrumbList 链接必须使用 `$indexlist_breadcrumb_item` 这类明确兜底值，不能回退引用未定义原始变量。
+- `tpl_reader.php` 中的本地阅读记录写入应使用 `$reader_url_safe`，不要直接把原始 `$uri` 当成稳定链接。
+- `tpl_author.php` 中的作者名与作品数展示建议先整理为 `$author_safe / $author_count_safe`，再输出到前台。
