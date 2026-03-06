@@ -31,10 +31,30 @@ if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
 if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
     $seo_description = $current_title . '榜单，尽在' . SITE_NAME . '。';
 }
+$rank_url_safe = (isset($uri) && $uri) ? $uri : $rank_base . $current_query . '/';
+$rank_ld = [
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => !empty($site_url) ? $site_url : '/'],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => '排行榜', 'item' => $rank_base],
+        ['@type' => 'ListItem', 'position' => 3, 'name' => $current_title, 'item' => $rank_url_safe],
+    ],
+];
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
 <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta name="applicable-device" content="pc,mobile">
+<meta name="mobile-agent" content="format=html5;url=<?=$rank_url_safe?>">
+<link rel="canonical" href="<?=$rank_url_safe?>">
+<meta property="og:type" content="website">
+<meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:url" content="<?=$rank_url_safe?>">
+<script type="application/ld+json"><?=json_encode($rank_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container">
     <section class="section">

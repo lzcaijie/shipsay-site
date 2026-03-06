@@ -1,47 +1,32 @@
 # VARIABLE_MAP（Shipsay 变量与占位符总表）
 
-> 目的：把“后台设置变量、URL 占位符、SEO 占位符、模板运行时变量、模板局部派生变量”分开写清楚，避免后续 AI 或人工把不同层级的变量混用。
+> 目的：把“后台设置变量、URL 占位符、SEO 占位符、模板运行时变量”分开写清楚，避免后续 AI 或人工把不同层级的变量混用。
 >
-> 当前基线：`fz1.112book.com_20260307v1` 全目录扫描结果。
->
-> 准确性原则：本表允许暂时不全，但不能写错；不确定的变量不写死进标准。
+> 说明：本表基于 `fz1.112book.com_20260306v2` 最新源码扫描整理。
 
 ---
 
 ## 1. 使用原则
 
-### 1.1 变量分五层
+### 1.1 变量分四层
 
 1. **后台配置变量**：来源于 `www/caijie/*` 后台设置与 `shipsay/configs/config.ini.php`
 2. **URL 占位符**：用于伪静态路由模板，不是模板运行时变量
 3. **SEO 占位符**：只用于 `shipsay/configs/seo_tpl.php`
-4. **App 输出变量**：由 `shipsay/app/*.php`、`shipsay/class/router.php`、`shipsay/seo.php` 准备后传给 `themes/*/tpl_*.php`
-5. **模板局部派生变量**：只在当前模板文件里临时兜底或二次整理，不能反向当成核心变量
+4. **模板运行时变量**：由 `shipsay/app/*.php` 准备后传给 `themes/*/tpl_*.php`
 
 ### 1.2 禁止混用
 
 错误示例：
 - 把 `{aid}` 当成模板里的 PHP 变量
 - 把 `$seo_title` 当成后台设置项
-- 把模板局部派生变量当成全站公共变量
-- 把 `$fake_top` / `$fake_rankstr` / `$rank_entry_url` 当成同一层概念
-
-### 1.3 先看来源，再判断能不能改
-
-处理任何模板变量前，必须先判断它属于哪一层：
-- 配置层
-- 路由层
-- app 输出层
-- SEO 渲染层
-- 模板局部派生层
-
-没核清来源，不准直接改模板引用方式。
+- 把 `$fake_top` 写死成 `/top/`
 
 ---
 
 ## 2. 后台配置变量（`www/caijie/base/*`）
 
-### 2.1 基础设置 `cfg_main.php`
+## 2.1 基础设置 `cfg_main.php`
 
 | 变量 | 作用 | 备注 |
 |---|---|---|
@@ -64,7 +49,7 @@
 | `vote_perday` | 每日推荐/投票限制 | 推荐逻辑 |
 | `count_visit` | 是否统计访问 | 详情/阅读访问链路 |
 
-### 2.2 伪静态设置 `cfg_fake.php`
+## 2.2 伪静态设置 `cfg_fake.php`
 
 | 变量 | 作用 | 备注 |
 |---|---|---|
@@ -72,12 +57,12 @@
 | `fake_chapter_url` | 阅读页 URL 模板 | 如 `/read/{aid}/{cid}.html` |
 | `use_orderid` | 章节是否用排序 ID | 影响 `cid` 逻辑 |
 | `fake_sort_url` | 分类页 URL 模板 | 如 `/sort/{sortcode}/{pid}/` |
-| `fake_top` | 排行聚合入口 | 与 `fake_rankstr` 配合使用 |
+| `fake_top` | 聚合排行榜入口 | 当前已扩展为单榜前缀 |
 | `fake_recentread` | 阅读记录页地址 | 如 `/history.html` |
 | `fake_indexlist` | 目录页 URL 模板 | 如 `/indexlist/{aid}/{pid}/` |
 | `per_indexlist` | 目录分页每页章节数 | 目录页分页 |
 
-### 2.3 长尾设置 `cfg_langtail.php`
+## 2.3 长尾设置 `cfg_langtail.php`
 
 | 变量 | 作用 | 备注 |
 |---|---|---|
@@ -90,7 +75,7 @@
 | `keywords_num` | 关键词数量 | 长尾关键词数量 |
 | `fake_tag` | tag 页 URL 模板 | 当前后台只读展示 |
 
-### 2.4 高级设置 `cfg_adv.php`
+## 2.4 高级设置 `cfg_adv.php`
 
 | 变量 | 作用 | 备注 |
 |---|---|---|
@@ -105,7 +90,7 @@
 | `ss_newid` | 新 ID 规则 | 多站/新旧 ID 映射 |
 | `ss_sourceid` | 源站 ID 规则 | 多站映射 |
 
-### 2.5 Redis 设置 `cfg_redis.php`
+## 2.5 Redis 设置 `cfg_redis.php`
 
 | 变量 | 作用 | 备注 |
 |---|---|---|
@@ -120,7 +105,7 @@
 | `category_cache_time` | 分类缓存时间 | 栏目页 |
 | `cache_time` | 通用缓存时间 | 其它列表 |
 
-### 2.6 数据库设置 `cfg_database.php`
+## 2.6 数据库设置 `cfg_database.php`
 
 | 变量 | 作用 | 备注 |
 |---|---|---|
@@ -149,7 +134,7 @@
 | `{pid}` | 页码 | 分类页/目录页/tag 页 |
 | `{tag}` | tag 名称 | tag 页 |
 
-### 当前源码可确认的默认模板
+### 当前源码中可确认的默认模板
 
 ```php
 $fake_info_url = '/book/{aid}/';
@@ -166,7 +151,7 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 
 ## 4. SEO 占位符（`shipsay/configs/seo_tpl.php` 专用）
 
-当前源码中已确认支持：
+当前源码中已明确支持：
 
 | 占位符 | 含义 |
 |---|---|
@@ -183,184 +168,274 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 ### 规则
 - 这些占位符只用于 SEO 模板字符串
 - 模板页本身不要再手写一套不一致的 title/meta 逻辑
-- `ss_seo_render($page)` 只负责轻量替换，不负责随机生成 SEO
 
 ---
 
-## 5. App 输出变量（运行时变量）
+## 5. 模板运行时变量（按页面分）
 
-### 5.1 路由层 / 全局公共变量（`shipsay/class/router.php`）
-
-| 变量 | 含义 | 来源 |
-|---|---|---|
-| `$theme_dir` | 当前主题目录 | 配置层 |
-| `$site_url` | 站点绝对地址 | router 自动补齐 |
-| `$year` | 当前年份 | router |
-| `$db` / `$redis` | 数据库 / Redis 实例 | router 初始化 |
-| `$dbarr` | DB 配置数组 | router |
-| `$rico_sql` | 文章基础查询 SQL 前缀 | router |
-| `$allbooks_url` | 书库入口 | 从 `fake_sort_url` 派生 |
-| `$full_allbooks_url` | 完本书库入口 | 由 `fake_fullstr + allbooks_url` 派生 |
-| `$fake_fullstr` | 完本前缀 | router 默认 `quanben` |
-| `$fake_rankstr` | 旧榜单前缀 | router 默认 `rank` |
-
-### 5.2 Header / 公共入口相关变量
-
-| 变量 | 含义 | 备注 |
-|---|---|---|
-| `$fake_recentread` | 阅读记录入口 | 配置或路由输出 |
-| `$fake_top` | 排行聚合入口 | 配置输出 |
-| `$fake_search` | 搜索入口 | 当前源码中未见统一核心定义，模板必须兜底 |
-| `$search_url_safe` | 搜索提交地址 | 模板局部兜底，不能误写成核心变量 |
-| `$full_allbooks_url_safe` | 完本入口安全值 | 模板局部兜底 |
-| `$rank_entry_safe` | 排行入口安全值 | 模板局部兜底 |
-| `$search_placeholder` | 搜索框占位 | 模板局部展示变量 |
-
-### 5.3 首页 `shipsay/app/home.php`
+## 5.1 公共头部 `tpl_header.php`
 
 | 变量 | 含义 |
 |---|---|
-| `$commend` | 推荐书列表 |
-| `$popular` | 热门书列表 |
-| `$sort1...$sortN` | 各分类热门列表（动态变量） |
+| `$theme_dir` | 当前主题目录 |
+| `$allbooks_url` | 书库入口 |
+| `$full_allbooks_url` | 完本入口基础值 |
+| `$fake_recentread` | 足迹/阅读记录入口 |
+| `$fake_search` | 搜索入口（若存在） |
+| `$search_url_safe` | 搜索提交地址（安全兜底） |
+| `$search_placeholder` | 搜索框占位文案 |
+
+## 5.2 首页 `tpl_home.php`
+
+| 变量 | 含义 |
+|---|---|
+| `$commend` | 首页推荐书列表 |
+| `$popular` | 热门/排行榜入口数据 |
 | `$lastupdate` | 最近更新列表 |
 | `$postdate` | 最新入库列表 |
 | `$link_html` | 友情链接 HTML |
-| `$home_lastupdate_num` | 最近更新条数 |
-| `$home_postdate_num` | 最新入库条数 |
+| `$fake_top` | 排行入口前缀 |
+| `$fake_rankstr` | 旧 rank 前缀（兼容） |
+| `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
-### 5.4 排行聚合 / 榜单详情（`shipsay/app/top.php` / `shipsay/app/rank.php`）
+## 5.3 分类页 `tpl_category.php`
 
-| 变量 | 含义 | 备注 |
-|---|---|---|
-| `$rank_meta` | 由 `ss_get_fake_top_meta()` 生成的排行榜入口元信息 | 结构化路由元数据 |
-| `$rank_entry_url` | 排行聚合入口 URL | 来自 `$rank_meta['entry_url']` |
-| `$rank_detail_base` | 榜单详情前缀 | 来自 `$rank_meta['detail_base']` |
-| `$rank_legacy_base` | 旧 rank 前缀 | 用于兼容旧 `/rank/` |
-| `$query` | 当前榜单 key | 例如 `allvisit` / `monthvisit` |
-| `$page_title` | 当前榜单标题 | 由 `title_arr` 派生 |
-| `$articlerows` | 榜单详情列表 | 详情页模板使用 |
+| 变量 | 含义 |
+|---|---|
+| `$retarr` | 当前分类书籍列表 |
+| `$sortcategory` | 分类导航集合 |
+| `$sortid / $sortname` | 当前分类 |
+| `$fullflag / $full_url / $allbooks_url` | 完本/书库链路 |
+| `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
-### 5.5 详情页 `shipsay/app/info.php` / `shipsay/app/info_langtail.php`
+## 5.4 详情页 `tpl_info.php`
 
 | 变量 | 含义 |
 |---|---|
 | `$articleid` | 小说 ID |
 | `$articlename` | 书名 |
-| `$author` / `$author_url` | 作者与作者页 |
-| `$img_url` | 封面 |
-| `$sortid` / `$sortname` | 分类 |
+| `$author / $author_url` | 作者与作者页链接 |
+| `$img_url` | 封面地址 |
+| `$sortid / $sortname` | 分类信息 |
 | `$isfull` | 完结状态 |
-| `$words_w` | 万字数 |
-| `$intro_p` / `$intro_des` | 简介摘要 / 简介纯文本 |
-| `$first_url` | 第一章链接 |
-| `$last_url` | 最新章节链接 |
-| `$lastchapter` | 最新章节名 |
-| `$lastchapter_arr` | 最新章节列表源 |
-| `$preview_chapters` | 第二章节区数据源 | 语义需结合真实运行结果判断，不能只靠数组切片字面猜 |
-| `$chapterrows` | 全章节数据 |
-| `$chapters` | 章节总数 |
-| `$index_url` | 目录页链接 |
-| `$langtailrows` | 长尾推荐列表 |
+| `$words_w` | 字数（万字） |
+| `$intro / $intro_p` | 简介原文 / 简介摘要 |
+| `$lastchapter / $last_url` | 最新章节标题 / 链接 |
+| `$lastchapter_arr` 或 `$lastarr` | 最新章节列表（模板实际用前需核对） |
+| `$first_url` | 开始阅读链接 |
+| `$index_url / $index_url_safe` | 目录页链接 |
+| `$info_url` | 详情页当前链接 |
+| `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
-### 5.6 目录页 `shipsay/app/indexlist.php` / `shipsay/app/indexlist_langtail.php`
+## 5.5 目录页 `tpl_indexlist.php`
 
 | 变量 | 含义 |
 |---|---|
-| `$list_arr` | 当前页章节列表 |
-| `$pid` | 当前目录页码 |
-| `$per_page` | 每页章节数 |
+| `$articlename` | 书名 |
+| `$author / $author_url` | 作者与作者页 |
+| `$img_url` | 封面 |
+| `$sortid / $sortname` | 分类 |
+| `$isfull` | 完结状态 |
+| `$words_w` | 字数 |
 | `$chapters` | 总章节数 |
-| `$htmltitle` | 目录页分页 HTML / 片段 |
-| `$langtailrows` | 长尾推荐列表 |
+| `$list_arr` | 当前页章节列表 |
+| `$pid` | 当前目录分页页码 |
+| `$first_url` | 开始阅读链接 |
+| `$info_url` | 返回详情链接 |
+| `$index_url` | 当前目录基础链接 |
+| `$lastchapter / $last_url` | 最新章节信息 |
+| `$lastupdate_cn` | 最新更新时间中文文案 |
+| `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
-### 5.7 阅读页 `shipsay/app/reader.php`
+## 5.6 阅读页 `tpl_reader.php`
 
 | 变量 | 含义 |
 |---|---|
-| `$chaptername` | 章节名 |
-| `$rico_content` | 正文 HTML |
-| `$pre_url` / `$next_url` | 上一章 / 下一章 |
-| `$page` / `$now_pid` | 阅读分页页码 |
-| `$reader_des` | 阅读页 description 摘要 |
+| `$articlename` | 书名 |
+| `$chaptername` | 当前章节名 |
+| `$author / $author_url` | 作者与作者页 |
+| `$sortid / $sortname` | 分类信息 |
+| `$chapterwords` | 当前章字数 |
+| `$rico_content` | 正文 HTML（核心变量） |
+| `$pre_url / $next_url` | 上一章 / 下一章 |
+| `$prevpage_url / $nextpage_url` | 阅读分页链接 |
+| `$now_pid / $max_pid` | 阅读分页当前页 / 总页数 |
+| `$index_url / $index_url_safe` | 返回目录 |
+| `$info_url` | 返回详情 |
+| `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
+
+## 5.7 搜索页 `tpl_search.php`
+
+| 变量 | 含义 |
+|---|---|
+| `$searchkey` | 搜索词 |
+| `$search_res` | 搜索结果列表 |
+| `$search_count` | 结果数 |
+| `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
+
+## 5.8 作者页 `tpl_author.php`
+
+| 变量 | 含义 |
+|---|---|
+| `$author` | 作者名 |
+| `$author_count` | 作品数量 |
+| `$res` | 作者作品列表 |
+| `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
+
+## 5.9 排行榜 `tpl_rank.php / tpl_top.php / tpl_rank_list.php`
+
+### 聚合页常用变量
+| 变量 | 含义 |
+|---|---|
+| `$sortarr` | 全部分类 |
+| `allvisit{sortid}` | 某分类总榜列表（由 `top.php` 动态变量准备） |
+| `monthvisit{sortid}` | 某分类月榜 |
+| `weekvisit{sortid}` | 某分类周榜 |
+
+### 单榜页常用变量
+| 变量 | 含义 |
+|---|---|
+| `$query` | 榜单 key，如 `monthvisit` |
+| `$page_title` / `$current_title` | 当前榜单标题 |
+| `$articlerows` | 榜单书籍列表 |
+| `$fake_top` | 排行入口前缀 |
+| `$fake_rankstr` | 旧 rank 前缀（兼容） |
+| `$rank_base` / `$rank_entry_url` / `$rank_detail_base` | 排行链接基础值 |
+| `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
+
+## 5.10 阅读记录 `tpl_recentread.php`
+
+| 变量 | 含义 |
+|---|---|
+| `$popular` | 猜你喜欢/热门数据 |
+| 最近阅读主体 | 当前主要由前端 `showtempbooks()` 生成 |
 
 ---
 
-## 6. 模板局部派生变量（只能在当前模板内使用）
+## 6. 运行时公共常量/函数（模板编写必须知道）
 
-### 6.1 `themes/shipsay/tpl_header.php`
-
-| 变量 | 含义 |
-|---|---|
-| `$full_allbooks_url_safe` | 完本入口兜底值 |
-| `$search_url_safe` | 搜索提交地址兜底值 |
-| `$search_placeholder` | 搜索框占位文案 |
-| `$rank_entry_safe` | 排行入口兜底值 |
-
-> 说明：当前 Shipsay 仓库中**没有统一核心函数 `ss_search_url()` 定义**，所以该模板采用 `function_exists(...) ? ... : fallback` 形式兜底。后续标准里不能把 `ss_search_url()` 当成 Shipsay 核心已存在函数写死。
-
-### 6.2 `themes/shipsay/tpl_info.php`
-
-| 变量 | 含义 |
-|---|---|
-| `$index_url_safe` | 目录页链接兜底值 |
-| `$latest12` | `lastchapter_arr` 截取后的前 12 项 |
-| `$latest50` | `preview_chapters` 截取后的前 50 项 |
-
-### 6.3 `themes/shipsay/tpl_indexlist.php`
-
-| 变量 | 含义 |
-|---|---|
-| `$total_pages_safe` | 目录总页数兜底值 |
-| `$langtail_list` | 当前文件里定义但未实际使用的局部变量 |
-
-> 说明：`$langtail_list` 当前属于死变量，不应写进“公共变量定义”，只能记在扫描结果里。
-
-### 6.4 `themes/shipsay/tpl_reader.php`
-
-| 变量 | 含义 |
-|---|---|
-| `$pageTitle` | 阅读页 `<title>` 使用值 |
-| `$index_url_safe` | 目录页链接兜底值 |
-
-### 6.5 `themes/shipsay/tpl_rank.php`
-
-| 变量 | 含义 |
-|---|---|
-| `$current_query` | 当前榜单 key |
-| `$current_title` | 当前榜单标题 |
-
-### 6.6 `themes/shipsay/tpl_top.php`
-
-| 变量 | 含义 |
-|---|---|
-| `$top_title` / `$top_keywords` / `$top_description` | 聚合排行页局部 SEO |
-| `$rank_sections` | 榜单区块定义 |
-| `$rank_lists` | 模板内查询出的榜单数据 |
-| `$rank_limit` | 模板内榜单数量限制 |
-
-> 注意：`tpl_top.php` 当前直接查库 / 读缓存，这属于 Shipsay 现状，不属于后续模板标准。该处应记录为**现存例外**，不能反向写成规范。
+| 名称 | 类型 | 说明 |
+|---|---|---|
+| `SITE_NAME` | 常量 | 站点名称 |
+| `SITE_URL` | 常量 | 站点地址 |
+| `__ROOT_DIR__` | 常量 | 项目根目录 |
+| `__THEME_DIR__` | 常量 | 当前主题目录 |
+| `Sort::ss_sorthead()` | 方法 | 头部分类导航 |
+| `Sort::ss_sorturl()` | 方法 | 分类 URL |
+| `Url::info_url()` | 方法 | 详情页 URL |
+| `Url::index_url()` | 方法 | 目录页 URL |
+| `Url::chapter_url()` | 方法 | 阅读页 URL |
+| `Text::ss_lastupdate()` | 方法 | 时间文案转换 |
+| `ss_search_url()` | 函数 | 搜索地址兜底函数 |
+| `ss_get_fake_top_meta()` | 函数 | 排行前缀元数据 |
 
 ---
 
-## 7. 已确认的“不要写错”的定义
+## 7. 模板编写时不能写死的内容
 
-1. **`$fake_top` 不是榜单详情前缀本身**，实际详情前缀要通过 `ss_get_fake_top_meta()` 派生。
-2. **`$rank_entry_url` / `$rank_detail_base` 属于 app/top 路由派生变量**，不是后台直接配置项。
-3. **`$search_url_safe` 是模板兜底变量，不是核心统一 API。**
-4. **`$latest12` / `$latest50` 是模板内二次整理变量，不是 app 原始变量。**
-5. **`$preview_chapters` 的实际语义不能只靠 `array_slice/array_reverse` 字面判断，必须结合真实运行页验证。**
-6. **`$langtail_list` 当前未实际使用，不能写成有效公共变量。**
+以下内容后续模板中默认都不能写死：
+
+- `/top/`
+- `/rank/`
+- `/history.html`
+- `/search/`
+- `/book/{id}/` 的具体路径
+- 首页标题、keywords、description 的固定字符串
+- 分类固定名称
+
+应优先使用：
+- 后台变量
+- `Url::*` 方法
+- 程序准备好的链接变量
+- SEO 运行时变量
 
 ---
 
-## 8. 当前扫描结论（变量层）
+## 8. 当前可以直接作为“模板标准输入”的页面链路
 
-本轮全目录扫描后，变量文档当前最需要避免的错误是：
+| 页面 | 主入口 | 模板 |
+|---|---|---|
+| 首页 | `shipsay/app/home.php` | `tpl_home.php` |
+| 分类页 | `shipsay/app/category.php` | `tpl_category.php` |
+| 详情页 | `shipsay/app/info.php` / `info_langtail.php` | `tpl_info.php` |
+| 目录页 | `shipsay/app/indexlist.php` / `indexlist_langtail.php` | `tpl_indexlist.php` |
+| 阅读页 | `shipsay/app/reader.php` | `tpl_reader.php` |
+| 搜索页 | `shipsay/app/search.php` | `tpl_search.php` |
+| 作者页 | `shipsay/app/author.php` | `tpl_author.php` |
+| 阅读记录 | `shipsay/app/recentread.php` | `tpl_recentread.php` |
+| 排行页 | `shipsay/app/top.php` | `tpl_top.php / tpl_rank.php / tpl_rank_list.php` |
 
-- 把模板局部变量写成全局标准
-- 把历史兼容变量写成唯一标准
-- 把“当前 Shipsay 的例外写法”写成后续模板必须遵守的规范
-- 把尚未核实的运行时语义写死进文档
+---
 
-后续补文档时，优先保证：**定义准确 > 覆盖完整**。
+## 9. 一句话结论
+
+后续所有模板改动，先查这份表：
+
+- 先确认这是哪一层变量
+- 再确认变量是谁提供的
+- 再决定模板能不能直接用
+
+这样才能减少“变量写对了但层级写错了”的问题。
+
+
+---
+
+## 6. 本轮全目录扫描补充（2026-03-07）
+
+### 6.1 路由/入口层真实变量补充
+
+| 变量 | 层级 | 说明 |
+|---|---|---|
+| `$site_url` | 路由/公共 | 站点根地址，多个模板会用于 canonical / breadcrumb / OG 链路 |
+| `$allbooks_url` | 路由派生 | 书库入口，由分类伪静态模板派生 |
+| `$full_allbooks_url` | 路由派生 | 完本入口，由 `fake_fullstr + allbooks_url` 组合 |
+| `$fake_recentread` | 配置 | 阅读记录入口 |
+| `$fake_top` | 配置 | 排行聚合入口 |
+| `$fake_rankstr` | 路由兼容 | 旧排行明细前缀兼容值 |
+| `$rico_sql` | app 数据准备 | 列表查询公共 SQL 前缀，不是模板变量标准 |
+
+### 6.2 Header/模板局部派生变量补充
+
+| 变量 | 层级 | 说明 |
+|---|---|---|
+| `$full_allbooks_url_safe` | 模板局部 | Header 对完本入口的兜底值 |
+| `$search_url_safe` | 模板局部 | 搜索入口安全兜底值 |
+| `$search_placeholder` | 模板局部 | 搜索框占位文案 |
+| `$rank_entry_safe` | 模板局部 | Header 中排行入口兜底值 |
+| `$home_url_safe` | 模板局部 | 首页 canonical / OG / 结构化数据使用 |
+| `$category_url_safe` | 模板局部 | 分类页 canonical / OG / breadcrumb 使用 |
+| `$author_url_safe` | 模板局部 | 作者页 canonical / OG / breadcrumb 使用 |
+| `$rank_url_safe` | 模板局部 | 榜单详情页 canonical / OG / breadcrumb 使用 |
+| `$top_url_safe` | 模板局部 | 榜单聚合页 canonical / OG / breadcrumb 使用 |
+
+### 6.3 详情页/目录页局部变量补充
+
+| 变量 | 层级 | 说明 |
+|---|---|---|
+| `$index_url_safe` | 模板局部 | 详情页/阅读页目录入口兜底 |
+| `$latest12` | 模板局部 | 详情页展示用“最新 12 章”数组 |
+| `$latest50` | 模板局部 | 详情页展示用“前 50 章”数组 |
+| `$intro_html` | 模板局部 | 简介输出优先级合并值 |
+| `$total_pages_safe` | 模板局部 | 目录页总页数安全值 |
+
+### 6.4 排行链路变量补充
+
+| 变量 | 层级 | 说明 |
+|---|---|---|
+| `$rank_meta` | app 输出 | `fake_top` / `fake_rankstr` 解析后的排行元数据 |
+| `$rank_entry_url` | app 输出 | 排行聚合入口 |
+| `$rank_detail_base` | app 输出 | 排行明细页基础前缀 |
+| `$rank_legacy_base` | app 输出 | 旧排行前缀兼容值 |
+| `$query` | app 输出 | 当前榜单 key |
+| `$page_title` | app 输出 | 榜单标题，用于 SEO 占位符 `{ranktitle}` |
+
+### 6.5 本轮纠错：不能只按数组切片字面解释章节语义
+
+Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运行规则。
+
+因此：
+- 不能只看 `array_slice()` / `array_reverse()` 的字面写法
+- 不能只看 `chapterorder ASC` 就直接断言“前 50 章 / 最新 50 章”
+- 必须结合 **真实运行页、章节 URL 映射、最终页面输出结果** 一起判断
+
+这条属于变量/数据语义判断红线，后续写标准时必须保留。

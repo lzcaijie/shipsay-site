@@ -7,13 +7,38 @@
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('author');
+if (trim($seo_title) === '' || trim($seo_title) === SITE_NAME) {
+    $seo_title = $author . '作品大全_' . SITE_NAME;
+}
+if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
+    $seo_keywords = $author . ',' . SITE_NAME . ',作品集,小说';
+}
+if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
+    $seo_description = '作者' . $author . '作品列表与最新章节，尽在' . SITE_NAME . '。';
+}
+$author_url_safe = isset($uri) && $uri ? $uri : '';
+$author_ld = [
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => !empty($site_url) ? $site_url : '/'],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => $author . '作品大全', 'item' => $author_url_safe],
+    ],
+];
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
 <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-
-<meta property="og:title" content="<?=$author?>的全部小说">
-<meta property="og:description" content="<?=$author?>的全部小说"> 
+<?php if ($author_url_safe !== ''): ?>
+<meta name="applicable-device" content="pc,mobile">
+<meta name="mobile-agent" content="format=html5;url=<?=$author_url_safe?>">
+<link rel="canonical" href="<?=$author_url_safe?>">
+<meta property="og:url" content="<?=$author_url_safe?>">
+<?php endif; ?>
+<meta property="og:type" content="website">
+<meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
+<script type="application/ld+json"><?=json_encode($author_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 

@@ -9,14 +9,13 @@
 
 ---
 
+## 2026-03-07-1 | 模板/文档 | Shipsay SEO 首轮收口 + v5.1 文档补充
+- 修复：`themes/shipsay/tpl_info.php` 前台不再展示内部实现说明文案，并将章节块标题统一为“前 50 章”。
+- 完善：补强首页、分类页、作者页、排行聚合页、榜单详情页的基础 SEO 输出（canonical / device / OG / 结构化数据）。
+- 完善：新增 `docs/VARIABLE_MAP.md` 与 `docs/V5_1_TEMPLATE_STANDARD.md`，把本轮扫描确认的变量分层、结构红线、SEO 规则补入真源文档。
+- 迁移：为 `shipsay/docs/` 增补迁移占位文件，继续固定根目录 `docs/` 为唯一真源。
+- 备注：`themes/shipsay/tpl_top.php` 仍保留历史数据层例外，仅记录，不作为后续模板标准。
 
-## 2026-03-07-1 | 文档 | Shipsay v5.1 标准完善首轮（变量/结构/例外定义补全）
-- 新增：`docs/VARIABLE_MAP.md`，按“配置变量 / URL 占位符 / SEO 占位符 / App 输出变量 / 模板局部派生变量”重新分层。
-- 新增：`docs/V5_1_TEMPLATE_STANDARD.md`，补入当前执行顺序、模板修改红线、结构边界、例外清单、页面职责与文档真源约定。
-- 确认：`themes/shipsay/tpl_top.php` 模板层查库/读缓存属于 Shipsay 历史例外，不作为后续模板标准。
-- 确认：前台禁止展示内部实现规则说明；不确定语义的变量不得仅凭局部代码字面写死进标准。
-- 涉及：`docs/CHANGELOG.md`、`docs/VARIABLE_MAP.md`、`docs/V5_1_TEMPLATE_STANDARD.md`、`shipsay/docs/*` 迁移占位。
-- 回滚：删除上述新增文档并恢复 `docs/CHANGELOG.md` 头部本条记录即可。
 
 ## 2026-02-28-01 | 修复 | v6 模板下发：解压不再依赖 shell_exec（支持 zip/tar.gz）
 - 修复：部分分站禁用 `shell_exec` 导致模板下发报错 `tpl_extract_failed - shell_exec_disabled`。
