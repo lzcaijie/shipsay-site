@@ -18,6 +18,9 @@ if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
 }
 $category_url_safe = (isset($uri) && $uri) ? $uri : Sort::ss_sorturl($sortid);
 $allbooks_url_safe = !empty($allbooks_url) ? $allbooks_url : '/sort/';
+$category_name_html = htmlspecialchars($category_name_safe, ENT_QUOTES, 'UTF-8');
+$category_url_attr = htmlspecialchars($category_url_safe, ENT_QUOTES, 'UTF-8');
+$allbooks_url_attr = htmlspecialchars($allbooks_url_safe, ENT_QUOTES, 'UTF-8');
 $category_ld = [
     '@context' => 'https://schema.org',
     '@type' => 'BreadcrumbList',
@@ -33,22 +36,22 @@ $category_ld = [
 <meta http-equiv="Cache-Control" content="no-transform">
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <meta name="applicable-device" content="pc,mobile">
-<meta name="mobile-agent" content="format=html5;url=<?=$category_url_safe?>">
-<link rel="canonical" href="<?=$category_url_safe?>">
+<meta name="mobile-agent" content="format=html5;url=<?=$category_url_attr?>">
+<link rel="canonical" href="<?=$category_url_attr?>">
 <meta property="og:type" content="website">
 <meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-<meta property="og:url" content="<?=$category_url_safe?>">
+<meta property="og:url" content="<?=$category_url_attr?>">
 <script type="application/ld+json"><?=json_encode($category_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="store">
     <div class="store_left">
         <i id="store_menu" class="fa fa-bars fa-3x" onclick="javascript: store_menu();" title="筛选菜单"></i>
         <div class="side_commend">
-            <div class="title"><?=$sortname?></div>
+            <div class="title"><?=$category_name_html?></div>
             <div id="after_menu">
                 <div><a href="#"></a><a href="javascript:" onclick="document.location='<?=$full_url?>'"><label><input type="checkbox"<?php if($fullflag): ?> checked="checked"<?php endif ?> /> 只看全本</label></a></div>
-                <div><a href="<?=$allbooks_url_safe?>" <?php if($sortid == -1): ?> class="onselect"<?php endif?>>全部分类</a>
+                <div><a href="<?=$allbooks_url_attr?>" <?php if($sortid == -1): ?> class="onselect"<?php endif?>>全部分类</a>
                     <?php foreach($sortcategory as $k => $v): ?>
                         <a href="<?=$v['sorturl']?>"<?php if($sortid == $k): ?> class="onselect"<?php endif?>><?=$v['sortname']?></a>
                     <?php endforeach ?>
@@ -83,7 +86,7 @@ $category_ld = [
         </div>
     </div>
     <div id="store_right">
-        <ul><li><a href="<?=$allbooks_url_safe?>" <?php if($sortid == -1): ?> class="onselect"<?php endif?>>全部分类</a></li></ul>
+        <ul><li><a href="<?=$allbooks_url_attr?>" <?php if($sortid == -1): ?> class="onselect"<?php endif?>>全部分类</a></li></ul>
         <ul>
             <?php foreach($sortcategory as $k => $v): ?>
                 <li><a href="<?=$v['sorturl']?>"<?php if($sortid == $k): ?> class="onselect"<?php endif?>><?=$v['sortname']?></a></li>
