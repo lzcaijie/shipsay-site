@@ -62,7 +62,7 @@ if (isset($fake_top) && $fake_top) {
     <nav class="container">
         <a href="/">首页</a>
         <?php foreach (Sort::ss_sorthead() as $v): ?>
-            <?php if ((isset($fake_top) && rtrim($v['sorturl'], '/') === rtrim($fake_top, '/')) || (isset($v['sortname']) && mb_strpos($v['sortname'], '排行') !== false)) continue; ?>
+            <?php if (rtrim($v['sorturl'], '/') === rtrim($rank_entry_safe, '/') || (isset($v['sortname']) && mb_strpos($v['sortname'], '排行') !== false)) continue; ?>
             <a href="<?=$v['sorturl']?>"><?=$v['sortname_2']?></a>
         <?php endforeach ?>
         <div id="user_panel"></div>
