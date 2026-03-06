@@ -24,7 +24,7 @@
   <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
   <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
   <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-  <link rel="canonical" href="<?=$site_url . $rank_detail_base . $canonical_query . '/')?>">
+  <link rel="canonical" href="<?=htmlspecialchars($site_url . $rank_detail_base . $canonical_query . '/', ENT_QUOTES, 'UTF-8')?>">
   <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
   <style>
     form.search{
