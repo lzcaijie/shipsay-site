@@ -6,9 +6,6 @@
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
-$rank_entry_safe = (isset($fake_top) && $fake_top)
-    ? rtrim($fake_top, '/') . '/'
-    : ('/' . ((isset($fake_rankstr) && $fake_rankstr) ? trim($fake_rankstr, '/') : 'rank') . '/');
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
@@ -18,7 +15,7 @@ $rank_entry_safe = (isset($fake_top) && $fake_top)
     <div class="store_left">
         <i id="store_menu" class="fa fa-bars fa-3x" onclick="javascript: store_menu();" title="筛选菜单"></i>
         <div class="side_commend category-panel">
-            <div class="title title-with-link"><span><?=$sortname?></span><a class="more-link" href="<?=$rank_entry_safe?>">排行榜</a></div>
+            <div class="title"><span><?=$sortname?></span></div>
             <div class="category-entry-links">
                 <a href="<?=$allbooks_url?>">全部小说</a>
                 <a href="<?=$full_url?>"><?=$fullflag ? '当前已筛全本' : '只看全本'?></a>
@@ -51,6 +48,10 @@ $rank_entry_safe = (isset($fake_top) && $fake_top)
                 <?php endforeach ?>
                 <?php endif ?>
             </ul>
+            <div class="category-pagination">
+                <div class="index-container category-page-desktop"><ul><?=$jump_html?></ul></div>
+                <div class="index-container category-page-mobile"><?=$jump_html_wap?></div>
+            </div>
         </div>
     </div>
     <div id="store_right">
@@ -66,7 +67,6 @@ $rank_entry_safe = (isset($fake_top) && $fake_top)
             </li>
         </ul>
         <ul>
-            <li><a href="<?=$rank_entry_safe?>">进入排行</a></li>
             <li><a href="<?=$fake_recentread?>">阅读记录</a></li>
         </ul>
     </div>

@@ -35,7 +35,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
     </div>
 
     <aside>
-        <p class="title title-with-link"><span><i class="fa fa-fire fa-lg">&nbsp;</i>热门小说</span><a class="more-link" href="<?=((isset($fake_top) && $fake_top)?rtrim($fake_top, '/').'/':'/rank/')?>">更多排行</a></p>
+        <p class="title"><i class="fa fa-fire fa-lg">&nbsp;</i>热门小说</p>
         <ul class="popular odd">
             <?php if (is_array($popular)): foreach ($popular as $k => $v): if ($k < 12): ?>
                 <li><a href="<?=$v['info_url']?>"><?=$v['articlename']?></a><a class="gray" href="<?=$v['author_url']?>"><?=$v['author']?></a></li>

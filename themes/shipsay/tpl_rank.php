@@ -34,7 +34,6 @@ $current_title = isset($title_arr[$current_query]) ? $title_arr[$current_query] 
         </div>
         <div class="rank-page-head">
             <h1><?=$current_title?></h1>
-            <p>支持后台自定义排行榜入口，当前页默认展示 Top 30</p>
         </div>
         <div class="rank-tabs">
             <?php foreach ($title_arr as $key => $label): ?>

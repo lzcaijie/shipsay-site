@@ -2029,3 +2029,120 @@ kbd input {
         flex: 1;
     }
 }
+
+
+/* ===== v5.2 overrides ===== */
+.rank-page-head p { display: none; }
+.rank-page-head h1 { margin-bottom: 0; }
+
+.category-pagination {
+    margin-top: 18px;
+}
+.category-page-desktop {
+    display: block;
+}
+.category-page-desktop ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.category-page-desktop li a,
+.category-page-desktop li span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    min-height: 38px;
+    padding: 0 14px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    background: #fff;
+    color: #666;
+}
+.category-page-desktop li.active span,
+.category-page-desktop li a:hover {
+    background: #bf2c24;
+    border-color: #bf2c24;
+    color: #fff;
+}
+.category-page-mobile {
+    display: none;
+}
+
+.section-info-block .intro {
+    min-height: 0;
+    margin-top: 0;
+}
+.section-info-block .intro:empty::before {
+    content: '暂无简介';
+    color: #999;
+}
+
+.reader-page-info {
+    padding: 0 64px 12px;
+    color: #777;
+    font-size: 14px;
+}
+.read-breadcrumbs {
+    padding: 18px 64px 0;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media screen and (max-width: 959px) {
+    .read-breadcrumbs,
+    .text_title,
+    .reader-page-info,
+    #article {
+        padding-left: 22px;
+        padding-right: 22px;
+    }
+    .style_h1 {
+        margin-right: 70px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .category-page-desktop {
+        display: none;
+    }
+    .category-page-mobile {
+        display: block;
+    }
+    .reader-page-info,
+    .read-breadcrumbs,
+    .text_title,
+    #article {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+    .reader-page-info {
+        padding-top: 2px;
+        padding-bottom: 10px;
+    }
+    .read-breadcrumbs {
+        padding-top: 14px;
+        margin-bottom: 8px;
+        font-size: 12px;
+    }
+    .text_title {
+        padding-top: 8px;
+    }
+    .style_h1 {
+        margin-right: 54px;
+        font-size: 28px;
+        line-height: 1.35;
+    }
+    .text_info span {
+        margin-right: 10px;
+        line-height: 1.7;
+    }
+    #article > p {
+        margin: 0.95em 0;
+    }
+}

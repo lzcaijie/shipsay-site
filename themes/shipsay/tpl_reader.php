@@ -68,7 +68,7 @@ $pageTitle = $seo_title;
                 </div>
             </div>
             <?php if ($max_pid > 1): ?>
-            <div class="page-info" style="margin-bottom:15px;">当前第 <?=$now_pid?> 页 / 共 <?=$max_pid?> 页</div>
+            <div class="reader-page-info">当前第 <?=$now_pid?> 页 / 共 <?=$max_pid?> 页</div>
             <?php endif; ?>
             <article id="article" class="content"><?=$rico_content?></article>
             <div class="s_gray tc"><script>tips('<?=$articlename?>');</script></div>

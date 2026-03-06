@@ -401,3 +401,28 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 - 聚合排行前缀优先使用：`$fake_top`
 - 兼容旧逻辑时才使用：`$fake_rankstr`
 - 模板层不允许写死 `/top/` 或 `/rank/`。
+
+
+## 6.5 v5.2 纠偏补充（2026-03-06）
+
+### 详情页简介
+- `tpl_info.php` 不应只假定 `$intro` 一定存在。
+- 当前母模板兼容顺序建议：
+  1. `$intro`
+  2. `$intro_des`
+  3. `$intro_p`
+
+### 详情页章节预览
+- `shipsay/app/info.php` 已提供完整 `$chapterrows`。
+- 详情页如需展示“前 50 章”，应直接从 `$chapterrows` 取，不要误用 `$lastarr`。
+- `$lastarr` 只表示最近章节切片。
+
+### 分类页分页
+- `shipsay/app/category.php` 当前真实分页变量：
+  - `$jump_html`：桌面页码
+  - `$jump_html_wap`：手机端上一页/下一页/跳页
+- 模板层应直接复用，不再额外写死页数上限。
+
+### 排行入口
+- v5.2 起，正文区不再重复放排行入口。
+- 排行入口保留在全站顶部导航/顶部功能区即可。

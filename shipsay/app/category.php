@@ -84,12 +84,7 @@ else
 	}
 }
 
-$category_max_page = 10;
 if($page < 1) $page = 1;
-if($page > $category_max_page)
-{
-	require_once __ROOT_DIR__.'/shipsay/include/error.php';
-}
 
 $sql='SELECT COUNT(articleid) as allbooks FROM '.$dbarr['pre'].'article_article WHERE '.$dbarr['words'].' > 0 '.$sortidstr.$fullstr;
 if(isset($redis)&&$redis->ss_get($sql))
@@ -102,11 +97,7 @@ else
 	if(isset($redis))$redis->ss_setex($sql,$category_cache_time,$allbooks);
 }
 $allpage=ceil($allbooks/$category_per_page);
-if($allpage > $category_max_page)
-{
-	$allpage = $category_max_page;
-	$allbooks = $category_per_page * $category_max_page;
-}
+if($allpage < 1)$allpage = 1;
 if($page>$allpage)$page=$allpage;
 $sql=$rico_sql.$sortidstr.$fullstr.' ORDER BY lastupdate DESC LIMIT '.(($page-1)*$category_per_page).','.$category_per_page;
 if(isset($redis)&&!isset($_REQUEST['nocache']))

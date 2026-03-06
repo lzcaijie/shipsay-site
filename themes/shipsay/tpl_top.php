@@ -19,7 +19,6 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('rank');
         </div>
         <div class="rank-page-head">
             <h1>排行榜</h1>
-            <p>按分类查看热门作品，作为母模板统一排行榜入口。</p>
         </div>
         <div class="top-grid">
             <?php $sortCount = is_array($sortarr) ? count($sortarr) : 0; ?>

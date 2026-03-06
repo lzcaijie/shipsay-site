@@ -13,6 +13,25 @@ if (!empty($lastarr) && is_array($lastarr)) {
     $recent_chapters = $lastchapter_arr;
 }
 $langtail_list = (!empty($langtailrows) && is_array($langtailrows)) ? $langtailrows : [];
+$intro_html = '';
+if (isset($intro) && trim(strip_tags((string)$intro)) !== '') {
+    $intro_html = $intro;
+} elseif (isset($intro_des) && trim((string)$intro_des) !== '') {
+    $intro_html = '<p>' . nl2br(htmlspecialchars((string)$intro_des, ENT_QUOTES, 'UTF-8')) . '</p>';
+} elseif (isset($intro_p) && trim((string)$intro_p) !== '') {
+    $intro_html = '<p>' . nl2br(htmlspecialchars((string)$intro_p, ENT_QUOTES, 'UTF-8')) . '</p>';
+}
+$chapter_preview = [];
+if (!empty($chapterrows) && is_array($chapterrows)) {
+    $preview_count = 0;
+    foreach ($chapterrows as $row) {
+        $chapter_preview[] = $row;
+        if (!isset($row['chaptertype']) || (int)$row['chaptertype'] !== 1) {
+            $preview_count++;
+        }
+        if ($preview_count >= 50) break;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="zh">
@@ -69,14 +88,14 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
 
         <div class="section sub-section section-info-block">
             <h2 class="sub_title">作品简介</h2>
-            <div class="intro"><?=$intro?></div>
+            <div class="intro"><?=$intro_html?></div>
         </div>
 
         <div class="section sub-section section-info-block">
             <div class="catalog-header">
                 <div>
                     <h2 class="block-title">最新章节</h2>
-                    <div class="page-info">共 <?=$chapters?> 章，默认展示最近 12 章</div>
+                    <div class="page-info">共 <?=$chapters?> 章，先展示最近 12 章</div>
                 </div>
                 <div><a href="<?=$index_url_safe?>" class="back-link"><i class="fa fa-list"></i> 全部目录</a></div>
             </div>
@@ -91,6 +110,29 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
                     <?php endif; ?>
                 </ul>
             </div>
+        </div>
+
+        <div class="section sub-section section-info-block">
+            <div class="catalog-header">
+                <div>
+                    <h2 class="block-title">正文预览</h2>
+                    <div class="page-info">详情页预览前 50 章，完整目录请进入目录页查看</div>
+                </div>
+                <div><a href="<?=$index_url_safe?>" class="back-link"><i class="fa fa-list"></i> 完整目录</a></div>
+            </div>
+            <ul class="chapter-grid">
+                <?php if (!empty($chapter_preview)): ?>
+                    <?php foreach ($chapter_preview as $v): ?>
+                        <?php if (isset($v['chaptertype']) && (int)$v['chaptertype'] === 1): ?>
+                            <li class="volume-title"><?=$v['cname']?></li>
+                        <?php else: ?>
+                            <li class="chapter-item"><a href="<?=$v['cid_url']?>" title="<?=$articlename?> <?=$v['cname']?>"><?=$v['cname']?></a></li>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <li class="chapter-item chapter-item-empty">暂无章节数据</li>
+                <?php endif; ?>
+            </ul>
         </div>
 
         <?php if (!empty($langtail_list)): ?>
