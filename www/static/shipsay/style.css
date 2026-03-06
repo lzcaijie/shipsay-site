@@ -1518,3 +1518,241 @@ kbd input {
         tap-highlight-color: rgba(74, 144, 226, 0.2);
     }
 }
+
+/* ===== v5 first round ===== */
+.site-search {
+    display: flex;
+    align-items: center;
+    height: 36px;
+    width: 300px;
+    margin: 5px 2px;
+}
+
+.bread_crumbs {
+    width: 100%;
+    margin-bottom: 14px;
+    color: #999;
+    font-size: 13px;
+}
+
+.bread_crumbs a { color: #666; }
+
+.book-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.book-actions a,
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 16px;
+    border-radius: 4px;
+    color: #fff;
+    background: #bf2c24;
+}
+
+.book-actions a:nth-child(2),
+.back-link { background: #3e3d43; }
+
+.rank-quick-section { padding: 12px 14px; }
+.rank-quick-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+.rank-quick-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+}
+.rank-quick-tabs a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 16px;
+    background: #f6f6f6;
+    color: #666;
+    font-size: 13px;
+}
+.rank-quick-list { margin: 0; padding: 0; }
+.rank-quick-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+.rank-quick-list li:last-child { border-bottom: 0; }
+.rank-quick-list span {
+    width: 24px;
+    text-align: center;
+    color: #999;
+}
+.rank-quick-list a {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.rank-quick-list em { color: #999; white-space: nowrap; }
+
+.rank-page-head { margin-bottom: 16px; }
+.rank-page-head h1 { font-size: 24px; color: #333; }
+.rank-page-head p { margin-top: 8px; color: #888; }
+.rank-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+.rank-tabs a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 0 14px;
+    border-radius: 18px;
+    background: #f6f6f6;
+    color: #666;
+}
+.rank-tabs a.active { background: #bf2c24; color: #fff; }
+.rank-page-list { margin: 0; padding: 0; }
+.rank-page-list li {
+    display: flex;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+.rank-page-list .rank-num {
+    width: 30px;
+    flex: 0 0 30px;
+    text-align: center;
+    font-size: 18px;
+    color: #999;
+    line-height: 28px;
+}
+.rank-main { flex: 1; min-width: 0; }
+.rank-bookname {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 8px;
+}
+.rank-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    color: #999;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+.rank-meta em { color: #999; }
+.rank-main p { line-height: 1.8; color: #666; }
+.rank-empty { color: #999; justify-content: center; }
+.top-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+.top-card {
+    border: 1px solid #ececec;
+    border-radius: 6px;
+    padding: 14px;
+}
+.top-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.top-card-head h2 { font-size: 18px; color: #333; }
+.top-card ol { margin: 0; padding: 0; }
+.top-card li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid #f3f3f3;
+}
+.top-card li:last-child { border-bottom: 0; }
+.top-card li span {
+    width: 24px;
+    text-align: center;
+    color: #999;
+}
+.top-card li a {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.top-card li em { color: #999; white-space: nowrap; }
+.read-breadcrumbs { padding-top: 10px; }
+
+@media (max-width: 768px) {
+    .head {
+        padding: 12px 10px;
+        gap: 10px;
+    }
+    #logo { width: 100%; }
+    .site-search,
+    header form {
+        width: 100%;
+        order: 3;
+    }
+    .header_right {
+        width: 100%;
+        justify-content: space-between;
+        font-size: 14px;
+        padding-top: 0;
+    }
+    .header_right a {
+        padding-left: 0;
+        flex: 1;
+    }
+    .header_right #home { display: block; }
+    nav {
+        overflow-x: auto;
+        white-space: nowrap;
+        flex-wrap: nowrap;
+    }
+    nav a {
+        padding: 0 14px;
+        font-size: 14px;
+    }
+    .rank-quick-head,
+    .catalog-header,
+    .page-navigation {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .rank-quick-tabs,
+    .rank-tabs {
+        width: 100%;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 4px;
+    }
+    .rank-quick-tabs a,
+    .rank-tabs a { white-space: nowrap; }
+    .rank-page-head h1 { font-size: 20px; }
+    .rank-bookname { font-size: 16px; }
+    .top-grid { grid-template-columns: 1fr; }
+    .book-actions,
+    .page-navigation { width: 100%; }
+    .book-actions a,
+    .back-link { width: 100%; }
+}
