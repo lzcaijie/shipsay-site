@@ -4,11 +4,21 @@
 <head>
 <meta charset="UTF-8">
 <?php
-$top_title = '排行榜_' . SITE_NAME;
-$top_keywords = '排行榜,周榜,月榜,总榜,推荐榜,收藏榜,' . SITE_NAME;
-$top_description = SITE_NAME . '小说排行榜聚合页，查看周榜、月榜、总榜、推荐榜、收藏榜。';
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('top');
 $rank_entry_url = isset($rank_entry_url) && $rank_entry_url ? $rank_entry_url : ((isset($fake_top) && $fake_top) ? $fake_top : '/rank/');
 $rank_detail_base = isset($rank_detail_base) && $rank_detail_base ? $rank_detail_base : $rank_entry_url;
+$rank_page_title = '排行榜';
+if (trim($seo_title) === '' || trim($seo_title) === SITE_NAME) {
+    $seo_title = $rank_page_title . '_' . SITE_NAME;
+}
+if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
+    $seo_keywords = '排行榜,周榜,月榜,总榜,推荐榜,收藏榜,' . SITE_NAME;
+}
+if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
+    $seo_description = SITE_NAME . '小说排行榜聚合页，查看周榜、月榜、总榜、推荐榜、收藏榜。';
+}
+$canonical_top = $rank_entry_url ?: '/rank/';
 $rank_sections = [
     'weekvisit'  => ['title' => '周榜',   'field' => 'weekvisit',  'more' => $rank_detail_base . 'weekvisit/'],
     'monthvisit' => ['title' => '月榜',   'field' => 'monthvisit', 'more' => $rank_detail_base . 'monthvisit/'],
@@ -31,9 +41,25 @@ foreach ($rank_sections as $key => $conf) {
     if (!is_array($rank_lists[$key])) $rank_lists[$key] = [];
 }
 ?>
-<title><?=htmlspecialchars($top_title, ENT_QUOTES, 'UTF-8')?></title>
-<meta name="keywords" content="<?=htmlspecialchars($top_keywords, ENT_QUOTES, 'UTF-8')?>">
-<meta name="description" content="<?=htmlspecialchars($top_description, ENT_QUOTES, 'UTF-8')?>">
+<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
+<link rel="canonical" href="<?=htmlspecialchars($canonical_top, ENT_QUOTES, 'UTF-8')?>">
+<meta name="applicable-device" content="pc,mobile">
+<meta name="mobile-agent" content="format=xhtml;url=<?=htmlspecialchars($canonical_top, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:type" content="website">
+<meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:url" content="<?=htmlspecialchars($canonical_top, ENT_QUOTES, 'UTF-8')?>">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": <?=json_encode($seo_title, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>,
+  "description": <?=json_encode($seo_description, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>,
+  "url": <?=json_encode($canonical_top, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>
+}
+</script>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container">
     <section class="section">
