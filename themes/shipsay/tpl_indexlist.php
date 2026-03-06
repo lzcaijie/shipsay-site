@@ -7,6 +7,11 @@ if (isset($chapters) && isset($per_page) && intval($per_page) > 0) {
     $total_pages_safe = (int)$pid;
 }
 $indexlist_url_safe = (isset($uri) && $uri) ? $uri : ((isset($index_url) && $index_url) ? $index_url : '');
+$indexlist_breadcrumb_item = $indexlist_url_safe !== ''
+    ? $indexlist_url_safe
+    : ((isset($index_url) && $index_url) ? $index_url : ((isset($info_url) && $info_url) ? $info_url : '/'));
+$current_pid_safe = isset($pid) ? intval($pid) : 1;
+$chapters_safe = isset($chapters) ? intval($chapters) : 0;
 ?>
 <!DOCTYPE html>
 <html lang="zh">
@@ -31,7 +36,7 @@ $indexlist_breadcrumb_ld = [
         ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => !empty($site_url) ? $site_url : '/'],
         ['@type' => 'ListItem', 'position' => 2, 'name' => $sortname, 'item' => Sort::ss_sorturl($sortid)],
         ['@type' => 'ListItem', 'position' => 3, 'name' => $articlename, 'item' => $info_url],
-        ['@type' => 'ListItem', 'position' => 4, 'name' => '章节目录' . (($pid > 1) ? '第' . intval($pid) . '页' : ''), 'item' => $indexlist_url_safe !== '' ? $indexlist_url_safe : $uri],
+        ['@type' => 'ListItem', 'position' => 4, 'name' => '章节目录' . (($pid > 1) ? '第' . intval($pid) . '页' : ''), 'item' => $indexlist_breadcrumb_item],
     ],
 ];
 ?>
@@ -41,14 +46,14 @@ $indexlist_breadcrumb_ld = [
 <meta http-equiv="Cache-Control" content="no-transform">
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <meta name="applicable-device" content="pc,mobile">
-<meta name="mobile-agent" content="format=html5;url=<?=$indexlist_url_safe?>">
+<meta name="mobile-agent" content="format=html5;url=<?=htmlspecialchars($indexlist_url_safe, ENT_QUOTES, 'UTF-8')?>">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<link rel="canonical" href="<?=$indexlist_url_safe?>">
+<link rel="canonical" href="<?=htmlspecialchars($indexlist_url_safe, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:type" content="website">
 <meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-<meta property="og:url" content="<?=$indexlist_url_safe?>">
+<meta property="og:url" content="<?=htmlspecialchars($indexlist_url_safe, ENT_QUOTES, 'UTF-8')?>">
 <script type="application/ld+json"><?=json_encode($indexlist_breadcrumb_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container">
@@ -69,13 +74,13 @@ $indexlist_breadcrumb_ld = [
                     <span>字数：<?=$words_w?>万</span>
                 </p>
                 <p>最新章节：<a href="<?=$last_url?>"><?=$lastchapter?></a> <em class="meta-time"><?=$lastupdate_cn?></em></p>
-                <p>总章节：<?=$chapters?>章</p>
+                <p>总章节：<?=$chapters_safe?>章</p>
             </div>
         </div>
         <div class="catalog-header">
             <div>
                 <h2 class="block-title">《<?=$articlename?>》章节目录</h2>
-                <div class="page-info">当前第 <?=$pid?> 页，共 <?=$total_pages_safe?> 页</div>
+                <div class="page-info">当前第 <?=$current_pid_safe?> 页，共 <?=$total_pages_safe?> 页</div>
             </div>
             <div class="catalog-actions">
                 <a href="<?=$first_url?>" class="back-link"><i class="fa fa-book"></i> 开始阅读</a>
