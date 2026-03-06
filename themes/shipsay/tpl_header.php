@@ -1,11 +1,18 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
-
 <?php
 $full_allbooks_url_safe = !empty($full_allbooks_url)
     ? $full_allbooks_url
     : ('/quanben' . (isset($allbooks_url) ? $allbooks_url : '/sort/'));
+$search_url_safe = function_exists('ss_search_url')
+    ? ss_search_url()
+    : ((isset($fake_search) && $fake_search) ? $fake_search : '/search/');
+$search_placeholder = isset($search_placeholder) && $search_placeholder !== ''
+    ? $search_placeholder
+    : '输入书名/作者';
+$rank_entry_safe = (isset($fake_top) && $fake_top)
+    ? rtrim($fake_top, '/') . '/'
+    : ('/' . ((isset($fake_rankstr) && $fake_rankstr) ? trim($fake_rankstr, '/') : 'rank') . '/');
 ?>
-<!-- header -->
 <meta name="robots" content="all">
 <meta name="bingbot" content="all">
 <meta name="baiduspider" content="all">
@@ -18,37 +25,41 @@ $full_allbooks_url_safe = !empty($full_allbooks_url)
 <link rel="shortcut icon" type="image/x-icon" href="/static/<?=$theme_dir?>/favicon.ico" media="screen">
 <link rel="stylesheet" href="/static/<?=$theme_dir?>/font-awesome.min.css">
 <link rel="stylesheet" href="/static/<?=$theme_dir?>/style.css">
-<script src="/static/<?= $theme_dir ?>/js/jquery.min.js"></script>
-<script src="/static/<?= $theme_dir ?>/js/jquery.cookie.min.js"></script>
-<script src="/static/<?= $theme_dir ?>/js/jquery.lazyload.min.js"></script>
-
+<script src="/static/<?=$theme_dir?>/js/jquery.min.js"></script>
+<script src="/static/<?=$theme_dir?>/js/jquery.cookie.min.js"></script>
+<script src="/static/<?=$theme_dir?>/js/jquery.lazyload.min.js"></script>
 <script src="/static/<?=$theme_dir?>/common.js"></script>
 </head>
-
 <body>
-    <header>
-        <div class="container head">
-            <a id="logo" href="/"><span><?=SITE_NAME?></span>
-                <p><?=SITE_URL?></p>
-            </a>
-            <script>search();</script>
-            <div class="header_right">
-                <a id="home" href="/"><i class="fa fa-home fa-lg"></i><br>首页</a>
-                <a href="<?=$allbooks_url?>"><i class="fa fa-book fa-lg"></i><br>书库</a>
-                <a href="<?=$full_allbooks_url_safe?>"><i class="fa fa-coffee fa-lg"></i><br>完本</a>
-                <a href="<?=$fake_recentread?>" rel="nofollow"><i class="fa fa-history fa-lg"></i><br>足迹</a>
-            </div>
-        </div>
-    </header>
-    <div class="navigation">
-        <nav class="container">
-            <a href="/">首页</a>
-            <?php foreach(Sort::ss_sorthead() as $v): ?>
-                <a href="<?=$v['sorturl']?>"><?=$v['sortname_2']?></a>
-            <?php endforeach ?>
+<header>
+    <div class="container head">
+        <a id="logo" href="/">
+            <span><?=SITE_NAME?></span>
+            <p><?=SITE_URL?></p>
+        </a>
 
-             <div id="user_panel">
-            </div> 
-        </nav>
+        <form class="site-search" name="t_frmsearch" method="post" action="<?=$search_url_safe?>" onsubmit="return chkval();">
+            <input autocomplete="off" id="searchkey" type="text" name="searchkey" class="search_input" placeholder="<?=htmlspecialchars($search_placeholder, ENT_QUOTES, 'UTF-8')?>">
+            <input type="hidden" name="searchtype" value="all">
+            <button type="submit" name="Submit" id="search_btn" title="搜索"><i class="fa fa-search fa-lg"></i></button>
+        </form>
+
+        <div class="header_right">
+            <a id="home" href="/"><i class="fa fa-home fa-lg"></i><br>首页</a>
+            <a href="<?=$allbooks_url?>"><i class="fa fa-book fa-lg"></i><br>书库</a>
+            <a href="<?=$full_allbooks_url_safe?>"><i class="fa fa-coffee fa-lg"></i><br>完本</a>
+            <a href="<?=$rank_entry_safe?>"><i class="fa fa-bar-chart fa-lg"></i><br>排行</a>
+            <a href="<?=$fake_recentread?>" rel="nofollow"><i class="fa fa-history fa-lg"></i><br>足迹</a>
+        </div>
     </div>
-    <!-- /header -->
+</header>
+<div class="navigation">
+    <nav class="container">
+        <a href="/">首页</a>
+        <a href="<?=$rank_entry_safe?>">排行</a>
+        <?php foreach (Sort::ss_sorthead() as $v): ?>
+            <a href="<?=$v['sorturl']?>"><?=$v['sortname_2']?></a>
+        <?php endforeach ?>
+        <div id="user_panel"></div>
+    </nav>
+</div>
