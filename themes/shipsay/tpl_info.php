@@ -6,6 +6,8 @@ if (isset($index_url) && $index_url) {
 } elseif (isset($articleid) && $articleid && class_exists('Url') && method_exists('Url', 'index_url')) {
     $index_url_safe = Url::index_url($articleid);
 }
+$latest12 = (!empty($lastchapter_arr) && is_array($lastchapter_arr)) ? array_slice($lastchapter_arr, 0, 12) : [];
+$latest50 = (!empty($preview_chapters) && is_array($preview_chapters)) ? array_slice($preview_chapters, 0, 50) : [];
 ?>
 <!DOCTYPE html>
 <html lang="zh">
@@ -14,6 +16,15 @@ if (isset($index_url) && $index_url) {
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
+if (trim($seo_title) === '' || trim($seo_title) === SITE_NAME) {
+    $seo_title = $articlename . '最新章节目录_' . $author . '_' . SITE_NAME;
+}
+if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
+    $seo_keywords = $articlename . ',' . $author . ',' . SITE_NAME . ',最新章节,全文阅读';
+}
+if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
+    $seo_description = '《' . $articlename . '》作者：' . $author . '，简介：' . (!empty($intro_p) ? $intro_p : $intro_des);
+}
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
@@ -25,7 +36,6 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link rel="canonical" href="<?=$uri?>">
-<link rel="prefetch" href="<?=$index_url_safe?>" as="document">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Book","name":"<?=$articlename?>","author":{"@type":"Person","name":"<?=$author?>"},"bookFormat":"EBook","datePublished":"<?=$lastupdate?>","numberOfPages":"<?=$chapters?>","publisher":{"@type":"Organization","name":"<?=SITE_NAME?>"},"image":"<?=$img_url?>","description":"<?=$intro_p?>"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"<?=SITE_NAME?>","item":"<?=$site_url?>"},{"@type":"ListItem","position":2,"name":"<?=$sortname?>","item":"<?=Sort::ss_sorturl($sortid)?>"},{"@type":"ListItem","position":3,"name":"<?=$articlename?>","item":"<?=$info_url?>"}]}</script>
 <meta property="og:type" content="novel">
@@ -52,7 +62,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
                     <span>状态：<?=$isfull?></span>
                     <span>字数：<?=$words_w?>万</span>
                 </p>
-                <p>最新章节：<a href="<?=$last_url?>"><?=$lastchapter?></a> <em style="color:#999;"><?=$lastupdate_cn?></em></p>
+                <p>最新章节：<a href="<?=$last_url?>"><?=$lastchapter?></a> <em class="meta-time"><?=$lastupdate_cn?></em></p>
                 <div class="book-actions">
                     <a href="<?=$first_url?>"><i class="fa fa-play-circle"></i> 开始阅读</a>
                     <a href="<?=$index_url_safe?>"><i class="fa fa-list"></i> 查看目录</a>
@@ -60,39 +70,51 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
             </div>
         </div>
 
-        <div class="section" style="margin:15px 0 0;padding:15px;">
+        <div class="section section-info-block">
             <h2 class="sub_title">作品简介</h2>
             <?php $intro_html = !empty($intro) ? $intro : (!empty($intro_p) ? $intro_p : $intro_des); ?>
             <div class="intro"><?=$intro_html?></div>
         </div>
 
-        <div class="section" style="margin:15px 0 0;padding:15px;">
-            <div class="catalog-header">
+        <div class="section section-info-block">
+            <div class="catalog-header info-catalog-header">
                 <div>
-                    <h2 style="margin:0;color:#333;">最新章节</h2>
-                    <div class="page-info" style="margin-top:5px;">共 <?=$chapters?> 章，默认展示最近 50 章</div>
+                    <h2 class="block-title">最新章节</h2>
+                    <div class="page-info">共 <?=$chapters?> 章，默认展示最新 12 章与最新 50 章</div>
                 </div>
                 <div><a href="<?=$index_url_safe?>" class="back-link"><i class="fa fa-list"></i> 全部目录</a></div>
             </div>
-            <div class="chapter-list-container chapter-list-grid" style="margin-top:15px;">
-                <ul style="list-style:none;padding:0;margin:0;">
-                    <?php if (!empty($preview_chapters) && is_array($preview_chapters)): ?>
-                        <?php foreach ($preview_chapters as $v): ?>
-                            <li class="chapter-item"><a href="<?=$v['cid_url']?>"><?=$v['cname']?></a></li>
-                        <?php endforeach; ?>
-                    <?php elseif (!empty($lastchapter_arr) && is_array($lastchapter_arr)): ?>
-                        <?php foreach ($lastchapter_arr as $v): ?>
-                            <li class="chapter-item"><a href="<?=$v['cid_url']?>"><?=$v['cname']?></a></li>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <li class="chapter-item"><a href="<?=$last_url?>"><?=$lastchapter?></a></li>
-                    <?php endif; ?>
+            <div class="latest-single-row">
+                <span class="latest-label">最新章节</span>
+                <a href="<?=$last_url?>"><?=$lastchapter?></a>
+                <em><?=$lastupdate_cn?></em>
+            </div>
+
+            <?php if (!empty($latest12)): ?>
+            <div class="info-chapter-block">
+                <h3 class="info-mini-title">最新 12 章</h3>
+                <ul class="info-chapter-list latest12-list">
+                    <?php foreach ($latest12 as $v): ?>
+                        <li class="chapter-item"><a href="<?=$v['cid_url']?>"><?=$v['cname']?></a></li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
+            <?php endif; ?>
+
+            <?php if (!empty($latest50)): ?>
+            <div class="info-chapter-block">
+                <h3 class="info-mini-title">最新 50 章</h3>
+                <ul class="info-chapter-list latest50-list">
+                    <?php foreach ($latest50 as $v): ?>
+                        <li class="chapter-item"><a href="<?=$v['cid_url']?>"><?=$v['cname']?></a></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <?php endif; ?>
         </div>
 
         <?php if (isset($is_langtail) && $is_langtail == 1 && !empty($langtailrows) && is_array($langtailrows)): ?>
-        <div class="section" style="margin:15px 0 0;padding:15px;">
+        <div class="section section-info-block">
             <h2 class="sub_title">相关推荐</h2>
             <div class="langtail-box">
                 <?php foreach ($langtailrows as $v): ?>

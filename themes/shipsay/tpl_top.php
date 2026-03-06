@@ -3,8 +3,36 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>排行榜_<?=SITE_NAME?></title>
-<meta name="description" content="<?=SITE_NAME?>小说排行榜聚合页，按分类查看热门作品。">
+<?php
+$top_title = '排行榜_' . SITE_NAME;
+$top_keywords = '排行榜,周榜,月榜,总榜,推荐榜,收藏榜,' . SITE_NAME;
+$top_description = SITE_NAME . '小说排行榜聚合页，查看周榜、月榜、总榜、推荐榜、收藏榜。';
+$rank_entry_url = isset($rank_entry_url) && $rank_entry_url ? $rank_entry_url : ((isset($fake_top) && $fake_top) ? $fake_top : '/rank/');
+$rank_detail_base = isset($rank_detail_base) && $rank_detail_base ? $rank_detail_base : $rank_entry_url;
+$rank_sections = [
+    'weekvisit'  => ['title' => '周榜',   'field' => 'weekvisit',  'more' => $rank_detail_base . 'weekvisit/'],
+    'monthvisit' => ['title' => '月榜',   'field' => 'monthvisit', 'more' => $rank_detail_base . 'monthvisit/'],
+    'allvisit'   => ['title' => '总榜',   'field' => 'allvisit',   'more' => $rank_detail_base . 'allvisit/'],
+    'allvote'    => ['title' => '推荐榜', 'field' => 'allvote',    'more' => $rank_detail_base . 'allvote/'],
+    'goodnum'    => ['title' => '收藏榜', 'field' => 'goodnum',    'more' => $rank_detail_base . 'goodnum/'],
+];
+$rank_lists = [];
+foreach ($rank_sections as $key => $conf) {
+    $rank_lists[$key] = [];
+    $field = preg_replace('/[^a-z0-9_]/i', '', $conf['field']);
+    if ($field === '' || !isset($rico_sql)) continue;
+    $sql = $rico_sql . 'ORDER BY ' . $field . ' DESC LIMIT 10';
+    if (isset($redis)) {
+        $rank_lists[$key] = $redis->ss_redis_getrows($sql, isset($home_cache_time) ? $home_cache_time : 300);
+    } elseif (isset($db)) {
+        $rank_lists[$key] = $db->ss_getrows($sql);
+    }
+    if (!is_array($rank_lists[$key])) $rank_lists[$key] = [];
+}
+?>
+<title><?=htmlspecialchars($top_title, ENT_QUOTES, 'UTF-8')?></title>
+<meta name="keywords" content="<?=htmlspecialchars($top_keywords, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=htmlspecialchars($top_description, ENT_QUOTES, 'UTF-8')?>">
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container">
     <section class="section">
@@ -13,19 +41,23 @@
         </div>
         <div class="rank-page-head">
             <h1>排行榜</h1>
-            
+            <p>按榜单类型查看热门作品</p>
         </div>
-        <div class="top-grid">
-            <?php $sortCount = is_array($sortarr) ? count($sortarr) : 0; ?>
-            <?php for ($i = 1; $i <= $sortCount; $i++): ?>
-                <?php $tmp = 'allvisit' . $i; $list = isset($$tmp) ? $$tmp : []; ?>
+        <div class="rank-tabs top-rank-tabs">
+            <?php foreach ($rank_sections as $key => $conf): ?>
+                <a href="<?=$conf['more']?>"><?=$conf['title']?></a>
+            <?php endforeach; ?>
+        </div>
+        <div class="top-rank-grid">
+            <?php foreach ($rank_sections as $key => $conf): ?>
+                <?php $list = isset($rank_lists[$key]) && is_array($rank_lists[$key]) ? $rank_lists[$key] : []; ?>
                 <div class="top-card">
                     <div class="top-card-head">
-                        <h2><?=Sort::ss_sortname($i,1)?>榜</h2>
-                        <a href="<?=Sort::ss_sorturl($i)?>">更多</a>
+                        <h2><?=$conf['title']?></h2>
+                        <a href="<?=$conf['more']?>">更多</a>
                     </div>
                     <ol>
-                        <?php if (!empty($list) && is_array($list)): ?>
+                        <?php if (!empty($list)): ?>
                             <?php foreach ($list as $k => $v): if ($k >= 10) break; ?>
                                 <li>
                                     <span><?=($k + 1)?></span>
@@ -38,7 +70,7 @@
                         <?php endif; ?>
                     </ol>
                 </div>
-            <?php endfor; ?>
+            <?php endforeach; ?>
         </div>
     </section>
 </div>

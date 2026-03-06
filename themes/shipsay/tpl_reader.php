@@ -14,11 +14,23 @@ $index_url_safe = isset($index_url) && $index_url ? $index_url : $info_url;
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('reader');
+if (trim($seo_title) === '' || trim($seo_title) === SITE_NAME) {
+    $seo_title = $chaptername . '_' . $articlename . '_' . SITE_NAME;
+}
+if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
+    $seo_keywords = $articlename . ',' . $chaptername . ',' . SITE_NAME . ',在线阅读';
+}
+if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
+    $seo_description = '《' . $articlename . '》最新章节：' . $chaptername . '，作者：' . $author . '。';
+}
 $pageTitle = $seo_title;
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
 <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
+<meta name="robots" content="all">
+<meta name="bingbot" content="all">
+<meta name="baiduspider" content="all">
 <meta http-equiv="Cache-Control" content="no-transform">
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <meta name="applicable-device" content="pc,mobile">
@@ -58,18 +70,20 @@ $pageTitle = $seo_title;
                     </div>
                 </div>
             </div>
-            <div class="text_title">
-                <h1 class="style_h1"><?=$chaptername?></h1>
-                <div class="text_info">
-                    <span><a href="<?=$info_url?>"><i class="fa fa-book"> <?=$articlename?></i></a></span>
-                    <span><a href="<?=$author_url?>"><i class="fa fa-user-circle-o"> <?=$author?></i></a></span>
-                    <span><i class="fa fa-list-ol"> <?=$chapterwords?> 字</i></span>
-                    <span><i class="fa fa-clock-o"> <?=Text::ss_lastupdate($lastupdate)?></i></span>
+            <div class="reader-page-head">
+                <div class="text_title">
+                    <h1 class="style_h1"><?=$chaptername?></h1>
+                    <div class="text_info">
+                        <span><a href="<?=$info_url?>"><i class="fa fa-book"> <?=$articlename?></i></a></span>
+                        <span><a href="<?=$author_url?>"><i class="fa fa-user-circle-o"> <?=$author?></i></a></span>
+                        <span><i class="fa fa-list-ol"> <?=$chapterwords?> 字</i></span>
+                        <span><i class="fa fa-clock-o"> <?=Text::ss_lastupdate($lastupdate)?></i></span>
+                    </div>
                 </div>
+                <?php if ($max_pid > 1): ?>
+                <div class="page-info reader-page-info">当前第 <?=$now_pid?> 页 / 共 <?=$max_pid?> 页</div>
+                <?php endif; ?>
             </div>
-            <?php if ($max_pid > 1): ?>
-            <div class="page-info" style="margin-bottom:15px;">当前第 <?=$now_pid?> 页 / 共 <?=$max_pid?> 页</div>
-            <?php endif; ?>
             <article id="article" class="content"><?=$rico_content?></article>
             <div class="s_gray tc"><script>tips('<?=$articlename?>');</script></div>
         </section>
