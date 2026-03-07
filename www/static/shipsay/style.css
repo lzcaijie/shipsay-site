@@ -3507,3 +3507,84 @@ kbd input {
         color:#666;
     }
 }
+
+/* shipsay v5.2.14 mobile finish: list cover alignment + detail/index meta tighten */
+@media (max-width:768px){
+    .side_commend.side_commend_width > ul.flex > li,
+    .store_left > .side_commend > ul.flex > li{
+        display:flex;
+        align-items:flex-start;
+        gap:10px;
+    }
+    .side_commend.side_commend_width .img_span,
+    .store_left > .side_commend .img_span{
+        flex:0 0 86px;
+        width:86px;
+        margin-right:0;
+    }
+    .side_commend.side_commend_width .img_span a,
+    .store_left > .side_commend .img_span a{
+        display:block;
+        width:86px;
+        height:110px;
+        overflow:hidden;
+    }
+    .side_commend.side_commend_width img,
+    .store_left > .side_commend img{
+        display:block;
+        width:86px;
+        height:110px;
+        object-fit:cover;
+        object-position:center top;
+    }
+    .side_commend.side_commend_width .img_span span,
+    .store_left > .side_commend .img_span span{
+        left:0;
+        width:86px;
+    }
+    .side_commend.side_commend_width > ul.flex > li > .w100,
+    .store_left > .side_commend > ul.flex > li > .w100{
+        flex:1 1 0;
+        width:auto;
+        min-width:0;
+    }
+    .side_commend.side_commend_width .indent,
+    .store_left > .side_commend .indent{
+        display:-webkit-box;
+        -webkit-box-orient:vertical;
+        -webkit-line-clamp:1;
+        overflow:hidden;
+    }
+
+    .novel-meta .meta-pairs{
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:6px 8px;
+        margin:0 0 6px;
+        line-height:1.46;
+    }
+    .novel-meta .meta-pairs span{
+        display:grid;
+        grid-template-columns:auto minmax(0,1fr);
+        align-items:baseline;
+        column-gap:2px;
+        min-width:0;
+        margin:0;
+        white-space:normal;
+        overflow:visible;
+    }
+    .novel-meta .meta-pairs .meta-label{
+        margin:0;
+        white-space:nowrap;
+    }
+    .novel-meta .meta-pairs .meta-value,
+    .novel-meta .meta-pairs span a,
+    .novel-meta .meta-pairs span em{
+        min-width:0;
+        margin:0;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+        justify-self:start;
+    }
+}
