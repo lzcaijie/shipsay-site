@@ -102,8 +102,8 @@ $info_book_ld = [
                     <span><i class="meta-label">状态：</i><b class="meta-value"><?=$status_html?></b></span>
                     <span><i class="meta-label">字数：</i><b class="meta-value"><?=$words_html?>万</b></span>
                 </p>
-                <p>最新章节：<a href="<?=$last_url_attr?>"><?=$lastchapter_html?></a> <em class="meta-time"><?=$lastupdate_cn_html?></em></p>
-                <div class="book-actions">
+                <p class="meta-latest"><i class="meta-label">最新章节：</i><a href="<?=$last_url_attr?>"><?=$lastchapter_html?></a><em class="meta-time"><?=$lastupdate_cn_html?></em></p>
+                <div class="book-actions book-actions-wide">
                     <a href="<?=$first_url_attr?>"><i class="fa fa-play-circle"></i> 开始阅读</a>
                     <a href="<?=$index_url_attr?>"><i class="fa fa-list"></i> 查看目录</a>
                 </div>

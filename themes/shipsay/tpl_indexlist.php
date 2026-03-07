@@ -85,7 +85,7 @@ $indexlist_breadcrumb_ld = [
                     <span><i class="meta-label">状态：</i><b class="meta-value"><?=$status_html?></b></span>
                     <span><i class="meta-label">字数：</i><b class="meta-value"><?=$words_html?>万</b></span>
                 </p>
-                <p>最新章节：<a href="<?=$last_url_attr?>"><?=$lastchapter_html?></a> <em class="meta-time"><?=$lastupdate_cn_html?></em></p>
+                <p class="meta-latest"><i class="meta-label">最新章节：</i><a href="<?=$last_url_attr?>"><?=$lastchapter_html?></a><em class="meta-time"><?=$lastupdate_cn_html?></em></p>
                 <p>总章节：<?=$chapters_safe?>章</p>
             </div>
         </div>
