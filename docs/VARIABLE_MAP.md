@@ -33,16 +33,6 @@
 
 确认后再写进标准；不确定时宁可暂缺，也不能写错。
 
-### 1.4 先区分“变量问题”还是“CSS/结构问题”
-
-像这轮手机端带图卡片、footer 居中、分类分页块这类问题，默认先归类为 **CSS/模板结构问题**，不要误判成变量链路问题。
-
-判断原则：
-- 程序输出的链接、页码、按钮文案已正确，只是显示错位 → 先查 CSS
-- 模板结构存在，但按钮/分页/信息区排列异常 → 先查 CSS 与模板结构
-- 只有在链接目标、页码数据、章节范围、SEO 文案来源本身错误时，才进入变量链路排查
-- 像封面尺寸、卡片间距、作者/字数/更新时间是否同一行、详情页按钮区与书封区是否协调，这些都属于 CSS 节奏问题，不要误判成变量缺失
-
 ---
 
 ## 2. 后台配置变量（`www/caijie/base/*`）
@@ -488,37 +478,3 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - `$recentread_page_title` / `$recentread_page_description`：阅读记录页本地标题与描述兜底。
 - `$recent_info_url_safe` / `$recent_author_url_safe`：阅读记录页猜你喜欢列表的安全链接。
 - `$recent_articlename_safe` / `$recent_author_safe`：阅读记录页猜你喜欢列表的安全展示文案。
-
-### 本轮补充：手机端带图区细调说明（2026-03-07）
-- 本轮首页 / 分类页 / 详情页 / 目录页的“图片周围文字适配”，本质属于 **CSS 排版层调整**。
-- 本轮未新增新的 app 层核心变量。
-- `novel-basic-info`、`side_commend`、`searchresult`、`sortvisit` 的这轮改动，应优先理解为“现有模板结构上的移动端排版标准收口”，而不是数据准备链路变化。
-
-
-### 本轮补充：图文邻接区继续适配（2026-03-07）
-- 本轮首页 / 分类页 / 首页分类首卡 / 详情页 / 目录页继续做的是 **图片周围文字适配**。
-- 这轮问题继续归类为 **CSS 排版层收口**，不是 app 层变量链路变化。
-- `side_commend`、`searchresult`、`sortvisit`、`novel-basic-info` 的本轮调整，重点是封面列宽、文字列节奏、作者/分类/状态/字数折行策略。
-- 尤其是 `novel-meta p:first-of-type` 的收口，属于“现有模板结构上的手机端折行优化”，不是新增数据字段。
-
-
-## 2026-03-07 cg_patch_007
-- 本轮仍为 `www/static/shipsay/style.css` 的移动端布局收口。
-- 未新增模板变量，未修改 PHP 数据变量映射。
-
-
-## 2026-03-07 手机端排序相关结构说明
-- 本轮未新增后端变量。
-- 变更属于模板结构层与 CSS 呈现层：
-  - `card-author`
-  - `card-stats`
-  - `sortvisit-feature-copy`
-  - `sortvisit-feature-title`
-  - `sortvisit-feature-author`
-  - `sortvisit-feature-intro`
-  - `novel-meta-grid`
-  - `meta-pair`
-  - `novel-latest-row`
-  - `novel-latest-time`
-  - `novel-total-row`
-- 上述均为前端结构类名，不涉及新的 PHP 数据字段。
