@@ -2956,3 +2956,164 @@ kbd input {
         line-height:1.65;
     }
 }
+
+
+/* shipsay v5.2.8 mobile cover rhythm tune */
+@media (max-width:768px){
+    .side_commend,
+    .lastupdate,
+    aside,
+    .section,
+    .section-info-block{
+        padding-left:10px;
+        padding-right:10px;
+    }
+    .side_commend li,
+    .searchresult,
+    #tempBookcase ul li{
+        grid-template-columns:82px minmax(0,1fr);
+        gap:12px;
+        padding:10px 0 12px;
+        min-height:110px;
+    }
+    .img_span{
+        flex:0 0 82px;
+        width:82px;
+    }
+    .img_span a{
+        display:block;
+        width:82px;
+        height:110px;
+        overflow:hidden;
+        border-radius:4px;
+        background:#f0f0f0;
+    }
+    .side_commend img,
+    .img_span img{
+        display:block;
+        width:82px;
+        height:110px;
+        object-fit:cover;
+        object-position:center top;
+    }
+    .img_span span{
+        width:82px;
+        min-height:18px;
+        line-height:1.2;
+        padding:2px 4px;
+    }
+    .side_commend li > .w100,
+    .searchresult > div:last-child,
+    #tempBookcase .bookcase-items{
+        min-height:110px;
+    }
+    .side_commend h2,
+    .searchresult h3,
+    #tempBookcase .bookcase-items p:first-child a{
+        margin:0 0 6px;
+        font-size:18px;
+        line-height:1.36;
+    }
+    .side_commend .indent,
+    .searchresult .searchresult_p{
+        -webkit-line-clamp:2;
+        margin:0 0 8px;
+        font-size:15px;
+        line-height:1.58;
+    }
+    .side_commend .li_bottom{
+        gap:8px;
+    }
+    .side_commend .li_bottom > a,
+    .side_commend .li_bottom > div{
+        min-width:0;
+    }
+    .side_commend .li_bottom > div{
+        gap:5px;
+    }
+    .side_commend .li_bottom > a i,
+    .side_commend .li_bottom > div em{
+        line-height:1.3;
+    }
+    .sortvisit > ul > div{
+        grid-template-columns:82px minmax(0,1fr);
+        gap:12px;
+        min-height:110px;
+        padding:8px 0 10px;
+    }
+    .sortvisit > ul > div > a:first-child{
+        width:82px;
+    }
+    .sortvisit > ul > div > a:first-child,
+    .sortvisit > ul > div img{
+        width:82px;
+        height:110px;
+        border-radius:4px;
+    }
+    .sortvisit > ul > div img{
+        object-fit:cover;
+        object-position:center top;
+    }
+    .sortvisit > ul > div p{
+        max-height:5.1em;
+        line-height:1.58;
+    }
+    .sortvisit > ul > div p > a{
+        margin:0 0 4px;
+        font-size:17px;
+        line-height:1.36;
+    }
+    .sortvisit > ul > div p > i{
+        margin:0 0 5px;
+    }
+    .novel-basic-info{
+        grid-template-columns:96px minmax(0,1fr);
+        gap:12px;
+        padding:14px 12px;
+    }
+    .novel-cover{
+        width:96px;
+    }
+    .novel-cover img{
+        display:block;
+        width:96px;
+        height:128px;
+        object-fit:cover;
+        object-position:center top;
+        border-radius:4px;
+    }
+    .novel-meta h1{
+        margin-bottom:8px;
+        font-size:20px;
+        line-height:1.35;
+    }
+    .novel-meta p{
+        margin-bottom:6px;
+        line-height:1.6;
+    }
+    .novel-meta p:first-of-type{
+        gap:4px 10px;
+        margin-bottom:8px;
+    }
+    .novel-meta p:first-of-type span{
+        line-height:1.45;
+    }
+    .novel-meta p:nth-of-type(2){
+        gap:4px 8px;
+    }
+    .book-actions,
+    .catalog-actions{
+        gap:8px;
+        margin-top:10px;
+    }
+    .book-actions a,
+    .catalog-actions a{
+        min-height:42px;
+        padding:0 8px;
+        font-size:16px;
+    }
+    .catalog-header{
+        gap:12px;
+        margin-bottom:16px;
+    }
+}
