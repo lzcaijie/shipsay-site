@@ -3459,3 +3459,51 @@ kbd input {
         white-space:nowrap;
     }
 }
+
+
+/* shipsay v5.2.13 mobile object-position + meta compact */
+@media (max-width:768px){
+    .side_commend.side_commend_width img,
+    .store_left > .side_commend img{
+        object-position:left top;
+    }
+
+    .novel-meta .meta-pairs{
+        display:flex;
+        flex-wrap:wrap;
+        gap:6px 14px;
+        margin:0 0 6px;
+    }
+    .novel-meta .meta-pairs span{
+        display:inline-flex;
+        align-items:baseline;
+        justify-content:flex-start;
+        gap:2px;
+        min-width:0;
+        margin:0;
+        flex:0 1 auto;
+        white-space:nowrap;
+        overflow:hidden;
+    }
+    .novel-meta .meta-pairs .meta-label{
+        flex:none;
+        margin:0;
+        color:#555;
+        font-style:normal;
+        white-space:nowrap;
+    }
+    .novel-meta .meta-pairs .meta-value{
+        flex:none;
+        min-width:0;
+        margin:0;
+        color:#4a90e2;
+        font-style:normal;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+    }
+    .novel-meta .meta-pairs span:nth-child(3) .meta-value,
+    .novel-meta .meta-pairs span:nth-child(4) .meta-value{
+        color:#666;
+    }
+}
