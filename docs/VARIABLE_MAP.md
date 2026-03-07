@@ -488,3 +488,8 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - `$recentread_page_title` / `$recentread_page_description`：阅读记录页本地标题与描述兜底。
 - `$recent_info_url_safe` / `$recent_author_url_safe`：阅读记录页猜你喜欢列表的安全链接。
 - `$recent_articlename_safe` / `$recent_author_safe`：阅读记录页猜你喜欢列表的安全展示文案。
+
+### 本轮补充：手机端带图区细调说明（2026-03-07）
+- 本轮首页 / 分类页 / 详情页 / 目录页的“图片周围文字适配”，本质属于 **CSS 排版层调整**。
+- 本轮未新增新的 app 层核心变量。
+- `novel-basic-info`、`side_commend`、`searchresult`、`sortvisit` 的这轮改动，应优先理解为“现有模板结构上的移动端排版标准收口”，而不是数据准备链路变化。
