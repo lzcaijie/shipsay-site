@@ -433,9 +433,7 @@ span[class=full]{background:rgba(191,44,36, .75);}
 	line-height:38px;
 }
 
-/* .novel_info_title > *:nth-child(4),
-.novel_info_title > *:nth-child(3){
-*/
+/* .novel_info_title > *:nth-child(4), .novel_info_title > *:nth-child(3) */
 .novel_info_title p{
 	display:flex;
 	flex-flow:wrap;
@@ -1999,5 +1997,254 @@ kbd input {
     }
     .read_bg .text_title{
         padding-right:18px;
+    }
+}
+
+
+/* shipsay v5.2 mobile card standard */
+@media (max-width:768px){
+    .container{
+        display:block;
+        padding:0 8px;
+    }
+    .section,
+    .section_mark,
+    .side_commend,
+    .lastupdate,
+    aside{
+        padding:10px 12px;
+    }
+    .title{
+        margin-bottom:4px;
+        padding-bottom:10px;
+    }
+    .side_commend ul.flex,
+    #tempBookcase ul{
+        display:block;
+    }
+    .side_commend li,
+    .searchresult,
+    #tempBookcase ul li,
+    .section_mark li,
+    .sortvisit > ul > div{
+        display:flex !important;
+        align-items:flex-start;
+        gap:12px;
+        width:100% !important;
+        margin:0 0 14px 0 !important;
+        padding:12px 0 !important;
+        min-height:96px;
+    }
+    .side_commend li:last-child,
+    .searchresult:last-child,
+    #tempBookcase ul li:last-child,
+    .section_mark li:last-child{
+        margin-bottom:0 !important;
+    }
+    .img_span,
+    .sortvisit > ul > div > a:first-child{
+        flex:0 0 72px;
+        width:72px;
+        margin-right:0;
+    }
+    .img_span a,
+    .sortvisit > ul > div > a:first-child{
+        display:block;
+        width:72px;
+        height:96px;
+        overflow:hidden;
+        border-radius:4px;
+    }
+    .section_mark img,
+    .side_commend img,
+    .img_span img,
+    .sortvisit > ul > div img{
+        width:72px !important;
+        height:96px !important;
+        margin:0 !important;
+        object-fit:cover;
+        box-shadow:none;
+    }
+    .img_span span{
+        width:72px;
+        min-height:18px;
+        height:auto;
+        top:auto;
+        bottom:0;
+        padding:2px 4px;
+        font-size:10px;
+        line-height:1.2;
+        text-align:center;
+    }
+    .side_commend li > .w100,
+    .searchresult > div:last-child,
+    #tempBookcase .bookcase-items,
+    .sortvisit > ul > div p{
+        flex:1 1 auto;
+        width:auto !important;
+        min-width:0;
+    }
+    .side_commend li > .w100,
+    .searchresult > div:last-child,
+    #tempBookcase .bookcase-items{
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-start;
+    }
+    .side_commend h2,
+    .searchresult h3,
+    #tempBookcase .bookcase-items p:first-child a,
+    .sortvisit > ul > div p > a{
+        display:-webkit-box;
+        -webkit-box-orient:vertical;
+        -webkit-line-clamp:2;
+        overflow:hidden;
+        height:auto;
+        margin:0 0 6px;
+        line-height:1.45;
+        word-break:break-all;
+    }
+    .side_commend .indent,
+    .searchresult .searchresult_p{
+        text-indent:0;
+        display:-webkit-box;
+        -webkit-box-orient:vertical;
+        -webkit-line-clamp:2;
+        overflow:hidden;
+        height:auto;
+        min-height:0;
+        margin:0 0 8px;
+        line-height:1.7;
+    }
+    .searchresult h3,
+    .side_commend h2{
+        font-size:16px;
+        height:auto;
+    }
+    .searchresult p,
+    .bookcase-items p{
+        height:auto;
+        line-height:1.6;
+        margin:0 0 6px;
+        overflow:hidden;
+    }
+    .searchresult > div:last-child > p:last-child{
+        margin-top:auto;
+    }
+    .searchresult > div:last-child > p:last-child a{
+        display:block;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+    }
+    .side_commend .li_bottom{
+        margin-top:auto;
+        align-items:flex-start;
+        gap:6px 10px;
+    }
+    .side_commend .li_bottom > div{
+        width:100%;
+        margin-left:0;
+        display:flex;
+        flex-wrap:wrap;
+        gap:6px;
+    }
+    .side_commend em{
+        margin-right:0;
+    }
+    .sortvisit > ul{
+        padding:10px 0 0;
+    }
+    .sortvisit > ul > div{
+        height:auto;
+        line-height:1.65;
+    }
+    .sortvisit > ul > div p{
+        display:block;
+        max-height:4.95em;
+        overflow:hidden;
+        margin:0;
+    }
+    .sortvisit > ul > div p > a{
+        font-size:15px;
+    }
+    .sortvisit ul li{
+        height:40px;
+        line-height:40px;
+    }
+    .popular li{
+        gap:10px;
+        min-height:42px;
+        align-items:center;
+    }
+    .popular li *:first-child,
+    .popular li *:last-child{
+        min-width:0;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+    }
+    .popular li *:first-child{
+        flex:1 1 auto;
+    }
+    .popular li *:last-child{
+        flex:0 0 34%;
+    }
+    #tempBookcase p.title{
+        line-height:1.6;
+    }
+    #tempBookcase .bookcase-items p:first-child span{
+        display:block;
+        margin-top:4px;
+    }
+    #tempBookcase .bookcase-items p:last-child{
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+        margin-top:auto;
+    }
+    #tempBookcase .bookcase-items .bookcase_btn{
+        flex:1 1 calc(50% - 4px);
+        margin:0;
+        min-width:0;
+        text-align:center;
+    }
+    .novel-basic-info{
+        padding:16px 12px;
+        align-items:flex-start;
+    }
+    .novel-cover{
+        margin-right:12px;
+        flex:0 0 88px;
+    }
+    .novel-cover img{
+        width:88px;
+        height:123px;
+    }
+    .novel-meta h1{
+        font-size:22px;
+        line-height:1.35;
+    }
+    .novel-meta p{
+        line-height:1.75;
+        font-size:13px;
+    }
+    .novel-meta p span{
+        display:inline-flex;
+        margin-right:10px;
+        margin-bottom:4px;
+    }
+    .book-actions{
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
+    }
+    .book-actions a{
+        width:100%;
+        min-width:0;
+        padding:0 10px;
+    }
+    .catalog-header.info-catalog-header{
+        align-items:flex-start;
     }
 }
