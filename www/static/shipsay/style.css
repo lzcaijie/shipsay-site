@@ -3093,3 +3093,94 @@ kbd input {
         max-height:3.12em;
     }
 }
+
+
+/* shipsay v5.2.10 mobile one-line summary + detail meta tighten */
+@media (max-width:768px){
+    .side_commend.side_commend_width .indent,
+    .store_left > .side_commend .indent{
+        -webkit-line-clamp:1;
+        margin:0 0 7px;
+        min-height:1.62em;
+        max-height:1.62em;
+        line-height:1.62;
+    }
+    .side_commend.side_commend_width .li_bottom,
+    .store_left > .side_commend .li_bottom{
+        gap:8px;
+    }
+    .side_commend.side_commend_width .li_bottom > a i,
+    .store_left > .side_commend .li_bottom > a i{
+        font-size:14px;
+    }
+    .sortvisit > ul > div{
+        min-height:98px;
+        padding:7px 0 10px;
+    }
+    .sortvisit > ul > div p{
+        line-height:1.5;
+    }
+    .sortvisit > ul > div p > .sort-desc{
+        -webkit-line-clamp:1;
+        line-height:1.5;
+        max-height:1.5em;
+    }
+    .novel-basic-info{
+        align-items:start;
+    }
+    .novel-meta{
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-start;
+        min-width:0;
+    }
+    .novel-meta h1{
+        margin-bottom:8px;
+        font-size:19px;
+        line-height:1.36;
+    }
+    .novel-meta .meta-pairs{
+        gap:4px 10px;
+        margin-bottom:6px;
+    }
+    .novel-meta .meta-pairs span{
+        line-height:1.46;
+    }
+    .novel-meta .meta-latest{
+        display:flex;
+        flex-wrap:wrap;
+        align-items:baseline;
+        gap:3px 6px;
+        margin-bottom:0;
+        line-height:1.5;
+    }
+    .novel-meta .meta-latest .meta-label{
+        white-space:nowrap;
+    }
+    .novel-meta .meta-latest a{
+        flex:1 1 100%;
+        min-width:0;
+        display:block;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+        line-height:1.5;
+    }
+    .novel-meta .meta-latest .meta-time{
+        margin-left:0;
+        white-space:nowrap;
+    }
+    .book-actions.book-actions-wide{
+        margin-left:calc(-1 * (92px + 16px));
+        width:calc(100% + 92px + 16px);
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:10px;
+        margin-top:10px;
+    }
+    .book-actions.book-actions-wide a{
+        width:100%;
+        min-height:44px;
+        padding:0 10px;
+    }
+}
