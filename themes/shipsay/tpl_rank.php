@@ -34,9 +34,8 @@ if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
     $seo_description = $current_title . '榜单，尽在' . SITE_NAME . '。';
 }
 $rank_url_safe = (isset($uri) && $uri) ? $uri : $rank_base . $current_query . '/';
+$site_home_url_safe = !empty($site_url) ? $site_url : '/';
 $current_title_html = htmlspecialchars($current_title, ENT_QUOTES, 'UTF-8');
-$rank_url_attr = htmlspecialchars($rank_url_safe, ENT_QUOTES, 'UTF-8');
-$rank_base_attr = htmlspecialchars($rank_base, ENT_QUOTES, 'UTF-8');
 $rank_ld = [
     '@context' => 'https://schema.org',
     '@type' => 'BreadcrumbList',
@@ -53,44 +52,51 @@ $rank_ld = [
 <meta http-equiv="Cache-Control" content="no-transform">
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <meta name="applicable-device" content="pc,mobile">
-<meta name="mobile-agent" content="format=html5;url=<?=$rank_url_attr?>">
-<link rel="canonical" href="<?=$rank_url_attr?>">
+<meta name="mobile-agent" content="format=html5;url=<?=htmlspecialchars($rank_url_safe, ENT_QUOTES, 'UTF-8')?>">
+<link rel="canonical" href="<?=htmlspecialchars($rank_url_safe, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:type" content="website">
 <meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-<meta property="og:url" content="<?=$rank_url_attr?>">
+<meta property="og:url" content="<?=htmlspecialchars($rank_url_safe, ENT_QUOTES, 'UTF-8')?>">
 <script type="application/ld+json"><?=json_encode($rank_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container">
     <section class="section">
         <div class="bread_crumbs">
-            <a href="/">首页</a> &gt; <span><?=$current_title_html?></span>
+            <a href="<?=htmlspecialchars($site_home_url_safe, ENT_QUOTES, 'UTF-8')?>">首页</a> &gt; <span><?=$current_title_html?></span>
         </div>
         <div class="rank-page-head">
             <h1><?=$current_title_html?></h1>
         </div>
         <div class="rank-tabs">
             <?php foreach ($title_arr as $key => $label): ?>
-                <?php $rank_tab_url = htmlspecialchars($rank_base . $key . '/', ENT_QUOTES, 'UTF-8'); $label_html = htmlspecialchars($label, ENT_QUOTES, 'UTF-8'); ?>
-                <a href="<?=$rank_tab_url?>" class="<?=$current_query === $key ? 'active' : ''?>"><?=$label_html?></a>
+                <?php $tab_url_attr = htmlspecialchars($rank_base . $key . '/', ENT_QUOTES, 'UTF-8'); $tab_label_html = htmlspecialchars($label, ENT_QUOTES, 'UTF-8'); ?>
+                <a href="<?=$tab_url_attr?>" class="<?=$current_query === $key ? 'active' : ''?>"><?=$tab_label_html?></a>
             <?php endforeach; ?>
         </div>
         <ol class="rank-page-list">
             <?php if (!empty($articlerows) && is_array($articlerows)): ?>
                 <?php foreach ($articlerows as $k => $v): ?>
+                    <?php
+                    $info_url_attr = htmlspecialchars((string)$v['info_url'], ENT_QUOTES, 'UTF-8');
+                    $title_html = htmlspecialchars((string)$v['articlename'], ENT_QUOTES, 'UTF-8');
+                    $author_url_attr = htmlspecialchars((string)$v['author_url'], ENT_QUOTES, 'UTF-8');
+                    $author_html = htmlspecialchars((string)$v['author'], ENT_QUOTES, 'UTF-8');
+                    $sort_html = htmlspecialchars((string)$v['sortname_2'], ENT_QUOTES, 'UTF-8');
+                    $words_w_safe = intval($v['words_w']);
+                    $intro_html = htmlspecialchars((string)$v['intro_des'], ENT_QUOTES, 'UTF-8');
+                    ?>
                     <li>
                         <span class="rank-num"><?=($k + 1)?></span>
                         <div class="rank-main">
-                            <?php $info_url_attr = htmlspecialchars($v['info_url'], ENT_QUOTES, 'UTF-8'); $bookname_html = htmlspecialchars($v['articlename'], ENT_QUOTES, 'UTF-8'); ?>
-                            <a href="<?=$info_url_attr?>" class="rank-bookname"><?=$bookname_html?></a>
+                            <a href="<?=$info_url_attr?>" class="rank-bookname"><?=$title_html?></a>
                             <div class="rank-meta">
-                                <?php $author_url_attr = htmlspecialchars($v['author_url'], ENT_QUOTES, 'UTF-8'); $author_html = htmlspecialchars($v['author'], ENT_QUOTES, 'UTF-8'); ?>
                                 <a href="<?=$author_url_attr?>"><?=$author_html?></a>
-                                <?php if (!empty($v['sortname_2'])): ?><em><?=htmlspecialchars($v['sortname_2'], ENT_QUOTES, 'UTF-8')?></em><?php endif; ?>
-                                <em><?=$v['words_w']?>万字</em>
+                                <?php if (!empty($v['sortname_2'])): ?><em><?=$sort_html?></em><?php endif; ?>
+                                <em><?=$words_w_safe?>万字</em>
                                 <em><?=Text::ss_lastupdate($v['lastupdate'])?></em>
                             </div>
-                            <p><?=htmlspecialchars($v['intro_des'], ENT_QUOTES, 'UTF-8')?></p>
+                            <p><?=$intro_html?></p>
                         </div>
                     </li>
                 <?php endforeach; ?>

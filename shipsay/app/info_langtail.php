@@ -1,8 +1,7 @@
 <?php
 
 $langtail_articleid = $langtail_sourceid = $matches[1];
-$index_url = Url::index_url($langtail_articleid,1,true);
-if(!file_exists(__THEME_DIR__.'/tpl_info.php')) header('Location:'.$index_url);
+if(!file_exists(__THEME_DIR__.'/tpl_info.php')) Url::ss_errpage();
 
 // 长尾表 langid 使用的是长尾自身 id；sourceid 存的是真实 articleid。
 if($is_multiple) $langtail_sourceid = ss_sourceid($langtail_sourceid);
@@ -14,6 +13,8 @@ if(!is_array($lang_res) || empty($lang_res['sourceid'])) Url::ss_errpage();
 // 否则开启 is_acode=1 时长尾详情会直接查空。
 $sourceid = intval($lang_res['sourceid']);
 $articleid = $is_multiple ? ss_newid($sourceid) : $sourceid;
+// 长尾详情页的“查看目录/全部目录”应跳真实书籍目录，不走长尾伪目录。
+$index_url = Url::index_url($articleid);
 $articlename = $lang_res['langname'];
 $sourcename = $lang_res['sourcename'];
 
@@ -89,7 +90,7 @@ $lastchapter=$chapterrows[$chapters-1]['cname'];
 $last_url=$chapterrows[$chapters-1]['cid_url'];
 $lastarr=array_reverse(array_slice($chapterrows,-12,12));
 $lastchapter_arr=$lastarr;
-$preview_chapters=array_slice($chapterrows,0,50);
+$preview_chapters=array_reverse(array_slice($chapterrows,-50,50));
 if($count_visit)require_once __ROOT_DIR__.'/shipsay/include/articlevisit.php';
 $lm_ts=$lastupdate_stamp-8*60*60;
 $lm_gmt=date('D, d M Y H:i:s',$lm_ts).' GMT';
