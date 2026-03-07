@@ -7,6 +7,13 @@ $site_sync_secret = 'b44fe3186dc85178ad7756d97dc8e058ebd02f569758a467385ed6c80c1
 
 // 允许访问的总控服务器公网IP（allow_ips；每行一个 IP）
 $site_sync_allow_ips = [
+  '100.101.89.1',
+  '100.116.86.8',
+  '100.105.218.56',
+  '100.127.27.65',
+  '100.82.58.26',
+  '100.94.94.6',
+  '100.122.231.62',
   '216.250.254.115',
   '192.30.243.54',
   '198.135.52.104',
@@ -178,4 +185,4 @@ $site_sync_nonce_ttl = 600;
 $site_sync_sign_readonly = 0;
 
 // 可选：分站侧日志
-$site_sync_log = dirname(__DIR__, 2) . '/shipsay/configs/_bak/site_sync.log';
+$site_sync_log = '/www/wwwroot/fz1.112book.com/shipsay/configs/_bak/site_sync.log';
