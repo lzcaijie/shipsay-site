@@ -2327,3 +2327,302 @@ kbd input {
         margin:0;
     }
 }
+
+
+/* shipsay v5.2.3 mobile micro layout tune */
+@media (max-width:768px){
+    .section,
+    .section_mark,
+    .side_commend,
+    .lastupdate,
+    aside{
+        padding:10px 10px 8px;
+    }
+    .side_commend li,
+    .searchresult,
+    #tempBookcase ul li,
+    .section_mark li,
+    .sortvisit > ul > div{
+        gap:12px;
+        padding:12px 0;
+        min-height:98px;
+    }
+    .img_span,
+    .sortvisit > ul > div > a:first-child{
+        flex:0 0 74px;
+        width:74px;
+    }
+    .img_span a,
+    .sortvisit > ul > div > a:first-child{
+        width:74px;
+        height:98px;
+    }
+    .section_mark img,
+    .side_commend img,
+    .img_span img,
+    .sortvisit > ul > div img{
+        width:74px;
+        height:98px;
+    }
+    .side_commend li > .w100,
+    .searchresult > div:last-child,
+    #tempBookcase .bookcase-items{
+        min-height:98px;
+    }
+    .side_commend h2,
+    .searchresult h3,
+    #tempBookcase .bookcase-items p:first-child a,
+    .sortvisit > ul > div p > a{
+        margin-bottom:6px;
+        line-height:1.4;
+    }
+    .side_commend .indent,
+    .searchresult .searchresult_p{
+        margin-bottom:8px;
+        line-height:1.68;
+    }
+    .side_commend .li_bottom{
+        flex-wrap:wrap;
+        align-items:center;
+        gap:6px 8px;
+    }
+    .side_commend .li_bottom > a{
+        flex:1 1 auto;
+        max-width:60%;
+    }
+    .side_commend .li_bottom > div{
+        flex:0 0 auto;
+        width:auto;
+        justify-content:flex-end;
+        gap:5px;
+    }
+    .side_commend .li_bottom > a i{
+        max-width:100%;
+    }
+    .sortvisit > ul{
+        padding-top:8px;
+    }
+    .sortvisit > ul > div{
+        align-items:center;
+        margin-bottom:8px;
+    }
+    .sortvisit > ul > div p{
+        max-height:5.2em;
+        line-height:1.6;
+    }
+    .sortvisit > ul > div p > a{
+        font-size:16px;
+    }
+    .popular li{
+        gap:8px;
+        min-height:40px;
+    }
+    .novel-basic-info{
+        gap:14px;
+        padding:12px 12px 10px;
+    }
+    .novel-cover{
+        flex:0 0 84px;
+    }
+    .novel-cover img{
+        width:84px;
+        height:112px;
+    }
+    .novel-meta h1{
+        font-size:21px;
+        margin-bottom:7px;
+    }
+    .novel-meta p{
+        line-height:1.6;
+        margin-bottom:5px;
+    }
+    .novel-meta p span{
+        margin-right:12px;
+        margin-bottom:3px;
+    }
+    .novel-meta .meta-time{
+        margin-left:0;
+    }
+    .book-actions{
+        margin-top:10px;
+    }
+    .book-actions,
+    .catalog-actions{
+        gap:10px;
+    }
+    .book-actions a,
+    .catalog-actions a{
+        min-height:42px;
+    }
+    .catalog-header,
+    .catalog-header.info-catalog-header{
+        gap:12px;
+    }
+    .catalog-header{
+        margin-bottom:16px;
+    }
+    .catalog-header .page-info{
+        margin-top:6px;
+        line-height:1.6;
+    }
+}
+
+/* shipsay v5.2.5 image-adjacent text tune */
+@media (max-width:768px){
+    .side_commend li,
+    .searchresult,
+    #tempBookcase ul li{
+        gap:10px;
+        padding:12px 0 11px;
+    }
+    .img_span{
+        flex:0 0 70px;
+        width:70px;
+    }
+    .img_span a{
+        width:70px;
+        height:94px;
+    }
+    .section_mark img,
+    .side_commend img,
+    .img_span img{
+        width:70px;
+        height:94px;
+    }
+    .img_span span{
+        width:70px;
+        padding:2px 3px;
+    }
+    .side_commend li > .w100,
+    .searchresult > div:last-child,
+    #tempBookcase .bookcase-items{
+        min-height:94px;
+        padding-top:1px;
+    }
+    .side_commend h2,
+    .searchresult h3,
+    #tempBookcase .bookcase-items p:first-child a{
+        margin-bottom:5px;
+        font-size:16px;
+        line-height:1.42;
+    }
+    .side_commend .indent,
+    .searchresult .searchresult_p{
+        -webkit-line-clamp:3;
+        margin-bottom:7px;
+        line-height:1.58;
+    }
+    .side_commend .li_bottom{
+        flex-wrap:nowrap;
+        align-items:center;
+        gap:8px;
+    }
+    .side_commend .li_bottom > a{
+        flex:1 1 auto;
+        min-width:0;
+        max-width:none;
+        display:flex;
+        align-items:center;
+    }
+    .side_commend .li_bottom > a i{
+        display:inline-flex;
+        align-items:center;
+        gap:4px;
+        min-width:0;
+        max-width:100%;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+    }
+    .side_commend .li_bottom > div{
+        flex:0 0 auto;
+        width:auto;
+        display:flex;
+        align-items:center;
+        gap:6px;
+    }
+    .side_commend .li_bottom > div em{
+        display:inline-flex;
+        align-items:center;
+        line-height:1.4;
+    }
+    .sortvisit > ul > div{
+        gap:10px;
+        min-height:94px;
+        padding:4px 0 10px;
+    }
+    .sortvisit > ul > div > a:first-child{
+        flex:0 0 70px;
+        width:70px;
+    }
+    .sortvisit > ul > div > a:first-child,
+    .sortvisit > ul > div img{
+        height:94px;
+    }
+    .sortvisit > ul > div p{
+        max-height:none;
+        margin:0;
+        padding-top:1px;
+        line-height:1.58;
+    }
+    .sortvisit > ul > div p > a{
+        display:block;
+        margin:0 0 3px;
+        line-height:1.4;
+    }
+    .sortvisit > ul > div p > i{
+        display:block;
+        margin:0 0 4px;
+        line-height:1.35;
+    }
+    .sortvisit > ul > div p br{
+        display:none;
+    }
+    .novel-basic-info{
+        display:grid;
+        grid-template-columns:84px minmax(0,1fr);
+        gap:12px;
+        padding:12px;
+    }
+    .novel-cover{
+        flex:none;
+        width:84px;
+    }
+    .novel-meta{
+        padding-top:1px;
+        min-width:0;
+    }
+    .novel-meta h1{
+        font-size:20px;
+        line-height:1.34;
+        margin-bottom:8px;
+    }
+    .novel-meta p:first-of-type{
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:4px 10px;
+        margin-bottom:7px;
+    }
+    .novel-meta p:first-of-type span{
+        display:block;
+        margin:0;
+        min-width:0;
+    }
+    .novel-meta p:nth-of-type(2),
+    .novel-meta p:nth-of-type(3){
+        margin-bottom:6px;
+    }
+    .novel-meta p:nth-of-type(2) a{
+        word-break:break-all;
+    }
+    .book-actions,
+    .catalog-actions{
+        gap:8px;
+        margin-top:8px;
+    }
+    .book-actions a,
+    .catalog-actions a{
+        min-height:40px;
+        padding:0 8px;
+    }
+}
