@@ -22,7 +22,3 @@
 // $chapter_patch_fail_ttl = 2 * 86400;
 // $chapter_patch_insecure_ssl = 0;
 // $chapter_patch_log = __ROOT_DIR__ . '/shipsay/configs/_bak/chapter_patch.log';
-
-// $chapter_patch_bad_phrases = [
-//   '章节内容正在处理中，后续会添加，感谢您的支持！',
-// ];
