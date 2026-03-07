@@ -3354,3 +3354,108 @@ kbd input {
         padding:0 10px;
     }
 }
+
+
+/* shipsay v5.2.12 mobile final tighten without affecting PC */
+@media (max-width:768px){
+    .side_commend.side_commend_width > ul.flex > li,
+    .store_left > .side_commend > ul.flex > li{
+        gap:10px;
+        min-height:110px;
+        padding:10px 0 12px;
+        align-items:start;
+    }
+    .side_commend.side_commend_width .img_span,
+    .store_left > .side_commend .img_span{
+        flex:0 0 86px;
+        width:86px;
+    }
+    .side_commend.side_commend_width .img_span a,
+    .store_left > .side_commend .img_span a{
+        width:86px;
+        height:110px;
+    }
+    .side_commend.side_commend_width img,
+    .store_left > .side_commend img{
+        width:86px;
+        height:110px;
+    }
+    .side_commend.side_commend_width .img_span span,
+    .store_left > .side_commend .img_span span{
+        width:86px;
+    }
+    .side_commend.side_commend_width > ul.flex > li > .w100,
+    .store_left > .side_commend > ul.flex > li > .w100{
+        min-height:110px;
+    }
+    .side_commend.side_commend_width .indent,
+    .store_left > .side_commend .indent{
+        margin:0 0 6px;
+    }
+
+    .novel-basic-info{
+        grid-template-columns:86px minmax(0,1fr);
+        gap:10px;
+        padding:14px 12px 12px;
+        align-items:start;
+    }
+    .novel-cover{
+        width:86px;
+    }
+    .novel-cover img{
+        width:86px;
+        height:116px;
+    }
+    .novel-meta{
+        min-width:0;
+    }
+    .novel-meta h1{
+        margin:0 0 8px;
+        font-size:19px;
+        line-height:1.34;
+    }
+    .novel-meta .meta-pairs{
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        column-gap:10px;
+        row-gap:6px;
+        margin:0 0 6px;
+        line-height:1.45;
+    }
+    .novel-meta .meta-pairs span{
+        display:flex;
+        align-items:baseline;
+        justify-content:flex-start;
+        gap:2px;
+        min-width:0;
+        margin:0;
+        white-space:nowrap;
+        overflow:hidden;
+    }
+    .novel-meta .meta-pairs span a{
+        min-width:0;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+    }
+    .novel-meta .meta-latest{
+        display:flex;
+        flex-wrap:wrap;
+        gap:4px 6px;
+        margin:0 0 6px;
+        line-height:1.5;
+    }
+    .novel-meta .meta-latest a{
+        flex:1 1 100%;
+        min-width:0;
+        display:block;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+        word-break:normal;
+    }
+    .novel-meta .meta-latest .meta-time{
+        margin-left:0;
+        white-space:nowrap;
+    }
+}

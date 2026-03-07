@@ -79,13 +79,13 @@ $indexlist_breadcrumb_ld = [
             </div>
             <div class="novel-meta">
                 <h1><?=$article_title_html?></h1>
-                <p>
+                <p class="meta-pairs">
                     <span>作者：<a href="<?=$author_url_attr?>"><?=$author_html?></a></span>
                     <span>分类：<a href="<?=$sort_url_attr?>"><?=$sortname_html?></a></span>
                     <span>状态：<?=$status_html?></span>
                     <span>字数：<?=$words_html?>万</span>
                 </p>
-                <p>最新章节：<a href="<?=$last_url_attr?>"><?=$lastchapter_html?></a> <em class="meta-time"><?=$lastupdate_cn_html?></em></p>
+                <p class="meta-latest">最新章节：<a href="<?=$last_url_attr?>"><?=$lastchapter_html?></a> <em class="meta-time"><?=$lastupdate_cn_html?></em></p>
                 <p>总章节：<?=$chapters_safe?>章</p>
             </div>
         </div>
