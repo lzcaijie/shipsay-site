@@ -96,11 +96,11 @@ $info_book_ld = [
             </div>
             <div class="novel-meta">
                 <h1><?=$article_title_html?></h1>
-                <p>
-                    <span>作者：<a href="<?=$author_url_attr?>"><?=$author_html?></a></span>
-                    <span>分类：<a href="<?=$sort_url_attr?>"><?=$sortname_html?></a></span>
-                    <span>状态：<?=$status_html?></span>
-                    <span>字数：<?=$words_html?>万</span>
+                <p class="meta-pairs">
+                    <span><i class="meta-label">作者：</i><a href="<?=$author_url_attr?>"><?=$author_html?></a></span>
+                    <span><i class="meta-label">分类：</i><a href="<?=$sort_url_attr?>"><?=$sortname_html?></a></span>
+                    <span><i class="meta-label">状态：</i><b class="meta-value"><?=$status_html?></b></span>
+                    <span><i class="meta-label">字数：</i><b class="meta-value"><?=$words_html?>万</b></span>
                 </p>
                 <p>最新章节：<a href="<?=$last_url_attr?>"><?=$lastchapter_html?></a> <em class="meta-time"><?=$lastupdate_cn_html?></em></p>
                 <div class="book-actions">

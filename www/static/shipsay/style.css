@@ -3016,3 +3016,80 @@ kbd input {
         font-size:11px;
     }
 }
+
+/* shipsay v5.2.9 mobile detail meta + home sortvisit tune */
+.novel-meta .meta-pairs span{
+    display:flex;
+    align-items:baseline;
+    gap:2px;
+}
+.novel-meta .meta-label{
+    flex:none;
+    font-style:normal;
+    color:#555;
+    white-space:nowrap;
+}
+.novel-meta .meta-value{
+    font-weight:400;
+    color:#666;
+}
+.sortvisit > ul > div p > .sort-author{
+    display:block;
+    margin:0 0 6px;
+    line-height:1.35;
+    color:#888;
+    font-style:normal;
+}
+.sortvisit > ul > div p > .sort-desc{
+    display:block;
+    color:#666;
+}
+
+@media (max-width:768px){
+    .novel-meta .meta-pairs{
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:6px 12px;
+        margin-bottom:8px;
+    }
+    .novel-meta .meta-pairs span{
+        min-width:0;
+        line-height:1.5;
+    }
+    .novel-meta .meta-pairs a,
+    .novel-meta .meta-pairs .meta-value{
+        min-width:0;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+    }
+    .sortvisit > ul > div{
+        min-height:104px;
+        padding:8px 0 10px;
+    }
+    .sortvisit > ul > div p{
+        line-height:1.55;
+        max-height:none;
+        overflow:visible;
+    }
+    .sortvisit > ul > div p > a{
+        margin:0 0 4px;
+        font-size:16px;
+        line-height:1.4;
+    }
+    .sortvisit > ul > div p > .sort-author{
+        margin:0 0 5px;
+        line-height:1.32;
+        font-size:13px;
+    }
+    .sortvisit > ul > div p > .sort-desc{
+        line-height:1.56;
+        font-size:14px;
+        display:-webkit-box;
+        -webkit-box-orient:vertical;
+        -webkit-line-clamp:2;
+        overflow:hidden;
+        word-break:break-word;
+        max-height:3.12em;
+    }
+}
