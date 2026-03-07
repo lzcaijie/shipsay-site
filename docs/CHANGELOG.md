@@ -1,20 +1,5 @@
 # CHANGELOG（分站 shipsay-site，最新在最前）
 
-- 修复：`themes/shipsay/tpl_footer.php` 统一底部首页入口为安全链接，并给统计代码 include 增加文件存在/数组判断，避免模板层直接依赖未兜底变量。
-- 修复：`themes/shipsay/tpl_recentread.php` 的首页面包屑与猜你喜欢列表统一改用模板本地 safe 值输出，不再直接裸用原始链接与文案。
-- 修复：`themes/shipsay/tpl_error.php` 的返回首页和搜索表单 action 改走安全链接输出，保持错误页模板边界一致。
-- 任务：新增“手机页面显示问题”到后续模板验收范围，后续单独按移动端布局、错位、空白、按钮可点性继续收口。
-
-- 修复：`themes/shipsay/tpl_author.php` 的作者名/作品数改走本地安全显示值，并统一作者页 canonical / OG URL 的转义输出。
-- 修复：`themes/shipsay/tpl_indexlist.php` 的目录页 BreadcrumbList 不再回退引用未定义原始变量，并把分页/总章节展示统一为本地安全数值。
-- 修复：`themes/shipsay/tpl_reader.php` 的阅读页本地记录脚本改用 `$reader_url_safe`，并统一阅读页 novel OG 属性与分页数字的安全输出。
-- 修复：`shipsay/app/home.php` 的热门小说数据改为按实际展示数量取 `12` 条，去掉首页无意义的奇数超取。
-- 修复：`themes/shipsay/tpl_home.php` 移除未使用的 `$rank_base` 历史变量，并统一首页 canonical / `mobile-agent` / `og:url` 的安全输出。
-- 修复：`themes/shipsay/tpl_header.php` 顶部导航过滤排行入口时改用 `$rank_entry_safe`，不再依赖原始 `fake_top` 判断。
-- 修复：`themes/shipsay/tpl_rank.php` 榜单详情页优先复用程序已准备的 `$rank_entry_url`，并统一 `canonical / mobile-agent / og:url` 的安全输出。
-- 修复：`shipsay/app/top.php` 接管排行聚合页榜单数据准备，`themes/shipsay/tpl_top.php` 不再直接拼 SQL / 读 Redis / 查库。
-- 修复：`themes/shipsay/tpl_category.php` 的书库入口统一改走 `$allbooks_url_safe`，避免模板直接吃未兜底链路。
-- 修复：`themes/shipsay/tpl_search.php` 的搜索词输出改为安全高亮，避免前台直接裸输出搜索词。
 > 说明：
 > - 本文件只记录“分站侧功能/接口/安全策略”变更（新增写在最前）。
 > - 日常操作流程/部署/一致性验证：见 `docs/OPS.md`。
@@ -24,19 +9,19 @@
 
 ---
 
-## 2026-03-07-2 | 模板/文档 | Shipsay SEO 收尾第二轮 + 变量边界校准
-- 修复：`themes/shipsay/tpl_header.php` 增加书库/完本/足迹入口 safe 兜底，避免头部直接依赖未兜底变量。
-- 修复：`themes/shipsay/tpl_info.php` 详情页 SEO 输出与页面 TDK 对齐，`canonical / og / JSON-LD` 改为走安全链接和纯文本简介。
-- 修复：`themes/shipsay/tpl_indexlist.php` 目录页补齐 TDK 兜底、OG 基础项与 BreadcrumbList 结构化数据，并去掉未使用的局部变量。
-- 修复：`themes/shipsay/tpl_reader.php` 阅读页补齐 `canonical` 与 BreadcrumbList，并让 `og:title / og:description` 与页面 SEO 输出保持一致。
-- 文档：继续补强 `docs/V5_1_TEMPLATE_STANDARD.md` 与 `docs/VARIABLE_MAP.md`，记录 safe 变量、目录页/阅读页 SEO 最低标准与变量判定红线。
-
-## 2026-03-07-1 | 模板/文档 | Shipsay SEO 首轮收口 + v5.1 文档补充
-- 修复：`themes/shipsay/tpl_info.php` 前台不再展示内部实现说明文案，并将章节块标题统一为“前 50 章”。
-- 完善：补强首页、分类页、作者页、排行聚合页、榜单详情页的基础 SEO 输出（canonical / device / OG / 结构化数据）。
-- 完善：新增 `docs/VARIABLE_MAP.md` 与 `docs/V5_1_TEMPLATE_STANDARD.md`，把本轮扫描确认的变量分层、结构红线、SEO 规则补入真源文档。
-- 迁移：为 `shipsay/docs/` 增补迁移占位文件，继续固定根目录 `docs/` 为唯一真源。
-- 备注：`themes/shipsay/tpl_top.php` 仍保留历史数据层例外，仅记录，不作为后续模板标准。
+## 2026-03-07-01 | 模板 | Shipsay 手机端卡片/分页/footer 收口（标准继续沉淀）
+- 目标：继续以 `themes/shipsay` 作为标准模板基线，优先收口手机端带图卡片、分类分页块、详情/目录顶部信息区、全站 footer。
+- 更新：`www/static/shipsay/style.css`
+  - 优化带图列表卡片的移动端节奏，统一图片宽高、文本区收缩、标题/简介/底部信息区的间距与对齐。
+  - 优化详情页与目录页顶部信息区，统一手机端书封区、元信息区、按钮区与目录头部的排布。
+  - 优化分类页手机端分页块，改为更稳定的纵向节奏，避免上一页 / 页码选择 / 下一页之间出现大块空白。
+  - 修正全站 footer 手机端居中逻辑，沿现有结构轻量收口，不再采用强压覆盖式写法。
+- 更新：`docs/V5_1_TEMPLATE_STANDARD.md`
+  - 明确 `shipsay/docs/` 视为废弃目录，正式文档真源仅为 `root/docs/`。
+  - 补充手机端 footer 标准、分类分页块标准，以及“顺着现有规则收口、不依赖强制覆盖”的执行原则。
+- 更新：`docs/VARIABLE_MAP.md`
+  - 补充“先区分变量问题还是 CSS/结构问题”的判断规则，避免把手机端样式问题误判为变量链路错误。
+- 回滚：回退上述 3 个文件到本次修改前版本即可。
 
 
 ## 2026-02-28-01 | 修复 | v6 模板下发：解压不再依赖 shell_exec（支持 zip/tar.gz）
