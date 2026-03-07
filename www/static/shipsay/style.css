@@ -2956,3 +2956,210 @@ kbd input {
         line-height:1.65;
     }
 }
+
+/* shipsay v5.2.3 template-assisted mobile image text standard */
+.card-copy{
+    display:flex;
+    flex-direction:column;
+}
+.card-author{
+    margin:0 0 8px;
+    line-height:1.5;
+}
+.card-author a{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    color:#666;
+}
+.card-author i{
+    color:#666;
+}
+.card-stats{
+    margin-top:auto;
+}
+.card-stats > div{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+}
+.sortvisit-feature-copy{
+    flex:1 1 auto;
+    min-width:0;
+}
+.sortvisit-feature-title{
+    display:block;
+    margin:0 0 6px;
+    font-size:1.08em;
+    line-height:1.5;
+}
+.sortvisit-feature-author{
+    margin:0 0 6px;
+    color:gray;
+    font-size:11px;
+    line-height:1.4;
+}
+.sortvisit-feature-intro{
+    margin:0;
+    line-height:1.8;
+}
+.novel-meta-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px 14px;
+    margin:0 0 10px;
+}
+.meta-pair{
+    min-width:0;
+    color:#666;
+    font-size:14px;
+    line-height:1.7;
+}
+.meta-label,
+.meta-value{
+    color:#666;
+}
+.novel-latest-row,
+.novel-total-row{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:flex-start;
+    gap:4px 8px;
+    margin:0 0 4px;
+    line-height:1.75;
+    color:#666;
+    font-size:14px;
+}
+.novel-latest-row a{
+    min-width:0;
+    word-break:break-all;
+}
+.novel-latest-time{
+    margin:0 0 12px;
+    color:#666;
+    font-size:14px;
+    line-height:1.7;
+}
+@media (max-width:768px){
+    .side_commend li,
+    .searchresult,
+    #tempBookcase ul li,
+    .section_mark li{
+        align-items:flex-start;
+    }
+    .side_commend li > .w100,
+    .searchresult > div:last-child,
+    #tempBookcase .bookcase-items,
+    .card-copy{
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-start;
+    }
+    .side_commend h2,
+    .searchresult h3,
+    #tempBookcase .bookcase-items p:first-child a,
+    .sortvisit-feature-title{
+        -webkit-line-clamp:2;
+        margin:0 0 6px;
+        line-height:1.42;
+    }
+    .card-author{
+        order:2;
+        margin:0 0 6px;
+        line-height:1.45;
+    }
+    .side_commend .indent,
+    .searchresult .searchresult_p{
+        order:3;
+        -webkit-line-clamp:3;
+        margin:0 0 8px;
+    }
+    .card-stats,
+    .side_commend .li_bottom{
+        order:4;
+        margin-top:auto;
+    }
+    .card-stats > div,
+    .side_commend .li_bottom > div{
+        justify-content:flex-start;
+    }
+    .sortvisit > ul > div{
+        align-items:flex-start;
+    }
+    .sortvisit > ul > div p{
+        display:none;
+    }
+    .sortvisit-feature-copy{
+        display:flex;
+        flex-direction:column;
+        min-width:0;
+    }
+    .sortvisit-feature-title{
+        font-size:16px;
+    }
+    .sortvisit-feature-author{
+        order:2;
+        margin:0 0 6px;
+        line-height:1.45;
+    }
+    .sortvisit-feature-intro{
+        order:3;
+        display:-webkit-box;
+        -webkit-box-orient:vertical;
+        -webkit-line-clamp:3;
+        overflow:hidden;
+        line-height:1.7;
+        color:#666;
+    }
+    .novel-basic-info{
+        grid-template-columns:96px minmax(0,1fr);
+        gap:14px;
+        align-items:flex-start;
+    }
+    .novel-cover{
+        width:96px;
+        flex:0 0 96px;
+    }
+    .novel-cover img{
+        width:96px;
+        height:132px;
+    }
+    .novel-meta h1{
+        font-size:22px;
+        line-height:1.35;
+        margin-bottom:10px;
+    }
+    .novel-meta-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:6px 12px;
+        margin:0 0 8px;
+    }
+    .meta-pair,
+    .novel-latest-row,
+    .novel-total-row,
+    .novel-latest-time{
+        font-size:13px;
+        line-height:1.65;
+    }
+    .novel-latest-row{
+        display:block;
+        margin-bottom:2px;
+    }
+    .novel-latest-row .meta-label{
+        display:block;
+        margin-bottom:2px;
+    }
+    .novel-latest-row a{
+        display:block;
+    }
+    .novel-latest-time{
+        margin-bottom:10px;
+    }
+    .book-actions,
+    .catalog-actions{
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:10px;
+        margin-top:10px;
+    }
+}

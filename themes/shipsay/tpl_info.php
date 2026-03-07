@@ -96,13 +96,17 @@ $info_book_ld = [
             </div>
             <div class="novel-meta">
                 <h1><?=$article_title_html?></h1>
-                <p>
-                    <span>作者：<a href="<?=$author_url_attr?>"><?=$author_html?></a></span>
-                    <span>分类：<a href="<?=$sort_url_attr?>"><?=$sortname_html?></a></span>
-                    <span>状态：<?=$status_html?></span>
-                    <span>字数：<?=$words_html?>万</span>
-                </p>
-                <p>最新章节：<a href="<?=$last_url_attr?>"><?=$lastchapter_html?></a> <em class="meta-time"><?=$lastupdate_cn_html?></em></p>
+                <div class="novel-meta-grid">
+                    <div class="meta-pair"><span class="meta-label">作者：</span><a href="<?=$author_url_attr?>"><?=$author_html?></a></div>
+                    <div class="meta-pair"><span class="meta-label">分类：</span><a href="<?=$sort_url_attr?>"><?=$sortname_html?></a></div>
+                    <div class="meta-pair"><span class="meta-label">状态：</span><span class="meta-value"><?=$status_html?></span></div>
+                    <div class="meta-pair"><span class="meta-label">字数：</span><span class="meta-value"><?=$words_html?>万</span></div>
+                </div>
+                <div class="novel-latest-row">
+                    <span class="meta-label">最新章节：</span>
+                    <a href="<?=$last_url_attr?>"><?=$lastchapter_html?></a>
+                </div>
+                <div class="novel-latest-time"><?=$lastupdate_cn_html?></div>
                 <div class="book-actions">
                     <a href="<?=$first_url_attr?>"><i class="fa fa-play-circle"></i> 开始阅读</a>
                     <a href="<?=$index_url_attr?>"><i class="fa fa-list"></i> 查看目录</a>

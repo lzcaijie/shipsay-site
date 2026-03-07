@@ -154,3 +154,11 @@
 - mobile: 首页/分类列表带图卡片继续收口为更稳定的“封面列 + 文字列”布局。
 - mobile: 首页分类首卡 sortvisit 首图卡片增大封面并收紧标题/作者/简介节奏。
 - mobile: 详情页、目录页顶部图文区继续优化封面尺寸、元信息折行与按钮区节奏。
+
+
+## 2026-03-07 shipsay mobile template ordering pass
+- 手机端带图卡片进入“模板辅助排序”阶段，不再只依赖 `style.css` 微调。
+- `themes/shipsay/tpl_home.php` 与 `themes/shipsay/tpl_category.php`：带图卡片文案顺序统一为“标题 → 作者 → 简介 → 字数/更新时间”。
+- `themes/shipsay/tpl_home.php`：首页 `sortvisit` 首卡改为独立标题/作者/简介结构，避免继续沿用旧的 `<br>` 排序。
+- `themes/shipsay/tpl_info.php` 与 `themes/shipsay/tpl_indexlist.php`：顶部信息区统一为“标题 → 作者/分类/状态/字数网格 → 最新章节 → 时间 → 按钮/总章节”的手机端顺序。
+- `www/static/shipsay/style.css`：新增与模板结构配套的 `.card-author`、`.card-stats`、`.sortvisit-feature-*`、`.novel-meta-grid`、`.novel-latest-row` 等规则。

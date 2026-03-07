@@ -74,11 +74,11 @@ $category_ld = [
                 ?>
                 <li>
                     <div class="img_span"><a href="<?=$info_url_attr?>"><img class="lazy" src="<?=htmlspecialchars(Url::nocover_url(), ENT_QUOTES, 'UTF-8')?>" data-original="<?=$img_url_attr?>" title="<?=$title_html?>" loading="lazy" /><span<?php if($v['isfull'] != '连载'): ?> class="full"<?php endif ?>><?=$sort_html?> / <?=$status_html?></span></a></div>
-                    <div class="w100">
+                    <div class="w100 card-copy">
                         <a href="<?=$info_url_attr?>"><h2><?=$title_html?></h2></a>
+                        <p class="card-author"><a href="<?=$author_url_attr?>"><i class="fa fa-user-circle-o"></i><span><?=$author_html?></span></a></p>
                         <p class="indent"><?=$intro_html?></p>
-                        <div class="li_bottom">
-                            <a href="<?=$author_url_attr?>"><i class="fa fa-user-circle-o">&nbsp;<?=$author_html?></i></a>
+                        <div class="li_bottom card-stats">
                             <div>
                                 <em class="orange"><?=$words_w_safe?>万字</em><em class="blue"><?=Text::ss_lastupdate($v['lastupdate'])?></em>
                             </div>

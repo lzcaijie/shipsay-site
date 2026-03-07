@@ -505,3 +505,20 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 ## 2026-03-07 cg_patch_007
 - 本轮仍为 `www/static/shipsay/style.css` 的移动端布局收口。
 - 未新增模板变量，未修改 PHP 数据变量映射。
+
+
+## 2026-03-07 手机端排序相关结构说明
+- 本轮未新增后端变量。
+- 变更属于模板结构层与 CSS 呈现层：
+  - `card-author`
+  - `card-stats`
+  - `sortvisit-feature-copy`
+  - `sortvisit-feature-title`
+  - `sortvisit-feature-author`
+  - `sortvisit-feature-intro`
+  - `novel-meta-grid`
+  - `meta-pair`
+  - `novel-latest-row`
+  - `novel-latest-time`
+  - `novel-total-row`
+- 上述均为前端结构类名，不涉及新的 PHP 数据字段。
