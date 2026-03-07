@@ -52,11 +52,11 @@ $home_ld = [
                         <a href="<?=$info_url_attr?>"><img src="<?=$img_url_attr?>" title="<?=$title_html?>" loading="lazy" onerror="this.src='/static/<?=$theme_dir_safe?>/nocover.jpg';this.onerror=null;"></a>
                         <span><?=$sort_html?> / <?=$isfull_html?></span>
                     </div>
-                    <div class="w100">
+                    <div class="w100 card-copy">
                         <a href="<?=$info_url_attr?>"><h2><?=$title_html?></h2></a>
+                        <p class="card-author"><a href="<?=$author_url_attr?>"><i class="fa fa-user-circle-o"></i><span><?=$author_html?></span></a></p>
                         <p class="indent"><?=$intro_html?></p>
-                        <div class="li_bottom">
-                            <a href="<?=$author_url_attr?>"><i class="fa fa-user-circle-o">&nbsp;<?=$author_html?></i></a>
+                        <div class="li_bottom card-stats">
                             <div><em class="orange"><?=$words_safe?>万字</em><em class="blue"><?=$lastupdate_html?></em></div>
                         </div>
                     </div>
@@ -93,7 +93,14 @@ $home_ld = [
                 $title_short_html = htmlspecialchars(mb_substr($v['articlename'], 0, 6), ENT_QUOTES, 'UTF-8');
             ?>
                 <?php if ($k == 0): ?>
-                    <div><a href="<?=$info_url_attr?>"><img class="lazy" src="<?=htmlspecialchars(Url::nocover_url(), ENT_QUOTES, 'UTF-8')?>" data-original="<?=$img_url_attr?>" title="<?=$title_html?>"></a><p><a href="<?=$info_url_attr?>"><?=$title_html?></a><i>&nbsp;/&nbsp;<?=$author_html?></i><br>&nbsp;&nbsp;&nbsp;&nbsp;<?=$intro_html?></p></div>
+                    <div class="sortvisit-feature">
+                        <a href="<?=$info_url_attr?>"><img class="lazy" src="<?=htmlspecialchars(Url::nocover_url(), ENT_QUOTES, 'UTF-8')?>" data-original="<?=$img_url_attr?>" title="<?=$title_html?>"></a>
+                        <div class="sortvisit-feature-copy">
+                            <a class="sortvisit-feature-title" href="<?=$info_url_attr?>"><?=$title_html?></a>
+                            <p class="sortvisit-feature-author">/ <?=$author_html?></p>
+                            <p class="sortvisit-feature-intro"><?=$intro_html?></p>
+                        </div>
+                    </div>
                 <?php elseif ($k < 13): ?>
                     <li><a href="<?=$info_url_attr?>"><?=$title_short_html?></a><i>&nbsp;/ <?=$author_html?></i></li>
                 <?php endif; ?>
