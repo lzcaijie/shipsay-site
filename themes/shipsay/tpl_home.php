@@ -93,7 +93,7 @@ $home_ld = [
                 $title_short_html = htmlspecialchars(mb_substr($v['articlename'], 0, 6), ENT_QUOTES, 'UTF-8');
             ?>
                 <?php if ($k == 0): ?>
-                    <div><a href="<?=$info_url_attr?>"><img class="lazy" src="<?=htmlspecialchars(Url::nocover_url(), ENT_QUOTES, 'UTF-8')?>" data-original="<?=$img_url_attr?>" title="<?=$title_html?>"></a><p><a href="<?=$info_url_attr?>"><?=$title_html?></a><i>&nbsp;/&nbsp;<?=$author_html?></i><br>&nbsp;&nbsp;&nbsp;&nbsp;<?=$intro_html?></p></div>
+                    <div><a href="<?=$info_url_attr?>"><img class="lazy" src="<?=htmlspecialchars(Url::nocover_url(), ENT_QUOTES, 'UTF-8')?>" data-original="<?=$img_url_attr?>" title="<?=$title_html?>"></a><p><a href="<?=$info_url_attr?>"><?=$title_html?></a><i class="sort-author">&nbsp;/&nbsp;<?=$author_html?></i><span class="sort-desc"><?=$intro_html?></span></p></div>
                 <?php elseif ($k < 13): ?>
                     <li><a href="<?=$info_url_attr?>"><?=$title_short_html?></a><i>&nbsp;/ <?=$author_html?></i></li>
                 <?php endif; ?>
