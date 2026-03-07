@@ -500,3 +500,8 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - 这轮问题继续归类为 **CSS 排版层收口**，不是 app 层变量链路变化。
 - `side_commend`、`searchresult`、`sortvisit`、`novel-basic-info` 的本轮调整，重点是封面列宽、文字列节奏、作者/分类/状态/字数折行策略。
 - 尤其是 `novel-meta p:first-of-type` 的收口，属于“现有模板结构上的手机端折行优化”，不是新增数据字段。
+
+
+## 2026-03-07 cg_patch_007
+- 本轮仍为 `www/static/shipsay/style.css` 的移动端布局收口。
+- 未新增模板变量，未修改 PHP 数据变量映射。
