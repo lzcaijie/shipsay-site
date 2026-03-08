@@ -53,18 +53,18 @@ $search_placeholder_attr = htmlspecialchars($search_placeholder_raw, ENT_QUOTES,
             <p><?=$site_url_text_html?></p>
         </a>
 
-        <form class="site-search" name="t_frmsearch" method="post" action="<?=$search_url_attr?>" onsubmit="return chkval();">
+        <form class="site-search" name="t_frmsearch" method="post"<?php if ($search_url_raw !== ''): ?> action="<?=$search_url_attr?>" onsubmit="return chkval();"<?php else: ?> onsubmit="return false;"<?php endif; ?>>
             <input autocomplete="off" id="searchkey" type="text" name="searchkey" class="search_input" placeholder="<?=$search_placeholder_attr?>">
             <input type="hidden" name="searchtype" value="all">
-            <button type="submit" name="Submit" id="search_btn" title="搜索"><i class="fa fa-search fa-lg"></i></button>
+            <button type="submit" name="Submit" id="search_btn" title="搜索"<?php if ($search_url_raw === ''): ?> disabled="disabled" aria-disabled="true"<?php endif; ?>><i class="fa fa-search fa-lg"></i></button>
         </form>
 
         <div class="header_right">
             <a id="home" href="<?=$site_home_url_attr?>"><i class="fa fa-home fa-lg"></i><br>首页</a>
-            <a href="<?=$allbooks_url_attr?>"><i class="fa fa-book fa-lg"></i><br>书库</a>
-            <a href="<?=$full_allbooks_url_attr?>"><i class="fa fa-coffee fa-lg"></i><br>完本</a>
-            <a href="<?=$rank_entry_attr?>"><i class="fa fa-bar-chart fa-lg"></i><br>排行</a>
-            <a href="<?=$recentread_url_attr?>" rel="nofollow"><i class="fa fa-history fa-lg"></i><br>足迹</a>
+            <?php if ($allbooks_url_raw !== ''): ?><a href="<?=$allbooks_url_attr?>"><i class="fa fa-book fa-lg"></i><br>书库</a><?php else: ?><a class="w_gray" aria-disabled="true"><i class="fa fa-book fa-lg"></i><br>书库</a><?php endif; ?>
+            <?php if ($full_allbooks_url_raw !== ''): ?><a href="<?=$full_allbooks_url_attr?>"><i class="fa fa-coffee fa-lg"></i><br>完本</a><?php else: ?><a class="w_gray" aria-disabled="true"><i class="fa fa-coffee fa-lg"></i><br>完本</a><?php endif; ?>
+            <?php if ($rank_entry_raw !== ''): ?><a href="<?=$rank_entry_attr?>"><i class="fa fa-bar-chart fa-lg"></i><br>排行</a><?php else: ?><a class="w_gray" aria-disabled="true"><i class="fa fa-bar-chart fa-lg"></i><br>排行</a><?php endif; ?>
+            <?php if ($recentread_url_raw !== ''): ?><a href="<?=$recentread_url_attr?>" rel="nofollow"><i class="fa fa-history fa-lg"></i><br>足迹</a><?php else: ?><a class="w_gray" aria-disabled="true" rel="nofollow"><i class="fa fa-history fa-lg"></i><br>足迹</a><?php endif; ?>
         </div>
     </div>
 </header>

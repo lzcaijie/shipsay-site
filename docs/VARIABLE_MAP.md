@@ -230,7 +230,7 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$retarr` | 当前分类书籍列表 |
 | `$sortcategory` | 分类导航集合 |
 | `$sortid / $sortname` | 当前分类 |
-| `$fullflag / $full_url / $allbooks_url / $allbooks_url_safe` | 完本/书库链路（模板展示优先用 safe 变量） |
+| `$fullflag / $full_url / $allbooks_url / $allbooks_url_raw / $allbooks_url_attr` | 完本/书库链路（模板展示按 raw / attr 输出） |
 | `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
 ## 5.4 详情页 `tpl_info.php`
@@ -248,8 +248,8 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$lastchapter / $last_url` | 最新章节标题 / 链接 |
 | `$lastchapter_arr` 或 `$lastarr` | 最新章节列表（模板实际用前需核对） |
 | `$first_url` | 开始阅读链接 |
-| `$index_url / $index_url_safe` | 目录页链接 |
-| `$info_url / $info_url_safe` | 详情页当前链接（安全兜底） |
+| `$index_url / $index_url_raw / $index_url_attr` | 目录页链接（模板局部 raw / attr） |
+| `$info_url / $info_url_raw / $info_url_attr` | 详情页当前链接（模板局部 raw / attr） |
 | `$intro_plain` | 详情页用于 SEO/结构化数据的简介纯文本 |
 | `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
@@ -268,7 +268,7 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$pid` | 当前目录分页页码 |
 | `$first_url` | 开始阅读链接 |
 | `$info_url` | 返回详情链接 |
-| `$index_url / $indexlist_url_safe` | 当前目录基础链接 / 当前目录安全链接 |
+| `$index_url / $indexlist_url_raw / $indexlist_url_attr` | 当前目录基础链接 / 当前目录模板局部 raw / attr |
 | `$lastchapter / $last_url` | 最新章节信息 |
 | `$lastupdate_cn` | 最新更新时间中文文案 |
 | `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
@@ -283,7 +283,7 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$sortid / $sortname` | 分类信息 |
 | `$chapterwords` | 当前章字数 |
 | `$rico_content` | 正文 HTML（核心变量） |
-| `$reader_url_safe` | 当前阅读页安全链接 |
+| `$reader_url_raw / $reader_url_attr` | 当前阅读页模板局部 raw / attr |
 | `$author_safe / $author_count_safe` | 作者页本地安全显示值（作者名 / 作品数） |
 | `$indexlist_breadcrumb_item` | 目录页 BreadcrumbList 使用的安全目录链接 |
 | `$chapterwords_safe / $now_pid_safe / $max_pid_safe` | 阅读页字数 / 分页本地安全数值 |
@@ -442,10 +442,10 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$search_placeholder` | 模板局部 | 搜索框占位文案 |
 | `$rank_entry_raw / $rank_entry_attr` | 模板局部 | Header 中排行入口 raw / attr |
 | `$site_home_url_raw / $site_home_url_attr` | 模板局部 | 站点首页入口 raw / attr；Header、recentread、footer 等公共区优先复用 |
-| `$category_url_safe` | 模板局部 | 分类页 canonical / OG / breadcrumb 使用 |
-| `$author_url_safe` | 模板局部 | 作者页 canonical / OG / breadcrumb 使用 |
-| `$rank_url_safe` | 模板局部 | 榜单详情页 canonical / OG / breadcrumb 使用 |
-| `$top_url_safe` | 模板局部 | 榜单聚合页 canonical / OG / breadcrumb 使用 |
+| `$category_url_raw / $category_url_attr` | 模板局部 | 分类页 canonical / OG / breadcrumb raw / attr |
+| `$author_url_raw / $author_url_attr` | 模板局部 | 作者页 canonical / OG / breadcrumb raw / attr |
+| `$rank_url_raw / $rank_url_attr` | 模板局部 | 榜单详情页 canonical / OG / breadcrumb raw / attr |
+| `$top_url_raw / $top_url_attr` | 模板局部 | 榜单聚合页 canonical / OG / breadcrumb raw / attr |
 
 ### 6.3 详情页/目录页局部变量补充
 
@@ -483,7 +483,7 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - `tpl_top.php` 当前基线不再直接查库，榜单数据应由 `shipsay/app/top.php` 预先准备。
 - `tpl_search.php` 中的 `$searchkey` 仅视为原始输入，模板前台展示必须改用 `$searchkey_safe` 或局部高亮 helper；搜索结果主容器优先复用现有 `side_commend_width` 类，不再继续写模板内联宽度。
 - `tpl_indexlist.php` 中的 BreadcrumbList 链接必须使用 `$indexlist_breadcrumb_item` 这类明确兜底值，不能回退引用未定义原始变量。
-- `tpl_reader.php` 中的本地阅读记录写入应使用 `$reader_url_safe`，不要直接把原始 `$uri` 当成稳定链接。
+- `tpl_reader.php` 中的本地阅读记录写入应使用模板局部整理后的 `$reader_url_raw`；不要直接把原始 `$uri` 当成稳定链接。
 - `tpl_author.php` 中的作者名、作品数、封面默认图与页面包屑当前已统一整理为展示层变量后再输出；后续继续沿用 `*_raw / *_attr / *_html` 命名。
 
 ### Footer / recentread / error 模板本地变量（本轮补充）
@@ -559,16 +559,18 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 #### C 级：当前先保可用
 - `tpl_error.php`
 
-### 10.2 safe 链接优先级（本轮正式补充）
+### 10.2 当前链接输出规范（以 raw / attr / html 为准）
 
-后续模板中，凡是存在 `*_safe` 兜底变量时，前台展示优先级统一为：
+后续模板中，公共链接的当前标准不是继续扩散旧 `*_safe` 命名，而是统一按下面的三层做本地整理：
 
-1. `*_safe`
-2. 当前 app 层直接准备好的真实链接变量
-3. 首页链接等极少数展示入口，最后才允许非常轻的模板兜底值
+1. app 层直接准备好的真实链接变量
+2. 模板局部整理后的 `*_raw / *_attr`
+3. 仅首页这类极少数展示入口，最后才允许非常轻的本地兜底值
 
-#### 当前应优先使用 `*_safe` 的常见入口
-- `$home_url_safe`
+#### 当前应优先按 raw / attr 输出的常见入口
+说明：历史文档中的 `*_safe` 记法只作为旧链路对照保留；当前 Shipsay 母模板不再新增这类命名。
+
+- `$site_home_url_raw / $site_home_url_attr`
 - `$allbooks_url_raw / $allbooks_url_attr`
 - `$full_allbooks_url_raw / $full_allbooks_url_attr`
 - `$recentread_url_raw / $recentread_url_attr`
@@ -581,7 +583,8 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - `$rank_url_raw / $rank_url_attr`
 
 规则：
-- 能走 `*_safe` 的，不要直接退回原始变量
+- 不要在属性位直接输出原始变量
+- 模板展示统一优先使用本地整理后的 `*_attr / *_html`
 - fallback 只作为最终兜底，不作为模板默认真实值
 
 ### 10.3 详情页 / 目录页变量层规则（正式固定）
@@ -595,8 +598,8 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - `$words_w`
 - `$lastchapter / $last_url`
 - `$first_url`
-- `$index_url / $index_url_safe`
-- `$info_url / $info_url_safe`
+- `$index_url / $index_url_raw / $index_url_attr`
+- `$info_url / $info_url_raw / $info_url_attr`
 - `$intro / $intro_p / $intro_plain`
 - `$seo_title / $seo_keywords / $seo_description`
 
@@ -610,7 +613,7 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - `$lastchapter / $last_url`
 - `$first_url`
 - `$info_url`
-- `$index_url / $indexlist_url_safe`
+- `$index_url / $indexlist_url_raw / $indexlist_url_attr`
 - `$list_arr`
 - `$pid / $total_pages_safe`
 - `$seo_title / $seo_keywords / $seo_description`
@@ -638,7 +641,7 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - `$sortcategory`
 - `$sortid / $sortname`
 - `$fullflag / $full_url`
-- `$allbooks_url / $allbooks_url_safe`
+- `$allbooks_url / $allbooks_url_raw / $allbooks_url_attr`
 - `$seo_title / $seo_keywords / $seo_description`
 
 但下面这些写法只视为当前兼容实现，不应继续当标准扩散：
@@ -715,8 +718,8 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - `$words_w`
 - `$lastchapter / $last_url`
 - `$first_url`
-- `$info_url / $info_url_safe`
-- `$index_url / $indexlist_url_safe`
+- `$info_url / $info_url_raw / $info_url_attr`
+- `$index_url / $indexlist_url_raw / $indexlist_url_attr`
 - `$seo_title / $seo_keywords / $seo_description`
 
 允许目录页额外新增但不改变详情页语义的变量：
