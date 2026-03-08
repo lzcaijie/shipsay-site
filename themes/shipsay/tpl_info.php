@@ -14,6 +14,12 @@ if (!empty($lastarr) && is_array($lastarr)) {
 } elseif (!empty($preview_chapters) && is_array($preview_chapters)) {
     $last_rows = array_slice($preview_chapters, 0, 12);
 }
+$latest50_rows = [];
+if (!empty($preview_chapters) && is_array($preview_chapters)) {
+    $latest50_rows = array_slice($preview_chapters, 0, 50);
+} elseif (!empty($chapterrows) && is_array($chapterrows)) {
+    $latest50_rows = array_slice($chapterrows, 0, 50);
+}
 $info_url_safe = (isset($uri) && $uri) ? $uri : ((isset($info_url) && $info_url) ? $info_url : '');
 $site_home_url_safe = !empty($site_url) ? rtrim($site_url, '/') . '/' : '/';
 $article_title_html = htmlspecialchars((string)$articlename, ENT_QUOTES, 'UTF-8');
@@ -108,16 +114,6 @@ $info_book_ld = [
                     <span<?php if ($isfull != '连载') : ?> class="fullflag"<?php endif; ?>><?=$status_html?></span>
                 </p>
                 <div class="flex to100">最新章节：<a href="<?=$last_url_attr?>"><?=$lastchapter_html?></a><em class="s_gray"><?=$lastupdate_cn_html?></em></div>
-                <?php if (isset($is_langtail) && $is_langtail == 1 && !empty($langtailrows) && is_array($langtailrows)) : ?>
-                    <p>相关推荐：
-                        <?php foreach ($langtailrows as $v) :
-                            $langtail_url_attr = htmlspecialchars((string)$v['info_url'], ENT_QUOTES, 'UTF-8');
-                            $langname_html = htmlspecialchars((string)$v['langname'], ENT_QUOTES, 'UTF-8');
-                        ?>
-                            <a href="<?=$langtail_url_attr?>"><?=$langname_html?></a>&nbsp;
-                        <?php endforeach; ?>
-                    </p>
-                <?php endif; ?>
                 <div class="flex">
                     <a class="l_btn" href="<?=$first_url_attr?>"><i class="fa fa-file-text"></i> 开始阅读</a>
                     <a class="l_btn_0" href="<?=$index_url_attr?>"><i class="fa fa-list"></i> 查看目录</a>
@@ -140,6 +136,32 @@ $info_book_ld = [
                         <li><a href="<?=$cid_url_attr?>" title="<?=$article_title_html?> <?=$cname_html?>"><?=$cname_html?></a></li>
                     <?php endforeach; ?>
                 </ul>
+            </div>
+            <?php endif; ?>
+
+            <?php if (!empty($latest50_rows)): ?>
+            <div class="section chapter_list">
+                <div class="title jcc">《<?=$article_title_html?>》章节预览</div>
+                <ul>
+                    <?php foreach ($latest50_rows as $v):
+                        $cid_url_attr = htmlspecialchars((string)$v['cid_url'], ENT_QUOTES, 'UTF-8');
+                        $cname_html = htmlspecialchars((string)$v['cname'], ENT_QUOTES, 'UTF-8');
+                    ?>
+                        <li><a href="<?=$cid_url_attr?>" title="<?=$article_title_html?> <?=$cname_html?>"><?=$cname_html?></a></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <?php endif; ?>
+
+            <?php if (isset($is_langtail) && $is_langtail == 1 && !empty($langtailrows) && is_array($langtailrows)): ?>
+            <div class="section section-info-block">
+                <h2 class="sub_title">相关推荐</h2>
+                <div class="langtail-box">
+                    <?php foreach ($langtailrows as $v): ?>
+                        <?php $langtail_url_attr = htmlspecialchars((string)$v['info_url'], ENT_QUOTES, 'UTF-8'); $langname_html = htmlspecialchars((string)$v['langname'], ENT_QUOTES, 'UTF-8'); ?>
+                        <a href="<?=$langtail_url_attr?>"><?=$langname_html?></a>
+                    <?php endforeach; ?>
+                </div>
             </div>
             <?php endif; ?>
         </div>
