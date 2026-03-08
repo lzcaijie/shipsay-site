@@ -1132,961 +1132,185 @@ kbd input {
 	}
 }
 
-/* 详情页移动端触摸优化 */
-@media (max-width: 768px) {
-    .l_btn, .l_btn_0, 
-    .flex a, .ulcard li a,
-    .chapter_list a, #gotop, #gofooter,
-    button, .btn, .nav-btn {
-        min-height: 44px;
-        min-width: 44px;
-        line-height: 44px;
-        padding: 0 16px;
-    }
-    
-    .chapter_list li a {
-        padding: 12px 16px;
-        display: block;
-        min-height: 44px;
-    }
-    
-    .ulcard li {
-        flex: 1;
-        text-align: center;
-    }
-    .ulcard li a {
-        display: block;
-        padding: 12px 0;
-        font-size: 16px;
-    }
-    
-    body {
-        font-size: 16px;
-        -webkit-text-size-adjust: 100%;
-        -webkit-font-smoothing: antialiased;
-        text-rendering: optimizeLegibility;
-    }
-    
-    .l_btn, .l_btn_0 {
-        font-size: 16px;
-    }
-    
-    .novel_info_main img {
-        max-width: 120px;
-        height: auto;
-    }
-    
-    a, button {
-        -webkit-tap-highlight-color: rgba(74, 144, 226, 0.2);
-        tap-highlight-color: rgba(74, 144, 226, 0.2);
-    }
+/* shipsay rebuild step2 support block: current v5 structure on old stable css */
+.bread_crumbs {
+    width: 100%;
+    margin-bottom: 12px;
+    color: #999;
+    font-size: 13px;
+    line-height: 1.8;
+    word-break: break-all;
 }
+.bread_crumbs a { color: #666; }
 
-/* 目录页移动端触摸优化 */
-@media (max-width: 768px) {
-    .index-container-btn, .back-link, 
-    .novel-basic-info a, .chapter-item a,
-    .page-navigation a, .volume-title {
-        min-height: 44px;
-        min-width: 44px;
-        padding: 12px 16px;
-        line-height: 1.4;
-    }
-    
-    .chapter-item a {
-        padding: 12px 16px;
-        display: block;
-        min-height: 44px;
-    }
-    
-    .index-container {
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    #indexselect {
-        width: 100%;
-        margin: 10px 0;
-        min-height: 44px;
-        font-size: 16px;
-    }
-    
-    .index-container-btn {
-        width: 100%;
-        min-height: 44px;
-        font-size: 16px;
-    }
-    
-    .novel-basic-info {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .novel-cover {
-        margin-right: 0;
-        margin-bottom: 15px;
-    }
-    
-    .novel-cover img {
-        width: 120px;
-        height: 168px;
-    }
-    
-    .catalog-header {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
-    }
-    
-    .page-navigation {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
-    }
-    
-    a, button, select {
-        -webkit-tap-highlight-color: rgba(74, 144, 226, 0.2);
-        tap-highlight-color: rgba(74, 144, 226, 0.2);
-    }
-}
-
-/* 滚动条优化 */
-@media (max-width: 768px) {
-    ::-webkit-scrollbar {
-        width: 6px;
-    }
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-    ::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
-        border-radius: 3px;
-    }
-}
-
-/* 通用移动端字体优化 */
-@media (max-width: 768px) {
-    body {
-        font-size: 16px;
-        -webkit-text-size-adjust: 100%;
-        -webkit-font-smoothing: antialiased;
-    }
-}
-
-/* 目录页基础样式 */
-.novel-basic-info {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-}
-
-.novel-cover {
-    margin-right: 20px;
-}
-
-.novel-cover img {
-    width: 100px;
-    height: 140px;
-    object-fit: cover;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.novel-meta {
-    flex: 1;
-}
-
-.novel-meta h1 {
-    margin: 0 0 10px 0;
-    color: #333;
-    font-size: 22px;
-}
-
-.novel-meta p {
-    margin: 5px 0;
-    color: #666;
-    font-size: 14px;
-}
-
-.novel-meta p span {
-    margin-right: 15px;
-}
-
-.novel-meta p a {
-    color: #4a90e2;
-    text-decoration: none;
-}
-
-.novel-meta p a:hover {
-    text-decoration: underline;
-}
-
-.catalog-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
-}
-
-.back-link {
-    color: #4a90e2;
-    text-decoration: none;
-    font-size: 14px;
-    padding: 8px 15px;
-    border: 1px solid #4a90e2;
-    border-radius: 4px;
-    transition: all 0.3s;
-}
-
-.back-link:hover {
-    background: #4a90e2;
-    color: white;
-    text-decoration: none;
-}
-
-.chapter-list-container {
-    background: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.chapter-item {
-    padding: 10px 15px;
-    border-bottom: 1px solid #f0f0f0;
-    transition: background 0.3s;
-}
-
-.chapter-item:hover {
-    background: #f8f9fa;
-}
-
-.chapter-item a {
-    color: #333;
-    text-decoration: none;
-    display: block;
-}
-
-.chapter-item a:hover {
-    color: #4a90e2;
-}
-
-.volume-title {
-    background: #e9f3ff;
-    padding: 12px 15px;
-    font-weight: bold;
-    color: #2c3e50;
-    border-left: 4px solid #4a90e2;
-    margin: 10px 0;
-}
-
-.index-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 10px;
-    margin-top: 20px;
-    border-top: 1px solid #eee;
-}
-
-#indexselect {
-    width: 49%;
-    margin: 0 1rem;
-    padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: #fff;
-    outline: none;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.index-container-btn {
-    background: linear-gradient(135deg, #4a90e2, #3a7bc8);
-    border: none;
-    border-radius: 4px;
-    height: 38px;
-    line-height: 38px;
-    text-align: center;
-    display: block;
-    color: #fff;
-    width: 20%;
-    text-decoration: none;
-    font-size: 14px;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(74, 144, 226, 0.3);
-    transition: all 0.3s;
-}
-
-.index-container-btn:hover {
-    background: linear-gradient(135deg, #3a7bc8, #2a6bb8);
-    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.4);
-}
-
-.disabled-btn {
-    background: linear-gradient(135deg, #ccc, #bbb);
-    cursor: not-allowed;
-    box-shadow: none;
-}
-
-.disabled-btn:hover {
-    background: linear-gradient(135deg, #ccc, #bbb);
-    box-shadow: none;
-}
-
-.page-navigation {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 30px;
-}
-
-.page-info {
-    font-size: 14px;
-    color: #666;
-}
-
-/* 目录页移动端触摸优化 */
-@media (max-width: 768px) {
-    .index-container-btn, .back-link, 
-    .novel-basic-info a, .chapter-item a,
-    .page-navigation a, .volume-title {
-        min-height: 44px;
-        min-width: 44px;
-        padding: 12px 16px;
-        line-height: 1.4;
-    }
-    
-    .chapter-item a {
-        padding: 12px 16px;
-        display: block;
-        min-height: 44px;
-    }
-    
-    .index-container {
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    #indexselect {
-        width: 100%;
-        margin: 10px 0;
-        min-height: 44px;
-        font-size: 16px;
-    }
-    
-    .index-container-btn {
-        width: 100%;
-        min-height: 44px;
-        font-size: 16px;
-    }
-    
-    .novel-basic-info {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .novel-cover {
-        margin-right: 0;
-        margin-bottom: 15px;
-    }
-    
-    .novel-cover img {
-        width: 120px;
-        height: 168px;
-    }
-    
-    .catalog-header {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
-    }
-    
-    .page-navigation {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
-    }
-    
-    a, button, select {
-        -webkit-tap-highlight-color: rgba(74, 144, 226, 0.2);
-        tap-highlight-color: rgba(74, 144, 226, 0.2);
-    }
-}
-
-/* ===== v5 first round ===== */
 .site-search {
     display: flex;
     align-items: center;
-    height: 36px;
-    width: 300px;
-    margin: 5px 2px;
+    flex: 1;
+    max-width: 360px;
+    margin: 0 12px 0 18px;
 }
-
-.bread_crumbs {
-    width: 100%;
-    margin-bottom: 14px;
-    color: #999;
-    font-size: 13px;
-}
-
-.bread_crumbs a { color: #666; }
-
-.book-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 16px;
-}
-
-.book-actions a,
-.back-link {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 40px;
-    padding: 0 16px;
-    border-radius: 4px;
-    color: #fff;
-    background: #bf2c24;
-}
-
-.book-actions a:nth-child(2),
-.back-link { background: #3e3d43; }
-
-.rank-quick-section { padding: 12px 14px; }
-.rank-quick-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 10px;
-}
-.rank-quick-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: flex-end;
-}
-.rank-quick-tabs a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 32px;
-    padding: 0 12px;
-    border-radius: 16px;
-    background: #f6f6f6;
-    color: #666;
-    font-size: 13px;
-}
-.rank-quick-list { margin: 0; padding: 0; }
-.rank-quick-list li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 0;
-    border-bottom: 1px solid #f1f1f1;
-}
-.rank-quick-list li:last-child { border-bottom: 0; }
-.rank-quick-list span {
-    width: 24px;
-    text-align: center;
-    color: #999;
-}
-.rank-quick-list a {
+.site-search .search_input {
     flex: 1;
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
-.rank-quick-list em { color: #999; white-space: nowrap; }
+.site-search #search_btn {
+    flex: none;
+}
 
-.rank-page-head { margin-bottom: 16px; }
-.rank-page-head h1 { font-size: 24px; color: #333; }
-.rank-page-head p { margin-top: 8px; color: #888; }
-.rank-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 18px;
+.sortvisit > ul > div p > .sort-author {
+    display: inline;
+    font-style: normal;
+    color: #888;
 }
-.rank-tabs a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 36px;
-    padding: 0 14px;
-    border-radius: 18px;
-    background: #f6f6f6;
-    color: #666;
-}
-.rank-tabs a.active { background: #bf2c24; color: #fff; }
-.rank-page-list { margin: 0; padding: 0; }
-.rank-page-list li {
-    display: flex;
-    gap: 14px;
-    padding: 14px 0;
-    border-bottom: 1px solid #f1f1f1;
-}
-.rank-page-list .rank-num {
-    width: 30px;
-    flex: 0 0 30px;
-    text-align: center;
-    font-size: 18px;
-    color: #999;
-    line-height: 28px;
-}
-.rank-main { flex: 1; min-width: 0; }
-.rank-bookname {
+.sortvisit > ul > div p > .sort-desc {
     display: block;
-    font-size: 18px;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 8px;
+    margin-top: 4px;
+    color: #777;
+    line-height: 1.7;
 }
-.rank-meta {
+
+.category-pagination { width: 100%; }
+.pagination-pc-wrap { display: block; }
+.pagination-pc {
+    display: block;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.pagination-mobile { display: none; }
+.pagination-pc a,
+.pagination-pc strong,
+.pagination-pc span,
+.pagination-mobile a,
+.pagination-mobile strong,
+.pagination-mobile span {
+    display: inline-block;
+    margin: 2px;
+    padding: 0 8px;
+    min-width: 34px;
+    line-height: 32px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    background: #fff;
+    color: #666;
+    text-align: center;
+}
+.pagination-pc strong,
+.pagination-mobile strong {
+    border-color: #bf2c24;
+    background: #bf2c24;
+    color: #fff;
+}
+.pagination-pc a:hover,
+.pagination-mobile a:hover {
+    border-color: #bf2c24;
+    color: #bf2c24;
+}
+
+.index-container {
+    width: 100%;
+    margin-top: 14px;
+    text-align: center;
+}
+.index-container a,
+.index-container strong,
+.index-container span {
+    display: inline-block;
+    margin: 2px;
+    padding: 0 10px;
+    min-width: 34px;
+    line-height: 34px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    background: #fff;
+    color: #666;
+}
+.index-container strong {
+    border-color: #bf2c24;
+    background: #bf2c24;
+    color: #fff;
+}
+
+.section-info-block {
+    margin-top: 15px;
+    padding: 15px;
+    background: #fff;
+}
+.sub_title {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+.langtail-box {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    color: #999;
-    font-size: 13px;
-    margin-bottom: 8px;
+    gap: 8px 10px;
 }
-.rank-meta em { color: #999; }
-.rank-main p { line-height: 1.8; color: #666; }
-.rank-empty { color: #999; justify-content: center; }
-.top-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+.langtail-box a {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 15px;
+    background: #f6f6f6;
+    color: #666;
 }
-.top-card {
-    border: 1px solid #ececec;
-    border-radius: 6px;
-    padding: 14px;
-}
-.top-card-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-.top-card-head h2 { font-size: 18px; color: #333; }
-.top-card ol { margin: 0; padding: 0; }
-.top-card li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 0;
-    border-bottom: 1px solid #f3f3f3;
-}
-.top-card li:last-child { border-bottom: 0; }
-.top-card li span {
-    width: 24px;
-    text-align: center;
-    color: #999;
-}
-.top-card li a {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-.top-card li em { color: #999; white-space: nowrap; }
-.read-breadcrumbs { padding-top: 10px; }
+.langtail-box a:hover { color: #bf2c24; }
 
-@media (max-width: 768px) {
-    .head {
-        padding: 12px 10px;
-        gap: 10px;
-    }
-    #logo { width: 100%; }
-    .site-search,
-    header form {
+.reader-page-head { margin-bottom: 8px; }
+.read-breadcrumbs { white-space: normal; word-break: break-all; line-height: 1.8; }
+.page-info.reader-page-inline {
+    margin: 8px 0 14px;
+    color: #666;
+    line-height: 1.7;
+}
+.read_bg .content { text-align: left; }
+.read_bg .content p { text-indent: 2em; }
+
+@media screen and (max-width: 768px) {
+    .site-search {
+        max-width: none;
+        margin: 10px 0 0;
         width: 100%;
         order: 3;
     }
-    .header_right {
-        width: 100%;
-        justify-content: space-between;
-        font-size: 14px;
-        padding-top: 0;
-    }
-    .header_right a {
-        padding-left: 0;
-        flex: 1;
-    }
-    .header_right #home { display: block; }
-    nav {
-        overflow-x: auto;
-        white-space: nowrap;
-        flex-wrap: nowrap;
-    }
-    nav a {
-        padding: 0 14px;
-        font-size: 14px;
-    }
-    .rank-quick-head,
-    .catalog-header,
-    .page-navigation {
-        flex-direction: column;
+    .sortvisit > ul > div {
         align-items: flex-start;
     }
-    .rank-quick-tabs,
-    .rank-tabs {
-        width: 100%;
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        padding-bottom: 4px;
+    .sortvisit > ul > div p > .sort-author {
+        display: block;
+        margin: 2px 0 4px;
     }
-    .rank-quick-tabs a,
-    .rank-tabs a { white-space: nowrap; }
-    .rank-page-head h1 { font-size: 20px; }
-    .rank-bookname { font-size: 16px; }
-    .top-grid { grid-template-columns: 1fr; }
-    .book-actions,
-    .page-navigation { width: 100%; }
-    .book-actions a,
-    .back-link { width: 100%; }
-}
-
-
-/* v5.2.1 focused fixes */
-.category-pagination { width: 100%; margin-top: 18px; }
-.pagination-pc { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; }
-.pagination-pc li { list-style: none; }
-.pagination-pc a, .pagination-pc span { display: inline-flex; align-items: center; justify-content: center; min-width: 38px; height: 38px; padding: 0 12px; border: 1px solid #e5e5e5; border-radius: 4px; background: #fff; color: #666; }
-.pagination-pc .active span, .pagination-pc a:hover { background: #4a90e2; color: #fff; border-color: #4a90e2; }
-.pagination-mobile { display: none; }
-.chapter-list-grid ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
-.chapter-list-grid .chapter-item { margin: 0; }
-.langtail-box { display: flex; flex-wrap: wrap; gap: 10px 12px; }
-.langtail-box a { display: inline-flex; padding: 6px 12px; border-radius: 16px; background: #f6f6f6; color: #666; }
-.read-breadcrumbs { white-space: normal; word-break: break-all; line-height: 1.8; }
-.read_bg .page-info { margin-bottom: 12px; color: #666; }
-.read_bg .content { text-align: left; }
-.read_bg .content p { text-indent: 2em; }
-@media (max-width: 768px) {
-  .pagination-pc { display: none; }
-  .pagination-mobile { display: flex; }
-  .chapter-list-grid ul { grid-template-columns: 1fr; }
-  .read-breadcrumbs { font-size: 13px; }
-}
-
-
-/* shipsay v3 收口修正 */
-.header_right a{
-    padding-left:22px;
-}
-.header_right a:first-child{
-    padding-left:0;
-}
-.category-pagination{
-    width:100%;
-    margin-top:18px;
-}
-.pagination-pc-wrap{
-    padding:0;
-}
-.pagination-pc{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    align-items:center;
-    gap:8px;
-    margin:0;
-    padding:0;
-    list-style:none;
-}
-.pagination-pc li{
-    list-style:none;
-    margin:0;
-    padding:0;
-}
-.pagination-pc li a,
-.pagination-pc li span{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    min-width:38px;
-    height:38px;
-    padding:0 12px;
-    border:1px solid #e5e5e5;
-    border-radius:4px;
-    background:#fff;
-    color:#666;
-    text-decoration:none;
-    line-height:38px;
-}
-.pagination-pc li.active span,
-.pagination-pc li a:hover{
-    background:#bf2c24;
-    color:#fff;
-    border-color:#bf2c24;
-}
-.pagination-mobile{
-    display:none;
-}
-.section-info-block{
-    margin:15px 0 0;
-    padding:15px;
-}
-.latest-single-row{
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    gap:10px;
-    padding:10px 0 14px;
-    border-bottom:1px solid #f0f0f0;
-}
-.latest-label{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    min-width:78px;
-    height:30px;
-    padding:0 12px;
-    border-radius:15px;
-    background:#f4f6f8;
-    color:#666;
-    font-size:13px;
-}
-.latest-single-row a{
-    flex:1;
-    min-width:0;
-    color:#333;
-}
-.latest-single-row em{
-    color:#999;
-    font-style:normal;
-    white-space:nowrap;
-}
-.info-chapter-block{
-    margin-top:16px;
-}
-.info-mini-title{
-    margin:0 0 10px;
-    font-size:16px;
-    color:#333;
-}
-.info-chapter-list,
-.chapter-grid{
-    margin:0;
-    padding:0;
-    list-style:none;
-}
-.latest12-list,
-.latest50-list,
-.chapter-grid{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:0 18px;
-}
-.latest12-list .chapter-item,
-.latest50-list .chapter-item,
-.chapter-grid .chapter-item{
-    margin:0;
-}
-.chapter-grid .volume-title{
-    grid-column:1 / -1;
-}
-.reader-page-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:16px;
-    margin-bottom:16px;
-}
-.reader-page-head .text_title{
-    flex:1;
-    min-width:0;
-    margin-bottom:0;
-}
-.reader-page-info{
-    margin:6px 0 0;
-    white-space:nowrap;
-    text-align:right;
-}
-.top-rank-grid{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:18px;
-}
-.top-rank-tabs{
-    margin-bottom:16px;
-}
-@media (max-width:768px){
-    .header_right{
-        gap:0;
+    .pagination-pc-wrap { display: none; }
+    .pagination-mobile { display: block; }
+    .index-container a,
+    .index-container strong,
+    .index-container span,
+    .pagination-mobile a,
+    .pagination-mobile strong,
+    .pagination-mobile span {
+        min-width: 30px;
+        line-height: 30px;
+        padding: 0 8px;
+        font-size: 13px;
     }
-    .header_right a{
-        padding-left:0;
+    .bread_crumbs {
+        font-size: 12px;
+        margin-bottom: 10px;
     }
-    .pagination-pc-wrap{
-        display:none;
+    .section-info-block {
+        padding: 12px;
     }
-    .pagination-mobile{
-        display:flex;
+    .sub_title {
+        font-size: 16px;
+        margin-bottom: 10px;
     }
-    .latest12-list,
-    .latest50-list,
-    .chapter-grid,
-    .top-rank-grid{
-        grid-template-columns:1fr;
+    .langtail-box {
+        gap: 8px;
     }
-    .reader-page-head,
-    .catalog-header{
-        flex-direction:column;
-        align-items:flex-start;
-    }
-    .reader-page-info{
-        text-align:left;
-        white-space:normal;
-    }
-    .latest-single-row{
-        align-items:flex-start;
-    }
-}
-
-
-/* v3 round2 fixes */
-.category-pagination .pages.pagination-pc{
-    display:flex !important;
-    flex-direction:row !important;
-    flex-wrap:wrap !important;
-    justify-content:center;
-    align-items:center;
-    gap:10px;
-    margin:0;
-    padding:0;
-    text-align:center;
-}
-.category-pagination .pages.pagination-pc li,
-.side_commend .category-pagination li{
-    width:auto !important;
-    display:block !important;
-    margin:0 !important;
-    line-height:normal !important;
-}
-.category-pagination .pages.pagination-pc li a,
-.category-pagination .pages.pagination-pc li span{
-    min-width:42px;
-}
-.read_bg .reader-page-head{
-    display:block;
-    margin-bottom:14px;
-}
-.read_bg .text_title .reader-page-inline{
-    display:block;
-    margin:8px 0 0;
-    color:#666;
-    text-align:left;
-    white-space:normal;
-}
-.read_bg .page-info.reader-page-inline{
-    margin-bottom:0;
-}
-@media (max-width:768px){
-    .category-pagination .pages.pagination-pc{
-        display:none !important;
-    }
-    .read_bg .text_title{
-        padding-right:18px;
-    }
-}
-/* shipsay merged baseline for current tpl_info / tpl_indexlist */
-.novel-meta .meta-pairs{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px 14px;
-    margin:6px 0 8px;
-}
-.novel-meta .meta-pairs span{
-    display:inline-flex;
-    align-items:center;
-    gap:0;
-    margin-right:0;
-    white-space:nowrap;
-}
-.novel-meta .meta-pairs .meta-label{
-    font-style:normal;
-    color:#666;
-}
-.novel-meta .meta-pairs .meta-value{
-    color:inherit;
-}
-.novel-meta .meta-pairs a.meta-value{
-    color:#4a90e2;
-}
-.novel-meta .meta-latest{
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    gap:6px 8px;
-    margin:8px 0 0;
-    line-height:1.8;
-}
-.novel-meta .meta-latest .meta-time{
-    color:#999;
-    font-style:normal;
-    white-space:nowrap;
-}
-.catalog-actions{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-}
-.catalog-actions .back-link{
-    margin:0;
-}
-
-@media screen and (max-width:767px){
-    .novel-basic-info{
-        padding:14px;
-        gap:12px;
-        align-items:flex-start;
-    }
-    .novel-cover{
-        margin-right:12px;
-        flex:0 0 90px;
-    }
-    .novel-cover img{
-        width:90px;
-        height:120px;
-    }
-    .novel-meta h1{
-        font-size:20px;
-        line-height:1.4;
-        margin-bottom:8px;
-    }
-    .novel-meta .meta-pairs{
-        gap:4px 10px;
-        margin:4px 0 6px;
-    }
-    .novel-meta .meta-pairs span{
-        font-size:14px;
-    }
-    .novel-meta .meta-latest{
-        font-size:14px;
-        gap:4px 6px;
-    }
-    .catalog-header{
-        gap:12px;
-    }
-    .book-actions,
-    .catalog-actions{
-        width:100%;
-    }
-    .book-actions a,
-    .catalog-actions .back-link{
-        flex:1 1 calc(50% - 5px);
-        min-width:0;
+    .langtail-box a {
+        padding: 5px 10px;
+        font-size: 13px;
     }
 }
