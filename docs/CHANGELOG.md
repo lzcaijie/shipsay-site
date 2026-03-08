@@ -1,3 +1,11 @@
+## 2026-03-09-04 | 模板 | Shipsay 全模板复扫收尾（只动 themes/shipsay + docs）
+- 范围：仅调整 `themes/shipsay/*` 与 `docs/*`，不动 `app / class / include / configs`。
+- 修正：`tpl_recentread.php` 将页面标题与描述变量前置定义，避免 `<title>` / `<meta description>` 在变量尚未赋值时提前输出空值。
+- 修正：`tpl_header.php` 中搜索表单与公共入口在链接缺失时改为禁用展示，不再输出空 `action` 或空 `href`；继续保持“不写死旧路径、模板不反向造业务链接”。
+- 修正：`tpl_error.php` 搜索表单同步采用同一口径：搜索入口缺失时禁用提交，不再让错误页表单默默回投当前地址。
+- 文档：`V5_1_TEMPLATE_STANDARD.md` 与 `VARIABLE_MAP.md` 同步改成“当前链接标准以 `*_raw / *_attr / *_html` 为准”，保留 `*_safe` 仅作旧链路对照，不再作为新标准继续扩散。
+- 结论：当前 Shipsay 模板层继续按“核心给真实链接 → 模板局部整理 raw/attr/html → 缺失时禁用展示”执行，减少空链接与职责边界混乱。
+
 
 ## 2026-03-09-02 | 模板 | Shipsay 首页 / 作者页 / 分类页继续收口（只动 themes/shipsay + docs）
 - 范围：仅调整 `themes/shipsay/*` 与 `docs/*`，不动 `app / class / include / configs`。
