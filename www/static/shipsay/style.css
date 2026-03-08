@@ -2328,27 +2328,9 @@ kbd input {
     }
 }
 
-
-/* shipsay v5.2 merged mobile cleanup */
-.novel-meta .meta-pairs span{
-    display:flex;
-    align-items:baseline;
-    gap:1px;
-}
-.novel-meta .meta-label{
-    flex:none;
-    font-style:normal;
-    color:#555;
-    white-space:nowrap;
-}
-.novel-meta .meta-value{
-    font-weight:400;
-    color:#666;
-}
+/* shipsay mobile cleanup final merge */
 .sortvisit > ul > div p > .sort-author{
-    display:block;
-    margin:0 0 5px;
-    line-height:1.35;
+    display:inline;
     color:#888;
     font-style:normal;
 }
@@ -2356,260 +2338,253 @@ kbd input {
     display:block;
     color:#666;
 }
-
-@media (min-width:769px){
-    .novel-meta p:first-of-type{
-        display:block;
-        margin:5px 0;
-        line-height:1.65;
-    }
-    .novel-meta p:first-of-type span{
-        display:inline;
-        margin-right:15px;
-    }
-    .novel-meta p:nth-of-type(2),
-    .novel-meta p:nth-of-type(3){
-        display:block;
-        margin:5px 0;
-        line-height:1.65;
-    }
-    .novel-meta p:nth-of-type(2) a{
-        display:inline;
-        overflow:visible;
-        text-overflow:clip;
-        white-space:normal;
-        word-break:break-word;
-    }
-    .novel-meta .meta-time{
-        display:inline;
-        margin-left:6px;
-        white-space:nowrap;
-    }
-    .book-actions,
-    .catalog-actions{
-        display:flex;
-        flex-wrap:wrap;
-        gap:10px;
-        width:auto;
-        margin-top:10px;
-    }
-    .book-actions a,
-    .catalog-actions a{
-        width:auto;
-        min-width:100px;
-        padding:0 16px;
-    }
+.novel-meta .meta-pairs{
+    margin:0 0 6px;
+}
+.novel-meta .meta-pairs span{
+    display:inline-flex;
+    align-items:baseline;
+    gap:2px;
+    margin-right:12px;
+}
+.novel-meta .meta-label{
+    font-style:normal;
+    color:#555;
+    white-space:nowrap;
+}
+.novel-meta .meta-value{
+    font-style:normal;
+}
+.novel-meta .meta-latest .meta-time{
+    margin-left:6px;
+    white-space:nowrap;
 }
 
 @media (max-width:768px){
-    /* 首页大神推荐 / 分类页列表：统一图片列与文字列 */
-    .side_commend.side_commend_width > ul.flex > li,
-    .store_left > .side_commend > ul.flex > li{
-        display:flex;
-        align-items:flex-start;
-        gap:8px;
-        min-height:98px;
-        padding:10px 0 12px;
-    }
-    .side_commend.side_commend_width .img_span,
-    .store_left > .side_commend .img_span{
-        flex:0 0 72px;
-        width:72px;
-        margin-right:0;
-    }
-    .side_commend.side_commend_width .img_span a,
-    .store_left > .side_commend .img_span a{
-        width:72px;
-        height:96px;
-    }
-    .side_commend.side_commend_width img,
-    .store_left > .side_commend img{
-        width:72px !important;
-        height:96px !important;
-        margin:0 !important;
-        object-fit:cover;
-        object-position:center top;
-    }
-    .side_commend.side_commend_width .img_span span,
-    .store_left > .side_commend .img_span span{
-        width:72px;
-        min-height:18px;
-        height:auto;
-        top:auto;
-        bottom:0;
-        padding:2px 4px;
-        line-height:1.2;
-    }
-    .side_commend.side_commend_width > ul.flex > li > .w100,
-    .store_left > .side_commend > ul.flex > li > .w100{
-        flex:1 1 auto;
-        min-width:0;
-        min-height:96px;
-        display:flex;
-        flex-direction:column;
-    }
-    .side_commend.side_commend_width h2,
-    .store_left > .side_commend h2{
-        margin:0 0 4px;
-        font-size:16px;
-        line-height:1.4;
-        height:auto;
-        display:-webkit-box;
-        -webkit-box-orient:vertical;
-        -webkit-line-clamp:1;
-        overflow:hidden;
-    }
-    .side_commend.side_commend_width .indent,
-    .store_left > .side_commend .indent{
-        text-indent:0;
-        margin:0 0 6px;
-        min-height:1.55em;
-        max-height:1.55em;
-        line-height:1.55;
-        display:-webkit-box;
-        -webkit-box-orient:vertical;
-        -webkit-line-clamp:1;
-        overflow:hidden;
-        color:#666;
-    }
-    .side_commend.side_commend_width .li_bottom,
-    .store_left > .side_commend .li_bottom{
-        margin-top:auto;
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
-        gap:8px;
-    }
-    .side_commend.side_commend_width .li_bottom > a,
-    .store_left > .side_commend .li_bottom > a{
-        flex:1 1 auto;
-        min-width:0;
-        max-width:none;
-        line-height:1.4;
-    }
-    .side_commend.side_commend_width .li_bottom > a i,
-    .store_left > .side_commend .li_bottom > a i{
-        display:block;
-        overflow:hidden;
-        text-overflow:ellipsis;
-        white-space:nowrap;
-    }
-    .side_commend.side_commend_width .li_bottom > div,
-    .store_left > .side_commend .li_bottom > div{
-        flex:none;
-        display:flex;
-        align-items:center;
-        gap:4px;
-        margin-left:0;
-        white-space:nowrap;
-    }
-    .side_commend.side_commend_width .li_bottom > div em,
-    .store_left > .side_commend .li_bottom > div em{
-        margin-right:0;
-        display:inline-flex;
-        align-items:center;
-        white-space:nowrap;
+    .section,
+    .section_mark,
+    .side_commend,
+    .lastupdate,
+    aside{
+        padding:10px 12px;
     }
 
-    /* 首页分类首卡：同一套图片和文字节奏 */
+    .side_commend li,
+    .searchresult,
+    #tempBookcase ul li,
+    .section_mark li,
     .sortvisit > ul > div{
         display:flex;
         align-items:flex-start;
-        gap:8px;
+        gap:10px;
+        width:100%;
+        margin:0 0 12px 0;
+        padding:10px 0;
         min-height:96px;
-        height:auto;
-        padding:8px 0 10px;
-        overflow:hidden;
-        line-height:1.55;
     }
+
+    .img_span,
     .sortvisit > ul > div > a:first-child{
         flex:0 0 72px;
         width:72px;
         margin-right:0;
-        display:block;
     }
+
+    .img_span a,
+    .sortvisit > ul > div > a:first-child{
+        display:block;
+        width:72px;
+        height:96px;
+        overflow:hidden;
+        border-radius:2px;
+    }
+
+    .section_mark img,
+    .side_commend img,
+    .img_span img,
     .sortvisit > ul > div img{
         width:72px !important;
         height:96px !important;
         margin:0 !important;
         object-fit:cover;
         object-position:center top;
+        box-shadow:none;
     }
+
+    .img_span span{
+        width:72px;
+        min-height:18px;
+        height:auto;
+        top:auto;
+        bottom:0;
+        padding:2px 4px;
+        font-size:10px;
+        line-height:1.2;
+        text-align:center;
+    }
+
+    .side_commend li > .w100,
+    .searchresult > div:last-child,
+    #tempBookcase .bookcase-items,
     .sortvisit > ul > div p{
         flex:1 1 auto;
+        width:auto;
         min-width:0;
-        margin:0;
-        line-height:1.55;
-        max-height:none;
-        overflow:visible;
     }
+
+    .side_commend li > .w100,
+    .searchresult > div:last-child,
+    #tempBookcase .bookcase-items{
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-start;
+        min-height:96px;
+    }
+
+    .side_commend h2,
+    .searchresult h3,
+    #tempBookcase .bookcase-items p:first-child a,
     .sortvisit > ul > div p > a{
         display:block;
-        margin:0 0 4px;
+        margin:0 0 6px;
+        line-height:1.45;
+        overflow:hidden;
+        white-space:nowrap;
+        text-overflow:ellipsis;
+        height:auto;
+        word-break:break-word;
+    }
+
+    .side_commend .indent,
+    .searchresult .searchresult_p,
+    .sortvisit > ul > div p > .sort-desc{
+        text-indent:0;
+        display:-webkit-box;
+        -webkit-box-orient:vertical;
+        -webkit-line-clamp:2;
+        overflow:hidden;
+        height:auto;
+        min-height:0;
+        margin:0 0 8px;
+        line-height:1.6;
+        color:#777;
+    }
+
+    .searchresult h3,
+    .side_commend h2{
         font-size:16px;
+    }
+
+    .side_commend .li_bottom{
+        margin-top:auto;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:8px;
+        flex-wrap:nowrap;
+    }
+
+    .side_commend .li_bottom > a{
+        min-width:0;
+        flex:1 1 auto;
+        max-width:none;
         line-height:1.4;
+    }
+
+    .side_commend .li_bottom > div{
+        display:flex;
+        flex-wrap:nowrap;
+        gap:4px;
+        width:auto;
+        margin-left:auto;
+        flex:0 0 auto;
+    }
+
+    .side_commend .li_bottom > a i,
+    .side_commend .li_bottom > div em{
+        display:block;
         overflow:hidden;
         text-overflow:ellipsis;
         white-space:nowrap;
     }
-    .sortvisit > ul > div p > .sort-author{
-        margin:0 0 5px;
-        font-size:13px;
-        line-height:1.32;
-    }
-    .sortvisit > ul > div p > .sort-desc{
-        display:-webkit-box;
-        -webkit-box-orient:vertical;
-        -webkit-line-clamp:1;
-        overflow:hidden;
-        max-height:1.55em;
-        line-height:1.55;
-        word-break:break-word;
+
+    .side_commend em{
+        margin-right:0;
     }
 
-    /* 详情页 / 目录页：元信息只保留一套紧凑规则 */
+    .sortvisit > ul{
+        padding:10px 0 0;
+    }
+
+    .sortvisit > ul > div{
+        height:auto;
+        line-height:1.6;
+    }
+
+    .sortvisit > ul > div p{
+        display:block;
+        margin:0;
+        max-height:none;
+        overflow:visible;
+    }
+
+    .sortvisit > ul > div p > a{
+        font-size:15px;
+    }
+
     .novel-basic-info{
         display:flex;
+        flex-direction:row;
+        padding:14px 12px;
         align-items:flex-start;
-        gap:12px;
-        padding:14px 12px 12px;
         text-align:left;
+        gap:12px;
     }
+
     .novel-cover{
-        flex:0 0 86px;
-        width:86px;
         margin:0;
+        flex:0 0 78px;
+        width:78px;
     }
+
     .novel-cover img{
-        width:86px;
-        height:116px;
-        object-fit:cover;
+        width:78px;
+        height:104px;
     }
+
     .novel-meta{
-        flex:1 1 auto;
         min-width:0;
-        padding-top:0;
+        flex:1 1 auto;
     }
+
     .novel-meta h1{
-        margin:0 0 8px;
-        font-size:18px;
+        font-size:20px;
         line-height:1.35;
+        margin:0 0 8px;
     }
+
+    .novel-meta p{
+        line-height:1.6;
+        font-size:13px;
+        margin:0 0 6px;
+    }
+
     .novel-meta .meta-pairs{
-        display:flex;
-        flex-wrap:wrap;
-        gap:6px 12px;
+        display:grid;
+        grid-template-columns:repeat(2, minmax(0, 1fr));
+        gap:6px 10px;
         margin:0 0 8px;
         line-height:1.5;
     }
+
     .novel-meta .meta-pairs span{
-        display:inline-flex;
+        display:flex;
         align-items:baseline;
-        gap:1px;
+        gap:2px;
         min-width:0;
         margin:0;
-        white-space:nowrap;
     }
+
     .novel-meta .meta-pairs a,
     .novel-meta .meta-pairs .meta-value{
         min-width:0;
@@ -2617,39 +2592,61 @@ kbd input {
         text-overflow:ellipsis;
         white-space:nowrap;
     }
+
     .novel-meta .meta-latest{
         display:flex;
         flex-wrap:wrap;
         gap:4px 6px;
-        margin:0 0 8px;
+        margin:0 0 6px;
         line-height:1.5;
     }
+
     .novel-meta .meta-latest a{
-        flex:1 1 100%;
+        flex:1 1 100%; 
         min-width:0;
         display:block;
         overflow:hidden;
         text-overflow:ellipsis;
         white-space:nowrap;
+        word-break:normal;
     }
-    .novel-meta .meta-latest .meta-time,
-    .novel-meta .meta-time{
+
+    .novel-meta .meta-latest .meta-time{
         margin-left:0;
-        white-space:nowrap;
     }
+
     .book-actions,
     .catalog-actions{
         display:grid;
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-template-columns:repeat(2, minmax(0, 1fr));
         gap:10px;
         width:100%;
-        margin:10px 0 0;
     }
+
     .book-actions a,
     .catalog-actions a{
         width:100%;
         min-width:0;
-        min-height:44px;
+        min-height:42px;
         padding:0 10px;
+    }
+
+    .catalog-header,
+    .catalog-header.info-catalog-header{
+        align-items:flex-start;
+        gap:12px;
+    }
+
+    .catalog-header{
+        margin-bottom:16px;
+    }
+
+    .catalog-header > div:first-child{
+        width:100%;
+        min-width:0;
+    }
+
+    .catalog-header .page-info{
+        margin-top:6px;
     }
 }
