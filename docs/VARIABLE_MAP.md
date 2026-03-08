@@ -2,7 +2,7 @@
 
 > 目的：把“后台设置变量、URL 占位符、SEO 占位符、模板运行时变量”分开写清楚，避免后续 AI 或人工把不同层级的变量混用。
 >
-> 说明：本表基于 `fz1.112book.com_20260308v2` 最新源码扫描整理。
+> 说明：本表基于 `fz1.112book.com_20260308v2` 当前最新源码扫描整理。
 
 ---
 
@@ -290,7 +290,7 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$pre_url / $next_url` | 上一章 / 下一章 |
 | `$prevpage_url / $nextpage_url` | 阅读分页链接 |
 | `$now_pid / $max_pid` | 阅读分页当前页 / 总页数 |
-| `$index_url / $index_url_safe` | 返回目录 |
+| `$index_url / $index_url_safe` | 返回目录；当前 `tpl_reader.php` 在缺失目录链接时会临时回退详情页，不应误判为新标准 |
 | `$info_url` | 返回详情 |
 | `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
@@ -323,6 +323,9 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$top_sections` | 排行聚合页榜单配置（由 `shipsay/app/top.php` 准备） |
 | `$top_rank_lists` | 排行聚合页榜单数据（由 `shipsay/app/top.php` 准备） |
 | `$top_rank_limit` | 排行聚合页单榜展示数量上限 |
+| `$rank_sections` | `tpl_top.php` 内对 `$top_sections` 的模板局部别名 |
+| `$rank_lists` | `tpl_top.php` 内对 `$top_rank_lists` 的模板局部别名 |
+| `$rank_limit` | `tpl_top.php` 内对 `$top_rank_limit` 的模板局部别名 |
 | `allvisit{sortid}` | 某分类总榜列表（由 `top.php` 动态变量准备） |
 | `monthvisit{sortid}` | 某分类月榜 |
 | `weekvisit{sortid}` | 某分类周榜 |
@@ -480,6 +483,8 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - `tpl_search.php` 中的 `$searchkey` 仅视为原始输入，模板前台展示必须改用 `$searchkey_safe` 或局部高亮 helper。
 - `tpl_indexlist.php` 中的 BreadcrumbList 链接必须使用 `$indexlist_breadcrumb_item` 这类明确兜底值，不能回退引用未定义原始变量。
 - `tpl_reader.php` 中的本地阅读记录写入应使用 `$reader_url_safe`，不要直接把原始 `$uri` 当成稳定链接。
+- `tpl_top.php` 当前模板实际消费的是 `$rank_sections / $rank_lists / $rank_limit`，它们是对 app 层 `$top_sections / $top_rank_lists / $top_rank_limit` 的模板局部别名。
+- `shipsay/app/search.php` 当前已确认存在 `$search_cache_time` 初始化，后续搜索页若只出现缓存时间差异，不要误判成模板变量问题。
 - `tpl_author.php` 中的作者名与作品数展示建议先整理为 `$author_safe / $author_count_safe`，再输出到前台。
 
 ### Footer / recentread / error 模板本地 safe 变量（本轮补充）
@@ -857,11 +862,3 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - **CSS 控制块问题**：分页被容器规则污染、图片列和文字列错位、按钮/元信息间距异常
 
 默认先排除 CSS 控制块污染，再决定是否进入模板或变量链层修改。
-
-### 10.14 第四轮程序扫描补充（2026-03-08）
-
-- `search_cache_time` 属于搜索页程序层缓存时间变量，应在 `shipsay/app/search.php` 入口先初始化默认值，再参与“无结果兜底热门书”查询。
-- 长尾详情页中的目录入口变量：`shipsay/app/info_langtail.php` 当前应以真实书籍 `$index_url = Url::index_url($articleid)` 为准，不再默认回到长尾伪目录。
-- 长尾目录页当前分页仍使用 `Url::index_url($langtail_articleid, $pid, true)` 生成长尾目录页自身链接；这与“详情页目录按钮跳真实目录”的语义不同，后续排查时不能混为同一规则。
-- `shipsay/configs/_bak/`、`bundle_*`、临时日志这类残留文件不属于模板运行时变量真源，不参与 v5 变量标准判断，也不应纳入后续交付口径。
-

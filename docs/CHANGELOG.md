@@ -1,9 +1,9 @@
-## 2026-03-08 | 程序+标准 | Shipsay v5 全程序扫描与标准补充
-- 扫描：整包 PHP 基础语法已过；当前未发现明显 PHP 8 专属语法，后续仍按 PHP 7.4 口径维护。
-- 修正：`shipsay/app/search.php` 先初始化 `$search_cache_time` 默认值，避免“未提交 searchkey 且启用 redis 时”出现未定义变量告警。
-- 标准：补充“长尾详情页目录入口应跳真实目录、长尾目录页分页仍属长尾链路、排查时优先核对 `info_langtail.php` / `indexlist_langtail.php` / `shipsay/class/Url.php`”的程序层口径。
-- 标准：明确 `shipsay/configs/_bak/` 等备份残留不属于 v5 真源，不纳入模板标准判断与后续交付范围。
-- 模板核对：`themes/shipsay` 当前 A/B/C 分层不变；`tpl_category.php` 旧交互写法、`tpl_error.php` 行内样式、`tpl_rank.php` / `tpl_top.php` 的视觉统一继续列为待收口项。
+## 2026-03-08 | 标准 | Shipsay v5 文档审计（第五轮 / 程序与模板对照）
+- 核对：按 `fz1.112book.com_20260308v2` 重新对照 `docs`、`shipsay/app/*` 与 `themes/shipsay/*`，本轮重点不改模板，只修正文档口径。
+- 修正：`VARIABLE_MAP` 顶部基线版本更新为 `20260308v2`，避免后续继续按旧包口径判断当前模板。
+- 修正：明确 `tpl_top.php` 当前模板局部实际使用的是 `$rank_sections / $rank_lists / $rank_limit`，它们对应 app 层 `$top_sections / $top_rank_lists / $top_rank_limit`，避免后续误把聚合页变量写错。
+- 固定：分类页 `onclick / javascript: / href="#"` 仍记为模板层待整改项；但阅读页字号/夜间/极简按钮，以及 app 层分页输出中的 `javascript:void(0);` 禁用态，当前视为兼容交互，不与旧跳转写法混为同一级问题。
+- 核对：本轮程序与 shipsay 模板复扫未发现需要立即写入标准的 PHP 7.4 语法级阻塞项；后续仍优先按“文档 → 变量链 → 结构/CSS → 程序链路”的顺序排查。
 
 ## 2026-03-08 | 标准 | Shipsay v5 标准收口（第四轮 / 交接版）
 - 固定：当前 `themes/shipsay` 进入“可复用母模板”阶段，后续修改默认优先遵守：**先核文档 → 再看当前模板变量链 → 最后只借旧布局/旧 CSS 的正确控制块**。
@@ -60,7 +60,6 @@
 - 细化：首页分类首卡 `sortvisit` 的封面与右侧文案改为更紧凑的上下节奏，作者单独成行，不再依赖 `<br>` 撑开视觉。
 - 细化：详情页/目录页顶部 `novel-basic-info` 在手机端改为稳定的图文双列节奏，作者/分类/状态/字数按两列收口。
 - 同步：`docs/V5_1_TEMPLATE_STANDARD.md`、`docs/VARIABLE_MAP.md` 补充本轮可复用标准说明。
-
 
 # CHANGELOG（分站 shipsay-site，最新在最前）
 
