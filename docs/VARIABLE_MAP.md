@@ -284,8 +284,8 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$chapterwords` | 当前章字数 |
 | `$rico_content` | 正文 HTML（核心变量） |
 | `$reader_url_raw / $reader_url_attr` | 当前阅读页模板局部 raw / attr |
-| `$author_safe / $author_count_safe` | 作者页本地安全显示值（作者名 / 作品数） |
-| `$indexlist_breadcrumb_item` | 目录页 BreadcrumbList 使用的安全目录链接 |
+| `$site_home_url_raw / $site_home_url_attr` | 首页入口 raw / attr |
+| `$sort_url_raw / $sort_url_attr` | 分类入口 raw / attr |
 | `$chapterwords_safe / $now_pid_safe / $max_pid_safe` | 阅读页字数 / 分页本地安全数值 |
 | `$pre_url / $next_url` | 上一章 / 下一章 |
 | `$prevpage_url / $nextpage_url` | 阅读分页链接 |
@@ -318,7 +318,7 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 - 作者页当前复用 `side_commend / side_commend_width` 主容器，不再继续写 `style="width:100%;"` 这类旧布局兜底。
 - 作者页封面默认图、最后更新时间、页面包屑均归入模板展示层安全输出，不新增业务 URL 生成。
 
-## 5.9 排行榜 `tpl_rank.php / tpl_top.php / tpl_rank_list.php`
+## 5.9 排行榜 `tpl_rank.php / tpl_top.php`
 
 ### 聚合页常用变量
 | 变量 | 含义 |
@@ -337,15 +337,19 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$query` | 榜单 key，如 `monthvisit` |
 | `$page_title` / `$current_title` | 当前榜单标题 |
 | `$articlerows` | 榜单书籍列表 |
-| `$fake_top` | 排行入口前缀 |
-| `$fake_rankstr` | 旧 rank 前缀（兼容） |
-| `$rank_base_raw / $rank_entry_url / $rank_detail_base` | 排行链接基础值（模板层不再补 `/rank/`） |
+| `$fake_top` | 配置层唯一排行入口前缀 |
+| `$fake_rankstr` | 旧路由兼容前缀（不再作为模板默认输出源） |
+| `$rank_entry_url / $rank_detail_base` | app 输出的排行聚合入口 / 单榜明细基础前缀 |
+| `$rank_entry_url_raw / $rank_detail_base_raw` | 模板局部 | 聚合页 / 单榜页本地整理后的 raw 值 |
 | `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
 ## 5.10 阅读记录 `tpl_recentread.php`
 
 | 变量 | 含义 |
 |---|---|
+| `$site_home_url_raw / $site_home_url_attr` | 首页入口 raw / attr |
+| `$recentread_page_title / $recentread_page_title_html` | 页面标题原始值 / 安全输出值 |
+| `$recentread_page_description / $recentread_page_description_html` | 页面描述原始值 / 安全输出值 |
 | `$popular` | 猜你喜欢/热门数据 |
 | 最近阅读主体 | 当前主要由前端 `showtempbooks()` 生成 |
 
@@ -402,7 +406,7 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | 搜索页 | `shipsay/app/search.php` | `tpl_search.php` |
 | 作者页 | `shipsay/app/author.php` | `tpl_author.php` |
 | 阅读记录 | `shipsay/app/recentread.php` | `tpl_recentread.php` |
-| 排行页 | `shipsay/app/top.php` | `tpl_top.php / tpl_rank.php / tpl_rank_list.php` |
+| 排行页 | `shipsay/app/top.php` | `tpl_top.php / tpl_rank.php` |
 
 ---
 
@@ -482,7 +486,6 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 补充说明：
 - `tpl_top.php` 当前基线不再直接查库，榜单数据应由 `shipsay/app/top.php` 预先准备。
 - `tpl_search.php` 中的 `$searchkey` 仅视为原始输入，模板前台展示必须改用 `$searchkey_safe` 或局部高亮 helper；搜索结果主容器优先复用现有 `side_commend_width` 类，不再继续写模板内联宽度。
-- `tpl_indexlist.php` 中的 BreadcrumbList 链接必须使用 `$indexlist_breadcrumb_item` 这类明确兜底值，不能回退引用未定义原始变量。
 - `tpl_reader.php` 中的本地阅读记录写入应使用模板局部整理后的 `$reader_url_raw`；不要直接把原始 `$uri` 当成稳定链接。
 - `tpl_author.php` 中的作者名、作品数、封面默认图与页面包屑当前已统一整理为展示层变量后再输出；后续继续沿用 `*_raw / *_attr / *_html` 命名。
 
@@ -622,7 +625,14 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - 目录页虽然是后期新增页，但变量链已经走到正确方向
 - 后续可以借旧详情页布局，不允许把变量链退回旧模板
 
-### 10.4 阅读页双链路属于正式变量规则，不是临时兼容
+### 10.4 排行与 SEO 当前闭环规则
+
+- `tpl_top.php` 当前正式接入 `ss_seo_render('rank')`，并以模板局部 `$page_title='排行榜'` 接入 `shipsay/configs/seo_tpl.php` 的 `seo_rank_*` 主链路。
+- 当前标准中**没有独立的 `seo_top_*` 主链路**；后续若要新增，必须在 `shipsay/configs/seo_tpl.php`、`shipsay/seo.php`、文档三处一起闭环。
+- `fake_top` 是当前唯一正式排行入口前缀；`fake_rankstr` 只保留给旧路由兼容，不再作为母模板默认导航入口。
+- `tpl_rank.php` / `tpl_top.php` 只允许消费 `rank_entry_url / rank_detail_base` 与 `fake_top`；不允许继续在模板层拼接旧 `/rank/` 入口。
+
+## 10.5 阅读页双链路属于正式变量规则，不是临时兼容
 
 阅读页 `tpl_reader.php` 当前正式规则：
 
@@ -634,15 +644,21 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - 但普通用户 HTML 源码正文为空是**正确行为**
 - 不允许后续再把普通用户链路改回模板直出正文
 
-### 10.5 分类页属于“旧交互待整改页”
+### 10.6 分类页属于“旧交互待整改页”
 
 `tpl_category.php` 当前需要继续保留的真实变量有：
 - `$retarr`
+- `$page / $allpage / $jump_html / $jump_html_wap`
 - `$sortcategory`
 - `$sortid / $sortname`
 - `$fullflag / $full_url`
 - `$allbooks_url / $allbooks_url_raw / $allbooks_url_attr`
 - `$seo_title / $seo_keywords / $seo_description`
+
+当前核心约束补充：
+- `shipsay/app/category.php` 目前存在 **分类分页最多只保留 10 页** 的核心上限：`$category_max_page = 10`。
+- 母模板与文档标准必须按这个现状验收，不允许在模板层假定存在第 11 页及以后。
+- 后续若要放开该上限，必须先作为**核心规则变更**单独处理，再同步模板与文档，不得只在模板层放宽。
 
 但下面这些写法只视为当前兼容实现，不应继续当标准扩散：
 - `onclick="javascript:..."`
@@ -650,7 +666,7 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - `href="javascript:"`
 - 过重的模板内 fallback 导航写法
 
-### 10.6 当前确认允许写死与禁止写死的边界
+### 10.6.1 当前确认允许写死与禁止写死的边界
 
 #### 允许写死的界面文案
 - `作者：`
