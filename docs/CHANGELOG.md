@@ -1,3 +1,22 @@
+## 2026-03-09-06 | 文档 | Shipsay v13 docs 全量收口（只动 docs）
+- 范围：仅调整 `docs/*`，不动模板与核心。
+- 修正：`OPS.md` 同步当前真实运行目录 `/www/wwwroot/fz1.112book.com`，并把交付流程收口为“增量包 + A/B”；去掉当前基线中不存在的 `shipsay/config.php`、`shipsay/config.local.php` 旧排除项。
+- 修正：`PROJECT_STRUCTURE.md` 明确当前母模板标准路径为 `themes/shipsay/*`，阅读页链路说明不再沿用过泛的 `themes/*/tpl_reader.php` 口径。
+- 修正：`V5_1_TEMPLATE_STANDARD.md` 新增“模板修改注意事项”：现有模板修复同样遵守母模板标准，只是结构尽量少动；URL 标准化、去掉多余会员系统、统一当前核心支持的变量/SEO/链接链仍属于应做项；子模板基于母模板微调生成。
+- 修正：`VARIABLE_MAP.md` 基线说明切换到 `fz1.112book.com_20260309v1`，并明确当前母模板标准路径为 `themes/shipsay/tpl_*.php`。
+- 结论：当前 docs 收口重点从“变量/链路定义”扩展到“模板修改方法标准”，为后续现有模板修复与母模板/子模板派生提供统一规则。
+
+## 2026-03-09-05 | 模板 | Shipsay 排行模板回归现有 CSS（v12）
+- 范围：仅调整 `themes/shipsay/tpl_top.php` 与 `tpl_rank.php`，不动核心。
+- 修正：`tpl_top.php` 将作者节点恢复为与现有 CSS 匹配的旧结构，避免 `.top-card li span` 的固定宽度规则把作者压成竖排。
+- 修正：`tpl_rank.php` 恢复为与当前 `style.css` 匹配的结构，不再沿用一套与现有样式类名不兼容的新结构；`/top/weekvisit/` 等单榜页继续按当前 CSS 输出。
+- 结论：排行问题最终定性为“模板结构与现有 CSS 不匹配”，不是核心回退问题。
+
+## 2026-03-09-05 | 回退 | Shipsay 排行 fallback 误改回退（v10 已撤回）
+- 说明：曾尝试修改 `shipsay/include/tpl_top_default.php` 以统一排行 fallback，但该改动改变了核心 fallback 页面原有展示模型，不适合作为当前阶段的核心标准。
+- 处理：相关改动已通过 `revert: rollback shipsay rank fallback v10` 正式回退；当前 `tpl_top_default.php` 继续保持 `fz1.112book.com_20260309v1` 基线原样。
+- 结论：从此处开始再次确认：核心默认冻结，后续模板必须适配核心，不再反过来改核心去贴模板标准。
+
 ## 2026-03-09-05 | 文档 | Shipsay 最终验收式 docs 收尾（只动 docs）
 - 范围：仅调整 `docs/*`，不动 `themes/shipsay/*` 与核心目录。
 - 修正：`VARIABLE_MAP.md` 将 `tpl_header.php` 头部变量表改为当前真实运行口径：统一记录 `*_raw / *_attr / *_html`，不再把旧的 `*_safe` 头部链接变量写成现行标准。
