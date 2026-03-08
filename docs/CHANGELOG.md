@@ -1,3 +1,8 @@
+## 2026-03-09-07 | 文档 | Shipsay v14 标准文档最终收束（只动 docs）
+- 修正：`VARIABLE_MAP.md` 将排行聚合页输入正式收口为 `top_sections / top_rank_lists / top_rank_limit`，不再把 `allvisit{sortid}` / `monthvisit{sortid}` / `weekvisit{sortid}` 继续写成母模板常用标准输入。
+- 修正：`VARIABLE_MAP.md` 删除 2026-03-07 历史扫描补充大段，避免把阶段性备忘误当成现行标准；历史过程说明统一留在 `CHANGELOG.md`。
+- 补充：`V5_1_TEMPLATE_STANDARD.md` 明确排行页属于高风险页面，要求 `tpl_top.php / tpl_rank.php` 默认先尊重当前正常 DOM 与现有 CSS，不因命名更规整就顺手改作者节点、图片块或列表层级。
+
 ## 2026-03-09-06 | 文档 | Shipsay v13 docs 全量收口（只动 docs）
 - 范围：仅调整 `docs/*`，不动模板与核心。
 - 修正：`OPS.md` 同步当前真实运行目录 `/www/wwwroot/fz1.112book.com`，并把交付流程收口为“增量包 + A/B”；去掉当前基线中不存在的 `shipsay/config.php`、`shipsay/config.local.php` 旧排除项。
