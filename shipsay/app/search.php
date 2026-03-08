@@ -1,6 +1,7 @@
 <?php
 
 include_once __ROOT_DIR__.'/shipsay/configs/search.ini.php';
+$search_cache_time=$ShipSaySearch['cache_time']?:0;
 if($ShipSaySearch['delay']===0)
 {
 	echo '<script>alert("对不起,管理员已关闭此功能.");window.history.go(-1);</script>';
@@ -23,7 +24,6 @@ if(isset($_REQUEST['searchkey'])&&$_REQUEST['searchkey']!="")
 	}
 	if($is_ft)$searchkey=Convert::jt2ft($searchkey,1);
 	$res_limit=$ShipSaySearch['limit']?:100;
-	$search_cache_time=$ShipSaySearch['cache_time']?:0;
 	$query=$rico_sql.'AND (articlename LIKE "%'.$searchkey.'%" OR author LIKE "%'.$searchkey.'%") ORDER BY lastupdate DESC LIMIT '.$res_limit;
 	if(isset($redis))
 	{
