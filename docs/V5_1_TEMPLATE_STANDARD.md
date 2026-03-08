@@ -357,8 +357,9 @@
 ### 新规则
 - 后台 `fake_top` 是唯一正式排行入口前缀
 - `fake_rankstr` 仅保留给旧路由兼容，不再作为模板默认导航入口
-- `tpl_top.php` / `tpl_rank.php` 统一优先消费 `rank_entry_url / rank_detail_base`，缺失时才允许回退到 `fake_top`
-- `tpl_top.php` 当前正式接入 `seo_rank_*` 主链路，并以模板局部 `page_title=排行榜` 闭环；当前标准中不再单独扩散 `seo_top_*`
+- `tpl_top.php` / `tpl_rank.php` / `shipsay/include/tpl_top_default.php` 统一优先消费 `rank_entry_url / rank_detail_base`，缺失时才允许回退到 `fake_top`
+- `tpl_top.php` 与 `shipsay/include/tpl_top_default.php` 当前正式接入 `seo_rank_*` 主链路，并以模板局部 `page_title=排行榜` 闭环；当前标准中不再单独扩散 `seo_top_*`
+- 排行 fallback 模板不得再使用 `sortarr + allvisit{sortid}` 旧分类榜逻辑，必须直接复用 `shipsay/app/top.php` 已准备好的 `top_sections / top_rank_lists / top_rank_limit`
 - 榜单切换必须自适应
 - 不允许模板里继续写死 `/top/` 或 `/rank/`
 

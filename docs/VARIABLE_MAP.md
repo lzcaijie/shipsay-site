@@ -317,18 +317,14 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 - 作者页当前复用 `side_commend / side_commend_width` 主容器，不再继续写 `style="width:100%;"` 这类旧布局兜底。
 - 作者页封面默认图、最后更新时间、页面包屑均归入模板展示层安全输出，不新增业务 URL 生成。
 
-## 5.9 排行榜 `tpl_rank.php / tpl_top.php`
+## 5.9 排行榜 `tpl_rank.php / tpl_top.php / shipsay/include/tpl_top_default.php`
 
 ### 聚合页常用变量
 | 变量 | 含义 |
 |---|---|
-| `$sortarr` | 全部分类 |
 | `$top_sections` | 排行聚合页榜单配置（由 `shipsay/app/top.php` 准备） |
 | `$top_rank_lists` | 排行聚合页榜单数据（由 `shipsay/app/top.php` 准备） |
 | `$top_rank_limit` | 排行聚合页单榜展示数量上限 |
-| `allvisit{sortid}` | 某分类总榜列表（由 `top.php` 动态变量准备） |
-| `monthvisit{sortid}` | 某分类月榜 |
-| `weekvisit{sortid}` | 某分类周榜 |
 
 ### 单榜页常用变量
 | 变量 | 含义 |
@@ -340,6 +336,7 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$fake_rankstr` | 旧路由兼容前缀（不再作为模板默认输出源） |
 | `$rank_entry_url / $rank_detail_base` | app 输出的排行聚合入口 / 单榜明细基础前缀 |
 | `$rank_entry_url_raw / $rank_detail_base_raw` | 模板局部 | 聚合页 / 单榜页本地整理后的 raw 值 |
+| `$rank_sections / $rank_lists / $rank_limit` | 模板局部 | `tpl_top.php` / `tpl_top_default.php` 基于 `top_sections / top_rank_lists / top_rank_limit` 整理后的展示变量 |
 | `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
 ## 5.10 阅读记录 `tpl_recentread.php`
@@ -483,7 +480,7 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 这条属于变量/数据语义判断红线，后续写标准时必须保留。
 
 补充说明：
-- `tpl_top.php` 当前基线不再直接查库，榜单数据应由 `shipsay/app/top.php` 预先准备。
+- `tpl_top.php` 与 `shipsay/include/tpl_top_default.php` 当前基线都不再直接查库，榜单数据应由 `shipsay/app/top.php` 预先准备。
 - `tpl_search.php` 中的 `$searchkey` 仅视为原始输入，模板前台展示必须改用 `$searchkey_safe` 或局部高亮 helper；搜索结果主容器优先复用现有 `side_commend_width` 类，不再继续写模板内联宽度。
 - `tpl_reader.php` 中的本地阅读记录写入应使用模板局部整理后的 `$reader_url_raw`；不要直接把原始 `$uri` 当成稳定链接。
 - `tpl_author.php` 中的作者名、作品数、封面默认图与页面包屑当前已统一整理为展示层变量后再输出；后续继续沿用 `*_raw / *_attr / *_html` 命名。
