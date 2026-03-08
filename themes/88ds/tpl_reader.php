@@ -37,7 +37,33 @@ $pageDescription .= '，作者：' . $author . '。';
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <link rel="canonical" href="<?=$uri?>">
+  <?php
+  $reader_url_raw = isset($uri) ? (string)$uri : '';
+  $reader_url_attr = htmlspecialchars($reader_url_raw, ENT_QUOTES, 'UTF-8');
+  $site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
+  $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
+  $sort_url_raw = (string)Sort::ss_sorturl($sortid);
+  $sort_url_attr = htmlspecialchars($sort_url_raw, ENT_QUOTES, 'UTF-8');
+  $info_url_attr = htmlspecialchars((string)$info_url, ENT_QUOTES, 'UTF-8');
+  $index_url_attr = htmlspecialchars((string)$index_url, ENT_QUOTES, 'UTF-8');
+  $author_url_attr = htmlspecialchars((string)$author_url, ENT_QUOTES, 'UTF-8');
+  $reader_breadcrumb_ld = [
+      '@context' => 'https://schema.org',
+      '@type' => 'BreadcrumbList',
+      'itemListElement' => [
+          ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => $site_home_url_raw],
+          ['@type' => 'ListItem', 'position' => 2, 'name' => $sortname, 'item' => $sort_url_raw],
+          ['@type' => 'ListItem', 'position' => 3, 'name' => $articlename, 'item' => (string)$info_url],
+          ['@type' => 'ListItem', 'position' => 4, 'name' => $chaptername, 'item' => $reader_url_raw],
+      ],
+  ];
+  $reader_page_url = function ($page) use ($articleid, $chapterid) {
+      $page = intval($page);
+      if ($page <= 1) return Url::chapter_url($articleid, $chapterid);
+      return Url::chapter_url($articleid, $chapterid, $page);
+  };
+  ?>
+  <link rel="canonical" href="<?=$reader_url_attr?>">
     <?php
   require_once __ROOT_DIR__.'/shipsay/seo.php';
   list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('reader');
@@ -54,16 +80,17 @@ $pageDescription .= '，作者：' . $author . '。';
   <meta name="mobile-agent" content="format=html5;url=<?=$uri?>">
   
   <meta property="og:type" content="novel">
-  <meta property="og:title" content="<?=$pageTitle?>">
-  <meta property="og:description" content="《<?=$articlename?>》<?=$chaptername?>：<?=$reader_des?>">
+  <meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
+  <meta property="og:description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
   <meta property="og:novel:category" content="<?=$sortname?>小说">
   <meta property="og:novel:author" content="<?=$author?>">
   <meta property="og:novel:book_name" content="<?=$articlename?>">
-  <meta property="og:novel:index_url" content="<?=$info_url?>">
-  <meta property="og:novel:info_url" content="<?=$info_url?>">
+  <meta property="og:novel:index_url" content="<?=$index_url_attr?>">
+  <meta property="og:novel:info_url" content="<?=$info_url_attr?>">
   <meta property="og:novel:status" content="<?=$isfull?>">
   <meta property="og:novel:chapter_name" content="<?=$chaptername?>">
-  <meta property="og:novel:chapter_url" content="<?=$uri?>">
+  <meta property="og:novel:chapter_url" content="<?=$reader_url_attr?>">
+  <script type="application/ld+json"><?=json_encode($reader_breadcrumb_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 
 
 <style>
@@ -101,10 +128,10 @@ $pageDescription .= '，作者：' . $author . '。';
       <div class="back">
         <a href="javascript:history.go(-1);">返回</a>
       </div>
-      <h1><a href="<?=$info_url?>" id="bookname"><?=$articlename?></a></h1>
+      <h1><a href="<?=$info_url_attr?>" id="bookname"><?=htmlspecialchars((string)$articlename, ENT_QUOTES, 'UTF-8')?></a></h1>
       <div class="reg">
         <a href="javascript:st();void 0;" id="st" rel="nofollow" class="login_topbtn c_index_login">繁</a>
-        <a href="/" class="login_topbtn c_index_login">首页</a>
+        <a href="<?=$site_home_url_attr?>" class="login_topbtn c_index_login">首页</a>
       </div>
     </div>
     <div class="nr_set clearfix">
@@ -131,7 +158,7 @@ $pageDescription .= '，作者：' . $author . '。';
                 <?php if ($i == $now_pid): ?>
                     <strong><?=$i?></strong>
                 <?php else: ?>
-                    <a href="/read/<?=$articleid?>/<?=$chapterid?>/<?=$i?>.html"><?=$i?></a>
+                    <a href="<?=htmlspecialchars($reader_page_url($i), ENT_QUOTES, 'UTF-8')?>"><?=$i?></a>
                 <?php endif; ?>
             <?php endfor; ?>
             
@@ -161,7 +188,7 @@ $pageDescription .= '，作者：' . $author . '。';
       <a id="pt_prev" href="<?=$pre_url?>">上一章</a>
       <?php endif ?>
       <?php endif ?>
-      <a id="pt_mulu" href="<?=$index_url?>">目录</a>
+      <a id="pt_mulu" href="<?=$index_url_attr?>">目录</a>
       <?php if($nextpage_url != ''): ?>
       <a id="pt_next" href="<?=$nextpage_url?>">下一页</a>
       <?php else: ?>
@@ -171,7 +198,7 @@ $pageDescription .= '，作者：' . $author . '。';
       <a id="pt_next" href="<?=$next_url?>">下一章</a>
       <?php endif ?>
       <?php endif ?>
-      <a id="pt_shuj" href="/bookcase/" >书架</a>
+      <a id="pt_shuj" href="javascript:;" onclick="addbookcase('<?=$articleid?>','<?=$articlename?>','<?=$chapterid?>','<?=$chaptername?>')" rel="nofollow">书架</a>
     </div>
     
     <div id="nr" class="nr_nr nr_bg">
@@ -195,7 +222,7 @@ $pageDescription .= '，作者：' . $author . '。';
       <a id="pt_prev1" href="<?=$pre_url?>">上一章</a>
       <?php endif ?>
       <?php endif ?>
-      <a id="pt_mulu1" href="<?=$index_url?>">目录</a>
+      <a id="pt_mulu1" href="<?=$index_url_attr?>">目录</a>
       <?php if($nextpage_url != ''): ?>
       <a id="pt_next1" href="<?=$nextpage_url?>">下一页</a>
       <?php else: ?>
@@ -205,7 +232,7 @@ $pageDescription .= '，作者：' . $author . '。';
       <a id="pt_next1" href="<?=$next_url?>">下一章</a>
       <?php endif ?>
       <?php endif ?>
-      <a id="pt_shuj1" href="/bookcase/" >书架</a>
+      <a id="pt_shuj1" href="javascript:;" onclick="addbookcase('<?=$articleid?>','<?=$articlename?>','<?=$chapterid?>','<?=$chaptername?>')" rel="nofollow">书架</a>
     </div>
     
     <script>getset();</script>

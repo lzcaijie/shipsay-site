@@ -6,45 +6,47 @@
   <?php
   require_once __ROOT_DIR__ . '/shipsay/seo.php';
   list($seo_title, $seo_keywords, $seo_description) = ss_seo_render('rank');
+  $rank_entry_url_raw = isset($rank_entry_url) && $rank_entry_url ? (string)$rank_entry_url : ((isset($fake_top) && $fake_top) ? (string)$fake_top : '');
+  $rank_entry_url_attr = htmlspecialchars($rank_entry_url_raw, ENT_QUOTES, 'UTF-8');
+  $site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
+  $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
+  $rank_sections = isset($top_sections) && is_array($top_sections) ? $top_sections : [];
+  $rank_lists = isset($top_rank_lists) && is_array($top_rank_lists) ? $top_rank_lists : [];
+  if (trim($seo_title) === '' || trim($seo_title) === SITE_NAME) {
+      $seo_title = '小说排行榜_' . SITE_NAME;
+  }
+  if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
+      $seo_keywords = '小说排行榜,热门小说,日榜,周榜,月榜,' . SITE_NAME;
+  }
+  if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
+      $seo_description = SITE_NAME . '小说排行榜聚合页，查看日榜、周榜、月榜、总榜、推荐榜、收藏榜。';
+  }
+  $rank_ld = [
+      '@context' => 'https://schema.org',
+      '@type' => 'BreadcrumbList',
+      'itemListElement' => [
+          ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => $site_home_url_raw],
+          ['@type' => 'ListItem', 'position' => 2, 'name' => '排行榜', 'item' => $rank_entry_url_raw],
+      ],
+  ];
   ?>
   <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
   <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
   <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <?php if ($rank_entry_url_raw !== ''): ?>
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="mobile-agent" content="format=html5;url=<?=$rank_entry_url_attr?>">
+  <link rel="canonical" href="<?=$rank_entry_url_attr?>">
+  <meta property="og:url" content="<?=$rank_entry_url_attr?>">
+  <?php endif; ?>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
+  <meta property="og:description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
+  <script type="application/ld+json"><?=json_encode($rank_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
   <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <body>
-<?php
-$rank_entry_url = isset($rank_entry_url) && $rank_entry_url ? $rank_entry_url : ((isset($fake_top) && $fake_top) ? $fake_top : '/rank/');
-$rank_detail_base = isset($rank_detail_base) && $rank_detail_base ? $rank_detail_base : $rank_entry_url;
-$rank_sections = [
-    'monthvisit' => ['title' => '月点击榜', 'field' => 'monthvisit', 'more' => $rank_detail_base . 'monthvisit/'],
-    'weekvisit'  => ['title' => '周点击榜', 'field' => 'weekvisit',  'more' => $rank_detail_base . 'weekvisit/'],
-    'allvisit'   => ['title' => '总点击榜', 'field' => 'allvisit',   'more' => $rank_detail_base . 'allvisit/'],
-    'allvote'    => ['title' => '推荐榜',   'field' => 'allvote',    'more' => $rank_detail_base . 'allvote/'],
-    'goodnum'    => ['title' => '收藏榜',   'field' => 'goodnum',    'more' => $rank_detail_base . 'goodnum/'],
-];
-
-$rank_lists = [];
-foreach ($rank_sections as $key => $conf) {
-    $rank_lists[$key] = [];
-
-    if (!isset($conf['field']) || empty($conf['field'])) continue;
-    if (!isset($rico_sql) || empty($rico_sql)) continue;
-
-    $field = preg_replace('/[^a-z0-9_]/i', '', $conf['field']);
-    if ($field === '') continue;
-
-    $sql = $rico_sql . 'ORDER BY ' . $field . ' DESC LIMIT 10';
-
-    if (isset($redis)) {
-        $rank_lists[$key] = $redis->ss_redis_getrows($sql, (isset($home_cache_time) ? $home_cache_time : 300));
-    } elseif (isset($db)) {
-        $rank_lists[$key] = $db->ss_getrows($sql);
-    }
-
-    if (!is_array($rank_lists[$key])) $rank_lists[$key] = [];
-}
-?>
-
   <div class="header">
     <div class="back">
       <a href="javascript:history.go(-1);">返回</a>
@@ -52,7 +54,7 @@ foreach ($rank_sections as $key => $conf) {
     <h1>小说排行榜</h1>
     <div class="reg">
       <a href="javascript:st();void 0;" id="st" rel="nofollow" class="login_topbtn c_index_login">繁</a>
-      <a href="/" class="login_topbtn c_index_login">首页</a>
+      <a href="<?=$site_home_url_attr?>" class="login_topbtn c_index_login">首页</a>
     </div>
   </div>
 
@@ -65,7 +67,8 @@ foreach ($rank_sections as $key => $conf) {
         <div class="block">
           <ul>
             <?php foreach ($rank_sections as $key => $conf): ?>
-              <li><a href="<?=$conf['more']?>"><?=$conf['title']?></a></li>
+              <?php $more_attr = htmlspecialchars((string)$conf['more'], ENT_QUOTES, 'UTF-8'); $title_html = htmlspecialchars((string)$conf['title'], ENT_QUOTES, 'UTF-8'); ?>
+              <li><a href="<?=$more_attr?>"><?=$title_html?></a></li>
             <?php endforeach; ?>
           </ul>
         </div>
@@ -73,25 +76,26 @@ foreach ($rank_sections as $key => $conf) {
 
       <?php foreach ($rank_sections as $key => $conf): ?>
         <?php
-          $title = isset($conf['title']) ? $conf['title'] : '';
-          $more  = isset($conf['more']) ? $conf['more'] : '#';
+          $title = isset($conf['title']) ? (string)$conf['title'] : '';
+          $more  = isset($conf['more']) ? (string)$conf['more'] : '#';
           $list  = isset($rank_lists[$key]) && is_array($rank_lists[$key]) ? $rank_lists[$key] : [];
+          $more_attr = htmlspecialchars($more, ENT_QUOTES, 'UTF-8');
+          $title_html = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
         ?>
-
         <div class="article">
-          <h2><span><a href="<?=$more?>"><?=$title?></a></span><a style="float:right;font-size:12px;font-weight:normal;color:#999;" href="<?=$more?>">更多 &gt;</a></h2>
+          <h2><span><a href="<?=$more_attr?>"><?=$title_html?></a></span><a style="float:right;font-size:12px;font-weight:normal;color:#999;" href="<?=$more_attr?>">更多 &gt;</a></h2>
           <div class="block">
             <ul>
               <?php if (!empty($list)): ?>
-                <?php foreach ($list as $k => $v): ?><?php if ($k < 10): ?>
+                <?php foreach (array_slice($list, 0, 10) as $k => $v): ?>
                   <?php
-                    $info_url = (isset($v['info_url']) && $v['info_url']) ? $v['info_url'] : '';
-                    $name = (isset($v['articlename']) && $v['articlename']) ? $v['articlename'] : '';
-                    $author = (isset($v['author']) && $v['author']) ? $v['author'] : '';
+                    $info_url = (isset($v['info_url']) && $v['info_url']) ? (string)$v['info_url'] : '';
+                    $name = (isset($v['articlename']) && $v['articlename']) ? (string)$v['articlename'] : '';
+                    $author = (isset($v['author']) && $v['author']) ? (string)$v['author'] : '';
                     if ($info_url === '' || $name === '') continue;
                   ?>
-                  <li><span style="color:#999;margin-right:6px;"><?=($k+1)?>.</span><a href="<?=$info_url?>"><?=htmlspecialchars($name, ENT_QUOTES, 'UTF-8')?></a><?php if ($author !== ''): ?> / <?=htmlspecialchars($author, ENT_QUOTES, 'UTF-8')?><?php endif; ?></li>
-                <?php endif; ?><?php endforeach; ?>
+                  <li><span style="color:#999;margin-right:6px;"><?=($k+1)?>.</span><a href="<?=htmlspecialchars($info_url, ENT_QUOTES, 'UTF-8')?>"><?=htmlspecialchars($name, ENT_QUOTES, 'UTF-8')?></a><?php if ($author !== ''): ?> / <?=htmlspecialchars($author, ENT_QUOTES, 'UTF-8')?><?php endif; ?></li>
+                <?php endforeach; ?>
               <?php else: ?>
                 <li>暂无数据</li>
               <?php endif; ?>
