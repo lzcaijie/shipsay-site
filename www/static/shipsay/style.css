@@ -1177,6 +1177,18 @@ kbd input {
     margin: 0;
     padding: 0;
     list-style: none;
+    text-align: center;
+}
+.pagination-pc li {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.pagination-pc li.active span {
+    border-color: #bf2c24;
+    background: #bf2c24;
+    color: #fff;
 }
 .pagination-mobile { display: none; }
 .pagination-pc a,
