@@ -8,7 +8,7 @@ if (isset($chapters) && isset($per_page) && intval($per_page) > 0) {
 }
 $indexlist_url_safe = (isset($uri) && $uri) ? $uri : ((isset($index_url) && $index_url) ? $index_url : '');
 $indexlist_url_attr = htmlspecialchars($indexlist_url_safe, ENT_QUOTES, 'UTF-8');
-$home_url_attr = !empty($site_url) ? htmlspecialchars($site_url, ENT_QUOTES, 'UTF-8') : '/';
+$home_url_attr = !empty($site_url) ? htmlspecialchars(rtrim($site_url, '/') . '/', ENT_QUOTES, 'UTF-8') : '/';
 $sort_url_attr = htmlspecialchars(Sort::ss_sorturl($sortid), ENT_QUOTES, 'UTF-8');
 $info_url_attr = htmlspecialchars((string)$info_url, ENT_QUOTES, 'UTF-8');
 $img_url_attr = htmlspecialchars((string)$img_url, ENT_QUOTES, 'UTF-8');
@@ -17,13 +17,14 @@ $author_url_attr = htmlspecialchars((string)$author_url, ENT_QUOTES, 'UTF-8');
 $author_html = htmlspecialchars((string)$author, ENT_QUOTES, 'UTF-8');
 $sortname_html = htmlspecialchars((string)$sortname, ENT_QUOTES, 'UTF-8');
 $status_html = htmlspecialchars((string)$isfull, ENT_QUOTES, 'UTF-8');
-$words_html = intval($words_w);
+$words_html = htmlspecialchars((string)intval($words_w), ENT_QUOTES, 'UTF-8');
 $last_url_attr = htmlspecialchars((string)$last_url, ENT_QUOTES, 'UTF-8');
 $lastchapter_html = htmlspecialchars((string)$lastchapter, ENT_QUOTES, 'UTF-8');
 $lastupdate_cn_html = htmlspecialchars((string)$lastupdate_cn, ENT_QUOTES, 'UTF-8');
 $chapters_safe = intval($chapters);
-$pid_safe = intval($pid);
+$pid_safe = max(1, intval($pid));
 $first_url_attr = htmlspecialchars((string)$first_url, ENT_QUOTES, 'UTF-8');
+$theme_dir_safe = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
 <html lang="zh">
@@ -33,7 +34,7 @@ $first_url_attr = htmlspecialchars((string)$first_url, ENT_QUOTES, 'UTF-8');
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('indexlist');
 if (trim($seo_title) === '' || trim($seo_title) === SITE_NAME) {
-    $seo_title = $articlename . '章节目录' . (($pid > 1) ? '_第' . intval($pid) . '页' : '') . '_' . SITE_NAME;
+    $seo_title = $articlename . '章节目录' . (($pid_safe > 1) ? '_第' . $pid_safe . '页' : '') . '_' . SITE_NAME;
 }
 if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
     $seo_keywords = $articlename . ',章节目录,' . $author . ',' . SITE_NAME;
@@ -45,10 +46,10 @@ $indexlist_breadcrumb_ld = [
     '@context' => 'https://schema.org',
     '@type' => 'BreadcrumbList',
     'itemListElement' => [
-        ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => !empty($site_url) ? $site_url : '/'],
+        ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => !empty($site_url) ? rtrim($site_url, '/') . '/' : '/'],
         ['@type' => 'ListItem', 'position' => 2, 'name' => $sortname, 'item' => Sort::ss_sorturl($sortid)],
         ['@type' => 'ListItem', 'position' => 3, 'name' => $articlename, 'item' => $info_url],
-        ['@type' => 'ListItem', 'position' => 4, 'name' => '章节目录' . (($pid > 1) ? '第' . intval($pid) . '页' : ''), 'item' => $indexlist_url_safe !== '' ? $indexlist_url_safe : $uri],
+        ['@type' => 'ListItem', 'position' => 4, 'name' => '目录' . ($pid_safe > 1 ? '第' . $pid_safe . '页' : ''), 'item' => $indexlist_url_safe !== '' ? $indexlist_url_safe : $info_url],
     ],
 ];
 ?>
@@ -73,46 +74,39 @@ $indexlist_breadcrumb_ld = [
         <div class="bread_crumbs">
             <a href="<?=$home_url_attr?>">首页</a> &gt; <a href="<?=$sort_url_attr?>"><?=$sortname_html?></a> &gt; <a href="<?=$info_url_attr?>"><?=$article_title_html?></a> &gt; <span>目录</span>
         </div>
-        <div class="novel-basic-info">
-            <div class="novel-cover">
-                <img src="<?=$img_url_attr?>" alt="<?=$article_title_html?>" loading="lazy" width="100" height="140" onerror="this.src='/static/<?=$theme_dir?>/nocover.jpg'; this.onerror=null;">
-            </div>
-            <div class="novel-meta">
-                <h1><?=$article_title_html?></h1>
-                <p class="meta-pairs">
-                    <span><i class="meta-label">作者：</i><a class="meta-value" href="<?=$author_url_attr?>"><?=$author_html?></a></span>
-                    <span><i class="meta-label">分类：</i><a class="meta-value" href="<?=$sort_url_attr?>"><?=$sortname_html?></a></span>
-                    <span><i class="meta-label">状态：</i><em class="meta-value"><?=$status_html?></em></span>
-                    <span><i class="meta-label">字数：</i><em class="meta-value"><?=$words_html?>万</em></span>
+
+        <div class="novel_info_main">
+            <img src="<?=$img_url_attr?>" alt="<?=$article_title_html?>" loading="lazy" onerror="this.src='/static/<?=$theme_dir_safe?>/nocover.jpg';this.onerror=null;" />
+            <div class="novel_info_title">
+                <h1><?=$article_title_html?></h1><i>作者：<a href="<?=$author_url_attr?>"><?=$author_html?></a></i>
+                <p>
+                    <span><?=$sortname_html?></span><span><?=$words_html?> 万字</span>
+                    <span<?php if ($isfull != '连载') : ?> class="fullflag"<?php endif; ?>><?=$status_html?></span>
                 </p>
-                <p class="meta-latest">最新章节：<a href="<?=$last_url_attr?>"><?=$lastchapter_html?></a> <em class="meta-time"><?=$lastupdate_cn_html?></em></p>
-                <p>总章节：<?=$chapters_safe?>章</p>
+                <div class="flex to100">最新章节：<a href="<?=$last_url_attr?>"><?=$lastchapter_html?></a><em class="s_gray"><?=$lastupdate_cn_html?></em></div>
+                <div class="flex to100">当前分页：第 <?=$pid_safe?> 页 / 共 <?=$total_pages_safe?> 页</div>
+                <div class="flex">
+                    <a class="l_btn" href="<?=$first_url_attr?>"><i class="fa fa-file-text"></i> 开始阅读</a>
+                    <a class="l_btn_0" href="<?=$info_url_attr?>"><i class="fa fa-arrow-left"></i> 返回详情</a>
+                </div>
             </div>
         </div>
-        <div class="catalog-header">
-            <div>
-                <h2 class="block-title">《<?=$article_title_html?>》章节目录</h2>
-                <div class="page-info">当前第 <?=$pid_safe?> 页，共 <?=$total_pages_safe?> 页</div>
-            </div>
-            <div class="catalog-actions">
-                <a href="<?=$first_url_attr?>" class="back-link"><i class="fa fa-book"></i> 开始阅读</a>
-                <a href="<?=$info_url_attr?>" class="back-link"><i class="fa fa-arrow-left"></i> 返回详情</a>
-            </div>
-        </div>
-        <div class="chapter-list-container">
-            <ul class="chapter-grid">
+
+        <div class="section chapter_list">
+            <div class="title jcc">《<?=$article_title_html?>》章节目录</div>
+            <ul id="ul_all_chapters">
                 <?php if (isset($list_arr) && !empty($list_arr)): ?>
                     <?php foreach ($list_arr as $v): ?>
-                        <?php if (isset($v['chaptertype']) && $v['chaptertype'] == 1): ?>
+                        <?php if (isset($v['chaptertype']) && intval($v['chaptertype']) === 1): ?>
                             <?php $cname_html = htmlspecialchars((string)$v['cname'], ENT_QUOTES, 'UTF-8'); ?>
-                            <li class="volume-title"><?=$cname_html?></li>
+                            <li style="width:100%"><?=$cname_html?></li>
                         <?php else: ?>
                             <?php $cid_url_attr = htmlspecialchars((string)$v['cid_url'], ENT_QUOTES, 'UTF-8'); $cname_html = htmlspecialchars((string)$v['cname'], ENT_QUOTES, 'UTF-8'); ?>
-                            <li class="chapter-item"><a href="<?=$cid_url_attr?>" title="<?=$article_title_html?> <?=$cname_html?>"><?=$cname_html?></a></li>
+                            <li><a href="<?=$cid_url_attr?>" title="<?=$article_title_html?> <?=$cname_html?>"><?=$cname_html?></a></li>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <li class="chapter-item chapter-item-empty">暂无章节数据</li>
+                    <li style="width:100%">暂无章节数据</li>
                 <?php endif; ?>
             </ul>
             <div class="index-container"><?=$htmltitle?></div>
