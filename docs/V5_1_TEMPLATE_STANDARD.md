@@ -982,6 +982,14 @@
 - 阅读页普通用户 JS、蜘蛛直出正文的双链路已确认正确，后续不得误改回普通用户直出正文。
 
 
+### 12.17 第四轮程序扫描补充（2026-03-08）
+
+- `shipsay/app/search.php` 当前程序层应先初始化 `$search_cache_time` 默认值，再参与“无结果兜底热门书”查询，避免把小范围程序告警误判成模板问题。
+- `shipsay/app/info_langtail.php` 已明确：长尾详情页的“查看目录 / 全部目录”应优先跳真实书籍目录，不走长尾伪目录。
+- `shipsay/app/indexlist_langtail.php` 当前仍保留长尾目录页自身分页链路；后续若继续排查“长尾详情 → 长尾目录 → 真实目录”一致性，优先核对 `info_langtail.php`、`indexlist_langtail.php`、`shipsay/class/Url.php`，不要先改模板。
+- `shipsay/configs/_bak/` 仅视为残留备份，不属于 v5 标准真源，不纳入模板标准判断与后续交付范围。
+
+
 ## 6. 当前 Shipsay 页面分层（交接版）
 
 ### 6.1 A 级：当前已可作为标准参考页
