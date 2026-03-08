@@ -24,19 +24,22 @@ $pageTitle .= ' - ' . SITE_NAME;
 $index_url_raw = isset($index_url) && $index_url ? (string)$index_url : '';
 $reader_url_raw = isset($uri) && $uri ? (string)$uri : '';
 $reader_url_attr = htmlspecialchars($reader_url_raw, ENT_QUOTES, 'UTF-8');
-$home_url_raw = !empty($site_url) ? (string)$site_url : '/';
-$home_url_attr = htmlspecialchars($home_url_raw, ENT_QUOTES, 'UTF-8');
-$sort_url_attr = htmlspecialchars(Sort::ss_sorturl($sortid), ENT_QUOTES, 'UTF-8');
+$site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
+$site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
+$sort_url_raw = (string)Sort::ss_sorturl($sortid);
+$sort_url_attr = htmlspecialchars($sort_url_raw, ENT_QUOTES, 'UTF-8');
 $sortname_html = htmlspecialchars((string)$sortname, ENT_QUOTES, 'UTF-8');
 $author_html = htmlspecialchars((string)$author, ENT_QUOTES, 'UTF-8');
 $article_title_html = htmlspecialchars((string)$articlename, ENT_QUOTES, 'UTF-8');
 $chaptername_html = htmlspecialchars((string)$chaptername, ENT_QUOTES, 'UTF-8');
-$info_url_attr = htmlspecialchars((string)$info_url, ENT_QUOTES, 'UTF-8');
+$info_url_raw = isset($info_url) ? (string)$info_url : '';
+$info_url_attr = htmlspecialchars($info_url_raw, ENT_QUOTES, 'UTF-8');
 $author_url_attr = htmlspecialchars((string)$author_url, ENT_QUOTES, 'UTF-8');
 $index_url_attr = htmlspecialchars($index_url_raw, ENT_QUOTES, 'UTF-8');
 $theme_dir_attr = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
 $status_html = htmlspecialchars((string)$isfull, ENT_QUOTES, 'UTF-8');
 $chapterwords_safe = intval($chapterwords);
+$lastupdate_text_html = htmlspecialchars((string)Text::ss_lastupdate($lastupdate), ENT_QUOTES, 'UTF-8');
 $now_pid_safe = intval($now_pid);
 $max_pid_safe = intval($max_pid);
 $prevpage_url_attr = htmlspecialchars((string)$prevpage_url, ENT_QUOTES, 'UTF-8');
@@ -65,9 +68,9 @@ $reader_breadcrumb_ld = [
     '@context' => 'https://schema.org',
     '@type' => 'BreadcrumbList',
     'itemListElement' => [
-        ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => $home_url_raw],
-        ['@type' => 'ListItem', 'position' => 2, 'name' => $sortname, 'item' => Sort::ss_sorturl($sortid)],
-        ['@type' => 'ListItem', 'position' => 3, 'name' => $articlename, 'item' => $info_url],
+        ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => $site_home_url_raw],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => $sortname, 'item' => $sort_url_raw],
+        ['@type' => 'ListItem', 'position' => 3, 'name' => $articlename, 'item' => $info_url_raw],
         ['@type' => 'ListItem', 'position' => 4, 'name' => $chaptername, 'item' => $reader_url_raw],
     ],
 ];
@@ -89,7 +92,7 @@ $reader_breadcrumb_ld = [
 <meta property="og:novel:category" content="<?=$sortname_html?>小说">
 <meta property="og:novel:author" content="<?=$author_html?>">
 <meta property="og:novel:book_name" content="<?=$article_title_html?>">
-<meta property="og:novel:index_url" content="<?=$info_url_attr?>">
+<?php if ($index_url_raw !== ""): ?><meta property="og:novel:index_url" content="<?=$index_url_attr?>"><?php endif; ?>
 <meta property="og:novel:info_url" content="<?=$info_url_attr?>">
 <meta property="og:novel:status" content="<?=$status_html?>">
 <meta property="og:novel:chapter_name" content="<?=$chaptername_html?>">
@@ -100,7 +103,7 @@ $reader_breadcrumb_ld = [
     <main class="container">
         <section class="section_style">
             <div class="bread_crumbs read-breadcrumbs">
-                <a href="<?=$home_url_attr?>">首页</a> &gt; <a href="<?=$sort_url_attr?>"><?=$sortname_html?></a> &gt; <a href="<?=$info_url_attr?>"><?=$article_title_html?></a> &gt; <span><?=$chaptername_html?></span>
+                <a href="<?=$site_home_url_attr?>">首页</a> &gt; <a href="<?=$sort_url_attr?>"><?=$sortname_html?></a> &gt; <a href="<?=$info_url_attr?>"><?=$article_title_html?></a> &gt; <span><?=$chaptername_html?></span>
             </div>
             <div class="text">
                 <div class="text_set">
@@ -126,7 +129,7 @@ $reader_breadcrumb_ld = [
                         <span><a href="<?=$info_url_attr?>"><i class="fa fa-book"> <?=$article_title_html?></i></a></span>
                         <span><a href="<?=$author_url_attr?>"><i class="fa fa-user-circle-o"> <?=$author_html?></i></a></span>
                         <span><i class="fa fa-list-ol"> <?=$chapterwords_safe?> 字</i></span>
-                        <span><i class="fa fa-clock-o"> <?=Text::ss_lastupdate($lastupdate)?></i></span>
+                        <span><i class="fa fa-clock-o"> <?=$lastupdate_text_html?></i></span>
                     </div>
                     <?php if ($max_pid > 1): ?>
                     <div class="page-info reader-page-inline">当前第 <?=$now_pid_safe?> 页 / 共 <?=$max_pid_safe?> 页</div>
@@ -186,6 +189,6 @@ setTimeout(function() {
 <script src="/static/<?=$theme_dir_attr?>/style.js"></script>
 <script>
 if (window.lastread && typeof window.lastread.set === 'function') {
-    lastread.set(<?=json_encode($info_url, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($reader_url_raw, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($articlename, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($chaptername, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($author, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($img_url, JSON_UNESCAPED_UNICODE)?>);
+    lastread.set(<?=json_encode($info_url_raw, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($reader_url_raw, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($articlename, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($chaptername, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($author, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($img_url, JSON_UNESCAPED_UNICODE)?>);
 }
 </script>

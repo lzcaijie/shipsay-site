@@ -17,6 +17,7 @@ if (!empty($preview_chapters) && is_array($preview_chapters)) {
 }
 $info_url_raw = (isset($uri) && $uri) ? (string)$uri : ((isset($info_url) && $info_url) ? (string)$info_url : '');
 $site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
+$site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
 $article_title_html = htmlspecialchars((string)$articlename, ENT_QUOTES, 'UTF-8');
 $author_url_attr = htmlspecialchars((string)$author_url, ENT_QUOTES, 'UTF-8');
 $author_html = htmlspecialchars((string)$author, ENT_QUOTES, 'UTF-8');
@@ -31,8 +32,7 @@ $first_url_attr = htmlspecialchars((string)$first_url, ENT_QUOTES, 'UTF-8');
 $index_url_attr = htmlspecialchars($index_url_raw, ENT_QUOTES, 'UTF-8');
 $info_url_attr = htmlspecialchars($info_url_raw, ENT_QUOTES, 'UTF-8');
 $img_url_attr = htmlspecialchars((string)$img_url, ENT_QUOTES, 'UTF-8');
-$theme_dir_safe = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
-$home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
+$theme_dir_attr = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
 $intro_html = !empty($intro) ? $intro : (!empty($intro_p) ? $intro_p : $intro_des);
 $intro_plain = trim(strip_tags((string)$intro_html));
 ?>
@@ -97,11 +97,11 @@ $info_book_ld = [
 <div class="container">
     <section class="section">
         <div class="bread_crumbs">
-            <a href="<?=$home_url_attr?>">首页</a> &gt; <a href="<?=$sort_url_attr?>"><?=$sortname_html?></a> &gt; <span><?=$article_title_html?></span>
+            <a href="<?=$site_home_url_attr?>">首页</a> &gt; <a href="<?=$sort_url_attr?>"><?=$sortname_html?></a> &gt; <span><?=$article_title_html?></span>
         </div>
 
         <div class="novel_info_main">
-            <img src="<?=$img_url_attr?>" alt="<?=$article_title_html?>" loading="lazy" onerror="this.src='/static/<?=$theme_dir_safe?>/nocover.jpg';this.onerror=null;" />
+            <img src="<?=$img_url_attr?>" alt="<?=$article_title_html?>" loading="lazy" onerror="this.src='/static/<?=$theme_dir_attr?>/nocover.jpg';this.onerror=null;" />
             <div class="novel_info_title">
                 <h1><?=$article_title_html?></h1><i>作者：<a href="<?=$author_url_attr?>"><?=$author_html?></a></i>
                 <p>
@@ -111,7 +111,11 @@ $info_book_ld = [
                 <div class="flex to100">最新章节：<a href="<?=$last_url_attr?>"><?=$lastchapter_html?></a><em class="s_gray"><?=$lastupdate_cn_html?></em></div>
                 <div class="flex">
                     <a class="l_btn" href="<?=$first_url_attr?>"><i class="fa fa-file-text"></i> 开始阅读</a>
+                    <?php if ($index_url_raw !== ''): ?>
                     <a class="l_btn_0" href="<?=$index_url_attr?>"><i class="fa fa-list"></i> 查看目录</a>
+                    <?php else: ?>
+                    <span class="l_btn_0 w_gray"><i class="fa fa-list"></i> 查看目录</span>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

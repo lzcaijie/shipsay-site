@@ -8,9 +8,12 @@ if (isset($chapters) && isset($per_page) && intval($per_page) > 0) {
 }
 $indexlist_url_raw = (isset($uri) && $uri) ? (string)$uri : ((isset($index_url) && $index_url) ? (string)$index_url : '');
 $indexlist_url_attr = htmlspecialchars($indexlist_url_raw, ENT_QUOTES, 'UTF-8');
-$home_url_attr = !empty($site_url) ? htmlspecialchars(rtrim($site_url, '/') . '/', ENT_QUOTES, 'UTF-8') : '/';
-$sort_url_attr = htmlspecialchars(Sort::ss_sorturl($sortid), ENT_QUOTES, 'UTF-8');
-$info_url_attr = htmlspecialchars((string)$info_url, ENT_QUOTES, 'UTF-8');
+$site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
+$site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
+$sort_url_raw = (string)Sort::ss_sorturl($sortid);
+$sort_url_attr = htmlspecialchars($sort_url_raw, ENT_QUOTES, 'UTF-8');
+$info_url_raw = isset($info_url) ? (string)$info_url : '';
+$info_url_attr = htmlspecialchars($info_url_raw, ENT_QUOTES, 'UTF-8');
 $img_url_attr = htmlspecialchars((string)$img_url, ENT_QUOTES, 'UTF-8');
 $article_title_html = htmlspecialchars((string)$articlename, ENT_QUOTES, 'UTF-8');
 $author_url_attr = htmlspecialchars((string)$author_url, ENT_QUOTES, 'UTF-8');
@@ -24,7 +27,7 @@ $lastupdate_cn_html = htmlspecialchars((string)$lastupdate_cn, ENT_QUOTES, 'UTF-
 $chapters_safe = intval($chapters);
 $pid_safe = max(1, intval($pid));
 $first_url_attr = htmlspecialchars((string)$first_url, ENT_QUOTES, 'UTF-8');
-$theme_dir_safe = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
+$theme_dir_attr = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
 <html lang="zh">
@@ -46,9 +49,9 @@ $indexlist_breadcrumb_ld = [
     '@context' => 'https://schema.org',
     '@type' => 'BreadcrumbList',
     'itemListElement' => [
-        ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => !empty($site_url) ? rtrim($site_url, '/') . '/' : '/'],
-        ['@type' => 'ListItem', 'position' => 2, 'name' => $sortname, 'item' => Sort::ss_sorturl($sortid)],
-        ['@type' => 'ListItem', 'position' => 3, 'name' => $articlename, 'item' => $info_url],
+        ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => $site_home_url_raw],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => $sortname, 'item' => $sort_url_raw],
+        ['@type' => 'ListItem', 'position' => 3, 'name' => $articlename, 'item' => $info_url_raw],
         ['@type' => 'ListItem', 'position' => 4, 'name' => '目录' . ($pid_safe > 1 ? '第' . $pid_safe . '页' : ''), 'item' => $indexlist_url_raw],
     ],
 ];
@@ -72,11 +75,11 @@ $indexlist_breadcrumb_ld = [
 <div class="container">
     <section class="section">
         <div class="bread_crumbs">
-            <a href="<?=$home_url_attr?>">首页</a> &gt; <a href="<?=$sort_url_attr?>"><?=$sortname_html?></a> &gt; <a href="<?=$info_url_attr?>"><?=$article_title_html?></a> &gt; <span>目录</span>
+            <a href="<?=$site_home_url_attr?>">首页</a> &gt; <a href="<?=$sort_url_attr?>"><?=$sortname_html?></a> &gt; <a href="<?=$info_url_attr?>"><?=$article_title_html?></a> &gt; <span>目录</span>
         </div>
 
         <div class="novel_info_main">
-            <img src="<?=$img_url_attr?>" alt="<?=$article_title_html?>" loading="lazy" onerror="this.src='/static/<?=$theme_dir_safe?>/nocover.jpg';this.onerror=null;" />
+            <img src="<?=$img_url_attr?>" alt="<?=$article_title_html?>" loading="lazy" onerror="this.src='/static/<?=$theme_dir_attr?>/nocover.jpg';this.onerror=null;" />
             <div class="novel_info_title">
                 <h1><?=$article_title_html?></h1><i>作者：<a href="<?=$author_url_attr?>"><?=$author_html?></a></i>
                 <p>
@@ -87,7 +90,7 @@ $indexlist_breadcrumb_ld = [
                 <div class="flex to100">当前分页：第 <?=$pid_safe?> 页 / 共 <?=$total_pages_safe?> 页</div>
                 <div class="flex">
                     <a class="l_btn" href="<?=$first_url_attr?>"><i class="fa fa-file-text"></i> 开始阅读</a>
-                    <a class="l_btn_0" href="<?=$info_url_attr?>"><i class="fa fa-arrow-left"></i> 返回详情</a>
+                    <?php if ($info_url_raw !== ''): ?><a class="l_btn_0" href="<?=$info_url_attr?>"><i class="fa fa-arrow-left"></i> 返回详情</a><?php else: ?><span class="l_btn_0 w_gray"><i class="fa fa-arrow-left"></i> 返回详情</span><?php endif; ?>
                 </div>
             </div>
         </div>
