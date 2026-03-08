@@ -16,7 +16,8 @@ if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
 if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
     $seo_description = '作者' . $author . '作品列表与最新章节，尽在' . SITE_NAME . '。';
 }
-$author_url_safe = isset($uri) && $uri ? htmlspecialchars($uri, ENT_QUOTES, 'UTF-8') : '';
+$author_url_raw = isset($uri) && $uri ? (string)$uri : '';
+$author_url_attr = htmlspecialchars($author_url_raw, ENT_QUOTES, 'UTF-8');
 $author_name_safe = htmlspecialchars((string)$author, ENT_QUOTES, 'UTF-8');
 $author_count_safe = intval($author_count);
 $author_ld = [
@@ -24,18 +25,18 @@ $author_ld = [
     '@type' => 'BreadcrumbList',
     'itemListElement' => [
         ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => !empty($site_url) ? $site_url : '/'],
-        ['@type' => 'ListItem', 'position' => 2, 'name' => $author . '作品大全', 'item' => $author_url_safe],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => $author . '作品大全', 'item' => $author_url_raw],
     ],
 ];
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
 <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-<?php if ($author_url_safe !== ''): ?>
+<?php if ($author_url_raw !== ''): ?>
 <meta name="applicable-device" content="pc,mobile">
-<meta name="mobile-agent" content="format=html5;url=<?=$author_url_safe?>">
-<link rel="canonical" href="<?=$author_url_safe?>">
-<meta property="og:url" content="<?=$author_url_safe?>">
+<meta name="mobile-agent" content="format=html5;url=<?=$author_url_attr?>">
+<link rel="canonical" href="<?=$author_url_attr?>">
+<meta property="og:url" content="<?=$author_url_attr?>">
 <?php endif; ?>
 <meta property="og:type" content="website">
 <meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">

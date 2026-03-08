@@ -6,8 +6,8 @@ if (isset($chapters) && isset($per_page) && intval($per_page) > 0) {
 } elseif (isset($pid) && $pid > 1) {
     $total_pages_safe = (int)$pid;
 }
-$indexlist_url_safe = (isset($uri) && $uri) ? $uri : ((isset($index_url) && $index_url) ? $index_url : '');
-$indexlist_url_attr = htmlspecialchars($indexlist_url_safe, ENT_QUOTES, 'UTF-8');
+$indexlist_url_raw = (isset($uri) && $uri) ? (string)$uri : ((isset($index_url) && $index_url) ? (string)$index_url : '');
+$indexlist_url_attr = htmlspecialchars($indexlist_url_raw, ENT_QUOTES, 'UTF-8');
 $home_url_attr = !empty($site_url) ? htmlspecialchars(rtrim($site_url, '/') . '/', ENT_QUOTES, 'UTF-8') : '/';
 $sort_url_attr = htmlspecialchars(Sort::ss_sorturl($sortid), ENT_QUOTES, 'UTF-8');
 $info_url_attr = htmlspecialchars((string)$info_url, ENT_QUOTES, 'UTF-8');
@@ -49,7 +49,7 @@ $indexlist_breadcrumb_ld = [
         ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => !empty($site_url) ? rtrim($site_url, '/') . '/' : '/'],
         ['@type' => 'ListItem', 'position' => 2, 'name' => $sortname, 'item' => Sort::ss_sorturl($sortid)],
         ['@type' => 'ListItem', 'position' => 3, 'name' => $articlename, 'item' => $info_url],
-        ['@type' => 'ListItem', 'position' => 4, 'name' => '目录' . ($pid_safe > 1 ? '第' . $pid_safe . '页' : ''), 'item' => $indexlist_url_safe !== '' ? $indexlist_url_safe : $info_url],
+        ['@type' => 'ListItem', 'position' => 4, 'name' => '目录' . ($pid_safe > 1 ? '第' . $pid_safe . '页' : ''), 'item' => $indexlist_url_raw],
     ],
 ];
 ?>
