@@ -270,3 +270,11 @@
 - `tpl_recentread.php`：统一复用 `site_home_url_raw / site_home_url_attr` 口径，不再单独保留 `home_url_safe` 旧命名；阅读记录页标题与描述改成本地明确变量后再输出。
 - `tpl_footer.php`：统一改为 `site_home_url_raw / site_home_url_attr` 与 `footer_sitemap_*_raw / _attr` 命名，避免把原始 URL 继续写成 `*_safe`；站点地图链接当前仍属于模板本地固定资源路径，由站点首页链接推导，不上升为核心业务入口变量。
 - docs：同步修正文档中 footer / recentread / search 的变量命名与职责边界说明。
+
+
+## 2026-03-09 | redline v8 | 文档变量修正与排行/SEO/分类约束收尾
+- 范围继续锁定在 `themes/shipsay/*` 与 `docs/*`，未改动 `app / class / include / configs`。
+- `tpl_top.php`：改为通过模板局部 `page_title=排行榜` 接入 `ss_seo_render('rank')`，闭合当前 `shipsay/configs/seo_tpl.php` 主链路，不再继续走缺失的 `seo_top_*` 分支。
+- `tpl_header.php` / `tpl_top.php` / `tpl_rank.php`：统一去掉以 `fake_rankstr` 作为母模板默认排行入口的回退；当前模板正式只消费 `rank_entry_url / rank_detail_base / fake_top`，旧 `fake_rankstr` 仅保留给路由兼容。
+- `tpl_rank.php`：单榜页切换链接统一使用 `rank_detail_base`，避免当 `fake_top` 入口与详情根路径不完全一致时模板自行拼错榜单链接。
+- docs：修正 `VARIABLE_MAP` 中阅读页混入作者页变量、未落地变量名、`tpl_rank_list.php` 残留引用等问题；同步补充“排行 SEO 主链路当前闭环规则”与“分类分页 10 页上限属于核心约束”两项正式说明。

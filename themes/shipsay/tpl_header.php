@@ -16,8 +16,6 @@ if (isset($rank_entry_url) && $rank_entry_url) {
     $rank_entry_raw = (string)$rank_entry_url;
 } elseif (isset($fake_top) && $fake_top) {
     $rank_entry_raw = (string)$fake_top;
-} elseif (isset($fake_rankstr) && $fake_rankstr) {
-    $rank_entry_raw = '/' . trim((string)$fake_rankstr, '/') . '/';
 }
 $theme_dir_attr = htmlspecialchars($theme_dir_raw, ENT_QUOTES, 'UTF-8');
 $site_name_html = htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8');

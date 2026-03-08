@@ -5,14 +5,13 @@
 <meta charset="UTF-8">
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
-list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('top');
+$page_title = '排行榜';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('rank');
 $rank_entry_url_raw = '';
 if (isset($rank_entry_url) && $rank_entry_url) {
     $rank_entry_url_raw = (string)$rank_entry_url;
 } elseif (isset($fake_top) && $fake_top) {
     $rank_entry_url_raw = (string)$fake_top;
-} elseif (isset($fake_rankstr) && $fake_rankstr) {
-    $rank_entry_url_raw = '/' . trim((string)$fake_rankstr, '/') . '/';
 }
 $rank_detail_base_raw = isset($rank_detail_base) && $rank_detail_base ? (string)$rank_detail_base : $rank_entry_url_raw;
 $rank_page_title = '排行榜';
