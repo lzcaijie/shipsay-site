@@ -1,14 +1,10 @@
-## 2026-03-08 | 标准 | Shipsay v5 红线重命名（v1 docs-only）
-- 说明：基于上一轮 docs-only 审计包重新收口并重命名为 `v1` 起点包，本轮继续严格只动 `docs/*`，不触碰 `app / class / include / configs`。
-- 收紧：将文档中的泛写法进一步明确为“当前只以 `themes/shipsay/` 作为母模板标准”；其它主题可参考同样边界，但不反向定义 Shipsay 标准。
-- 固定：后续模板工作默认遵守“核心尽量不动，由模板去适配核心”；除非先完成全局核对并确认必须修改核心，否则不把核心程序改动混入标准审计包。
-
-## 2026-03-08 | 标准 | Shipsay v5 文档审计（第五轮 / 程序与模板对照）
-- 核对：按 `fz1.112book.com_20260308v2` 重新对照 `docs`、`shipsay/app/*` 与 `themes/shipsay/*`，本轮重点不改模板，只修正文档口径。
-- 修正：`VARIABLE_MAP` 顶部基线版本更新为 `20260308v2`，避免后续继续按旧包口径判断当前模板。
-- 修正：明确 `tpl_top.php` 当前模板局部实际使用的是 `$rank_sections / $rank_lists / $rank_limit`，它们对应 app 层 `$top_sections / $top_rank_lists / $top_rank_limit`，避免后续误把聚合页变量写错。
-- 固定：分类页 `onclick / javascript: / href="#"` 仍记为模板层待整改项；但阅读页字号/夜间/极简按钮，以及 app 层分页输出中的 `javascript:void(0);` 禁用态，当前视为兼容交互，不与旧跳转写法混为同一级问题。
-- 核对：本轮程序与 shipsay 模板复扫未发现需要立即写入标准的 PHP 7.4 语法级阻塞项；后续仍优先按“文档 → 变量链 → 结构/CSS → 程序链路”的顺序排查。
+## 2026-03-08 | 标准 | Shipsay v5 文档红线收口（v2 / 全模板实扫补充）
+- 范围：本轮继续严格遵守红线，只做 `docs/*` 收口；不改 `app / class / include / configs / themes`。
+- 实扫：补扫 `themes/shipsay` 全部模板文件，除 A/B/C 主分层页外，额外确认 `tpl_search.php`、`tpl_author.php`、`tpl_footer.php` 当前真实状态，避免后续文档只围绕主模板页写规则。
+- 固定：当前母模板标准只认 `themes/shipsay/*`；其它主题可参考，但不反向定义 Shipsay 标准，不再使用会让人误解为“任意主题都能反向定义当前标准”的泛写法。
+- 固定：`tpl_footer.php` 中的 `javascript:zh_tran(...)`、`tpl_error.php` 中的 `javascript:history.back()` 当前记为**局部功能型交互例外**，不与 `tpl_category.php` 的旧导航写法混为一类。
+- 固定：`tpl_recentread.php` 当前主体由前端 `showtempbooks()` 渲染，`$popular` 只负责右侧“猜你喜欢”列表；后续写标准时不得误记成“完整封面卡片页”。
+- 记账：`tpl_search.php` / `tpl_author.php` 当前已具备 SEO、canonical、BreadcrumbList 等基础链路，但列表容器仍保留 `style="width:100%;"` 这类旧内联样式；后续若收模板，只能按模板层最小范围处理。
 
 ## 2026-03-08 | 标准 | Shipsay v5 标准收口（第四轮 / 交接版）
 - 固定：当前 `themes/shipsay` 进入“可复用母模板”阶段，后续修改默认优先遵守：**先核文档 → 再看当前模板变量链 → 最后只借旧布局/旧 CSS 的正确控制块**。

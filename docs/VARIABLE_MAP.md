@@ -2,7 +2,7 @@
 
 > 目的：把“后台设置变量、URL 占位符、SEO 占位符、模板运行时变量”分开写清楚，避免后续 AI 或人工把不同层级的变量混用。
 >
-> 说明：本表基于 `fz1.112book.com_20260308v2` 当前最新源码扫描整理。
+> 说明：本表基于 `fz1.112book.com_20260306v2` 最新源码扫描整理。
 
 ---
 
@@ -13,7 +13,7 @@
 1. **后台配置变量**：来源于 `www/caijie/*` 后台设置与 `shipsay/configs/config.ini.php`
 2. **URL 占位符**：用于伪静态路由模板，不是模板运行时变量
 3. **SEO 占位符**：只用于 `shipsay/configs/seo_tpl.php`
-4. **模板运行时变量**：由 `shipsay/app/*.php` 准备后传给当前母模板 `themes/shipsay/tpl_*.php`；其它主题如需复用，同样遵守这条边界，但不反向定义 Shipsay 标准
+4. **模板运行时变量**：由 `shipsay/app/*.php` 准备后传给当前母模板 `themes/shipsay/tpl_*.php`（其它主题仅供参考，不反向定义 Shipsay 标准）
 
 ### 1.2 禁止混用
 
@@ -210,6 +210,16 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$search_placeholder` | 搜索框占位文案 |
 | `$rank_entry_safe` | 排行入口安全兜底 |
 
+## 5.1A 公共底部 `tpl_footer.php`
+
+| 变量 | 含义 |
+|---|---|
+| `$site_url_safe` | Footer 站点入口安全链接 |
+| `$sitemap_sm_safe` | 神马 sitemap 固定入口 |
+| `$sitemap_xml_safe` | XML sitemap 固定入口 |
+| `$year` | 当前年份 |
+| `zh_tran()` | 简繁切换前端函数（局部功能交互，不归到旧导航写法） |
+
 ## 5.2 首页 `tpl_home.php`
 
 | 变量 | 含义 |
@@ -290,7 +300,7 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$pre_url / $next_url` | 上一章 / 下一章 |
 | `$prevpage_url / $nextpage_url` | 阅读分页链接 |
 | `$now_pid / $max_pid` | 阅读分页当前页 / 总页数 |
-| `$index_url / $index_url_safe` | 返回目录；当前 `tpl_reader.php` 在缺失目录链接时会临时回退详情页，不应误判为新标准 |
+| `$index_url / $index_url_safe` | 返回目录 |
 | `$info_url` | 返回详情 |
 | `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
@@ -309,8 +319,11 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 
 | 变量 | 含义 |
 |---|---|
-| `$author` | 作者名 |
-| `$author_count` | 作品数量 |
+| `$author` | 作者名（原始值） |
+| `$author_name_safe` | 作者名安全显示值 |
+| `$author_count / $author_count_safe` | 作品数量 / 安全显示值 |
+| `$author_url_safe` | 作者页 canonical / OG / BreadcrumbList 使用的安全链接 |
+| `$author_ld` | 作者页 BreadcrumbList 结构化数据 |
 | `$res` | 作者作品列表 |
 | `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
@@ -323,9 +336,6 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$top_sections` | 排行聚合页榜单配置（由 `shipsay/app/top.php` 准备） |
 | `$top_rank_lists` | 排行聚合页榜单数据（由 `shipsay/app/top.php` 准备） |
 | `$top_rank_limit` | 排行聚合页单榜展示数量上限 |
-| `$rank_sections` | `tpl_top.php` 内对 `$top_sections` 的模板局部别名 |
-| `$rank_lists` | `tpl_top.php` 内对 `$top_rank_lists` 的模板局部别名 |
-| `$rank_limit` | `tpl_top.php` 内对 `$top_rank_limit` 的模板局部别名 |
 | `allvisit{sortid}` | 某分类总榜列表（由 `top.php` 动态变量准备） |
 | `monthvisit{sortid}` | 某分类月榜 |
 | `weekvisit{sortid}` | 某分类周榜 |
@@ -345,8 +355,10 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 
 | 变量 | 含义 |
 |---|---|
-| `$popular` | 猜你喜欢/热门数据 |
-| 最近阅读主体 | 当前主要由前端 `showtempbooks()` 生成 |
+| `$home_url_safe` | 面包屑与返回首页的安全链接 |
+| `$popular` | 右侧“猜你喜欢”列表数据 |
+| `showtempbooks()` | 最近阅读主体前端渲染函数 |
+| 最近阅读主体 | 当前主要由前端 `showtempbooks()` 生成，不是 PHP 直出封面卡片列表 |
 
 ---
 
@@ -483,9 +495,7 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - `tpl_search.php` 中的 `$searchkey` 仅视为原始输入，模板前台展示必须改用 `$searchkey_safe` 或局部高亮 helper。
 - `tpl_indexlist.php` 中的 BreadcrumbList 链接必须使用 `$indexlist_breadcrumb_item` 这类明确兜底值，不能回退引用未定义原始变量。
 - `tpl_reader.php` 中的本地阅读记录写入应使用 `$reader_url_safe`，不要直接把原始 `$uri` 当成稳定链接。
-- `tpl_top.php` 当前模板实际消费的是 `$rank_sections / $rank_lists / $rank_limit`，它们是对 app 层 `$top_sections / $top_rank_lists / $top_rank_limit` 的模板局部别名。
-- `shipsay/app/search.php` 当前已确认存在 `$search_cache_time` 初始化，后续搜索页若只出现缓存时间差异，不要误判成模板变量问题。
-- `tpl_author.php` 中的作者名与作品数展示建议先整理为 `$author_safe / $author_count_safe`，再输出到前台。
+- `tpl_author.php` 中的作者名与作品数展示建议先整理为 `$author_name_safe / $author_count_safe`，再输出到前台。
 
 ### Footer / recentread / error 模板本地 safe 变量（本轮补充）
 - `$site_url_safe`：Footer 首页入口安全链接，优先用 `$site_url`，否则回退 `/`。
@@ -862,3 +872,23 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - **CSS 控制块问题**：分页被容器规则污染、图片列和文字列错位、按钮/元信息间距异常
 
 默认先排除 CSS 控制块污染，再决定是否进入模板或变量链层修改。
+
+
+### 10.14 第四轮全模板实扫补充（2026-03-08，docs-only）
+
+#### `tpl_search.php`
+- 当前模板局部真实变量：`$searchkey_safe`、`$search_count_safe`、`$search_highlight()`。
+- 这页的搜索结果高亮 helper 属于模板局部闭包，不是 app 层公共函数名。
+- 当前问题重点是内联容器样式，不是搜索变量链错误。
+
+#### `tpl_author.php`
+- 当前模板局部真实变量：`$author_url_safe`、`$author_name_safe`、`$author_count_safe`、`$author_ld`。
+- 作者页已具备 canonical / OG / BreadcrumbList；后续若收模板，应优先沿用这些局部安全值。
+
+#### `tpl_footer.php`
+- Footer 当前固定使用：`$site_url_safe`、`$sitemap_sm_safe`、`$sitemap_xml_safe`。
+- `zh_tran()` 属于 footer 局部功能交互，不与分类页旧导航 `onclick / javascript:` 混记。
+
+#### `tpl_error.php`
+- `javascript:history.back()` 当前记为工具型回退交互。
+- 问题重点仍是行内样式较多；不是搜索/首页真实链接变量缺失。
