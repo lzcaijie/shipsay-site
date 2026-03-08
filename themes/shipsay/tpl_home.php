@@ -6,14 +6,14 @@
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
-$home_url_safe = (isset($uri) && $uri) ? $uri : (!empty($site_url) ? rtrim($site_url, '/') . '/' : '/');
-$site_name_safe = htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8');
-$theme_dir_safe = htmlspecialchars($theme_dir, ENT_QUOTES, 'UTF-8');
+$home_url_raw = (isset($uri) && $uri) ? (string)$uri : (!empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/');
+$home_url_attr = htmlspecialchars($home_url_raw, ENT_QUOTES, 'UTF-8');
+$theme_dir_attr = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
 $home_ld = [
     '@context' => 'https://schema.org',
     '@type' => 'WebSite',
     'name' => SITE_NAME,
-    'url' => $home_url_safe,
+    'url' => $home_url_raw,
     'description' => $seo_description,
 ];
 ?>
@@ -23,12 +23,12 @@ $home_ld = [
 <meta http-equiv="Cache-Control" content="no-transform">
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <meta name="applicable-device" content="pc,mobile">
-<meta name="mobile-agent" content="format=html5;url=<?=htmlspecialchars($home_url_safe, ENT_QUOTES, 'UTF-8')?>">
-<link rel="canonical" href="<?=htmlspecialchars($home_url_safe, ENT_QUOTES, 'UTF-8')?>">
+<meta name="mobile-agent" content="format=html5;url=<?=$home_url_attr?>">
+<link rel="canonical" href="<?=$home_url_attr?>">
 <meta property="og:type" content="website">
 <meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-<meta property="og:url" content="<?=htmlspecialchars($home_url_safe, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:url" content="<?=$home_url_attr?>">
 <script type="application/ld+json"><?=json_encode($home_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container">
@@ -44,12 +44,12 @@ $home_ld = [
                 $intro_html = htmlspecialchars($v['intro_des'], ENT_QUOTES, 'UTF-8');
                 $author_url_attr = htmlspecialchars($v['author_url'], ENT_QUOTES, 'UTF-8');
                 $author_html = htmlspecialchars($v['author'], ENT_QUOTES, 'UTF-8');
-                $words_safe = intval($v['words_w']);
+                $words_int = intval($v['words_w']);
                 $lastupdate_html = htmlspecialchars(Text::ss_lastupdate($v['lastupdate']), ENT_QUOTES, 'UTF-8');
             ?>
                 <li>
                     <div class="img_span">
-                        <a href="<?=$info_url_attr?>"><img src="<?=$img_url_attr?>" title="<?=$title_html?>" loading="lazy" onerror="this.src='/static/<?=$theme_dir_safe?>/nocover.jpg';this.onerror=null;"></a>
+                        <a href="<?=$info_url_attr?>"><img src="<?=$img_url_attr?>" title="<?=$title_html?>" loading="lazy" onerror="this.src='/static/<?=$theme_dir_attr?>/nocover.jpg';this.onerror=null;"></a>
                         <span><?=$sort_html?> / <?=$isfull_html?></span>
                     </div>
                     <div class="w100">
@@ -57,7 +57,7 @@ $home_ld = [
                         <p class="indent"><?=$intro_html?></p>
                         <div class="li_bottom">
                             <a href="<?=$author_url_attr?>"><i class="fa fa-user-circle-o">&nbsp;<?=$author_html?></i></a>
-                            <div><em class="orange"><?=$words_safe?>万字</em><em class="blue"><?=$lastupdate_html?></em></div>
+                            <div><em class="orange"><?=$words_int?>万字</em><em class="blue"><?=$lastupdate_html?></em></div>
                         </div>
                     </div>
                 </li>

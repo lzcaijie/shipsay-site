@@ -1,4 +1,15 @@
 
+## 2026-03-09-02 | 模板 | Shipsay 首页 / 作者页 / 分类页继续收口（只动 themes/shipsay + docs）
+- 范围：仅调整 `themes/shipsay/*` 与 `docs/*`，不动 `app / class / include / configs`。
+- 核对：继续针对 `tpl_home.php`、`tpl_author.php`、`tpl_category.php` 做模板层扫描，确认剩余问题仍属于命名口径、局部内联样式、展示层转义与模板职责边界，不需要先改核心。
+- 处理：
+  - `tpl_home.php` 将首页主链接从 `*_safe` 混名继续收口为 `home_url_raw / home_url_attr`，并统一首页 SEO/OG/canonical 输出口径。
+  - `tpl_home.php` 保留友情链接 `link_html` 直出，但在文档中明确其来源于后台友情链接配置缓存，属于模板可接受的受控 HTML 例外。
+  - `tpl_author.php` 去掉 `style="width:100%;"`，改为复用 `side_commend side_commend_width`；补页面包屑；封面默认图与最后更新时间统一做安全输出。
+  - `tpl_category.php` 将分类页主链接与分类名变量继续收口为 `*_raw / *_attr / *_html`，并补齐列表更新时间的安全输出。
+- 结论：当前 `tpl_home.php / tpl_author.php / tpl_category.php` 可以继续维持“模板只消费上游变量、仅负责展示层安全输出”的方向；分类页剩余 `store_menu()` 这类局部功能型交互保留，不视为旧导航链路问题。
+
+
 ## 2026-03-09-01 | 模板 | Shipsay 链接链与 safe 口径收口（只动 themes/shipsay + docs）
 - 范围：仅调整 `themes/shipsay/*` 与 `docs/*`，不动 `app / class / include / configs`。
 - 目标：围绕已确认的 5 个模板问题收口：

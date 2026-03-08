@@ -314,6 +314,10 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$res` | 作者作品列表 |
 | `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
+补充说明：
+- 作者页当前复用 `side_commend / side_commend_width` 主容器，不再继续写 `style="width:100%;"` 这类旧布局兜底。
+- 作者页封面默认图、最后更新时间、页面包屑均归入模板展示层安全输出，不新增业务 URL 生成。
+
 ## 5.9 排行榜 `tpl_rank.php / tpl_top.php / tpl_rank_list.php`
 
 ### 聚合页常用变量
@@ -480,7 +484,7 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - `tpl_search.php` 中的 `$searchkey` 仅视为原始输入，模板前台展示必须改用 `$searchkey_safe` 或局部高亮 helper；搜索结果主容器优先复用现有 `side_commend_width` 类，不再继续写模板内联宽度。
 - `tpl_indexlist.php` 中的 BreadcrumbList 链接必须使用 `$indexlist_breadcrumb_item` 这类明确兜底值，不能回退引用未定义原始变量。
 - `tpl_reader.php` 中的本地阅读记录写入应使用 `$reader_url_safe`，不要直接把原始 `$uri` 当成稳定链接。
-- `tpl_author.php` 中的作者名与作品数展示建议先整理为 `$author_safe / $author_count_safe`，再输出到前台。
+- `tpl_author.php` 中的作者名、作品数、封面默认图与页面包屑当前已统一整理为展示层变量后再输出；后续继续沿用 `*_raw / *_attr / *_html` 命名。
 
 ### Footer / recentread / error 模板本地变量（本轮补充）
 - `$site_home_url_raw / $site_home_url_attr`：Footer、recentread、error 等公共区优先复用的站点首页入口 raw / attr。
