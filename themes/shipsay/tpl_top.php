@@ -96,7 +96,7 @@ $rank_limit = isset($top_rank_limit) && (int)$top_rank_limit > 0 ? (int)$top_ran
                                 <li>
                                     <span class="rank-num"><?=$i + 1?></span>
                                     <a href="<?=$info_url_attr?>"><?=$title_item_html?></a>
-                                    <span class="rank-author"><?=$author_html?></span>
+                                    <em><?=$author_html?></em>
                                 </li>
                             <?php endforeach; ?>
                         <?php else: ?>
