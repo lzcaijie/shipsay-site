@@ -27,11 +27,11 @@
 
 ### 2.1 蜘蛛直出（PHP 直出正文）
 - 入口：`shipsay/app/reader.php`
-- 模板输出：`themes/*/tpl_reader.php` 使用 `$rico_content` 输出正文
+- 模板输出：当前母模板标准为 `themes/shipsay/tpl_reader.php`；运行时由当前主题对应的 `tpl_reader.php` 使用 `$rico_content` 输出正文
 - 兜底补章：缺章/短章时调用 `shipsay/include/chapter_patch.php`
 
 ### 2.2 普通用户（JS 拉取正文）
-- 前端：`themes/*/tpl_reader.php` AJAX 请求 `/api/reader_js.php`
+- 前端：当前母模板标准为 `themes/shipsay/tpl_reader.php`；普通用户通过对应主题的 `tpl_reader.php` AJAX 请求 `/api/reader_js.php`
 - 路由：`router.php` → `shipsay/include/reader_js.php`
 - 兜底补章：缺章/短章时同样调用 `shipsay/include/chapter_patch.php`
 
