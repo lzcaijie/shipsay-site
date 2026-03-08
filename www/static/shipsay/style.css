@@ -1436,3 +1436,47 @@ kbd input {
     .rank-bookname { font-size: 16px; }
     .top-rank-grid { grid-template-columns: 1fr; }
 }
+
+
+/* shipsay step24: category pc pagination final reset */
+@media (min-width:768px){
+    .category-pagination .pagination-pc-wrap{
+        display:block;
+        width:100%;
+    }
+    .category-pagination .pagination-pc{
+        display:flex;
+        flex-wrap:wrap;
+        justify-content:center;
+        align-items:center;
+        gap:6px;
+        width:100%;
+        margin:0;
+        padding:0;
+        list-style:none;
+        text-align:center;
+    }
+    .section_mark .category-pagination .pagination-pc li,
+    .category-pagination .pagination-pc li{
+        display:block !important;
+        flex:none !important;
+        width:auto !important;
+        min-width:0 !important;
+        margin:0 !important;
+        padding:0 !important;
+        border:0 !important;
+        float:none !important;
+        vertical-align:top;
+    }
+    .section_mark .category-pagination .pagination-pc li:first-child,
+    .category-pagination .pagination-pc li:first-child{
+        border-top:0 !important;
+    }
+    .category-pagination .pagination-pc a,
+    .category-pagination .pagination-pc span,
+    .category-pagination .pagination-pc strong{
+        display:block;
+        min-width:34px;
+        margin:0;
+    }
+}
