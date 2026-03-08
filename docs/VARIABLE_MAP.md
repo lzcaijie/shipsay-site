@@ -35,24 +35,6 @@
 
 ### 1.4 先区分“变量问题”还是“CSS/结构问题”
 
-### 1.4A 布局参考旧版，不等于变量回退旧版（新增）
-
-当前 Shipsay 模板重建时，允许：
-
-- 参考旧模板的布局
-- 参考旧模板的 CSS 节奏
-- 参考旧模板正常时的页面块顺序
-
-但**不允许**因此把变量链路退回旧写法。后续默认保持当前 v5 合规变量结构，例如：
-
-- 头部优先使用 safe 链接变量
-- 详情页 / 目录页优先使用当前程序准备的作者、分类、状态、字数、最新章节等变量
-- 阅读页继续保持普通用户 JS 加载、蜘蛛直出正文
-
-一句话：
-
-**布局可以借旧版，变量不能误退旧版。**
-
 像这轮手机端带图卡片、footer 居中、分类分页块这类问题，默认先归类为 **CSS/模板结构问题**，不要误判成变量链路问题。
 
 判断原则：
@@ -250,12 +232,6 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$sortid / $sortname` | 当前分类 |
 | `$fullflag / $full_url / $allbooks_url / $allbooks_url_safe` | 完本/书库链路（模板展示优先用 safe 变量） |
 | `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
-
-### 当前 Shipsay 重建补充说明（新增）
-
-- `tpl_info.php` 与 `tpl_indexlist.php` 当前应保持同一结构逻辑，目录页不是单独风格页。
-- 详情页 / 目录页的 CSS 收口优先回到旧稳定布局逻辑，但变量输出继续保当前 v5 合规写法。
-- 当页面“看着正常”但变量链不稳时，优先保变量；当变量链正确但显示错乱时，优先修 CSS，不要回退变量。
 
 ## 5.4 详情页 `tpl_info.php`
 
@@ -555,3 +531,148 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - 本轮首页 / 分类列表 / `sortvisit` 的“摘要收口为 1 行”仍属于 CSS 展示层策略，不属于 PHP 变量语义变化。
 
 - `tpl_info.php` / `tpl_indexlist.php` 顶部元信息默认仍保持原始 `p > span` 结构；手机端优先通过样式层控制两列、截断与按钮铺开，不新增会影响 PC 的全局元信息结构。
+
+
+---
+
+## 10. 2026-03-08 | v5 核对补充（页面分层与 safe 优先级）
+
+### 10.1 页面分层结论
+
+#### A 级：当前可直接作为标准输入页
+- `tpl_home.php`
+- `tpl_info.php`
+- `tpl_indexlist.php`
+- `tpl_reader.php`
+
+#### B 级：变量链基本正确，但模板交互/样式还需继续收口
+- `tpl_category.php`
+- `tpl_rank.php`
+- `tpl_top.php`
+- `tpl_recentread.php`
+
+#### C 级：当前先保可用
+- `tpl_error.php`
+
+### 10.2 safe 链接优先级（本轮正式补充）
+
+后续模板中，凡是存在 `*_safe` 兜底变量时，前台展示优先级统一为：
+
+1. `*_safe`
+2. 当前 app 层直接准备好的真实链接变量
+3. 最后才允许非常轻的模板兜底值
+
+#### 当前应优先使用 `*_safe` 的常见入口
+- `$home_url_safe`
+- `$allbooks_url_safe`
+- `$full_allbooks_url_safe`
+- `$recentread_url_safe`
+- `$search_url_safe`
+- `$rank_entry_safe`
+- `$info_url_safe`
+- `$index_url_safe`
+- `$reader_url_safe`
+- `$top_url_safe`
+- `$rank_url_safe`
+
+规则：
+- 能走 `*_safe` 的，不要直接退回原始变量
+- fallback 只作为最终兜底，不作为模板默认真实值
+
+### 10.3 详情页 / 目录页变量层规则（正式固定）
+
+#### 详情页 `tpl_info.php`
+后续必须继续保留当前这组变量链：
+- `$articlename`
+- `$author / $author_url`
+- `$sortid / $sortname`
+- `$isfull`
+- `$words_w`
+- `$lastchapter / $last_url`
+- `$first_url`
+- `$index_url / $index_url_safe`
+- `$info_url / $info_url_safe`
+- `$intro / $intro_p / $intro_plain`
+- `$seo_title / $seo_keywords / $seo_description`
+
+#### 目录页 `tpl_indexlist.php`
+后续必须继续保留当前这组变量链：
+- `$articlename`
+- `$author / $author_url`
+- `$sortid / $sortname`
+- `$isfull`
+- `$words_w`
+- `$lastchapter / $last_url`
+- `$first_url`
+- `$info_url`
+- `$index_url / $indexlist_url_safe`
+- `$list_arr`
+- `$pid / $total_pages_safe`
+- `$seo_title / $seo_keywords / $seo_description`
+
+说明：
+- 目录页虽然是后期新增页，但变量链已经走到正确方向
+- 后续可以借旧详情页布局，不允许把变量链退回旧模板
+
+### 10.4 阅读页双链路属于正式变量规则，不是临时兼容
+
+阅读页 `tpl_reader.php` 当前正式规则：
+
+- 普通用户：正文通过 `/api/reader_js.php` 拉取
+- 蜘蛛或关闭 JS：直出 `<?=$rico_content?>`
+
+因此：
+- `$rico_content` 仍是核心正文变量
+- 但普通用户 HTML 源码正文为空是**正确行为**
+- 不允许后续再把普通用户链路改回模板直出正文
+
+### 10.5 分类页属于“旧交互待整改页”
+
+`tpl_category.php` 当前需要继续保留的真实变量有：
+- `$retarr`
+- `$sortcategory`
+- `$sortid / $sortname`
+- `$fullflag / $full_url`
+- `$allbooks_url / $allbooks_url_safe`
+- `$seo_title / $seo_keywords / $seo_description`
+
+但下面这些写法只视为当前兼容实现，不应继续当标准扩散：
+- `onclick="javascript:..."`
+- `href="#"`
+- `href="javascript:"`
+- 过重的模板内 fallback 导航写法
+
+### 10.6 当前确认允许写死与禁止写死的边界
+
+#### 允许写死的界面文案
+- `作者：`
+- `分类：`
+- `状态：`
+- `字数：`
+- `最新章节：`
+- `开始阅读`
+- `查看目录`
+- `返回详情`
+- `相关推荐`
+
+#### 禁止写死的真实业务值
+- 分类名
+- 作者名
+- 书名
+- 详情链接
+- 目录链接
+- 阅读链接
+- 排行入口
+- 搜索入口
+- 阅读记录入口
+- 页面真实 SEO 数据来源
+
+### 10.7 本轮最终原则
+
+后续遇到旧模板与当前模板并存时，默认按这条规则判断：
+
+- **旧模板**：只借布局与节奏
+- **当前模板**：保变量链、safe 链接、SEO 链路、阅读双链路
+- **目录页**：按详情页同体系处理
+- **缺失项**：允许后补
+- **错误变量定义**：不允许进入标准
