@@ -18,8 +18,9 @@ if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
 }
 $author_url_raw = isset($uri) && $uri ? (string)$uri : '';
 $author_url_attr = htmlspecialchars($author_url_raw, ENT_QUOTES, 'UTF-8');
-$author_name_safe = htmlspecialchars((string)$author, ENT_QUOTES, 'UTF-8');
-$author_count_safe = intval($author_count);
+$author_name_html = htmlspecialchars((string)$author, ENT_QUOTES, 'UTF-8');
+$author_count_int = intval($author_count);
+$nocover_url_attr = htmlspecialchars(Url::nocover_url(), ENT_QUOTES, 'UTF-8');
 $author_ld = [
     '@context' => 'https://schema.org',
     '@type' => 'BreadcrumbList',
@@ -46,8 +47,9 @@ $author_ld = [
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <div class="container">
-	<div class="side_commend" style="width:100%;">
-		<p class="title"><i class="fa fa-user-circle-o">&nbsp;</i> "<?=$author_name_safe?>" 共有 "<?=$author_count_safe?>" 部作品：</p>
+	<div class="side_commend side_commend_width">
+		<div class="bread_crumbs"><a href="<?=htmlspecialchars((!empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/'), ENT_QUOTES, 'UTF-8')?>">首页</a> &gt; <span>作者作品</span></div>
+		<p class="title"><i class="fa fa-user-circle-o">&nbsp;</i>作者「<?=$author_name_html?>」共有 <?=$author_count_int?> 部作品</p>
 		<ul class="flex">
 			<?php if(is_array($res)): ?><?php foreach($res as $k => $v): ?>	
 			<li class="searchresult">
@@ -64,11 +66,11 @@ $author_ld = [
 				$words_html = intval($v['words_w']);
 				?>
 				<div class="img_span">
-					<a href="<?=$info_url_attr?>"><img class="lazy" src="<?=Url::nocover_url()?>" data-original="<?=$img_url_attr?>" title="<?=$title_html?>" loading="lazy" /><span<?php if($v['isfull'] == '全本'): ?> class="full"<?php endif ?>><?=$sort_html?> / <?=$status_html?></span></a>
+					<a href="<?=$info_url_attr?>"><img class="lazy" src="<?=$nocover_url_attr?>" data-original="<?=$img_url_attr?>" title="<?=$title_html?>" loading="lazy" /><span<?php if($v['isfull'] == '全本'): ?> class="full"<?php endif ?>><?=$sort_html?> / <?=$status_html?></span></a>
 				</div>
 				<div>
 					<a href="<?=$info_url_attr?>"><h3><?=$title_html?></h3></a>
-					<p><i class="fa fa-user-circle-o">&nbsp;</i><?=$author_html?>&nbsp;&nbsp;<span class="s_gray"><?=$words_html?> 万字&nbsp;&nbsp;<?=Text::ss_lastupdate($v['lastupdate'])?></span></p>
+					<p><i class="fa fa-user-circle-o">&nbsp;</i><?=$author_html?>&nbsp;&nbsp;<span class="s_gray"><?=$words_html?> 万字&nbsp;&nbsp;<?=htmlspecialchars((string)Text::ss_lastupdate($v['lastupdate']), ENT_QUOTES, 'UTF-8')?></span></p>
 					<p class="searchresult_p"><?=$intro_html?></p>
 					<p><a href="<?=$last_url_attr?>"><?=$lastchapter_html?></a></p>
 				</div>

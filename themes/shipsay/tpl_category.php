@@ -6,28 +6,29 @@
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
-$category_name_safe = isset($sortname) && $sortname !== '' ? $sortname : '全部小说';
+$category_name_raw = isset($sortname) && $sortname !== '' ? (string)$sortname : '全部小说';
 if (trim($seo_title) === '' || trim($seo_title) === SITE_NAME) {
-    $seo_title = $category_name_safe . (isset($page) && intval($page) > 1 ? '_第'.intval($page).'页' : '') . '_' . SITE_NAME;
+    $seo_title = $category_name_raw . (isset($page) && intval($page) > 1 ? '_第'.intval($page).'页' : '') . '_' . SITE_NAME;
 }
 if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
-    $seo_keywords = $category_name_safe . ',小说,' . SITE_NAME;
+    $seo_keywords = $category_name_raw . ',小说,' . SITE_NAME;
 }
 if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
-    $seo_description = $category_name_safe . '小说列表，尽在' . SITE_NAME . '。';
+    $seo_description = $category_name_raw . '小说列表，尽在' . SITE_NAME . '。';
 }
-$category_url_safe = (isset($uri) && $uri) ? $uri : Sort::ss_sorturl($sortid);
+$category_url_raw = (isset($uri) && $uri) ? (string)$uri : Sort::ss_sorturl($sortid);
 $allbooks_url_raw = isset($allbooks_url) && $allbooks_url ? (string)$allbooks_url : '';
-$category_name_html = htmlspecialchars($category_name_safe, ENT_QUOTES, 'UTF-8');
-$category_url_attr = htmlspecialchars($category_url_safe, ENT_QUOTES, 'UTF-8');
+$full_url_raw = isset($full_url) ? (string)$full_url : '';
+$category_name_html = htmlspecialchars($category_name_raw, ENT_QUOTES, 'UTF-8');
+$category_url_attr = htmlspecialchars($category_url_raw, ENT_QUOTES, 'UTF-8');
 $allbooks_url_attr = htmlspecialchars($allbooks_url_raw, ENT_QUOTES, 'UTF-8');
-$full_url_attr = htmlspecialchars((string)$full_url, ENT_QUOTES, 'UTF-8');
+$full_url_attr = htmlspecialchars($full_url_raw, ENT_QUOTES, 'UTF-8');
 $category_ld = [
     '@context' => 'https://schema.org',
     '@type' => 'BreadcrumbList',
     'itemListElement' => [
         ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => !empty($site_url) ? $site_url : '/'],
-        ['@type' => 'ListItem', 'position' => 2, 'name' => $category_name_safe, 'item' => $category_url_safe],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => $category_name_raw, 'item' => $category_url_raw],
     ],
 ];
 ?>
@@ -70,7 +71,8 @@ $category_ld = [
                 $intro_html = htmlspecialchars((string)$v['intro_des'], ENT_QUOTES, 'UTF-8');
                 $author_url_attr = htmlspecialchars((string)$v['author_url'], ENT_QUOTES, 'UTF-8');
                 $author_html = htmlspecialchars((string)$v['author'], ENT_QUOTES, 'UTF-8');
-                $words_w_safe = intval($v['words_w']);
+                $words_w_int = intval($v['words_w']);
+                $lastupdate_html = htmlspecialchars((string)Text::ss_lastupdate($v['lastupdate']), ENT_QUOTES, 'UTF-8');
                 ?>
                 <li>
                     <div class="img_span"><a href="<?=$info_url_attr?>"><img class="lazy" src="<?=htmlspecialchars(Url::nocover_url(), ENT_QUOTES, 'UTF-8')?>" data-original="<?=$img_url_attr?>" title="<?=$title_html?>" loading="lazy" /><span<?php if($v['isfull'] != '连载'): ?> class="full"<?php endif ?>><?=$sort_html?> / <?=$status_html?></span></a></div>
@@ -80,7 +82,7 @@ $category_ld = [
                         <div class="li_bottom">
                             <a href="<?=$author_url_attr?>"><i class="fa fa-user-circle-o">&nbsp;<?=$author_html?></i></a>
                             <div>
-                                <em class="orange"><?=$words_w_safe?>万字</em><em class="blue"><?=Text::ss_lastupdate($v['lastupdate'])?></em>
+                                <em class="orange"><?=$words_w_int?>万字</em><em class="blue"><?=$lastupdate_html?></em>
                             </div>
                         </div>
                     </div>
