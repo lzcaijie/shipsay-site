@@ -1,10 +1,16 @@
-## 2026-03-08-01 | 模板 | Shipsay 旧稳定基底重建（step1-step4）
-- 目的：不再沿用多轮补丁式 CSS/模板修改链；改为以“旧稳定基底 + 当前 v5 合规变量/功能回填”的方式重建 Shipsay 模板。
-- 结构：`tpl_info.php`、`tpl_indexlist.php` 统一回到旧版稳定布局逻辑（`novel_info_main / novel_info_title / l_btn / chapter_list`），同时保留当前版的 safe 链接、SEO 输出、后台变量对应与目录页功能。
-- 样式：`www/static/shipsay/style.css` 改为旧稳定 CSS 为主体，只补当前模板必须保留的支持块；不再继续叠加 `v5.2.x` 那种连续手机端补丁链。
-- 辅助页：为当前 `tpl_rank.php`、`tpl_top.php` 补齐必要样式支持；`tpl_recentread.php` 回到旧稳定布局并保留当前安全变量写法。
-- 原则：目录页必须和详情页保持同一结构逻辑；已有正确 CSS 优先复用，再把当前必须功能最小范围套进去；不为了一次性“修完”而整页照搬旧模板。
-- 状态：本轮为重建链路收口版本，后续统一测试应以“详情页 / 目录页一致、首页 / 分类页不回归、阅读页双链路正常”为验收重点。
+## 2026-03-08 | 标准 | Shipsay v5 核对与标准收口（第一轮）
+- 核对：按当前已合并基线重新核对 `tpl_home.php`、`tpl_category.php`、`tpl_info.php`、`tpl_indexlist.php`、`tpl_reader.php`、`tpl_recentread.php`、`tpl_rank.php`、`tpl_top.php`、`tpl_error.php` 与 `style.css`。
+- 结论：明确当前 Shipsay 标准口径为“**旧的、已验证正常的模板/CSS 只作为布局参考；当前主题中已经正确的变量链、safe 链接、SEO 链路、阅读双链路必须保留**”。
+- 固定：目录页必须与详情页保持同一结构体系；阅读页继续保持“普通用户 JS 加载、蜘蛛直出正文”。
+- 分层：将页面分为 A/B/C 三层：
+  - A 级：`tpl_home.php`、`tpl_info.php`、`tpl_indexlist.php`、`tpl_reader.php`
+  - B 级：`tpl_category.php`、`tpl_rank.php`、`tpl_top.php`、`tpl_recentread.php`
+  - C 级：`tpl_error.php`
+- 文档：补充 `V5_1_TEMPLATE_STANDARD.md` 与 `VARIABLE_MAP.md`，明确：
+  - 布局可借旧版，变量链不能退回旧版
+  - 分类页旧交互写法属于待整改，不是最终标准
+  - safe 链接优先级与允许/禁止写死边界
+  - 目录页按详情页同体系处理
 
 ## 2026-03-07-3 | 模板 | Shipsay 手机端图文邻接区继续适配
 - 调整：继续只在 `www/static/shipsay/style.css` 微调，不回退到原始版，也不新增强压覆盖块。
