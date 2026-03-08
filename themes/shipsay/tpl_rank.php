@@ -85,29 +85,30 @@ $rank_ld = [
                 <?php foreach ($articlerows as $k => $v): ?>
                     <?php
                     $info_url_attr = htmlspecialchars((string)$v['info_url'], ENT_QUOTES, 'UTF-8');
-                    $img_url_attr = htmlspecialchars((string)$v['img_url'], ENT_QUOTES, 'UTF-8');
                     $title_html = htmlspecialchars((string)$v['articlename'], ENT_QUOTES, 'UTF-8');
                     $author_url_attr = htmlspecialchars((string)$v['author_url'], ENT_QUOTES, 'UTF-8');
                     $author_html = htmlspecialchars((string)$v['author'], ENT_QUOTES, 'UTF-8');
                     $sort_html = htmlspecialchars((string)$v['sortname_2'], ENT_QUOTES, 'UTF-8');
-                    $status_html = htmlspecialchars((string)$v['isfull'], ENT_QUOTES, 'UTF-8');
+                    $words_w_safe = intval($v['words_w']);
                     $intro_html = htmlspecialchars((string)$v['intro_des'], ENT_QUOTES, 'UTF-8');
+                    $lastupdate_html = htmlspecialchars(Text::ss_lastupdate($v['lastupdate']), ENT_QUOTES, 'UTF-8');
                     ?>
                     <li>
-                        <span class="rank-page-num"><?=$k + 1?></span>
-                        <div class="rank-page-cover"><a href="<?=$info_url_attr?>"><img src="<?=$img_url_attr?>" alt="<?=$title_html?>" loading="lazy"></a></div>
-                        <div class="rank-page-info">
-                            <h2><a href="<?=$info_url_attr?>"><?=$title_html?></a></h2>
-                            <p class="rank-page-meta">
-                                <span><?=$sort_html?> / <?=$status_html?></span>
+                        <span class="rank-num"><?=$k + 1?></span>
+                        <div class="rank-main">
+                            <a href="<?=$info_url_attr?>" class="rank-bookname"><?=$title_html?></a>
+                            <div class="rank-meta">
                                 <a href="<?=$author_url_attr?>"><?=$author_html?></a>
-                            </p>
-                            <p class="rank-page-intro"><?=$intro_html?></p>
+                                <?php if (!empty($v['sortname_2'])): ?><em><?=$sort_html?></em><?php endif; ?>
+                                <em><?=$words_w_safe?>万字</em>
+                                <em><?=$lastupdate_html?></em>
+                            </div>
+                            <p><?=$intro_html?></p>
                         </div>
                     </li>
                 <?php endforeach; ?>
             <?php else: ?>
-                <li class="rank-empty">暂无数据</li>
+                <li class="rank-empty">暂无排行榜数据</li>
             <?php endif; ?>
         </ol>
     </section>
