@@ -13,7 +13,7 @@
 1. **后台配置变量**：来源于 `www/caijie/*` 后台设置与 `shipsay/configs/config.ini.php`
 2. **URL 占位符**：用于伪静态路由模板，不是模板运行时变量
 3. **SEO 占位符**：只用于 `shipsay/configs/seo_tpl.php`
-4. **模板运行时变量**：由 `shipsay/app/*.php` 准备后传给 `themes/*/tpl_*.php`
+4. **模板运行时变量**：由 `shipsay/app/*.php` 准备后传给当前母模板 `themes/shipsay/tpl_*.php`；其它主题如需复用，同样遵守这条边界，但不反向定义 Shipsay 标准
 
 ### 1.2 禁止混用
 
