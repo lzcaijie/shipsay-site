@@ -891,3 +891,19 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - `tpl_footer.php` 的 `javascript:zh_tran(...)` 属于前端功能型交互，不归类为旧导航链路问题。
 - `tpl_reader.php` 的字号/夜间/极简按钮，仍归类为阅读交互，不归类为旧导航链路问题。
 - `tpl_search.php` / `tpl_author.php` 仍有局部行内样式问题，但当前先归为模板样式收口项，不上升到核心链路问题。
+
+## 10.5 2026-03-09 | 核心页局部变量再收口
+
+| 变量 | 范围 | 说明 |
+|---|---|---|
+| `$site_home_url_raw / $site_home_url_attr` | `tpl_info.php` / `tpl_indexlist.php` / `tpl_reader.php` | 站点首页入口 raw / attr，核心页面包屑、BreadcrumbList、首页入口统一复用 |
+| `$sort_url_raw / $sort_url_attr` | `tpl_indexlist.php` / `tpl_reader.php` | 分类入口 raw / attr；避免在 JSON-LD 与属性位里混用临时表达式 |
+| `$info_url_raw / $info_url_attr` | `tpl_indexlist.php` / `tpl_reader.php` | 详情入口 raw / attr；阅读页本地阅读记录与 BreadcrumbList 统一复用 |
+| `$theme_dir_attr` | `tpl_info.php` / `tpl_indexlist.php` | 静态资源目录属性输出值；替代继续使用 `theme_dir_safe` 混名 |
+| `$lastupdate_text_html` | `tpl_reader.php` | 阅读页经 helper 处理后再转义的时间展示值 |
+
+### 10.5.1 当前固定边界
+- `tpl_info.php`：目录按钮缺失时只允许禁用展示，不允许输出空 `href`。
+- `tpl_indexlist.php`：返回详情按钮缺失时允许禁用展示，但不允许模板层回退到其它入口。
+- `tpl_reader.php`：`og:novel:index_url` 只在目录入口存在时输出，并且只允许使用 `$index_url_attr`。
+- `intro_html` 当前属于受控富文本例外；可直出，但不等同于模板可以直出任意原始 HTML。

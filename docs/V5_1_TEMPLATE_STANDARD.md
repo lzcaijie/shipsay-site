@@ -1099,3 +1099,25 @@
 - 排行入口回退到 `/rank/`
 - 搜索入口回退到 `/search/`
 
+
+### 10.5 2026-03-09 | info / indexlist / reader 核心页补充口径
+
+#### 10.5.1 详情页 `tpl_info.php`
+- 详情页目录按钮只允许消费 app 已传入的 `$index_url`。
+- 当 `$index_url` 缺失时，允许模板做禁用展示；不允许继续输出空 `href`，也不允许模板层再猜目录链接。
+- `theme_dir` 这类静态资源目录变量，在属性位统一按 `*_attr` 输出，避免继续沿用 `*_safe` 混名。
+
+#### 10.5.2 目录页 `tpl_indexlist.php`
+- 目录页与详情页继续使用同一套站点首页 / 分类 / 详情 raw/attr 语义：`site_home_url_raw / attr`、`sort_url_raw / attr`、`info_url_raw / attr`。
+- BreadcrumbList、canonical、OG、面包屑优先消费当前页真实 raw/attr 变量，不再在同一模板里混用临时表达式。
+- 返回详情按钮允许在详情链接缺失时做禁用展示，但不允许模板层回退到其它业务入口。
+
+#### 10.5.3 阅读页 `tpl_reader.php`
+- 阅读页站点首页与分类链接继续使用 `site_home_url_raw / attr`、`sort_url_raw / attr`。
+- `og:novel:index_url` 语义固定为“目录入口”；仅当 `$index_url` 存在时输出，不能误填详情页 URL。
+- `Text::ss_lastupdate()` 这类 helper 返回值，进入模板输出前仍应按展示层规则转义。
+- 阅读页目录按钮缺失时继续允许禁用展示；禁止模板层把目录入口改写成详情页或其它业务链接。
+
+#### 10.5.4 当前允许的受控 HTML 例外
+- 详情页简介区当前继续允许 `intro_html` 直出，但前提是它属于 app 已整理好的受控富文本内容。
+- 这类受控 HTML 例外只限于正文简介/后台受控 HTML 区，不得扩散到链接、canonical、OG、BreadcrumbList 等 URL 链路位。

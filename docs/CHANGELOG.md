@@ -95,6 +95,14 @@
 
 ---
 
+## 2026-03-09 | 标准 | Shipsay 核心页模板红线收口（第六轮 / info-indexlist-reader）
+- 范围：仅调整 `themes/shipsay/tpl_info.php`、`tpl_indexlist.php`、`tpl_reader.php` 与 `root/docs`，继续遵守“模板适配核心、不动 app/class/include/configs”。
+- 收口：详情页 `tpl_info.php` 的目录按钮不再输出空 `href`；当上游未提供 `$index_url` 时，模板只做禁用展示，不再靠空链接冒充真实目录入口。
+- 收口：目录页 `tpl_indexlist.php` 统一补齐 `site_home_url_raw / site_home_url_attr`、`sort_url_raw / sort_url_attr`、`info_url_raw / info_url_attr`，BreadcrumbList 与面包屑统一消费当前页真实 raw/attr 链路。
+- 收口：阅读页 `tpl_reader.php` 统一补齐 `site_home_url_raw / site_home_url_attr`、`sort_url_raw / sort_url_attr`、`info_url_raw / info_url_attr`；`og:novel:index_url` 改为只在目录链接存在时输出，并改用目录入口 `index_url_attr`，不再误填详情页链接。
+- 收口：阅读页 `Text::ss_lastupdate()` 的结果先转义再输出；本地阅读记录写入继续使用 `info_url_raw / reader_url_raw`，不再混用原始变量与局部变量。
+- 结论：当前三大核心页继续维持“模板只消费核心已提供链接，缺失时允许禁用展示，不允许模板层改写业务语义”。
+
 
 ## 2026-03-07-02 | 模板 | Shipsay 手机端带图卡片与详情/目录书封区继续细调
 - 目标：在上一轮已收口的基础上，继续微调手机端带图卡片、首页分类首卡、详情页/目录页书封信息区，让整体节奏更接近可复用标准模板，而不是靠强覆盖硬压。
