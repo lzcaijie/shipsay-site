@@ -235,3 +235,11 @@
 - mobile: 详情页顶部元信息区继续收紧到更贴近书封高度，`开始阅读 / 查看目录` 按整行双按钮铺开；目录页最新章节改为单独可控的长链接行，避免长章节名溢出。
 - pc: 本轮仍只针对手机端追加覆盖，不改 PC 端布局。
 - 2026-03-07：恢复详情页/目录页 PC 顶部信息区与按钮节奏；手机端仅继续收口首页/分类带图卡片封面列、详情/目录元信息间距与详情按钮整行铺开。
+
+
+## 2026-03-09 | redline v4 | 辅助页模板与文档继续收口
+- 范围继续锁定在 `themes/shipsay/*` 与 `docs/*`，未改动 `app / class / include / configs`。
+- `tpl_search.php`：搜索结果主容器改回现有样式体系内的 `side_commend_width` 类，不再保留 `style="width:100%;"` 这类模板内联宽度；同时补上搜索结果页面包屑，并把结果字段读取改成更稳的局部空值兼容写法。
+- `tpl_recentread.php`：统一复用 `site_home_url_raw / site_home_url_attr` 口径，不再单独保留 `home_url_safe` 旧命名；阅读记录页标题与描述改成本地明确变量后再输出。
+- `tpl_footer.php`：统一改为 `site_home_url_raw / site_home_url_attr` 与 `footer_sitemap_*_raw / _attr` 命名，避免把原始 URL 继续写成 `*_safe`；站点地图链接当前仍属于模板本地固定资源路径，由站点首页链接推导，不上升为核心业务入口变量。
+- docs：同步修正文档中 footer / recentread / search 的变量命名与职责边界说明。

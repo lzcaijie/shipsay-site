@@ -437,7 +437,7 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$search_url_raw / $search_url_attr` | 模板局部 | 搜索入口 raw / attr |
 | `$search_placeholder` | 模板局部 | 搜索框占位文案 |
 | `$rank_entry_raw / $rank_entry_attr` | 模板局部 | Header 中排行入口 raw / attr |
-| `$home_url_safe` | 模板局部 | 首页 canonical / OG / 结构化数据使用 |
+| `$site_home_url_raw / $site_home_url_attr` | 模板局部 | 站点首页入口 raw / attr；Header、recentread、footer 等公共区优先复用 |
 | `$category_url_safe` | 模板局部 | 分类页 canonical / OG / breadcrumb 使用 |
 | `$author_url_safe` | 模板局部 | 作者页 canonical / OG / breadcrumb 使用 |
 | `$rank_url_safe` | 模板局部 | 榜单详情页 canonical / OG / breadcrumb 使用 |
@@ -477,17 +477,18 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 
 补充说明：
 - `tpl_top.php` 当前基线不再直接查库，榜单数据应由 `shipsay/app/top.php` 预先准备。
-- `tpl_search.php` 中的 `$searchkey` 仅视为原始输入，模板前台展示必须改用 `$searchkey_safe` 或局部高亮 helper。
+- `tpl_search.php` 中的 `$searchkey` 仅视为原始输入，模板前台展示必须改用 `$searchkey_safe` 或局部高亮 helper；搜索结果主容器优先复用现有 `side_commend_width` 类，不再继续写模板内联宽度。
 - `tpl_indexlist.php` 中的 BreadcrumbList 链接必须使用 `$indexlist_breadcrumb_item` 这类明确兜底值，不能回退引用未定义原始变量。
 - `tpl_reader.php` 中的本地阅读记录写入应使用 `$reader_url_safe`，不要直接把原始 `$uri` 当成稳定链接。
 - `tpl_author.php` 中的作者名与作品数展示建议先整理为 `$author_safe / $author_count_safe`，再输出到前台。
 
-### Footer / recentread / error 模板本地 safe 变量（本轮补充）
-- `$site_url_safe`：Footer 首页入口安全链接，优先用 `$site_url`，否则回退 `/`。
-- `$home_url_safe`：recentread / error 页面返回首页与面包屑入口的安全链接。
-- `$recentread_page_title` / `$recentread_page_description`：阅读记录页本地标题与描述兜底。
-- `$recent_info_url_safe` / `$recent_author_url_safe`：阅读记录页猜你喜欢列表的安全链接。
-- `$recent_articlename_safe` / `$recent_author_safe`：阅读记录页猜你喜欢列表的安全展示文案。
+### Footer / recentread / error 模板本地变量（本轮补充）
+- `$site_home_url_raw / $site_home_url_attr`：Footer、recentread、error 等公共区优先复用的站点首页入口 raw / attr。
+- `$recentread_page_title / $recentread_page_title_html`：阅读记录页标题本地变量与安全输出值。
+- `$recentread_page_description / $recentread_page_description_html`：阅读记录页描述本地变量与安全输出值。
+- `$recent_info_url_attr / $recent_author_url_attr`：阅读记录页猜你喜欢列表链接 attr。
+- `$recent_articlename_html / $recent_author_html`：阅读记录页猜你喜欢列表安全展示文案。
+- `$footer_sitemap_sm_raw / $footer_sitemap_sm_attr`、`$footer_sitemap_xml_raw / $footer_sitemap_xml_attr`：Footer 当前模板本地站点地图资源链接；属于固定资源路径，不等同于业务入口变量。
 
 ### 本轮补充：手机端带图区细调说明（2026-03-07）
 - 本轮首页 / 分类页 / 详情页 / 目录页的“图片周围文字适配”，本质属于 **CSS 排版层调整**。
