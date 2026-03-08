@@ -198,17 +198,16 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 
 | 变量 | 含义 |
 |---|---|
-| `$theme_dir` | 当前主题目录 |
-| `$allbooks_url` | 书库入口 |
-| `$allbooks_url_safe` | 书库入口安全兜底 |
-| `$full_allbooks_url` | 完本入口基础值 |
-| `$full_allbooks_url_safe` | 完本入口安全兜底 |
-| `$fake_recentread` | 足迹/阅读记录入口 |
-| `$recentread_url_safe` | 足迹入口安全兜底 |
-| `$fake_search` | 搜索入口（若存在） |
-| `$search_url_safe` | 搜索提交地址（安全兜底） |
-| `$search_placeholder` | 搜索框占位文案 |
-| `$rank_entry_safe` | 排行入口安全兜底 |
+| `$theme_dir` | 当前主题目录（上游原始值） |
+| `$theme_dir_raw / $theme_dir_attr` | 主题目录原始值 / 属性位安全输出 |
+| `$allbooks_url / $allbooks_url_raw / $allbooks_url_attr` | 书库入口原始值与模板局部整理后的 raw / attr |
+| `$full_allbooks_url / $full_allbooks_url_raw / $full_allbooks_url_attr` | 完本入口原始值与模板局部整理后的 raw / attr |
+| `$fake_recentread / $recentread_url_raw / $recentread_url_attr` | 足迹入口原始值与模板局部整理后的 raw / attr |
+| `$fake_search / $search_url_raw / $search_url_attr` | 搜索入口原始值与模板局部整理后的 raw / attr |
+| `$site_url / $site_home_url_raw / $site_home_url_attr` | 站点首页入口原始值与模板局部整理后的 raw / attr |
+| `$rank_entry_url / $fake_top / $rank_entry_raw / $rank_entry_attr` | 排行入口原始值与模板局部整理后的 raw / attr；默认只认 `rank_entry_url`，缺失时才回退 `fake_top` |
+| `$search_placeholder / $search_placeholder_raw / $search_placeholder_attr` | 搜索框占位文案原始值与安全输出值 |
+| `$site_name_html / $site_url_text_html` | 站点名 / 站点地址展示位安全输出 |
 
 ## 5.2 首页 `tpl_home.php`
 
@@ -644,7 +643,7 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - 但普通用户 HTML 源码正文为空是**正确行为**
 - 不允许后续再把普通用户链路改回模板直出正文
 
-### 10.6 分类页属于“旧交互待整改页”
+### 10.6 分类页当前属于“真实跳转已收口、局部功能交互保留”页
 
 `tpl_category.php` 当前需要继续保留的真实变量有：
 - `$retarr`
@@ -660,11 +659,10 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - 母模板与文档标准必须按这个现状验收，不允许在模板层假定存在第 11 页及以后。
 - 后续若要放开该上限，必须先作为**核心规则变更**单独处理，再同步模板与文档，不得只在模板层放宽。
 
-但下面这些写法只视为当前兼容实现，不应继续当标准扩散：
-- `onclick="javascript:..."`
-- `href="#"`
-- `href="javascript:"`
-- 过重的模板内 fallback 导航写法
+当前页面边界补充：
+- “只看全本”这类真实跳转入口已改成直接消费上游真实链接，不再保留 `href="javascript:"`、`onclick=document.location` 这类旧跳转写法。
+- `store_menu()` 这类局部前端功能交互仍可保留，但不再视为旧业务导航链路问题。
+- 过重的模板内 fallback 导航写法仍不应继续扩散。
 
 ### 10.6.1 当前确认允许写死与禁止写死的边界
 

@@ -1,3 +1,12 @@
+## 2026-03-09-05 | 文档 | Shipsay 最终验收式 docs 收尾（只动 docs）
+- 范围：仅调整 `docs/*`，不动 `themes/shipsay/*` 与核心目录。
+- 修正：`VARIABLE_MAP.md` 将 `tpl_header.php` 头部变量表改为当前真实运行口径：统一记录 `*_raw / *_attr / *_html`，不再把旧的 `*_safe` 头部链接变量写成现行标准。
+- 修正：`VARIABLE_MAP.md` / `V5_1_TEMPLATE_STANDARD.md` 同步把分类页口径改成“真实跳转入口已收口，`store_menu()` 等局部功能交互保留为前端交互例外”，不再继续把它归类成旧导航待整改项。
+- 修正：历史记录中 `tpl_rank.php` 的排行入口说明同步到当前最终口径：模板正式只消费 `rank_entry_url / rank_detail_base / fake_top`，旧 `fake_rankstr` 仅保留给路由兼容。
+- 复扫：`root/docs` 全量复核完成；`CHANGELOG.md / V5_1_TEMPLATE_STANDARD.md / VARIABLE_MAP.md / OPS.md / PROJECT_STRUCTURE.md` 当前未发现新的阻塞性口径冲突。
+- 结论：当前 docs 与模板、核心现状已基本一致，可作为 Shipsay 阶段性收口版文档基线继续使用。
+
+
 ## 2026-03-09-04 | 模板 | Shipsay 全模板复扫收尾（只动 themes/shipsay + docs）
 - 范围：仅调整 `themes/shipsay/*` 与 `docs/*`，不动 `app / class / include / configs`。
 - 修正：`tpl_recentread.php` 将页面标题与描述变量前置定义，避免 `<title>` / `<meta description>` 在变量尚未赋值时提前输出空值。
@@ -29,7 +38,7 @@
 - 处理：
   - `tpl_header.php` 改为统一 `*_raw / *_attr / *_html` 命名，不再写死 `/sort/`、`/search/`、`/history.html`、`/rank/`。
   - `tpl_top.php` 不再在模板内补默认榜单链接或 `/rank/` 入口，聚合页链接完全跟随 app 已准备好的 `rank_entry_url / rank_detail_base / top_sections`。
-  - `tpl_rank.php` 去掉 `/rank/` 明文回退，榜单入口只消费 `rank_entry_url / fake_top / fake_rankstr`。
+  - `tpl_rank.php` 去掉 `/rank/` 明文回退；当前模板正式只消费 `rank_entry_url / rank_detail_base / fake_top`，旧 `fake_rankstr` 仅保留给路由兼容。
   - `tpl_info.php` 去掉模板层 `Url::index_url($articleid)` 目录链接兜底，目录入口只消费 app 已传入的 `$index_url`。
   - `tpl_reader.php` 去掉“目录缺失时回退详情页”的写法；目录链接缺失时仅做禁用展示，不再模板层改写业务入口。
   - `tpl_category.php` 去掉旧的 `href="javascript:"` / `onclick=document.location` 全本筛选跳转。
