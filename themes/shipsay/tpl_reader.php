@@ -21,10 +21,11 @@ if ($max_pid > 1) {
     $pageTitle .= '（' . $now_pid . '/' . $max_pid . '）';
 }
 $pageTitle .= ' - ' . SITE_NAME;
-$index_url_safe = isset($index_url) && $index_url ? $index_url : $info_url;
-$reader_url_safe = isset($uri) && $uri ? $uri : '';
-$reader_url_attr = htmlspecialchars($reader_url_safe, ENT_QUOTES, 'UTF-8');
-$home_url_attr = !empty($site_url) ? htmlspecialchars($site_url, ENT_QUOTES, 'UTF-8') : '/';
+$index_url_raw = isset($index_url) && $index_url ? (string)$index_url : '';
+$reader_url_raw = isset($uri) && $uri ? (string)$uri : '';
+$reader_url_attr = htmlspecialchars($reader_url_raw, ENT_QUOTES, 'UTF-8');
+$home_url_raw = !empty($site_url) ? (string)$site_url : '/';
+$home_url_attr = htmlspecialchars($home_url_raw, ENT_QUOTES, 'UTF-8');
 $sort_url_attr = htmlspecialchars(Sort::ss_sorturl($sortid), ENT_QUOTES, 'UTF-8');
 $sortname_html = htmlspecialchars((string)$sortname, ENT_QUOTES, 'UTF-8');
 $author_html = htmlspecialchars((string)$author, ENT_QUOTES, 'UTF-8');
@@ -32,7 +33,8 @@ $article_title_html = htmlspecialchars((string)$articlename, ENT_QUOTES, 'UTF-8'
 $chaptername_html = htmlspecialchars((string)$chaptername, ENT_QUOTES, 'UTF-8');
 $info_url_attr = htmlspecialchars((string)$info_url, ENT_QUOTES, 'UTF-8');
 $author_url_attr = htmlspecialchars((string)$author_url, ENT_QUOTES, 'UTF-8');
-$index_url_attr = htmlspecialchars((string)$index_url_safe, ENT_QUOTES, 'UTF-8');
+$index_url_attr = htmlspecialchars($index_url_raw, ENT_QUOTES, 'UTF-8');
+$theme_dir_attr = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
 $status_html = htmlspecialchars((string)$isfull, ENT_QUOTES, 'UTF-8');
 $chapterwords_safe = intval($chapterwords);
 $now_pid_safe = intval($now_pid);
@@ -63,10 +65,10 @@ $reader_breadcrumb_ld = [
     '@context' => 'https://schema.org',
     '@type' => 'BreadcrumbList',
     'itemListElement' => [
-        ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => !empty($site_url) ? $site_url : '/'],
+        ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => $home_url_raw],
         ['@type' => 'ListItem', 'position' => 2, 'name' => $sortname, 'item' => Sort::ss_sorturl($sortid)],
         ['@type' => 'ListItem', 'position' => 3, 'name' => $articlename, 'item' => $info_url],
-        ['@type' => 'ListItem', 'position' => 4, 'name' => $chaptername, 'item' => $reader_url_safe !== '' ? $reader_url_safe : $info_url],
+        ['@type' => 'ListItem', 'position' => 4, 'name' => $chaptername, 'item' => $reader_url_raw],
     ],
 ];
 ?>
@@ -146,7 +148,11 @@ $reader_breadcrumb_ld = [
             <?php else: ?>
                 <?php if ($pre_cid == 0): ?><a id="prev_url" href="<?=$info_url_attr?>" class="w_gray"><i class="fa fa-stop"></i> 没有了</a><?php else: ?><a id="prev_url" href="<?=$pre_url_attr?>"><i class="fa fa-backward"></i> 上一章</a><?php endif; ?>
             <?php endif; ?>
-            <a id="info_url" href="<?=$index_url_attr?>">目录</a>
+            <?php if ($index_url_raw !== ''): ?>
+                <a id="info_url" href="<?=$index_url_attr?>">目录</a>
+            <?php else: ?>
+                <span id="info_url" class="w_gray">目录</span>
+            <?php endif; ?>
             <?php if ($nextpage_url != ''): ?>
                 <a id="next_url" href="<?=$nextpage_url_attr?>">下一页 <i class="fa fa-forward"></i></a>
             <?php else: ?>
@@ -177,9 +183,9 @@ setTimeout(function() {
 <?php endif; ?>
 </script>
 <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
-<script src="/static/<?=$theme_dir?>/style.js"></script>
+<script src="/static/<?=$theme_dir_attr?>/style.js"></script>
 <script>
 if (window.lastread && typeof window.lastread.set === 'function') {
-    lastread.set(<?=json_encode($info_url, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($reader_url_safe, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($articlename, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($chaptername, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($author, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($img_url, JSON_UNESCAPED_UNICODE)?>);
+    lastread.set(<?=json_encode($info_url, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($reader_url_raw, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($articlename, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($chaptername, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($author, JSON_UNESCAPED_UNICODE)?>, <?=json_encode($img_url, JSON_UNESCAPED_UNICODE)?>);
 }
 </script>

@@ -155,8 +155,8 @@
 ### 规则
 - 模板页统一使用 `__THEME_DIR__` include
 - 静态资源统一走：`/static/<?=$theme_dir?>/`
-- 搜索入口必须走程序/配置生成的可变链接，不能写死 `/search/`
-- 头部导航链接必须优先走 safe 变量（如 `$allbooks_url_safe`、`$full_allbooks_url_safe`、`$recentread_url_safe`、`$rank_entry_safe`），不能直接信任未兜底变量
+- 搜索入口必须走程序/配置生成的可变链接，并在模板输出时做属性转义，不能写死 `/search/`
+- 头部导航链接必须优先消费上游已提供的真实链接，再在模板层拆分为 `*_raw / *_attr` 输出；不能继续写死旧固定路径
 - 页面全局数据调用数量优先使用双数；若为栅格/多列模块，默认先按双数收口，避免 PC 端出现空白列。
 - 模板中未使用、且会干扰链路判断的历史变量应及时清理，避免后续把“死变量”误当成真实标准。
 
@@ -331,7 +331,7 @@
 ### v5.1 统一规则
 - 单独一页，不与排行榜或推荐列表混用
 - 头部入口固定保留
-- 当前页面主体由前端 `showtempbooks()` 渲染，`$popular` 只负责右侧“猜你喜欢”列表
+- 支持无封面占位
 - PC / 手机端使用同一数据逻辑，不是两套含义不同的布局
 
 ## 6.8 排行榜 `tpl_rank.php / tpl_top.php / tpl_rank_list.php`
@@ -465,7 +465,7 @@
 ### 7.3 模板不能直接承担数据层职责
 
 标准规则：
-- 当前母模板标准中的 `themes/shipsay/*` 只负责展示；其它主题仅作参考，不反向定义 Shipsay 标准
+- `themes/*` 只负责展示
 - `shipsay/app/*` 负责准备页面数据
 - `class/include/configs` 负责底层逻辑与公共能力
 
@@ -1063,28 +1063,29 @@
 **旧模板借布局，当前模板保变量；缺失可以后补，错误不能进入标准。**
 
 
-### 12.17 第四轮全模板实扫补充（2026-03-08，docs-only）
+### 10.3 当前已收口的模板红线（2026-03-09）
 
-#### `tpl_search.php`
-- 当前已具备：`ss_seo_render('search')`、结果高亮 helper、搜索词与结果数安全输出。
-- 当前仍保留的模板层旧痕迹：列表外层 `side_commend` 容器有 `style="width:100%;"` 内联样式。
-- 结论：当前可用，后续若收模板，只在 `themes/shipsay/tpl_search.php` 或样式层最小范围处理，不外溢到程序层。
+本轮已按 `themes/shipsay` 真实文件收口以下口径：
 
-#### `tpl_author.php`
-- 当前已具备：`ss_seo_render('author')`、canonical、OG、BreadcrumbList。
-- 当前模板已在本地整理出 `$author_url_safe`、`$author_name_safe`、`$author_count_safe` 等安全值。
-- 当前仍保留的模板层旧痕迹：列表外层 `side_commend` 容器也有 `style="width:100%;"` 内联样式。
-- 结论：作者页属于可继续复用的辅助 SEO 页，后续若收模板，优先统一卡片/容器节奏，不改程序链路。
+1. Header / 排行 / 搜索 / 足迹 / 书库 / 完本 等公共入口，模板层不再写死 `/rank/`、`/search/`、`/sort/`、`/history.html` 这类业务 URL。
+2. 模板内 URL 变量统一优先拆分为：
+   - `*_raw`：原始链接值，供 JSON-LD / 逻辑判断使用
+   - `*_attr`：`htmlspecialchars()` 后的链接属性值，供 `href` / `content` / `canonical` 输出使用
+   - `*_html`：安全展示文本
+3. `tpl_info.php` 不再模板层自行调用 `Url::index_url()` 生成目录入口。
+4. `tpl_reader.php` 不再把目录入口缺失时回退到详情页；目录按钮允许做禁用展示，但不允许模板层擅自改写成别的业务入口。
+5. `tpl_top.php` / `tpl_rank.php` 只消费 app 已提供的排行入口和榜单集合，不再在模板里继续补 `/rank/` 或重建榜单数据。
+6. `tpl_category.php` 中“只看全本”这类真实跳转入口，应直接使用上游给出的真实链接，不再保留 `href="javascript:"`、`onclick=document.location` 这类旧写法。
 
-#### `tpl_footer.php`
-- Footer 当前承担：站点入口、两类 sitemap 链接、版权文案、统计脚本输出。
-- 其中 `javascript:zh_tran('s') / zh_tran('t')` 属于**局部功能型交互**，不与分类页旧导航写法混为一类。
-- 后续若整理 footer，重点在文案与布局，不要因为看见 `javascript:` 就误判为必须立刻改核心链路。
+#### 当前允许的模板兜底（保留）
+- 展示层空数组：如 `$rank_lists` 缺失时回退为空数组。
+- 展示层默认文案：如搜索占位文案、空列表“暂无数据”。
+- 首页链接：`$site_url` 缺失时可回退 `/`。
 
-#### `tpl_error.php`
-- 当前目标仍是“先保可用”：返回首页、返回上一页、搜索入口真实可用。
-- `javascript:history.back()` 当前记为工具型回退交互；问题重点仍是行内样式偏多，而不是业务链接链路错误。
+#### 当前不允许的模板兜底
+- 业务 URL 硬编码
+- canonical / og:url / breadcrumb 主链接回退到旧固定路径
+- 目录入口回退到详情页
+- 排行入口回退到 `/rank/`
+- 搜索入口回退到 `/search/`
 
-#### 当前新增口径
-- A/B/C 主分层继续只覆盖主模板页与既定辅助页；`tpl_search.php`、`tpl_author.php`、`tpl_footer.php` 单独记为“辅助模板实扫页”，用于补文档，不单独拉进核心分层。
-- 后续扫描模板时，先区分“旧导航写法”还是“局部功能型 JS 交互”，避免把所有 `javascript:` 一概归为同一类问题。

@@ -13,7 +13,7 @@
 1. **后台配置变量**：来源于 `www/caijie/*` 后台设置与 `shipsay/configs/config.ini.php`
 2. **URL 占位符**：用于伪静态路由模板，不是模板运行时变量
 3. **SEO 占位符**：只用于 `shipsay/configs/seo_tpl.php`
-4. **模板运行时变量**：由 `shipsay/app/*.php` 准备后传给当前母模板 `themes/shipsay/tpl_*.php`（其它主题仅供参考，不反向定义 Shipsay 标准）
+4. **模板运行时变量**：由 `shipsay/app/*.php` 准备后传给 `themes/*/tpl_*.php`
 
 ### 1.2 禁止混用
 
@@ -210,16 +210,6 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$search_placeholder` | 搜索框占位文案 |
 | `$rank_entry_safe` | 排行入口安全兜底 |
 
-## 5.1A 公共底部 `tpl_footer.php`
-
-| 变量 | 含义 |
-|---|---|
-| `$site_url_safe` | Footer 站点入口安全链接 |
-| `$sitemap_sm_safe` | 神马 sitemap 固定入口 |
-| `$sitemap_xml_safe` | XML sitemap 固定入口 |
-| `$year` | 当前年份 |
-| `zh_tran()` | 简繁切换前端函数（局部功能交互，不归到旧导航写法） |
-
 ## 5.2 首页 `tpl_home.php`
 
 | 变量 | 含义 |
@@ -300,7 +290,7 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$pre_url / $next_url` | 上一章 / 下一章 |
 | `$prevpage_url / $nextpage_url` | 阅读分页链接 |
 | `$now_pid / $max_pid` | 阅读分页当前页 / 总页数 |
-| `$index_url / $index_url_safe` | 返回目录 |
+| `$index_url / $index_url_raw / $index_url_attr` | 返回目录：app 原始值 / 模板本地 raw / 模板输出 attr |
 | `$info_url` | 返回详情 |
 | `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
@@ -319,11 +309,8 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 
 | 变量 | 含义 |
 |---|---|
-| `$author` | 作者名（原始值） |
-| `$author_name_safe` | 作者名安全显示值 |
-| `$author_count / $author_count_safe` | 作品数量 / 安全显示值 |
-| `$author_url_safe` | 作者页 canonical / OG / BreadcrumbList 使用的安全链接 |
-| `$author_ld` | 作者页 BreadcrumbList 结构化数据 |
+| `$author` | 作者名 |
+| `$author_count` | 作品数量 |
 | `$res` | 作者作品列表 |
 | `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
@@ -348,17 +335,15 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 | `$articlerows` | 榜单书籍列表 |
 | `$fake_top` | 排行入口前缀 |
 | `$fake_rankstr` | 旧 rank 前缀（兼容） |
-| `$rank_base` / `$rank_entry_url` / `$rank_detail_base` | 排行链接基础值 |
+| `$rank_base_raw / $rank_entry_url / $rank_detail_base` | 排行链接基础值（模板层不再补 `/rank/`） |
 | `$seo_title / $seo_keywords / $seo_description` | 页面 SEO |
 
 ## 5.10 阅读记录 `tpl_recentread.php`
 
 | 变量 | 含义 |
 |---|---|
-| `$home_url_safe` | 面包屑与返回首页的安全链接 |
-| `$popular` | 右侧“猜你喜欢”列表数据 |
-| `showtempbooks()` | 最近阅读主体前端渲染函数 |
-| 最近阅读主体 | 当前主要由前端 `showtempbooks()` 生成，不是 PHP 直出封面卡片列表 |
+| `$popular` | 猜你喜欢/热门数据 |
+| 最近阅读主体 | 当前主要由前端 `showtempbooks()` 生成 |
 
 ---
 
@@ -448,10 +433,10 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 
 | 变量 | 层级 | 说明 |
 |---|---|---|
-| `$full_allbooks_url_safe` | 模板局部 | Header 对完本入口的兜底值 |
-| `$search_url_safe` | 模板局部 | 搜索入口安全兜底值 |
+| `$full_allbooks_url_raw / $full_allbooks_url_attr` | 模板局部 | Header 完本入口 raw / attr |
+| `$search_url_raw / $search_url_attr` | 模板局部 | 搜索入口 raw / attr |
 | `$search_placeholder` | 模板局部 | 搜索框占位文案 |
-| `$rank_entry_safe` | 模板局部 | Header 中排行入口兜底值 |
+| `$rank_entry_raw / $rank_entry_attr` | 模板局部 | Header 中排行入口 raw / attr |
 | `$home_url_safe` | 模板局部 | 首页 canonical / OG / 结构化数据使用 |
 | `$category_url_safe` | 模板局部 | 分类页 canonical / OG / breadcrumb 使用 |
 | `$author_url_safe` | 模板局部 | 作者页 canonical / OG / breadcrumb 使用 |
@@ -462,7 +447,7 @@ $fake_langtail_indexlist = '/indexs/{aid}/{pid}/';
 
 | 变量 | 层级 | 说明 |
 |---|---|---|
-| `$index_url_safe` | 模板局部 | 详情页/阅读页目录入口兜底 |
+| `$index_url_raw / $index_url_attr` | 模板局部 | 详情页/阅读页目录入口 raw / attr（不再回退详情页） |
 | `$latest12` | 模板局部 | 详情页展示用“最新 12 章”数组 |
 | `$latest50` | 模板局部 | 详情页展示用“前 50 章”数组 |
 | `$intro_html` | 模板局部 | 简介输出优先级合并值 |
@@ -495,7 +480,7 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 - `tpl_search.php` 中的 `$searchkey` 仅视为原始输入，模板前台展示必须改用 `$searchkey_safe` 或局部高亮 helper。
 - `tpl_indexlist.php` 中的 BreadcrumbList 链接必须使用 `$indexlist_breadcrumb_item` 这类明确兜底值，不能回退引用未定义原始变量。
 - `tpl_reader.php` 中的本地阅读记录写入应使用 `$reader_url_safe`，不要直接把原始 `$uri` 当成稳定链接。
-- `tpl_author.php` 中的作者名与作品数展示建议先整理为 `$author_name_safe / $author_count_safe`，再输出到前台。
+- `tpl_author.php` 中的作者名与作品数展示建议先整理为 `$author_safe / $author_count_safe`，再输出到前台。
 
 ### Footer / recentread / error 模板本地 safe 变量（本轮补充）
 - `$site_url_safe`：Footer 首页入口安全链接，优先用 `$site_url`，否则回退 `/`。
@@ -575,20 +560,20 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 
 1. `*_safe`
 2. 当前 app 层直接准备好的真实链接变量
-3. 最后才允许非常轻的模板兜底值
+3. 首页链接等极少数展示入口，最后才允许非常轻的模板兜底值
 
 #### 当前应优先使用 `*_safe` 的常见入口
 - `$home_url_safe`
-- `$allbooks_url_safe`
-- `$full_allbooks_url_safe`
-- `$recentread_url_safe`
-- `$search_url_safe`
-- `$rank_entry_safe`
-- `$info_url_safe`
-- `$index_url_safe`
-- `$reader_url_safe`
-- `$top_url_safe`
-- `$rank_url_safe`
+- `$allbooks_url_raw / $allbooks_url_attr`
+- `$full_allbooks_url_raw / $full_allbooks_url_attr`
+- `$recentread_url_raw / $recentread_url_attr`
+- `$search_url_raw / $search_url_attr`
+- `$rank_entry_raw / $rank_entry_attr`
+- `$info_url_raw / $info_url_attr`
+- `$index_url_raw / $index_url_attr`
+- `$reader_url_raw / $reader_url_attr`
+- `$top_url_raw / $top_url_attr`
+- `$rank_url_raw / $rank_url_attr`
 
 规则：
 - 能走 `*_safe` 的，不要直接退回原始变量
@@ -874,21 +859,30 @@ Shipsay 当前章节链路存在“章节 ID / 顺序混淆映射”的实际运
 默认先排除 CSS 控制块污染，再决定是否进入模板或变量链层修改。
 
 
-### 10.14 第四轮全模板实扫补充（2026-03-08，docs-only）
+## 10.4 2026-03-09 | Header / rank / reader 模板变量收口
 
-#### `tpl_search.php`
-- 当前模板局部真实变量：`$searchkey_safe`、`$search_count_safe`、`$search_highlight()`。
-- 这页的搜索结果高亮 helper 属于模板局部闭包，不是 app 层公共函数名。
-- 当前问题重点是内联容器样式，不是搜索变量链错误。
+### 10.4.1 当前正式命名口径
+- `*_raw`：原始 URL / 原始业务值，供 JSON-LD、逻辑判断、变量拼装使用。
+- `*_attr`：对 `*_raw` 做过 `htmlspecialchars()` 的属性输出值，只用于 `href`、`content`、`canonical`、`og:url` 等属性位。
+- `*_html`：展示文字专用安全值。
 
-#### `tpl_author.php`
-- 当前模板局部真实变量：`$author_url_safe`、`$author_name_safe`、`$author_count_safe`、`$author_ld`。
-- 作者页已具备 canonical / OG / BreadcrumbList；后续若收模板，应优先沿用这些局部安全值。
+### 10.4.2 本轮重点收口文件
+- `tpl_header.php`
+- `tpl_top.php`
+- `tpl_rank.php`
+- `tpl_info.php`
+- `tpl_indexlist.php`
+- `tpl_reader.php`
+- `tpl_category.php`
+- `tpl_author.php`
 
-#### `tpl_footer.php`
-- Footer 当前固定使用：`$site_url_safe`、`$sitemap_sm_safe`、`$sitemap_xml_safe`。
-- `zh_tran()` 属于 footer 局部功能交互，不与分类页旧导航 `onclick / javascript:` 混记。
+### 10.4.3 这轮已经明确不再允许的模板写法
+- 在 Header / 排行 / 搜索 / 足迹 / 书库 / 完本入口直接写死 `/rank/`、`/search/`、`/sort/`、`/history.html`。
+- 在详情页模板里直接调用 `Url::index_url()` 补目录链接。
+- 在阅读页里把目录入口缺失时自动改成详情页。
+- 在分类页里继续使用 `href="javascript:"` 或 `onclick=document.location=...` 承担真实跳转。
 
-#### `tpl_error.php`
-- `javascript:history.back()` 当前记为工具型回退交互。
-- 问题重点仍是行内样式较多；不是搜索/首页真实链接变量缺失。
+### 10.4.4 当前仍保留的边界
+- `tpl_footer.php` 的 `javascript:zh_tran(...)` 属于前端功能型交互，不归类为旧导航链路问题。
+- `tpl_reader.php` 的字号/夜间/极简按钮，仍归类为阅读交互，不归类为旧导航链路问题。
+- `tpl_search.php` / `tpl_author.php` 仍有局部行内样式问题，但当前先归为模板样式收口项，不上升到核心链路问题。

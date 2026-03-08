@@ -17,10 +17,10 @@ if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
     $seo_description = $category_name_safe . '小说列表，尽在' . SITE_NAME . '。';
 }
 $category_url_safe = (isset($uri) && $uri) ? $uri : Sort::ss_sorturl($sortid);
-$allbooks_url_safe = !empty($allbooks_url) ? $allbooks_url : '/sort/';
+$allbooks_url_raw = isset($allbooks_url) && $allbooks_url ? (string)$allbooks_url : '';
 $category_name_html = htmlspecialchars($category_name_safe, ENT_QUOTES, 'UTF-8');
 $category_url_attr = htmlspecialchars($category_url_safe, ENT_QUOTES, 'UTF-8');
-$allbooks_url_attr = htmlspecialchars($allbooks_url_safe, ENT_QUOTES, 'UTF-8');
+$allbooks_url_attr = htmlspecialchars($allbooks_url_raw, ENT_QUOTES, 'UTF-8');
 $full_url_attr = htmlspecialchars((string)$full_url, ENT_QUOTES, 'UTF-8');
 $category_ld = [
     '@context' => 'https://schema.org',
@@ -51,7 +51,7 @@ $category_ld = [
         <div class="side_commend">
             <div class="title"><?=$category_name_html?></div>
             <div id="after_menu">
-                <div><a href="#"></a><a href="javascript:" onclick="document.location='<?=$full_url_attr?>'"><label><input type="checkbox"<?php if($fullflag): ?> checked="checked"<?php endif ?> /> 只看全本</label></a></div>
+                <div><a href="<?=$full_url_attr?>" class="category-full-link"><label><input type="checkbox"<?php if($fullflag): ?> checked="checked"<?php endif ?> /> 只看全本</label></a></div>
                 <div><a href="<?=$allbooks_url_attr?>" <?php if($sortid == -1): ?> class="onselect"<?php endif?>>全部分类</a>
                     <?php foreach($sortcategory as $k => $v): ?>
                         <?php $sort_url_attr = htmlspecialchars((string)$v['sorturl'], ENT_QUOTES, 'UTF-8'); $sort_name_html = htmlspecialchars((string)$v['sortname'], ENT_QUOTES, 'UTF-8'); ?>
@@ -107,9 +107,7 @@ $category_ld = [
             <?php endforeach ?>
         </ul>
         <ul>
-            <li onclick="javascript: document.location='<?=$full_url_attr?>'">
-                <label><input type="checkbox"<?php if($fullflag): ?> checked="checked"<?php endif ?> /> 只看全本</label>
-            </li>
+            <li><a href="<?=$full_url_attr?>" class="category-full-link"><label><input type="checkbox"<?php if($fullflag): ?> checked="checked"<?php endif ?> /> 只看全本</label></a></li>
         </ul>
     </div>
 </div>

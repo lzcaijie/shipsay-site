@@ -1,10 +1,21 @@
-## 2026-03-08 | 标准 | Shipsay v5 文档红线收口（v2 / 全模板实扫补充）
-- 范围：本轮继续严格遵守红线，只做 `docs/*` 收口；不改 `app / class / include / configs / themes`。
-- 实扫：补扫 `themes/shipsay` 全部模板文件，除 A/B/C 主分层页外，额外确认 `tpl_search.php`、`tpl_author.php`、`tpl_footer.php` 当前真实状态，避免后续文档只围绕主模板页写规则。
-- 固定：当前母模板标准只认 `themes/shipsay/*`；其它主题可参考，但不反向定义 Shipsay 标准，不再使用会让人误解为“任意主题都能反向定义当前标准”的泛写法。
-- 固定：`tpl_footer.php` 中的 `javascript:zh_tran(...)`、`tpl_error.php` 中的 `javascript:history.back()` 当前记为**局部功能型交互例外**，不与 `tpl_category.php` 的旧导航写法混为一类。
-- 固定：`tpl_recentread.php` 当前主体由前端 `showtempbooks()` 渲染，`$popular` 只负责右侧“猜你喜欢”列表；后续写标准时不得误记成“完整封面卡片页”。
-- 记账：`tpl_search.php` / `tpl_author.php` 当前已具备 SEO、canonical、BreadcrumbList 等基础链路，但列表容器仍保留 `style="width:100%;"` 这类旧内联样式；后续若收模板，只能按模板层最小范围处理。
+
+## 2026-03-09-01 | 模板 | Shipsay 链接链与 safe 口径收口（只动 themes/shipsay + docs）
+- 范围：仅调整 `themes/shipsay/*` 与 `docs/*`，不动 `app / class / include / configs`。
+- 目标：围绕已确认的 5 个模板问题收口：
+  - 可变链接仍有硬编码兜底
+  - 排行入口仍回退 `/rank/`
+  - Header 对 `*_safe` 变量使用口径不一致
+  - 搜索表单 `action` 未转义输出
+  - 模板层兜底过多导致职责边界不清
+- 处理：
+  - `tpl_header.php` 改为统一 `*_raw / *_attr / *_html` 命名，不再写死 `/sort/`、`/search/`、`/history.html`、`/rank/`。
+  - `tpl_top.php` 不再在模板内补默认榜单链接或 `/rank/` 入口，聚合页链接完全跟随 app 已准备好的 `rank_entry_url / rank_detail_base / top_sections`。
+  - `tpl_rank.php` 去掉 `/rank/` 明文回退，榜单入口只消费 `rank_entry_url / fake_top / fake_rankstr`。
+  - `tpl_info.php` 去掉模板层 `Url::index_url($articleid)` 目录链接兜底，目录入口只消费 app 已传入的 `$index_url`。
+  - `tpl_reader.php` 去掉“目录缺失时回退详情页”的写法；目录链接缺失时仅做禁用展示，不再模板层改写业务入口。
+  - `tpl_category.php` 去掉旧的 `href="javascript:"` / `onclick=document.location` 全本筛选跳转。
+  - `tpl_author.php` 同步收口 canonical / og / breadcrumb 的 raw/attr 口径，避免把已转义 attr 值反向当原始 URL 使用。
+- 结论：当前 Shipsay 模板继续按“模板适配核心”执行；核心链路已存在时，模板只负责消费和安全输出，不再自造业务 URL。
 
 ## 2026-03-08 | 标准 | Shipsay v5 标准收口（第四轮 / 交接版）
 - 固定：当前 `themes/shipsay` 进入“可复用母模板”阶段，后续修改默认优先遵守：**先核文档 → 再看当前模板变量链 → 最后只借旧布局/旧 CSS 的正确控制块**。

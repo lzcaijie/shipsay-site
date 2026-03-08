@@ -1,11 +1,6 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 <?php
-$index_url_safe = '';
-if (isset($index_url) && $index_url) {
-    $index_url_safe = $index_url;
-} elseif (isset($articleid) && $articleid && class_exists('Url') && method_exists('Url', 'index_url')) {
-    $index_url_safe = Url::index_url($articleid);
-}
+$index_url_raw = isset($index_url) && $index_url ? (string)$index_url : '';
 $last_rows = [];
 if (!empty($lastarr) && is_array($lastarr)) {
     $last_rows = $lastarr;
@@ -20,8 +15,8 @@ if (!empty($preview_chapters) && is_array($preview_chapters)) {
 } elseif (!empty($chapterrows) && is_array($chapterrows)) {
     $latest50_rows = array_slice($chapterrows, 0, 50);
 }
-$info_url_safe = (isset($uri) && $uri) ? $uri : ((isset($info_url) && $info_url) ? $info_url : '');
-$site_home_url_safe = !empty($site_url) ? rtrim($site_url, '/') . '/' : '/';
+$info_url_raw = (isset($uri) && $uri) ? (string)$uri : ((isset($info_url) && $info_url) ? (string)$info_url : '');
+$site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
 $article_title_html = htmlspecialchars((string)$articlename, ENT_QUOTES, 'UTF-8');
 $author_url_attr = htmlspecialchars((string)$author_url, ENT_QUOTES, 'UTF-8');
 $author_html = htmlspecialchars((string)$author, ENT_QUOTES, 'UTF-8');
@@ -33,11 +28,11 @@ $last_url_attr = htmlspecialchars((string)$last_url, ENT_QUOTES, 'UTF-8');
 $lastchapter_html = htmlspecialchars((string)$lastchapter, ENT_QUOTES, 'UTF-8');
 $lastupdate_cn_html = htmlspecialchars((string)$lastupdate_cn, ENT_QUOTES, 'UTF-8');
 $first_url_attr = htmlspecialchars((string)$first_url, ENT_QUOTES, 'UTF-8');
-$index_url_attr = htmlspecialchars((string)$index_url_safe, ENT_QUOTES, 'UTF-8');
-$info_url_attr = htmlspecialchars((string)$info_url_safe, ENT_QUOTES, 'UTF-8');
+$index_url_attr = htmlspecialchars($index_url_raw, ENT_QUOTES, 'UTF-8');
+$info_url_attr = htmlspecialchars($info_url_raw, ENT_QUOTES, 'UTF-8');
 $img_url_attr = htmlspecialchars((string)$img_url, ENT_QUOTES, 'UTF-8');
 $theme_dir_safe = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
-$home_url_attr = htmlspecialchars((string)$site_home_url_safe, ENT_QUOTES, 'UTF-8');
+$home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
 $intro_html = !empty($intro) ? $intro : (!empty($intro_p) ? $intro_p : $intro_des);
 $intro_plain = trim(strip_tags((string)$intro_html));
 ?>
@@ -61,9 +56,9 @@ $info_breadcrumb_ld = [
     '@context' => 'https://schema.org',
     '@type' => 'BreadcrumbList',
     'itemListElement' => [
-        ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => $site_home_url_safe],
+        ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => $site_home_url_raw],
         ['@type' => 'ListItem', 'position' => 2, 'name' => $sortname, 'item' => Sort::ss_sorturl($sortid)],
-        ['@type' => 'ListItem', 'position' => 3, 'name' => $articlename, 'item' => $info_url_safe !== '' ? $info_url_safe : $info_url],
+        ['@type' => 'ListItem', 'position' => 3, 'name' => $articlename, 'item' => $info_url_raw],
     ],
 ];
 $info_book_ld = [
@@ -77,7 +72,7 @@ $info_book_ld = [
     'publisher' => ['@type' => 'Organization', 'name' => SITE_NAME],
     'image' => $img_url,
     'description' => $intro_plain,
-    'url' => $info_url_safe !== '' ? $info_url_safe : $info_url,
+    'url' => $info_url_raw,
 ];
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
