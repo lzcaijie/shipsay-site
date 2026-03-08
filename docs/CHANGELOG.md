@@ -1,12 +1,3 @@
-## 2026-03-09-06 | 核心 fallback / 文档 | 排行 fallback 与当前 Shipsay 标准对齐
-- 范围：仅调整 `shipsay/include/tpl_top_default.php` 与 `docs/*`；未改动其它核心文件、模板目录与 `site_*` 文件。
-- 修正：`tpl_top_default.php` 去掉旧的 `fake_rankstr` / `/rank/` 拼接逻辑，不再继续使用 `sortarr + allvisit{sortid}` 的旧分类榜 fallback。
-- 对齐：`tpl_top_default.php` 统一消费 `shipsay/app/top.php` 已提供的 `rank_entry_url / rank_detail_base / top_sections / top_rank_lists / top_rank_limit`，保持与当前 Shipsay 排行模板同口径。
-- SEO：`tpl_top_default.php` 改为通过模板局部 `page_title=排行榜` 接入 `ss_seo_render('rank')`，与当前 `seo_rank_*` 主链路一致。
-- 安全：`tpl_top_default.php` 统一对链接、标题、作者做模板层转义，并修正主题头部/底部引入时的 HTML 骨架闭合方式，避免继续沿用旧 fallback 的重复 `</head><body>` 结构。
-- 文档：`V5_1_TEMPLATE_STANDARD.md` / `VARIABLE_MAP.md` 同步补充“核心 fallback 排行模板必须与当前 Shipsay 排行标准一致”的约束说明。
-
-
 ## 2026-03-09-05 | 文档 | Shipsay 最终验收式 docs 收尾（只动 docs）
 - 范围：仅调整 `docs/*`，不动 `themes/shipsay/*` 与核心目录。
 - 修正：`VARIABLE_MAP.md` 将 `tpl_header.php` 头部变量表改为当前真实运行口径：统一记录 `*_raw / *_attr / *_html`，不再把旧的 `*_safe` 头部链接变量写成现行标准。
