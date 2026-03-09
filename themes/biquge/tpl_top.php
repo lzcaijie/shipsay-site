@@ -29,7 +29,7 @@ $h = static function ($value) {
         </div>
         <div class="info-chapters-title"><strong>小说排行榜</strong></div>
         <?php if (!empty($rank_sections)): ?>
-        <div class="info-commend">
+        <div class="info-commend top-rank-links">
             <?php foreach ($rank_sections as $conf): ?>
                 <?php
                 $more_raw = isset($conf['more']) ? (string)$conf['more'] : '';
