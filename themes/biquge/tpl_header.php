@@ -38,18 +38,15 @@ window.ssSearchAction = <?=json_encode($search_url_raw, JSON_UNESCAPED_UNICODE |
 
 <body>
 <header>
-    <a href="<?=$site_home_url_attr?>"><div class="logo"><em><?=$site_name_html?></em><?=$site_url_text_html?></div></a>
-    <div class="diswap">
-        <button id="menu-btn" type="button" onclick="javascript:menu_toggle();" class="search_btn">菜单</button>
-    </div>
-    <div class="search dispc">
+    <a class="logo" href="<?=$site_home_url_attr?>"><em><?=$site_name_html?></em><?=$site_url_text_html?></a>
+    <div class="search">
         <form class="flex" name="t_frmsearch" method="post"<?php if ($search_url_raw !== ''): ?> action="<?=$search_url_attr?>"<?php else: ?> onsubmit="return false;"<?php endif; ?>>
             <input id="searchkey" type="text" name="searchkey" class="search_input" placeholder="书名或作者,请您少字也别错字" autocomplete="off">
             <button type="submit" name="Submit" class="search_btn" title="搜索"<?php if ($search_url_raw === ''): ?> disabled="disabled" aria-disabled="true"<?php endif; ?>> 搜 索 </button>
         </form>
     </div>
 </header>
-<nav class="dispc">
+<nav>
     <a href="<?=$site_home_url_attr?>">首页</a>
     <?php foreach (Sort::ss_sorthead() as $k => $v): ?>
         <?php

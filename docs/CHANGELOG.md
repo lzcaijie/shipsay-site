@@ -1,3 +1,10 @@
+## 2026-03-09-14 | 模板 | biquge 顶部改为手机端直接显示（v2）
+- 范围：仅调整 `themes/biquge/tpl_header.php`、`www/static/biquge/style.css`、`www/static/biquge/common.js` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 修正：手机端顶部不再默认折叠成“菜单”按钮；头部站名、搜索框与导航改为直接显示，避免首页首屏只剩站名 + 菜单按钮。
+- 修正：`tpl_header.php` 去掉移动端专用 `menu-btn` 折叠入口，头部搜索与导航直接按当前真实链接输出，不再依赖前端切换隐藏显示。
+- 微调：`style.css` 仅对头部/导航/搜索区补移动端布局样式，导航按 5 列栅格自动换行，搜索框改为整行展开，保持现有页面主体结构不动。
+- 清理：`www/static/biquge/common.js` 删除已经无引用的 `menu_toggle()` 与 `document.write()` 搜索注入旧逻辑。
+
 ## 2026-03-09-13 | 模板 | 2025txt 头部搜索死链收口（v6）
 - 范围：仅调整 `themes/2025txt/tpl_header.php`、`www/static/2025txt/css/2025.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 修正：头部橙色导航中原“搜索”文案在 `search_url_raw` 缺失时会输出不可点击的禁用项；当前 2025txt 已有头部搜索框，因此直接移除重复的顶部“搜索”导航文案，不再保留死链入口。
