@@ -605,6 +605,69 @@ article p{
     margin: 0;
   }
 
+  .commend .outdiv,
+  .category-commend .category-div{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid #ddd;
+  }
+  .commend .outdiv:last-child,
+  .category-commend .category-div:last-child{
+    border-bottom:none;
+  }
+  .commend .outdiv > a,
+  .category-commend .category-div > a{
+    flex:none;
+  }
+  .commend .outdiv > div,
+  .category-commend .category-div > div{
+    flex:1 1 auto;
+    min-width:0;
+  }
+  .commend img{
+    width:84px;
+    height:112px;
+    margin:0;
+  }
+  .commend-title{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    line-height:1.4;
+  }
+  .commend-title > a{
+    flex:1 1 auto;
+    min-width:0;
+  }
+  .commend-title h3{
+    display:block;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+  }
+  .commend-title span{
+    flex:none;
+    max-width:40%;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+  }
+  .commend .intro{
+    margin-top:6px;
+    padding:6px 0 0;
+    height:auto;
+    max-height:5.2rem;
+    line-height:1.3rem;
+    overflow:hidden;
+    word-break:break-word;
+    text-indent:0;
+    display:-webkit-box;
+    -webkit-line-clamp:4;
+    -webkit-box-orient:vertical;
+  }
+
   .popular{
     margin-top: 8px;
   }
@@ -958,115 +1021,5 @@ article p{
     .recentread-page .recentread-op{
         width:42px;
         margin-left:8px;
-    }
-}
-
-
-/* biquge v7 home/category/search/author finish scan */
-.biquge-page-empty{
-    width:100%;
-    padding:18px 12px;
-    color:#888;
-    font-size:13px;
-    text-align:center;
-}
-.biquge-page-title{
-    width:100%;
-    padding:10px 12px 2px;
-    color:#555;
-    font-size:14px;
-    font-weight:700;
-}
-.biquge-home-page .commend .outdiv > div,
-.biquge-category-page .category-div > div,
-.biquge-search-page .category-div > div,
-.biquge-author-page .category-div > div,
-.biquge-home-page .sortdiv > div{
-    flex:1 1 auto;
-    min-width:0;
-}
-.biquge-home-page .commend-title h3,
-.biquge-category-page .commend-title h3,
-.biquge-search-page .commend-title h3,
-.biquge-author-page .commend-title h3,
-.biquge-home-page .sortdiv h4{
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-}
-.biquge-home-page .sortdiv p,
-.biquge-category-page .intro,
-.biquge-search-page .intro,
-.biquge-author-page .intro{
-    word-break:break-all;
-}
-@media screen and (max-width:767px){
-    .biquge-home-page .commend .outdiv,
-    .biquge-category-page .category-div,
-    .biquge-search-page .category-div,
-    .biquge-author-page .category-div{
-        display:flex;
-        align-items:flex-start;
-        gap:12px;
-        padding:10px 0;
-    }
-    .biquge-home-page .commend .outdiv img,
-    .biquge-category-page .category-div img,
-    .biquge-search-page .category-div img,
-    .biquge-author-page .category-div img{
-        width:84px;
-        height:112px;
-        margin:0;
-        flex:none;
-    }
-    .biquge-home-page .commend .intro,
-    .biquge-category-page .intro,
-    .biquge-search-page .intro,
-    .biquge-author-page .intro{
-        height:auto;
-        max-height:72px;
-        padding:8px 0 0;
-        margin-top:6px;
-    }
-    .biquge-home-page .commend-title,
-    .biquge-category-page .commend-title,
-    .biquge-search-page .commend-title,
-    .biquge-author-page .commend-title{
-        height:auto;
-        line-height:1.45;
-        align-items:flex-start;
-        gap:8px;
-    }
-    .biquge-home-page .commend-title a,
-    .biquge-category-page .commend-title a,
-    .biquge-search-page .commend-title a,
-    .biquge-author-page .commend-title a{
-        flex:1 1 auto;
-        min-width:0;
-    }
-    .biquge-home-page .commend-title span,
-    .biquge-category-page .commend-title span,
-    .biquge-search-page .commend-title span,
-    .biquge-author-page .commend-title span{
-        flex:none;
-        white-space:nowrap;
-    }
-    .biquge-home-page .sortdiv{
-        align-items:flex-start;
-        gap:12px;
-    }
-    .biquge-home-page .sortdiv img{
-        width:72px !important;
-        height:96px;
-        margin:0;
-    }
-    .biquge-home-page .sortdiv p{
-        height:auto;
-        max-height:72px;
-    }
-    .biquge-search-page .biquge-page-title,
-    .biquge-author-page .biquge-page-title{
-        padding:10px 10px 2px;
-        line-height:1.6;
     }
 }
