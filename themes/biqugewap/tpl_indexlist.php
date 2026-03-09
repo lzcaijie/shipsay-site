@@ -4,72 +4,55 @@
 <head>
 <meta charset="UTF-8">
 <?php
-// 分页信息计算（仅用于SEO）
-$chaptersPerPage = 50;
-$currentPage = isset($pid) ? $pid : 1;
-$totalPages = ceil($chapters / $chaptersPerPage);
-
-function getChapterPageUrl($articleid, $page = 1) {
-    $page = (int)$page;
-    if ($page < 1) $page = 1;
-
-    // 优先走 CMS 的 Url::index_url（避免写死 /index/ 破坏后台路由/伪静态配置）
-    if (class_exists('Url') && method_exists('Url', 'index_url')) {
-        return Url::index_url($articleid, $page);
-    }
-
-    // 兜底（保持旧结构）
-    if ($page == 1) {
-        return "/index/{$articleid}/";
-    }
-    return "/index/{$articleid}/{$page}/";
+$per_indexlist_safe = 50;
+if (isset($per_indexlist) && (int)$per_indexlist > 0) {
+    $per_indexlist_safe = (int)$per_indexlist;
+} elseif (isset($per_page) && (int)$per_page > 0) {
+    $per_indexlist_safe = (int)$per_page;
 }
-
-$pageTitle = ($currentPage > 1) ? 
-    "《{$articlename}》章节目录第{$currentPage}页_{$articlename}最新章节_{$author}作品_{$sortname}最新章节列表_{$articlename}小说目录_{$articlename}小说免费阅读_".SITE_NAME : 
-    "《{$articlename}》章节目录_{$articlename}最新章节_{$author}作品_{$sortname}最新章节列表_{$articlename}小说目录_{$articlename}小说免费阅读_".SITE_NAME;
-
-$description = "《{$articlename}》章节目录第{$currentPage}页，作者：{$author}，总章节：{$chapters}章。".SITE_NAME."提供{$articlename}最新章节,{$articlename}最新章节列表,{$articlename}小说目录免费阅读";
-$keywords = "{$articlename}章节目录,{$articlename}最新章节,{$author},{$articlename}免费阅读,{$articlename}小说目录,{$articlename}最新章节列表";
-?>
-<?php
+$current_page = isset($pid) ? max(1, (int)$pid) : 1;
+$total_pages = 1;
+if (isset($chapters) && $per_indexlist_safe > 0) {
+    $total_pages = max(1, (int)ceil((int)$chapters / $per_indexlist_safe));
+} elseif ($current_page > 1) {
+    $total_pages = $current_page;
+}
+$site_home_url_raw = !empty($site_url) ? (string)$site_url : '/';
+$site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
+$allbooks_url_raw = isset($allbooks_url) ? (string)$allbooks_url : '';
+$allbooks_url_attr = htmlspecialchars($allbooks_url_raw, ENT_QUOTES, 'UTF-8');
+$full_allbooks_url_raw = isset($full_allbooks_url) ? (string)$full_allbooks_url : '';
+$full_allbooks_url_attr = htmlspecialchars($full_allbooks_url_raw, ENT_QUOTES, 'UTF-8');
+$recentread_url_raw = isset($fake_recentread) ? (string)$fake_recentread : '';
+$recentread_url_attr = htmlspecialchars($recentread_url_raw, ENT_QUOTES, 'UTF-8');
+$rank_entry_url_raw = !empty($rank_entry_url) ? (string)$rank_entry_url : (!empty($fake_top) ? (string)$fake_top : '');
+$rank_entry_url_attr = htmlspecialchars($rank_entry_url_raw, ENT_QUOTES, 'UTF-8');
+$indexlist_url_raw = isset($uri) && $uri ? (string)$uri : ((isset($index_url) && $index_url) ? (string)$index_url : '');
+$indexlist_url_attr = htmlspecialchars($indexlist_url_raw, ENT_QUOTES, 'UTF-8');
+$theme_dir_attr = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
+$article_title_html = htmlspecialchars((string)$articlename, ENT_QUOTES, 'UTF-8');
+$chapters_html = htmlspecialchars((string)(int)$chapters, ENT_QUOTES, 'UTF-8');
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('indexlist');
-$pageTitle = $seo_title;
+if (trim((string)$seo_title) === '' || trim((string)$seo_title) === SITE_NAME) {
+    $seo_title = $articlename . '章节目录' . ($current_page > 1 ? '第' . $current_page . '页' : '') . '_' . SITE_NAME;
+}
+if (trim((string)$seo_keywords) === '' || trim((string)$seo_keywords) === SITE_NAME) {
+    $seo_keywords = $articlename . ',章节目录,' . $author . ',' . SITE_NAME;
+}
+if (trim((string)$seo_description) === '' || trim((string)$seo_description) === SITE_NAME) {
+    $seo_description = '《' . $articlename . '》章节目录，共' . (int)$chapters . '章。';
+}
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
 <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-
-<link href="<?=$site_url?><?=getChapterPageUrl($articleid, $currentPage)?>" rel="canonical">
-<?php if ($currentPage > 1): ?>
-<link rel="prev" href="<?=$site_url?><?=getChapterPageUrl($articleid, $currentPage-1)?>" />
-<?php endif; ?>
-
-<?php if ($currentPage < $totalPages): ?>
-<link rel="next" href="<?=$site_url?><?=getChapterPageUrl($articleid, $currentPage+1)?>" />
-<?php endif; ?>
-
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="renderer" content="webkit">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<meta name="format-detection" content="telephone=no">
-<meta name="screen-orientation" content="portrait">
-<meta name="x5-orientation" content="portrait">
-<meta name="format-detection" content="telephone=no" /> 
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" /> 
-<meta name="applicable-device" content="mobile">
-<meta http-equiv="Cache-Control" content="no-transform">
-<meta http-equiv="Cache-Control" content="no-siteapp">
-<link rel="stylesheet" href="/static/<?=$theme_dir?>/book.css">
-
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body>
 	<header class="header">
-		<div class="left"><a href="<?=$info_url?>"><svg id="icon-arrow-l" viewBox="0 0 8 16"><path d="M.146 7.646a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7v.708l7-7a.5.5 0 0 0-.708-.708l-7 7z"></path></svg></a></div>
-		<div class="center"><?=$articlename?></div>
+		<div class="left"><a href="<?=htmlspecialchars((string)$info_url, ENT_QUOTES, 'UTF-8')?>"><svg id="icon-arrow-l" viewBox="0 0 8 16"><path d="M.146 7.646a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7v.708l7-7a.5.5 0 0 0-.708-.708l-7 7z"></path></svg></a></div>
+		<div class="center"><?=$article_title_html?></div>
 		<div class="right">
 		    <a id="opensearch" href="javascript:" title="搜索"><svg id="icon-search" viewBox="0 0 17 18"><path d="M12.775 14.482l3.371 3.372a.5.5 0 0 0 .708-.708l-3.372-3.37-1.817-1.818a.5.5 0 1 0-.707.707l1.817 1.817zM1 7.14a6 6 0 1 1 12 0 6 6 0 0 1-12 0zm13 0a7 7 0 1 0-14 0 7 7 0 0 0 14 0z"></path></svg></a>
 		    <a id="openGuide" href="javascript:" class="icon icon-more" title="更多"></a>
@@ -78,32 +61,50 @@ $pageTitle = $seo_title;
 	</header>
 	<div class="fixed">	<div class="book">
 		<div class="bookchapter">
-    	    <h2>章节目录<span class="pull-right">共<?=$chapters?>章</span></h2>
-    	    <div class="listpage"><?=$htmltitle?></div>
+    	    <h2>章节目录<span class="pull-right">共<?=$chapters_html?>章</span></h2>
+            <?php if (!empty($htmltitle)): ?><div class="listpage"><?=$htmltitle?></div><?php endif; ?>
     	    <div id="content_1"></div>
     	    <ul class="mt0">
-    	        <?php foreach($list_arr as $v): ?>
-                    <li><a href="<?=$v['cid_url']?>" title="<?=$v['cname']?>" rel="chapter"><?=$v['cname']?></a></li>
+    	        <?php if (!empty($list_arr) && is_array($list_arr)): ?>
+                    <?php foreach($list_arr as $v): ?>
+                    <?php if (isset($v['chaptertype']) && (int)$v['chaptertype'] === 1): ?>
+                    <li><?=htmlspecialchars((string)$v['cname'], ENT_QUOTES, 'UTF-8')?></li>
+                    <?php else: ?>
+                    <li><a href="<?=htmlspecialchars((string)$v['cid_url'], ENT_QUOTES, 'UTF-8')?>" title="<?=htmlspecialchars((string)$v['cname'], ENT_QUOTES, 'UTF-8')?>" rel="chapter"><?=htmlspecialchars((string)$v['cname'], ENT_QUOTES, 'UTF-8')?></a></li>
+                    <?php endif; ?>
                     <?php endforeach ?>
-
-        	    </ul>
+                <?php else: ?>
+                    <li>暂无章节数据</li>
+                <?php endif; ?>
+        	</ul>
     	    <div id="content_2"></div>
-    	    <div class="listpage"><?=$htmltitle?></div>
+            <?php if (!empty($htmltitle)): ?><div class="listpage"><?=$htmltitle?></div><?php endif; ?>
     	    <div id="content_3"></div>
+            <div class="pages">当前第 <?=$current_page?> 页 / 共 <?=$total_pages?> 页，每页 <?=$per_indexlist_safe?> 章</div>
     		<div class="clear"></div>
     	</div>
     </div>
 	<div class="rank mt0 mb0">
-		<h4>人气小说推荐<a class="pull-right" href="<?=$fake_top?>">More+</a></h4>
+		<h4>人气小说推荐<a class="pull-right" href="<?=$rank_entry_url_attr?>">More+</a></h4>
 		<div class="content">
-		    <?php foreach($postdate as $k => $v): ?><?php if($k < 5):?>
+		    <?php if (!empty($postdate) && is_array($postdate)): foreach($postdate as $k => $v): ?><?php if($k < 5):?>
+            <?php
+            $info_url_attr = htmlspecialchars((string)$v['info_url'], ENT_QUOTES, 'UTF-8');
+            $img_url_attr = htmlspecialchars((string)$v['img_url'], ENT_QUOTES, 'UTF-8');
+            $book_title_html = htmlspecialchars((string)$v['articlename'], ENT_QUOTES, 'UTF-8');
+            $intro_html = htmlspecialchars((string)$v['intro_des'], ENT_QUOTES, 'UTF-8');
+            $author_url_attr = htmlspecialchars((string)$v['author_url'], ENT_QUOTES, 'UTF-8');
+            $author_html = htmlspecialchars((string)$v['author'], ENT_QUOTES, 'UTF-8');
+            ?>
 			<dl>
-				<a href="<?=$v['info_url'] ?>" class="cover" title="<?=$v['articlename'] ?>"><img class="lazy" src="/static/<?=$theme_dir?>/nocover.jpg" data-original="<?=$v['img_url']?>" alt="<?=$v['articlename'] ?>"></a>
-				<dt><a href="<?=$v['info_url'] ?>" title="<?=$v['articlename'] ?>"><?=$v['articlename'] ?></a></dt>
-				<dd><?=$v['intro_des']?></dd>
-				<dd><a href="<?=$v['author_url']?>"><?=$v['author']?></a></dd>
+				<a href="<?=$info_url_attr?>" class="cover" title="<?=$book_title_html?>"><img class="lazy" src="/static/<?=$theme_dir_attr?>/nocover.jpg" data-original="<?=$img_url_attr?>" alt="<?=$book_title_html?>"></a>
+				<dt><a href="<?=$info_url_attr?>" title="<?=$book_title_html?>"><?=$book_title_html?></a></dt>
+				<dd><?=$intro_html?></dd>
+				<dd><a href="<?=$author_url_attr?>"><?=$author_html?></a></dd>
 			</dl>
-			 <?php endif; endforeach ?>
+			 <?php endif; endforeach; else: ?>
+            <dl><dd>暂无推荐内容</dd></dl>
+            <?php endif; ?>
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -111,23 +112,23 @@ $pageTitle = $seo_title;
     <div id="guide" class="guide">
         <div class="guide-content">
         <nav class="guide-nav">
-        <a href="<?=$site_url?>" class="guide-nav-a">
+        <a href="<?=$site_home_url_attr?>" class="guide-nav-a">
             <i class="icon icon-home"></i>
             <span class="guide-nav-h">首页</span>
         </a>
-        <a href="<?=$allbooks_url?>" class="guide-nav-a">
+        <a href="<?=$allbooks_url_attr?>" class="guide-nav-a">
             <i class="icon icon-sort"></i>
             <span class="guide-nav-h">分类</span>
         </a>
-        <a href="<?=$fake_top?>" class="guide-nav-a">
+        <a href="<?=$rank_entry_url_attr?>" class="guide-nav-a">
             <i class="icon icon-rank"></i>
             <span class="guide-nav-h">排行榜</span>
         </a>
-        <a href="<?=$full_allbooks_url?>" class="guide-nav-a">
+        <a href="<?=$full_allbooks_url_attr?>" class="guide-nav-a">
             <i class="icon icon-end"></i>
             <span class="guide-nav-h">全本</span>
         </a>
-        <a href="<?=$fake_recentread?>" class="guide-nav-a">
+        <a href="<?=$recentread_url_attr?>" class="guide-nav-a">
             <i class="icon icon-free"></i>
             <span class="guide-nav-h">记录</span>
         </a>
