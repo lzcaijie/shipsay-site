@@ -1,3 +1,11 @@
+## 2026-03-09-18 | 模板 | biquge 详情/目录/阅读记录继续收口（v6）
+- 范围：仅调整 `themes/biquge/tpl_info.php`、`themes/biquge/tpl_indexlist.php`、`themes/biquge/tpl_recentread.php`、`www/static/biquge/style.css`、`www/static/biquge/tempbookcase.js` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 修正：`tpl_info.php` 继续按当前核心真实变量链收口，补齐 canonical / mobile-agent / breadcrumb 结构化数据，详情页书名、作者、目录入口、推荐位与最新章节统一安全输出，空列表时给明确兜底文案。
+- 修正：`tpl_indexlist.php` 去掉目录页每页 50 章的模板层硬编码，改为优先消费当前 `per_page / per_indexlist`；目录分页说明、canonical、章节分组标题与空目录提示一起收口。
+- 修正：`tpl_recentread.php` 补阅读记录页面包屑、canonical 与“清空记录”工具栏，表头改成页面内结构节点，不再继续用无 href 的假链接撑表头。
+- 修正：`tempbookcase.js` 新增 `removeAll()` / `removeall()`，清空时只移除阅读记录相关 localStorage 键，不再误伤其它本地缓存；列表行 class 也同步收口到页面专用样式。
+- 微调：`style.css` 仅追加详情页目录入口、目录空态与阅读记录页作用域样式，不改 biquge 其它页面主结构。
+
 ## 2026-03-09-17 | 模板 | biquge 排行页与阅读记录显示修正（v5）
 - 范围：仅调整 `themes/biquge/tpl_top.php`、`themes/biquge/tpl_rank.php`、`www/static/biquge/style.css`、`www/static/biquge/tempbookcase.js` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 修正：排行聚合页与单榜页补页面专用 class，并把榜单切换区单独收口为 `top-rank-links`；手机端不再被全局 `.info-commend` 隐藏规则误伤，排行入口恢复正常显示。

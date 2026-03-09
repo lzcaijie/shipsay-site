@@ -79,6 +79,13 @@ LastRead.prototype = {
     }
     this.setItem(this.bookList, next.join("#"));
   },
+  removeAll: function () {
+    var ids = this.getBookIds();
+    for (var i = 0; i < ids.length; i++) {
+      this.removeItem(ids[i]);
+    }
+    this.removeItem(this.bookList);
+  },
   setItem: function (k, v) {
     localStorage.setItem(k, v);
   },
@@ -124,13 +131,20 @@ function escapeHtml(value) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
+    .replace(/\"/g, "&quot;")
     .replace(/'/g, "&#39;");
 }
 
 function removebook(bookid) {
   lastread.remove(bookid);
   showtempbooks();
+}
+
+function removeall() {
+  if (!window.confirm('确定要清空阅读记录吗？')) return false;
+  lastread.removeAll();
+  showtempbooks();
+  return false;
 }
 
 function showtempbooks() {
@@ -144,18 +158,18 @@ function showtempbooks() {
       if (!item || item.length < 4 || !item[0] || !item[1] || !item[2]) continue;
       var rt = fmtReadTime(item[5]);
       rendered++;
-      bookhtml += '<div class="recentread-main"><a href="' + escapeHtml(item[1]) + '">';
+      bookhtml += '<div class="recentread-main"><a class="recentread-row-link" href="' + escapeHtml(item[1]) + '">';
       bookhtml += "<span>" + rendered + "</span>";
       bookhtml += "<span>" + escapeHtml(item[2]) + "</span>";
       bookhtml += "<span>" + escapeHtml(item[3] || "") + "</span>";
       bookhtml += "<span>" + escapeHtml(item[4] || "") + "</span>";
       bookhtml += "<span>" + escapeHtml(rt) + "</span>";
       bookhtml += "</a>";
-      bookhtml += '<a href="javascript:removebook(\'' + escapeHtml(item[0]) + '\')" onclick="return confirm(\'确定要将本书移除吗？\')">移除</a></div>';
+      bookhtml += '<a class="recentread-op" href="javascript:removebook(\'' + escapeHtml(item[0]) + '\')" onclick="return confirm(\'确定要将本书移除吗？\')">移除</a></div>';
     }
   }
   if (!bookhtml) {
-    bookhtml = '<span style="display:block;padding:12px 10px;color:#888;">没有阅读记录。</span>';
+    bookhtml = '<div class="recentread-empty">没有阅读记录。</div>';
   }
   $("#tempBookcase").html(bookhtml);
 }
