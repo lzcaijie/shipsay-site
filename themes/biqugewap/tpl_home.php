@@ -11,6 +11,13 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
 <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
+<?php
+$rank_entry_url_home = !empty($rank_entry_url) ? $rank_entry_url : (!empty($fake_top) ? $fake_top : '');
+$rank_week_url_home = (!empty($rank_detail_base) ? rtrim($rank_detail_base, '/') . '/weekvisit/' : $rank_entry_url_home);
+$rank_goodnum_url_home = (!empty($rank_detail_base) ? rtrim($rank_detail_base, '/') . '/goodnum/' : $rank_entry_url_home);
+$recentread_url_home = !empty($recentread_url_attr) ? $recentread_url_attr : (!empty($fake_recentread) ? $fake_recentread : '');
+$full_allbooks_url_home = !empty($full_allbooks_url) ? $full_allbooks_url : '';
+?>
 </head>
 <body>
 	<header class="header">
@@ -31,21 +38,21 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
             <i class="icon icon-sort"></i>
             <span class="guide-nav-h">分类</span>
         </a>
-        <a href="<?=$fake_top?>" class="guide-nav-a">
+        <a href="<?=$rank_entry_url_home?>" class="guide-nav-a">
             <i class="icon icon-rank"></i>
             <span class="guide-nav-h">排行榜</span>
         </a>
-        <a href="<?=$full_allbooks_url?>" class="guide-nav-a">
+        <a href="<?=$full_allbooks_url_home?>" class="guide-nav-a">
             <i class="icon icon-end"></i>
             <span class="guide-nav-h">全本</span>
         </a>
-        <a href="<?=$fake_recentread?>" class="guide-nav-a">
+        <a href="<?=$recentread_url_home?>" class="guide-nav-a">
             <i class="icon icon-free"></i>
             <span class="guide-nav-h">记录</span>
         </a>
     </nav>
 	<div class="rank">
-		<h4>热门小说推荐<a class="pull-right" href="<?=$fake_top?>">More+</a></h4>
+		<h4>热门小说推荐<a class="pull-right" href="<?=$rank_entry_url_home?>">More+</a></h4>
 		<div class="content">
 		    <?php foreach($commend as $k => $v): ?><?php if($k < 5):?>
 			<dl>
@@ -59,7 +66,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
 		<div class="clear"></div>
 	</div>
 	<div class="rank">
-		<h4>本周人气榜<a class="pull-right" href="/rank/weekvisit/">More+</a></h4>
+		<h4>本周人气榜<a class="pull-right" href="<?=$rank_week_url_home?>">More+</a></h4>
 		<div class="content">
 		    <?php
                          $sql =  $rico_sql;
@@ -85,7 +92,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
 		<div class="clear"></div>
 	</div>
 	<div class="rank">
-		<h4>书友收藏榜<a class="pull-right" href="/rank/goodnum/">More+</a></h4>
+		<h4>书友收藏榜<a class="pull-right" href="<?=$rank_goodnum_url_home?>">More+</a></h4>
 		<div class="content">
 			<?php
                          $sql =  $rico_sql;

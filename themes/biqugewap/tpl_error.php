@@ -8,20 +8,23 @@
 </head>
 <body>
 <?php
-$search_url_safe = function_exists('ss_search_url') ? ss_search_url() : ((isset($fake_search) && $fake_search) ? $fake_search : '/search/');
+$search_form_action = !empty($search_url_attr) ? $search_url_attr : htmlspecialchars((string)(!empty($fake_search) ? $fake_search : (function_exists('ss_search_url') ? ss_search_url() : '')), ENT_QUOTES, 'UTF-8');
+$search_form_placeholder = !empty($search_placeholder_attr) ? $search_placeholder_attr : '搜索书名/作者';
 ?>
 <div class="rank">
-  <h4>404 页面不存在<a class="pull-right" href="/">返回首页</a></h4>
+  <h4>404 页面不存在<a class="pull-right" href="<?=htmlspecialchars((string)$site_url, ENT_QUOTES, 'UTF-8')?>">返回首页</a></h4>
   <div class="content" style="padding:12px;">
     <p style="color:#666;line-height:1.8;margin:0 0 14px;">你访问的页面可能已删除或地址错误。</p>
     <p style="margin:0 0 14px;">
-      <a href="/" style="margin-right:12px;">返回首页</a>
-      <a href="javascript:history.back();">返回上一页</a>
+      <a href="<?=htmlspecialchars((string)$site_url, ENT_QUOTES, 'UTF-8')?>" style="margin-right:12px;">返回首页</a>
+      <button type="button" onclick="history.back();" style="padding:0;border:0;background:none;color:#333;cursor:pointer;">返回上一页</button>
     </p>
-    <form name="search" action="<?=$search_url_safe?>" method="get" style="display:flex;gap:8px;max-width:520px;">
-      <input type="text" placeholder="搜索书名/作者" value="" name="searchkey" class="search" id="searchkey" autocomplete="on" required style="flex:1;padding:10px;">
+    <?php if ($search_form_action !== ''): ?>
+    <form name="search" action="<?=$search_form_action?>" method="get" style="display:flex;gap:8px;max-width:520px;">
+      <input type="text" placeholder="<?=$search_form_placeholder?>" value="" name="searchkey" class="search" id="searchkey" autocomplete="on" required style="flex:1;padding:10px;">
       <button type="submit" style="padding:10px 16px;">搜 索</button>
     </form>
+    <?php endif; ?>
   </div>
 </div>
 <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

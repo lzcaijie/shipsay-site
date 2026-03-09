@@ -62,7 +62,7 @@ $pageDescription = $seo_description;
 <meta property="og:novel:chapter_name" content="<?=$chaptername?>">
 <meta property="og:novel:chapter_url" content="<?=$uri?>">
 
-<?php require_once 'tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
 <style>
 .loading-text {
     text-align: center;
@@ -114,7 +114,7 @@ $pageDescription = $seo_description;
                 <?php if ($i == $now_pid): ?>
                     <strong><?=$i?></strong>
                 <?php else: ?>
-                    <a href="/read/<?=$articleid?>/<?=$chapterid?>/<?=$i?>.html"><?=$i?></a>
+                    <a href="<?=$now_url?><?=$i?>.html"><?=$i?></a>
                 <?php endif; ?>
             <?php endfor; ?>
 
@@ -141,14 +141,14 @@ $pageDescription = $seo_description;
 		    	<?php if($prevpage_url != ''): ?>
                 <a rel="prev" href="<?=$prevpage_url?>">上一页</a>
             <?php else: ?>
-                <?php if($pre_cid == 0): ?><a href="javascript:void(0);" class="gray" id="prev_url">没有了</a><?php else: ?><a href="<?=$pre_url?>" rel="prev" id="prev_url">上一章</a><?php endif ?>
+                <?php if($pre_cid == 0): ?><span class="gray" id="prev_url">没有了</span><?php else: ?><a href="<?=$pre_url?>" rel="prev" id="prev_url">上一章</a><?php endif ?>
             <?php endif ?>
 	        	<a href="<?=$info_url?>" rel="index" id="info_url">目录</a>
 	        	<a href="javascript:addbookcase('<?=$articleid?>','<?=$articlename?>','<?=$chapterid?>','<?=$chaptername?>');" class="addbookcase">加书签</a>
 		    	<?php if($nextpage_url != ''): ?>
                 <a href="<?=$nextpage_url?>" rel="next" id="next_url">下一页</a>
             <?php else: ?>
-                <?php if($next_cid == 0): ?><a href="javascript:void(0);" rel="next" class="gray">没有了</a><?php else: ?><a href="<?=$next_url ?>" rel="next" id="next_url">下一章</a><?php endif ?>
+                <?php if($next_cid == 0): ?><span rel="next" class="gray">没有了</span><?php else: ?><a href="<?=$next_url ?>" rel="next" id="next_url">下一章</a><?php endif ?>
             <?php endif ?>
 		    </div>
 		    
@@ -183,14 +183,14 @@ $pageDescription = $seo_description;
 		    	<?php if($prevpage_url != ''): ?>
                 <a rel="prev" href="<?=$prevpage_url?>">上一页</a>
             <?php else: ?>
-                <?php if($pre_cid == 0): ?><a href="javascript:void(0);" class="gray" id="prev_url">没有了</a><?php else: ?><a href="<?=$pre_url?>" rel="prev" id="prev_url">上一章</a><?php endif ?>
+                <?php if($pre_cid == 0): ?><span class="gray" id="prev_url">没有了</span><?php else: ?><a href="<?=$pre_url?>" rel="prev" id="prev_url">上一章</a><?php endif ?>
             <?php endif ?>
 	        	<a href="<?=$info_url?>" rel="index" id="info_url">目录</a>
 	        	<a href="javascript:addbookcase('<?=$articleid?>','<?=$articlename?>','<?=$chapterid?>','<?=$chaptername?>');" class="addbookcase">加书签</a>
 		    	<?php if($nextpage_url != ''): ?>
                 <a href="<?=$nextpage_url?>" rel="next" id="next_url">下一页</a>
             <?php else: ?>
-                <?php if($next_cid == 0): ?><a href="javascript:void(0);" rel="next" class="gray">没有了</a><?php else: ?><a href="<?=$next_url ?>" rel="next" id="next_url">下一章</a><?php endif ?>
+                <?php if($next_cid == 0): ?><span rel="next" class="gray">没有了</span><?php else: ?><a href="<?=$next_url ?>" rel="next" id="next_url">下一章</a><?php endif ?>
             <?php endif ?>
 		    </div>
 		    
@@ -214,7 +214,7 @@ $pageDescription = $seo_description;
         <div class="clear"></div>
     </div>
 
-    <?php require_once 'tpl_footer.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 
     <script src="/static/<?=$theme_dir?>/user.js"></script>
     <script src="/static/<?=$theme_dir?>/readpage.js"></script>

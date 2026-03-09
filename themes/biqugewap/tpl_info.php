@@ -52,7 +52,7 @@ $pageTitle = $seo_title;
 	            <div class="book-cell">
                     <h1 class="book-title"><?=$articlename?></h1>
                     <p class="book-meta">作者：<a href="<?=$author_url?>" title="<?=$author?>"><?=$author?></a></p>
-                    <p class="book-meta">分类：<a href="<?=Sort::ss_sorturl($sortid)?>" target="_blank" title="<?=$sortname?>"><?=$sortname?></a></p>
+                    <p class="book-meta">分类：<a href="<?=Sort::ss_sorturl($sortid)?>" title="<?=$sortname?>"><?=$sortname?></a></p>
                     <p class="book-meta">人气：<?=$allvisit?></p>
                     <p class="book-meta"><?=$isfull?> | <?=$words_w?>万字</p>
                 </div>
