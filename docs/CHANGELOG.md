@@ -1,3 +1,10 @@
+## 2026-03-09-13 | 模板 | 2025txt 排行聚合页按 v5 收口（v5）
+- 范围：仅调整 `themes/2025txt/tpl_top.php` 与 `docs/CHANGELOG.md`，不动核心与其他页面主结构。
+- 修正：`tpl_top.php` 不再继续使用 `allvisit{sortid}` / `Sort::ss_sorturl()` 这套分类榜数据；改为正式消费 `shipsay/app/top.php` 已提供的 `top_sections / top_rank_lists / top_rank_limit`。
+- 修正：聚合榜标题、切换按钮与每个榜单卡片的“更多”统一消费 `rank_entry_url / rank_detail_base / top_sections[*].more`，不再把分类榜误当成聚合榜输出。
+- 微调：补齐聚合榜移动端卡片样式与标题/更多对齐，避免榜单标题区重叠、挤压和错位。
+- 结论：2025txt 的 `tpl_top.php` 继续按 v5 口径保持“app 提供榜单集合 → 模板只负责展示”，不在模板里自造分类榜或旧排行链路。
+
 ## 2026-03-09-12 | 模板 | 2025txt 继续清尾（v4）
 - 范围：继续只动 `themes/2025txt/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 收口：`tpl_header.php` 的阅读记录入口优先消费 `ss_recentread_url()`，仅在旧变量存在时兼容 `fake_recentread`。
