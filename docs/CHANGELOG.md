@@ -1,3 +1,9 @@
+## 2026-03-09-13 | 模板 | 2025txt 头部搜索死链收口（v6）
+- 范围：仅调整 `themes/2025txt/tpl_header.php`、`www/static/2025txt/css/2025.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 修正：头部橙色导航中原“搜索”文案在 `search_url_raw` 缺失时会输出不可点击的禁用项；当前 2025txt 已有头部搜索框，因此直接移除重复的顶部“搜索”导航文案，不再保留死链入口。
+- 微调：`header-common-nav` 按 5 个公共入口重新收口宽度，PC 改为 20% 均分，手机端改为 `calc(100%/5)`，避免移除“搜索”后导航留大块空白。
+- 结论：继续遵守 v5“搜索入口必须走程序真实链接、按钮可点；已有搜索框时不再额外保留不可点击重复入口”的最小差异修法。
+
 ## 2026-03-09-13 | 模板 | 2025txt 排行聚合页按 v5 收口（v5）
 - 范围：仅调整 `themes/2025txt/tpl_top.php` 与 `docs/CHANGELOG.md`，不动核心与其他页面主结构。
 - 修正：`tpl_top.php` 不再继续使用 `allvisit{sortid}` / `Sort::ss_sorturl()` 这套分类榜数据；改为正式消费 `shipsay/app/top.php` 已提供的 `top_sections / top_rank_lists / top_rank_limit`。
