@@ -58,16 +58,27 @@ a{
 header, nav{
     max-width: 980px;
     margin: 0 auto;
+    padding: 0 15px;
+}
+header{
     display: flex;
     justify-content: space-between;
-    padding: 0 15px;
     flex-flow: wrap;
     align-items: center;
 }
+nav{
+    display: flex;
+    justify-content: space-between;
+    flex-flow: wrap;
+    align-items: center;
+    background: #88C6E5;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
 .logo{
+    display: block;
     text-align: center;
     padding: 10px 0;
-
 }
 .logo em{
     font-size: 24px;
@@ -77,6 +88,9 @@ header, nav{
 
 .search{
     margin-bottom: 5px;
+}
+.search .flex{
+    align-items: center;
 }
 #searchkey{
     height: 38px;
@@ -94,16 +108,10 @@ header, nav{
     border-bottom: 2px solid  #88C6E5;
 }
 
-nav{
-    background: #88C6E5;
-    margin-bottom: 8px;
-    font-weight: 700;
-}
 nav a{
     color: #fff;
     font-size: 16px;
     padding: 8px;
-
 }
 /* 封推及热门 */
 .commend{
@@ -457,43 +465,85 @@ article p{
     right: 20px;
     margin-right: unset;
   }
-  
+
+  header{
+    padding: 10px 12px 6px;
+    align-items: flex-start;
+  }
+  nav{
+    padding: 0 8px;
+    justify-content: flex-start;
+  }
+  .logo{
+    width: 100%;
+    padding: 0;
+    margin-bottom: 8px;
+    text-align: left;
+  }
+  .logo em{
+    font-size: 20px;
+    line-height: 1.3;
+  }
+  .search{
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  .search .flex{
+    width: 100%;
+  }
+  #searchkey{
+    width: calc(100% - 60px);
+    min-width: 0;
+    margin-right: 0;
+    border-right: none;
+  }
+  .search_btn{
+    flex: none;
+  }
+  nav a{
+    flex: 0 0 20%;
+    min-width: 20%;
+    padding: 10px 4px;
+    text-align: center;
+    font-size: 14px;
+  }
+
   .lastupdate, .info-chapters a, .sort-section > div,.commend, .popular, .outdiv, .category-div{
     width: 100%!important;
     margin: 0;
-    }
+  }
 
-    .popular{
-        margin-top: 8px;
-    }
+  .popular{
+    margin-top: 8px;
+  }
 
-    .info-commend, .dispc{
-        display: none;
-    }
-    .diswap{
-        display: block;
-    }
-    .info-main img{
-        width: 133px;
-        height: 170px;
-        margin-right: 15px;
-    }
-    article{
-        width:95%;
-    }
-    
-    .lastupdate a span:last-child,
-    .lastupdate .list-out span:first-child em:first-child
-    {
-        display: none;
-    }
+  .info-commend, .dispc{
+    display: none;
+  }
+  .diswap{
+    display: none;
+  }
+  .info-main img{
+    width: 133px;
+    height: 170px;
+    margin-right: 15px;
+  }
+  article{
+    width:95%;
+  }
 
-    .lastupdate em:nth-child(2) {
-        width: 45%;
-    }
-    .lastupdate a span:first-child{
-        width: 100%!important;
-    }
+  .lastupdate a span:last-child,
+  .lastupdate .list-out span:first-child em:first-child
+  {
+    display: none;
+  }
+
+  .lastupdate em:nth-child(2) {
+    width: 45%;
+  }
+  .lastupdate a span:first-child{
+    width: 100%!important;
+  }
 }
 
 /* 阅读页分页导航 */
