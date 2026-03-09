@@ -10,8 +10,9 @@ $search_placeholder_raw = isset($search_placeholder) && $search_placeholder !== 
     ? (string)$search_placeholder
     : '输入书名/作者';
 $search_placeholder_attr = htmlspecialchars($search_placeholder_raw, ENT_QUOTES, 'UTF-8');
+$search_form_submit = $search_url_raw !== '' ? 'return ssSubmitSearch(this);' : 'return false;';
 ?>
-<form id="post" name="t_frmsearch" method="post" class="search"<?php if ($search_url_raw !== ''): ?> action="<?=$search_url_attr?>"<?php else: ?> onsubmit="return false;"<?php endif; ?>>
+<form id="post" name="t_frmsearch" method="post" class="search" action="<?=$search_url_attr?>" data-action="<?=$search_url_attr?>" onsubmit="<?=$search_form_submit?>">
   <input
     name="searchkey"
     id="s_key"

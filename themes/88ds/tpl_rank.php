@@ -72,18 +72,10 @@
   </style>
   <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <body>
-  <div class="header">
-    <div class="back">
-      <a href="javascript:history.go(-1);">返回</a>
-    </div>
-    <h1><?=htmlspecialchars((string)$page_title, ENT_QUOTES, 'UTF-8')?></h1>
-    <div class="reg">
-      <a href="javascript:st();void 0;" id="st" rel="nofollow" class="login_topbtn c_index_login">繁</a>
-      <a href="<?=$site_home_url_attr?>" class="login_topbtn c_index_login">首页</a>
-    </div>
-  </div>
-
-  <?php require_once 'tpl_search_form.php'; ?>
+  <?php
+  $page_back_url = $rank_entry_url_raw !== '' ? $rank_entry_url_raw : $site_home_url_raw;
+  require __THEME_DIR__ . '/tpl_page_top.php';
+  ?>
 
   <div id="content">
     <div class="article">
