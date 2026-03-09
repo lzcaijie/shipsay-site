@@ -1,3 +1,9 @@
+## 2026-03-09-09 | 模板 | 88ds 收尾修正阅读记录页与详情页前50章（v5）
+- 范围：仅调整 `themes/88ds/tpl_recentread.php`、`themes/88ds/tpl_info.php` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 修正：`tpl_recentread.php` 回退到 88ds 当前已验证可用的旧稳定页头结构，只保留“返回 + 阅读记录 + 首页 + 搜索框”，移除上一轮额外接入的内页公共 tabs，避免阅读记录页继续被公共头部样式带偏。
+- 修正：`tpl_info.php` 重新消费 app 已给出的 `$preview_chapters`，在“最新 12 章”后补回“前 50 章顺序预览”，不反向改核心，不再遗漏详情页标准章节预览区。
+- 结论：88ds 本轮按 v5 标准收尾时，阅读记录页继续尊重旧稳定布局，详情页恢复“最新12 + 前50章”的既定展示链路。
+
 ## 2026-03-09-08 | 模板 | 88ds 回收过强 CSS 并补齐内页统一头部（v4）
 - 范围：仅调整 `themes/88ds/*`、`www/static/88ds/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 修正：`tpl_header.php` 补齐 `ss_search_url / ss_recentread_url / ss_top_url` 基础 helper，避免内页搜索入口与公共入口在变量缺失时直接失效。
