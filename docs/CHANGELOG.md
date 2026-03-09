@@ -1,3 +1,10 @@
+## 2026-03-09-12 | 模板 | 2025txt 继续清尾（v4）
+- 范围：继续只动 `themes/2025txt/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 收口：`tpl_header.php` 的阅读记录入口优先消费 `ss_recentread_url()`，仅在旧变量存在时兼容 `fake_recentread`。
+- 收口：`tpl_info.php` 去掉模板层 `Url::index_url($articleid)` 目录链接兜底；详情页目录按钮与“查看完整目录”只消费 app 已传入的 `$index_url`，缺失时做禁用展示。
+- 收口：`tpl_indexlist.php` 去掉写死 `/index/{articleid}/...` 分页回退；当前页 canonical/og 与分页跳转优先消费当前真实 `$uri / $index_url`，其他页只在 `Url::index_url()` 可用时输出链接，不再模板层自造旧路由。
+- 结论：2025txt 继续按“核心给真实链接 → 模板只消费并安全输出 → 缺失时禁用展示”收尾，不主动改已经正常显示的手机端主结构。
+
 ## 2026-03-09 2025txt v3
 - 继续按 v5 与 shipsay 母模板收口 2025txt，未动核心目录。
 - tpl_header.php：补齐排行入口，公共导航改为优先消费 rank_entry_url / fake_top。
