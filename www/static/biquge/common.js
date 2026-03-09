@@ -6,5 +6,10 @@ function menu_toggle() {
 }
 function setEcho(){$("img.lazy").lazyload({effect : "fadeIn"})}
 function search(){
-    document.write('<form class="flex" name="t_frmsearch" method="post" action="/search/"><input id="searchkey" type="text" name="searchkey" class="search_input" placeholder="书名或作者,请您少字也别错字" autocomplete="off"><button type="submit" name="Submit" class="search_btn" title="搜索"> 搜 索 </button></form>');
+    var action = (window.ssSearchAction || '').replace(/'/g, '&#39;');
+    if (action) {
+        document.write('<form class="flex" name="t_frmsearch" method="post" action="'+ action +'"><input id="searchkey" type="text" name="searchkey" class="search_input" placeholder="书名或作者,请您少字也别错字" autocomplete="off"><button type="submit" name="Submit" class="search_btn" title="搜索"> 搜 索 </button></form>');
+    } else {
+        document.write('<form class="flex" name="t_frmsearch" method="post" onsubmit="return false;"><input id="searchkey" type="text" name="searchkey" class="search_input" placeholder="书名或作者,请您少字也别错字" autocomplete="off"><button type="submit" name="Submit" class="search_btn" title="搜索" disabled="disabled" aria-disabled="true"> 搜 索 </button></form>');
+    }
 }

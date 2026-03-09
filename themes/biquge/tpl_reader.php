@@ -53,15 +53,15 @@ $pageDescription .= '，作者：' . $author . '。';
     <meta property="og:novel:category" content="<?=$sortname?>小说">
     <meta property="og:novel:author" content="<?=$author?>">
     <meta property="og:novel:book_name" content="<?=$articlename?>">
-    <meta property="og:novel:index_url" content="<?=$info_url?>">
-    <meta property="og:novel:info_url" content="<?=$info_url?>">
+    <?php if(!empty($index_url)): ?><meta property="og:novel:index_url" content="<?=htmlspecialchars((string)$index_url, ENT_QUOTES, "UTF-8")?>"><?php endif; ?>
+    <meta property="og:novel:info_url" content="<?=htmlspecialchars((string)$info_url, ENT_QUOTES, "UTF-8")?>">
     <meta property="og:novel:status" content="<?=$isfull?>">
     <meta property="og:novel:chapter_name" content="<?=$chaptername?>">
     <meta property="og:novel:chapter_url" content="<?=$uri?>">
     
     <link rel="shortcut icon" type="image/x-icon" href="<?=$site_url?>/static/<?=$theme_dir?>/favicon.ico" media="screen">
 
-<?php require_once 'tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
 <style>
 .loading-text {
     text-align: center;
@@ -94,7 +94,7 @@ $pageDescription .= '，作者：' . $author . '。';
 <div class="container">
     <div class="border3-2" id="ss-reader-main">
         <div class="info-title">
-            <a href="/"><?=SITE_NAME?></a> &gt; <a href="<?=Sort::ss_sorturl($sortid)?>"><?=$sortname?></a> &gt; <a href="<?=$info_url?>"><?=$articlename?></a> &gt; <?=$chaptername?>
+            <a href="<?=!empty($site_url) ? htmlspecialchars(rtrim((string)$site_url, '/') . '/', ENT_QUOTES, 'UTF-8') : '/'?>"><?=SITE_NAME?></a> &gt; <a href="<?=htmlspecialchars(Sort::ss_sorturl($sortid), ENT_QUOTES, 'UTF-8')?>"><?=$sortname?></a> &gt; <a href="<?=htmlspecialchars((string)$info_url, ENT_QUOTES, 'UTF-8')?>"><?=$articlename?></a> &gt; <?=$chaptername?>
         </div>
         
         <div class="spider-pagination" aria-label="章节分页导航">
@@ -105,13 +105,13 @@ $pageDescription .= '，作者：' . $author . '。';
                 
                 <span>第<?=$now_pid?>页/共<?=$max_pid?>页</span>
                 
-                <?php for ($i = 1; $i <= min($max_pid, 10); $i++): ?>
-                    <?php if ($i == $now_pid): ?>
-                        <strong><?=$i?></strong>
-                    <?php else: ?>
-                        <a href="/read/<?=$articleid?>/<?=$chapterid?>/<?=$i?>.html"><?=$i?></a>
-                    <?php endif; ?>
-                <?php endfor; ?>
+                <?php if ($now_pid > 1): ?>
+                    <a href="<?=$prevpage_url?>" rel="prev">上一分页</a>
+                <?php endif; ?>
+                <strong><?=$now_pid?></strong>
+                <?php if ($now_pid < $max_pid): ?>
+                    <a href="<?=$nextpage_url?>" rel="next">下一分页</a>
+                <?php endif; ?>
                 
                 <?php if ($now_pid < $max_pid): ?>
                     <a href="<?=$nextpage_url?>" rel="next">下一页</a>
@@ -136,7 +136,7 @@ $pageDescription .= '，作者：' . $author . '。';
                 <?php else: ?>
                     <?php if($pre_cid == 0): ?><a id="pre_url" href="javascript:void(0);" class="w_gray"><i class="fa fa-stop"></i> 书首页</a><?php else: ?><a id="prev_url" href="<?=$pre_url?>"><i class="fa fa-backward"></i> 上一章</a><?php endif ?>
                 <?php endif ?>
-                &nbsp; ← &nbsp;<a id="info_url" href="<?=$info_url?>"  disable="disabled">章节目录</a>&nbsp; → &nbsp;
+                &nbsp; ← &nbsp;<?php if(!empty($index_url)): ?><a id="info_url" href="<?=htmlspecialchars((string)$index_url, ENT_QUOTES, "UTF-8")?>">章节目录</a><?php else: ?><span id="info_url" class="w_gray">章节目录</span><?php endif; ?>&nbsp; → &nbsp;
                 <?php if($nextpage_url != ''): ?>
                     <a id="next_url" href="<?=$nextpage_url?>"><i class="fa fa-forward"></i> 下一页</a>
                 <?php else: ?>
@@ -167,7 +167,7 @@ $pageDescription .= '，作者：' . $author . '。';
             <?php else: ?>
                 <?php if($pre_cid == 0): ?><a id="prev_url" href="javascript:void(0);" class="w_gray"><i class="fa fa-stop"></i> 书首页</a><?php else: ?><a id="prev_url" href="<?=$pre_url?>"><i class="fa fa-backward"></i> 上一章</a><?php endif ?>
             <?php endif ?>
-            &nbsp; ← &nbsp;<a id="info_url" href="<?=$info_url?>"  disable="disabled">章节目录</a>&nbsp; → &nbsp;
+            &nbsp; ← &nbsp;<?php if(!empty($index_url)): ?><a id="info_url" href="<?=htmlspecialchars((string)$index_url, ENT_QUOTES, "UTF-8")?>">章节目录</a><?php else: ?><span id="info_url" class="w_gray">章节目录</span><?php endif; ?>&nbsp; → &nbsp;
             <?php if($nextpage_url != ''): ?>
                 <a id="next_url" href="<?=$nextpage_url?>"><i class="fa fa-forward"></i> 下一页</a>
             <?php else: ?>
@@ -218,4 +218,4 @@ $pageDescription .= '，作者：' . $author . '。';
 	lastread.set(articleid,uri,articlename,chaptername,author,lastvisit,imgurl);
 	
 </script>
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

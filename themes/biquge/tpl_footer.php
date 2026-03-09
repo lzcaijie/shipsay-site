@@ -10,8 +10,8 @@
 
         <p>
             Copyright <?=$year?> <?=SITE_NAME?> All Rights Reserved.
-            | <a href="/sitemap/sitemap.xml" title="XML SiteMap" target="_blank">谷歌网站地图</a>
-            | <a href="/sitemap/sm_sitemap.xml" title="XML SiteMap" target="_blank">神马网站地图</a>
+            | <a href="/sitemap/sitemap.xml" title="XML SiteMap">谷歌网站地图</a>
+            | <a href="/sitemap/sm_sitemap.xml" title="XML SiteMap">神马网站地图</a>
         </p>
     </div>
 </div>

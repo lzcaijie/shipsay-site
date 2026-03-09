@@ -172,6 +172,15 @@
 # CHANGELOG（分站 shipsay-site，最新在最前）
 
 > 说明：
+## 2026-03-09-06 | 模板 | biquge 起手版第一轮（模板层基线收口）
+- 范围：仅调整 `themes/biquge/*`、`www/static/biquge/common.js` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 收口：补齐 `themes/biquge/tpl_rank.php`、`tpl_top.php`，让 biquge 模板具备 v5 标准要求的排行聚合页与单榜页模板入口。
+- 收口：`tpl_header.php` 改为模板内直接输出搜索表单与公共入口，搜索与排行/阅读记录链接优先跟随当前核心变量，不再依赖写死 `/search/` 的旧 `document.write()` 入口。
+- 收口：`tpl_error.php` 去掉 `/search/` 硬编码兜底；`tpl_footer.php` 去掉站内 sitemap 链接的 `target="_blank"`。
+- 收口：`tpl_info.php` 目录入口改为只消费上游 `$index_url`；`tpl_indexlist.php` 目录分页改为优先消费 app 已准备的 `$htmltitle`，不再在模板内写死旧 `/index/` 分页兜底。
+- 收口：`tpl_reader.php` 改为使用主题标准 include 方式，阅读页“章节目录”入口改为优先使用 `$index_url`，并去掉蜘蛛分页里的硬编码 `/read/...` 链接。
+- 收口：`tpl_recentread.php` 统一改回 `__THEME_DIR__` include 方式；`www/static/biquge/common.js` 的搜索函数同步去掉硬编码 `/search/`。
+
 > - 本文件只记录“分站侧功能/接口/安全策略”变更（新增写在最前）。
 > - 日常操作流程/部署/一致性验证：见 `docs/OPS.md`。
 >

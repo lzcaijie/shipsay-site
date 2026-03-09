@@ -1,13 +1,7 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 
 <?php
-// 目录页链接兜底（避免写死 /index/ 破坏后台路由/伪静态配置）
-$index_url_safe = '';
-if (isset($index_url) && $index_url) {
-    $index_url_safe = $index_url;
-} elseif (isset($articleid) && $articleid && class_exists('Url') && method_exists('Url', 'index_url')) {
-    $index_url_safe = Url::index_url($articleid);
-}
+$index_url_safe = isset($index_url) && $index_url ? (string)$index_url : '';
 ?>
 
 <?php $year = isset($year) && $year ? $year : date('Y'); ?>
@@ -43,7 +37,7 @@ if (isset($index_url) && $index_url) {
 <div class="container">
     <div class="border3-2">
         <div class="info-title">
-            <a href="/"><?=SITE_NAME?></a> &gt; <a href="<?=Sort::ss_sorturl($sortid)?>"><?=$sortname?></a> &gt; <?=$articlename?>最新章节列表
+            <a href="<?=!empty($site_url) ? htmlspecialchars(rtrim((string)$site_url, '/') . '/', ENT_QUOTES, 'UTF-8') : '/'?>"><?=SITE_NAME?></a> &gt; <a href="<?=htmlspecialchars(Sort::ss_sorturl($sortid), ENT_QUOTES, 'UTF-8')?>"><?=$sortname?></a> &gt; <?=$articlename?>最新章节列表
         </div>
         <div class="info-main">
             <img class="lazy" src="/static/<?=$theme_dir?>/nocover.jpg" data-original="<?=$img_url?>" alt="<?=$articlename?>" onerror="this.src='/static/<?=$theme_dir?>/nocover.jpg';this.onerror=null;">
@@ -93,8 +87,8 @@ if (isset($index_url) && $index_url) {
 <div class="container border3-2 mt8 mb20">
     <div class="info-chapters-title">
         <strong>《<?=$articlename?>》正文</strong>
-        <?php if ($chapters > 50): ?>
-        <a href="<?=$index_url_safe?>" style="float: right; font-size: 14px; color: #4a90e2; text-decoration: none;">
+        <?php if ($chapters > 50 && $index_url_safe !== ''): ?>
+        <a href="<?=htmlspecialchars($index_url_safe, ENT_QUOTES, 'UTF-8')?>" style="float: right; font-size: 14px; color: #4a90e2; text-decoration: none;">
             查看完整目录（共<?=$chapters?>章）
         </a>
         <?php endif; ?>
@@ -112,9 +106,9 @@ if (isset($index_url) && $index_url) {
         ?>
     </div>
 
-    <?php if ($chapters > 50): ?>
+    <?php if ($chapters > 50 && $index_url_safe !== ''): ?>
     <div style="text-align: center; margin-top: 20px;">
-        <a href="<?=$index_url_safe?>" style="display: inline-block; padding: 10px 25px; background: #4a90e2; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+        <a href="<?=htmlspecialchars($index_url_safe, ENT_QUOTES, 'UTF-8')?>" style="display: inline-block; padding: 10px 25px; background: #4a90e2; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
             查看完整目录（共<?=$chapters?>章）
         </a>
     </div>

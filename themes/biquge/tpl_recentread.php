@@ -5,7 +5,7 @@
 <head>
 <meta charset="utf-8">
 <title>最近阅读_<?=SITE_NAME?></title>
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <style>
 	.recentread-p{
 		background-color: #e1eced;
@@ -84,4 +84,4 @@
 		$('nav a:last-child').addClass('orange');
 	</script>
 </div>
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
