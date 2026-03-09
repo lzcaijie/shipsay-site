@@ -19,20 +19,6 @@
     $startChapter = ($currentPage - 1) * $chaptersPerPage + 1;
     $endChapter = min($currentPage * $chaptersPerPage, $chapters);
 
-    function getChapterPageUrl($articleid, $page = 1) {
-        $page = (int)$page;
-        if ($page < 1) $page = 1;
-
-        // 优先走 CMS 的 Url::index_url（避免写死 /index/ 破坏后台路由/伪静态配置）
-        if (class_exists('Url') && method_exists('Url', 'index_url')) {
-            return Url::index_url($articleid, $page);
-        }
-
-        // 兜底（保持旧结构）
-        if ($page == 1) return "/index/{$articleid}/";
-        return "/index/{$articleid}/{$page}/";
-    }
-
     $pageTitle = ($currentPage > 1) ?
         "《{$articlename}》章节目录第{$currentPage}页_{$articlename}最新章节_{$author}_".SITE_NAME :
         "《{$articlename}》章节目录_{$articlename}最新章节_{$author}_".SITE_NAME;
@@ -65,7 +51,7 @@
 <div class="container">
     <div class="border3-2">
         <div class="info-title">
-            <a href="/"><?=SITE_NAME?></a> &gt; <a href="<?=Sort::ss_sorturl($sortid)?>"><?=$sortname?></a> &gt; <a href="<?=$info_url?>"><?=$articlename?></a> &gt; 章节目录
+            <a href="<?=!empty($site_url) ? htmlspecialchars(rtrim((string)$site_url, '/') . '/', ENT_QUOTES, 'UTF-8') : '/'?>"><?=SITE_NAME?></a> &gt; <a href="<?=htmlspecialchars(Sort::ss_sorturl($sortid), ENT_QUOTES, 'UTF-8')?>"><?=$sortname?></a> &gt; <a href="<?=htmlspecialchars((string)$info_url, ENT_QUOTES, 'UTF-8')?>"><?=$articlename?></a> &gt; 章节目录
         </div>
         <div class="info-main">
             <img class="lazy" src="/static/<?=$theme_dir?>/nocover.jpg" data-original="<?=$img_url?>" alt="<?=$articlename?>" width="120" height="150"
@@ -121,19 +107,15 @@
     </div>
 </div>
 
-<?php if ($totalPages > 1): ?>
+<?php if (!empty($htmltitle)): ?>
 <div class="chapter-pagination">
-    <?php if ($currentPage > 1): ?>
-    <a href="<?=getChapterPageUrl($articleid, $currentPage-1)?>" class="chapter-page-btn">上一页</a>
-    <?php endif; ?>
-
+    <?=$htmltitle?>
+</div>
+<?php elseif ($totalPages > 1): ?>
+<div class="chapter-pagination">
     <div class="chapter-page-info">
         第 <?=$currentPage?> 页 / 共 <?=$totalPages?> 页
     </div>
-
-    <?php if ($currentPage < $totalPages): ?>
-    <a href="<?=getChapterPageUrl($articleid, $currentPage+1)?>" class="chapter-page-btn">下一页</a>
-    <?php endif; ?>
 </div>
 <?php endif; ?>
 
