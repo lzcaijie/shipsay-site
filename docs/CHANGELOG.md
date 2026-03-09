@@ -1,3 +1,10 @@
+## 2026-03-09 biquge v9 final cleanup
+- 收尾清理 biquge：补齐通用空态样式 `biquge-page-empty`，避免首页/列表/搜索/作者等空数据块无样式。
+- `tpl_top.php` 补 canonical / mobile-agent / og:url / 面包屑 ld+json，并把聚合榜空态改回页面作用域样式。
+- `tpl_rank.php` / `tpl_reader.php` 清掉残余行内样式，统一改为样式表类名。
+- `tpl_error.php` 行内样式迁回 `style.css`，返回上一页从伪链接改为按钮写法。
+- 删除未引用静态资源：`www/static/biquge/js/protect-page.js`、`www/static/biquge/js/protect-ptcms.js`。
+
 ## 2026-03-09-20 | 模板 | biquge 分类卡片手机端简介溢出修正（v8）
 - 范围：仅调整 `www/static/biquge/style.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 biquge 模板文件。
 - 修正：手机端分类/搜索/作者/首页左图右文卡片补 `flex:1; min-width:0;`，避免文本列在窄屏下不收缩，导致简介溢出到下一条。

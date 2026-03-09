@@ -1023,3 +1023,99 @@ article p{
         margin-left:8px;
     }
 }
+
+
+/* biquge v9 final cleanup */
+.biquge-page-empty{
+    padding:18px 10px;
+    color:#888;
+    font-size:13px;
+    text-align:center;
+}
+.rank-empty,
+.top-rank-empty{
+    margin:0 10px;
+    border-bottom:0;
+}
+.reader-pagecount{
+    font-size:14px;
+    color:#666;
+    margin-left:10px;
+}
+.error-page{
+    padding:18px 10px;
+}
+.error-page-box{
+    padding:18px 14px;
+    text-align:center;
+}
+.error-page-title{
+    margin:0 0 10px;
+    font-size:24px;
+    line-height:1.4;
+    color:#333;
+}
+.error-page-desc{
+    margin:0 0 14px;
+    color:#666;
+}
+.error-page-actions{
+    margin:0 0 14px;
+}
+.error-page-link{
+    display:inline-block;
+    margin:0 6px;
+    color:#4a90e2;
+    text-decoration:none;
+}
+.error-page-link-btn{
+    border:0;
+    background:none;
+    font:inherit;
+    cursor:pointer;
+    padding:0;
+}
+.error-page-search{
+    max-width:520px;
+    margin:0 auto;
+    display:flex;
+    gap:8px;
+}
+.error-page-input{
+    flex:1 1 auto;
+    min-width:0;
+    padding:10px;
+    border:1px solid #ddd;
+    background:#fff;
+}
+.error-page-submit{
+    padding:10px 16px;
+    border:1px solid #88C6E5;
+    background:#88C6E5;
+    color:#fff;
+    cursor:pointer;
+}
+.error-page-submit[disabled]{
+    opacity:.65;
+    cursor:not-allowed;
+}
+@media screen and (max-width:767px){
+    .error-page{
+        padding:12px 10px;
+    }
+    .error-page-box{
+        padding:16px 12px;
+    }
+    .error-page-title{
+        font-size:20px;
+    }
+    .error-page-actions{
+        display:flex;
+        justify-content:center;
+        gap:12px;
+        flex-wrap:wrap;
+    }
+    .error-page-link{
+        margin:0;
+    }
+}

@@ -128,7 +128,7 @@ $h = static function ($value) {
             <h1>
                 <?=$h($chaptername)?>
                 <?php if ($max_pid > 1): ?>
-                <span style="font-size: 14px; color: #666; margin-left: 10px;">
+                <span class="reader-pagecount">
                     （第<?=$h($now_pid)?>页/共<?=$h($max_pid)?>页）
                 </span>
                 <?php endif; ?>
