@@ -7,11 +7,11 @@
         <p>本站不保存小说内容及数据，仅作宣传展示。</p>
         <p><?=SITE_NAME?>基于搜索引擎技术为您提供检索服务</p>
         <p>版权投诉及建议请联系我们 <?=SITE_NAME?></p>
-
-        <p>
-            Copyright <?=$year?> <?=SITE_NAME?> All Rights Reserved.
-            | <a href="/sitemap/sitemap.xml" title="XML SiteMap">谷歌网站地图</a>
-            | <a href="/sitemap/sm_sitemap.xml" title="XML SiteMap">神马网站地图</a>
+        <p>Copyright <?=$year?> <?=SITE_NAME?> All Rights Reserved.</p>
+        <p class="footer-sitemap">
+            <a href="/sitemap/sitemap.xml" title="XML SiteMap">谷歌网站地图</a>
+            <span>|</span>
+            <a href="/sitemap/sm_sitemap.xml" title="XML SiteMap">神马网站地图</a>
         </p>
     </div>
 </div>

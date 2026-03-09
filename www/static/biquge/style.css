@@ -166,6 +166,36 @@ nav a{
     line-height: 35px;
     padding-left: 10px;
 }
+.popular-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding-right:10px;
+    background-color:#e1eced;
+    border-bottom:1px solid #ddd;
+}
+.popular-head > p{
+    flex:1 1 auto;
+    margin:0;
+    border-bottom:none;
+}
+.popular-more{
+    flex:none;
+    font-size:12px;
+    color:#666;
+    text-decoration:none;
+    white-space:nowrap;
+}
+.popular-more.is-disabled{
+    color:#999;
+}
+.top-rank-row{
+    justify-content:space-between;
+}
+.top-rank-card{
+    width:49%;
+}
 /* .popular a, .lastupdate a{ */
 .list-out {
     margin: 0 10px;
@@ -442,6 +472,16 @@ article p{
     text-align: center;
     font-size: 12px;
 }
+.footer p{
+    margin:6px 0;
+}
+.footer-sitemap{
+    display:block;
+}
+.footer-sitemap span{
+    display:inline-block;
+    margin:0 6px;
+}
 .diswap{
     display: none;
 }
@@ -515,6 +555,14 @@ article p{
 
   .popular{
     margin-top: 8px;
+  }
+
+  .top-rank-card{
+    width:100%!important;
+  }
+
+  .popular-head{
+    padding-right:8px;
   }
 
   .info-commend, .dispc{

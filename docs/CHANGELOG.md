@@ -1,3 +1,10 @@
+## 2026-03-09-15 | 模板 | biquge 排行更多按钮与模板继续复扫（v3）
+- 范围：仅调整 `themes/biquge/tpl_top.php`、`themes/biquge/tpl_footer.php`、`themes/biquge/tpl_home.php`、`themes/biquge/tpl_category.php`、`themes/biquge/tpl_search.php`、`themes/biquge/tpl_author.php`、`www/static/biquge/style.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 修正：`tpl_top.php` 的每个榜单卡片补齐“更多”按钮，并正式消费 `top_rank_limit` 控制单榜展示数量，避免聚合榜继续整列全量输出。
+- 修正：`tpl_footer.php` 将两个网站地图入口单独收成一行，底部版权与站点地图职责分开，手机端更顺眼。
+- 继续复扫：`tpl_home.php / tpl_category.php / tpl_search.php / tpl_author.php` 统一补数组判空与安全输出，减少变量缺失时的 notice 风险；不改主结构、不动核心。
+- 微调：`www/static/biquge/style.css` 只补聚合榜“更多”按钮、双列卡片宽度与 footer sitemap 行样式，继续保持当前 DOM 结构优先。
+
 ## 2026-03-09-14 | 模板 | biquge 顶部改为手机端直接显示（v2）
 - 范围：仅调整 `themes/biquge/tpl_header.php`、`www/static/biquge/style.css`、`www/static/biquge/common.js` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 修正：手机端顶部不再默认折叠成“菜单”按钮；头部站名、搜索框与导航改为直接显示，避免首页首屏只剩站名 + 菜单按钮。
