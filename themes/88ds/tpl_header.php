@@ -13,6 +13,5 @@ $v = defined('SITE_VERSION') ? SITE_VERSION : date('Ymd');
 <link rel="shortcut icon" type="image/x-icon" href="/static/<?=$theme_dir_attr?>/favicon.ico" media="screen">
 <link rel="stylesheet" href="/static/<?=$theme_dir_attr?>/style.css?v=<?=$v?>">
 <script src="/static/<?=$theme_dir_attr?>/js/jquery.min.js?v=<?=$v?>"></script>
-<script src="/static/<?=$theme_dir_attr?>/js/jquery.cookie.min.js?v=<?=$v?>"></script>
 <script src="/static/<?=$theme_dir_attr?>/common.js?v=<?=$v?>"></script>
 </head>
