@@ -17,49 +17,52 @@ foreach ($searchEngines as $bot) {
     }
 }
 
-$pageTitle = $articlename . ' - ' . $chaptername;
-if ($max_pid > 1) {
-    $pageTitle .= '（' . $now_pid . '/' . $max_pid . '）';
-}
-$pageTitle .= ' - ' . SITE_NAME;
-
-$pageDescription = '《' . $articlename . '》最新章节：' . $chaptername;
-if ($max_pid > 1) {
-    $pageDescription .= ' 第' . $now_pid . '页/共' . $max_pid . '页';
-}
-$pageDescription .= '，作者：' . $author . '。';
+require_once __ROOT_DIR__.'/shipsay/seo.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('reader');
+$pageTitle = trim((string)$seo_title) !== '' ? (string)$seo_title : ((string)$articlename . ' - ' . (string)$chaptername . ' - ' . SITE_NAME);
+$pageDescription = trim((string)$seo_description) !== '' ? (string)$seo_description : ('《' . (string)$articlename . '》最新章节：' . (string)$chaptername . '，作者：' . (string)$author . '。');
+$site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
+$current_uri_raw = isset($uri) ? (string)$uri : '';
+$canonical_url_raw = ($site_home_url_raw !== '/' && $current_uri_raw !== '' && strpos($current_uri_raw, 'http') !== 0)
+    ? rtrim($site_home_url_raw, '/') . '/' . ltrim($current_uri_raw, '/')
+    : $current_uri_raw;
+$sort_url_raw = isset($sortid) ? (string)Sort::ss_sorturl($sortid) : '';
+$info_url_raw = isset($info_url) ? (string)$info_url : '';
+$index_url_raw = !empty($index_url) ? (string)$index_url : '';
+$prevpage_url_raw = isset($prevpage_url) ? (string)$prevpage_url : '';
+$nextpage_url_raw = isset($nextpage_url) ? (string)$nextpage_url : '';
+$pre_url_raw = isset($pre_url) ? (string)$pre_url : '';
+$next_url_raw = isset($next_url) ? (string)$next_url : '';
+$theme_dir_attr = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
+$h = static function ($value) {
+    return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+};
 ?>
 <!DOCTYPE html>
 <html lang='zh'>
 <head>
 <meta charset="UTF-8">
-        <?php
-    require_once __ROOT_DIR__.'/shipsay/seo.php';
-    list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('reader');
-    $pageTitle = $seo_title;
-    $pageDescription = $seo_description;
-    ?>
-    <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
-    <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
-    <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-    <link rel="canonical" href="<?=$site_url?><?=$uri?>">
-    <meta http-equiv="Cache-Control" content="no-transform">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta name="applicable-device" content="pc,mobile">
-    
-    <meta property="og:type" content="novel">
-    <meta property="og:title" content="<?=$pageTitle?>">
-    <meta property="og:description" content="《<?=$articlename?>》最新章节：<?=$chaptername?>">
-    <meta property="og:novel:category" content="<?=$sortname?>小说">
-    <meta property="og:novel:author" content="<?=$author?>">
-    <meta property="og:novel:book_name" content="<?=$articlename?>">
-    <?php if(!empty($index_url)): ?><meta property="og:novel:index_url" content="<?=htmlspecialchars((string)$index_url, ENT_QUOTES, "UTF-8")?>"><?php endif; ?>
-    <meta property="og:novel:info_url" content="<?=htmlspecialchars((string)$info_url, ENT_QUOTES, "UTF-8")?>">
-    <meta property="og:novel:status" content="<?=$isfull?>">
-    <meta property="og:novel:chapter_name" content="<?=$chaptername?>">
-    <meta property="og:novel:chapter_url" content="<?=$uri?>">
-    
-    <link rel="shortcut icon" type="image/x-icon" href="<?=$site_url?>/static/<?=$theme_dir?>/favicon.ico" media="screen">
+<title><?=$h($pageTitle)?></title>
+<meta name="keywords" content="<?=$h($seo_keywords)?>">
+<meta name="description" content="<?=$h($pageDescription)?>">
+<?php if ($canonical_url_raw !== ''): ?><link rel="canonical" href="<?=$h($canonical_url_raw)?>"><?php endif; ?>
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+<meta name="applicable-device" content="pc,mobile">
+
+<meta property="og:type" content="novel">
+<meta property="og:title" content="<?=$h($pageTitle)?>">
+<meta property="og:description" content="<?=$h('《' . (string)$articlename . '》最新章节：' . (string)$chaptername)?>">
+<meta property="og:novel:category" content="<?=$h((string)$sortname . '小说')?>">
+<meta property="og:novel:author" content="<?=$h($author)?>">
+<meta property="og:novel:book_name" content="<?=$h($articlename)?>">
+<?php if($index_url_raw !== ''): ?><meta property="og:novel:index_url" content="<?=$h($index_url_raw)?>"><?php endif; ?>
+<?php if($info_url_raw !== ''): ?><meta property="og:novel:info_url" content="<?=$h($info_url_raw)?>"><?php endif; ?>
+<meta property="og:novel:status" content="<?=$h($isfull)?>">
+<meta property="og:novel:chapter_name" content="<?=$h($chaptername)?>">
+<?php if($canonical_url_raw !== ''): ?><meta property="og:novel:chapter_url" content="<?=$h($canonical_url_raw)?>"><?php endif; ?>
+
+<link rel="shortcut icon" type="image/x-icon" href="/static/<?=$theme_dir_attr?>/favicon.ico" media="screen">
 
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
 <style>
@@ -94,65 +97,68 @@ $pageDescription .= '，作者：' . $author . '。';
 <div class="container">
     <div class="border3-2" id="ss-reader-main">
         <div class="info-title">
-            <a href="<?=!empty($site_url) ? htmlspecialchars(rtrim((string)$site_url, '/') . '/', ENT_QUOTES, 'UTF-8') : '/'?>"><?=SITE_NAME?></a> &gt; <a href="<?=htmlspecialchars(Sort::ss_sorturl($sortid), ENT_QUOTES, 'UTF-8')?>"><?=$sortname?></a> &gt; <a href="<?=htmlspecialchars((string)$info_url, ENT_QUOTES, 'UTF-8')?>"><?=$articlename?></a> &gt; <?=$chaptername?>
+            <a href="<?=$h($site_home_url_raw)?>"><?=htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8')?></a> &gt; <a href="<?=$h($sort_url_raw)?>"><?=$h($sortname)?></a> &gt; <a href="<?=$h($info_url_raw)?>"><?=$h($articlename)?></a> &gt; <?=$h($chaptername)?>
         </div>
-        
+
         <div class="spider-pagination" aria-label="章节分页导航">
             <?php if ($max_pid > 1): ?>
-                <?php if ($now_pid > 1): ?>
-                    <a href="<?=$prevpage_url?>" rel="prev">上一页</a>
+                <?php if ($now_pid > 1 && $prevpage_url_raw !== ''): ?>
+                    <a href="<?=$h($prevpage_url_raw)?>" rel="prev">上一页</a>
                 <?php endif; ?>
-                
-                <span>第<?=$now_pid?>页/共<?=$max_pid?>页</span>
-                
-                <?php if ($now_pid > 1): ?>
-                    <a href="<?=$prevpage_url?>" rel="prev">上一分页</a>
+
+                <span>第<?=$h($now_pid)?>页/共<?=$h($max_pid)?>页</span>
+
+                <?php if ($now_pid > 1 && $prevpage_url_raw !== ''): ?>
+                    <a href="<?=$h($prevpage_url_raw)?>" rel="prev">上一分页</a>
                 <?php endif; ?>
-                <strong><?=$now_pid?></strong>
-                <?php if ($now_pid < $max_pid): ?>
-                    <a href="<?=$nextpage_url?>" rel="next">下一分页</a>
+                <strong><?=$h($now_pid)?></strong>
+                <?php if ($now_pid < $max_pid && $nextpage_url_raw !== ''): ?>
+                    <a href="<?=$h($nextpage_url_raw)?>" rel="next">下一分页</a>
                 <?php endif; ?>
-                
-                <?php if ($now_pid < $max_pid): ?>
-                    <a href="<?=$nextpage_url?>" rel="next">下一页</a>
+
+                <?php if ($now_pid < $max_pid && $nextpage_url_raw !== ''): ?>
+                    <a href="<?=$h($nextpage_url_raw)?>" rel="next">下一页</a>
                 <?php endif; ?>
             <?php endif; ?>
         </div>
-        
+
         <div class="reader-main">
-            <script src="/static/<?=$theme_dir?>/readpage.js"></script>
+            <div id="readSetMount"></div>
+            <script src="/static/<?=$theme_dir_attr?>/readpage.js"></script>
             <h1>
-                <?=$chaptername?>
+                <?=$h($chaptername)?>
                 <?php if ($max_pid > 1): ?>
                 <span style="font-size: 14px; color: #666; margin-left: 10px;">
-                    （第<?=$now_pid?>页/共<?=$max_pid?>页）
+                    （第<?=$h($now_pid)?>页/共<?=$h($max_pid)?>页）
                 </span>
                 <?php endif; ?>
             </h1>
 
             <div class="read_nav">
-                <?php if($prevpage_url != ''): ?>
-                    <a id="prev_url" href="<?=$prevpage_url?>"><i class="fa fa-backward"></i> 上一页</a>
+                <?php if($prevpage_url_raw !== ''): ?>
+                    <a class="read_nav_link" href="<?=$h($prevpage_url_raw)?>"><i class="fa fa-backward"></i> 上一页</a>
                 <?php else: ?>
-                    <?php if($pre_cid == 0): ?><a id="pre_url" href="javascript:void(0);" class="w_gray"><i class="fa fa-stop"></i> 书首页</a><?php else: ?><a id="prev_url" href="<?=$pre_url?>"><i class="fa fa-backward"></i> 上一章</a><?php endif ?>
+                    <?php if($pre_cid == 0): ?><span class="w_gray"><i class="fa fa-stop"></i> 书首页</span><?php else: ?><a class="read_nav_link" href="<?=$h($pre_url_raw)?>"><i class="fa fa-backward"></i> 上一章</a><?php endif ?>
                 <?php endif ?>
-                &nbsp; ← &nbsp;<?php if(!empty($index_url)): ?><a id="info_url" href="<?=htmlspecialchars((string)$index_url, ENT_QUOTES, "UTF-8")?>">章节目录</a><?php else: ?><span id="info_url" class="w_gray">章节目录</span><?php endif; ?>&nbsp; → &nbsp;
-                <?php if($nextpage_url != ''): ?>
-                    <a id="next_url" href="<?=$nextpage_url?>"><i class="fa fa-forward"></i> 下一页</a>
+                <span class="read_nav_sep">←</span><?php if($index_url_raw !== ''): ?><a class="read_nav_link" href="<?=$h($index_url_raw)?>">章节目录</a><?php else: ?><span class="w_gray">章节目录</span><?php endif; ?><span class="read_nav_sep">→</span>
+                <?php if($nextpage_url_raw != ''): ?>
+                    <a class="read_nav_link" href="<?=$h($nextpage_url_raw)?>"><i class="fa fa-forward"></i> 下一页</a>
                 <?php else: ?>
-                    <?php if($next_cid == 0): ?><a id="next_url" href="javascript:void(0);" class="w_gray">书末页 <i class="fa fa-stop"></i></a><?php else: ?><a id="next_url" href="<?=$next_url ?>">下一章 <i class="fa fa-forward"></i></a><?php endif ?>
+                    <?php if($next_cid == 0): ?><span class="w_gray">书末页 <i class="fa fa-stop"></i></span><?php else: ?><a class="read_nav_link" href="<?=$h($next_url_raw)?>">下一章 <i class="fa fa-forward"></i></a><?php endif ?>
                 <?php endif ?>
             </div>
         </div>
 
-        <div class="info-commend mt8">推荐阅读: 
-            <?php foreach($neighbor as $k => $v): ?>
-                <a href="<?=$v['info_url'] ?>" title="<?=$articlename?>"><?=$v['articlename'] ?></a>
-            <?php endforeach ?>
+        <div class="info-commend mt8">推荐阅读:
+            <?php if (!empty($neighbor) && is_array($neighbor)): ?>
+                <?php foreach($neighbor as $k => $v): ?>
+                    <a href="<?=$h(isset($v['info_url']) ? $v['info_url'] : '')?>" title="<?=$h(isset($v['articlename']) ? $v['articlename'] : '')?>"><?=$h(isset($v['articlename']) ? $v['articlename'] : '')?></a>
+                <?php endforeach ?>
+            <?php endif; ?>
         </div>
 
         <div class="reader-hr" ></div>
-        
+
         <article id="article" class="content">
             <?php if ($isSearchEngine || !Ss::use_js()): ?>
                 <?php echo $rico_content; ?>
@@ -160,62 +166,65 @@ $pageDescription .= '，作者：' . $author . '。';
                 <div class="loading-text">正在加载章节内容...</div>
             <?php endif; ?>
         </article>
-        
+
         <div class="read_nav reader-bottom">
-            <?php if($prevpage_url != ''): ?>
-                <a id="prev_url" href="<?=$prevpage_url?>"><i class="fa fa-backward"></i> 上一页</a>
+            <?php if($prevpage_url_raw != ''): ?>
+                <a class="read_nav_link" href="<?=$h($prevpage_url_raw)?>"><i class="fa fa-backward"></i> 上一页</a>
             <?php else: ?>
-                <?php if($pre_cid == 0): ?><a id="prev_url" href="javascript:void(0);" class="w_gray"><i class="fa fa-stop"></i> 书首页</a><?php else: ?><a id="prev_url" href="<?=$pre_url?>"><i class="fa fa-backward"></i> 上一章</a><?php endif ?>
+                <?php if($pre_cid == 0): ?><span class="w_gray"><i class="fa fa-stop"></i> 书首页</span><?php else: ?><a class="read_nav_link" href="<?=$h($pre_url_raw)?>"><i class="fa fa-backward"></i> 上一章</a><?php endif ?>
             <?php endif ?>
-            &nbsp; ← &nbsp;<?php if(!empty($index_url)): ?><a id="info_url" href="<?=htmlspecialchars((string)$index_url, ENT_QUOTES, "UTF-8")?>">章节目录</a><?php else: ?><span id="info_url" class="w_gray">章节目录</span><?php endif; ?>&nbsp; → &nbsp;
-            <?php if($nextpage_url != ''): ?>
-                <a id="next_url" href="<?=$nextpage_url?>"><i class="fa fa-forward"></i> 下一页</a>
+            <span class="read_nav_sep">←</span><?php if($index_url_raw !== ''): ?><a class="read_nav_link" href="<?=$h($index_url_raw)?>">章节目录</a><?php else: ?><span class="w_gray">章节目录</span><?php endif; ?><span class="read_nav_sep">→</span>
+            <?php if($nextpage_url_raw != ''): ?>
+                <a class="read_nav_link" href="<?=$h($nextpage_url_raw)?>"><i class="fa fa-forward"></i> 下一页</a>
             <?php else: ?>
-                <?php if($next_cid == 0): ?><a id="next_url" href="javascript:void(0);" class="w_gray">书末页 <i class="fa fa-stop"></i></a><?php else: ?><a id="next_url" href="<?=$next_url ?>">下一章 <i class="fa fa-forward"></i></a><?php endif ?>
+                <?php if($next_cid == 0): ?><span class="w_gray">书末页 <i class="fa fa-stop"></i></span><?php else: ?><a class="read_nav_link" href="<?=$h($next_url_raw)?>">下一章 <i class="fa fa-forward"></i></a><?php endif ?>
             <?php endif ?>
         </div>
     </div>
 </div>
 
 <div class="container">
-    <div class="info-commend mt8">最新小说: 
-        <?php foreach($postdate as $k => $v): ?>
-            <a href="<?=$v['info_url'] ?>" title="<?=$articlename?>"><?=$v['articlename'] ?></a>
-        <?php endforeach ?>
+    <div class="info-commend mt8">最新小说:
+        <?php if (!empty($postdate) && is_array($postdate)): ?>
+            <?php foreach($postdate as $k => $v): ?>
+                <a href="<?=$h(isset($v['info_url']) ? $v['info_url'] : '')?>" title="<?=$h(isset($v['articlename']) ? $v['articlename'] : '')?>"><?=$h(isset($v['articlename']) ? $v['articlename'] : '')?></a>
+            <?php endforeach ?>
+        <?php endif; ?>
     </div>
 </div>
 
-<script src="/static/<?=$theme_dir?>/tempbookcase.js"></script>
+<script src="/static/<?=$theme_dir_attr?>/tempbookcase.js"></script>
 
 <script>
-   <?php if (Ss::use_js() && !$isSearchEngine) : ?>
-      setTimeout(function() {
-          $.ajax({
-              type: "post",
-              url: "/api/reader_js.php",
-              data: {
-                  articleid: '<?= $articleid ?>',
-                  chapterid: '<?= $chapterid ?>',
-                  pid: '<?= $now_pid ?>'
-              },
-              success: function(data) {
-                  $('#article').html(data);
-              },
-              error: function() {
-                  $('#article').html('<div class="error-text">加载失败，请刷新重试</div>');
-              }
-          });
-      }, 200);
-  <?php endif ?>
-	const articleid = <?=$articleid?>;
-	const chapterid = <?=$chapterid?>;
-	const uri = "<?=$uri?>";
-	const articlename = "<?=$articlename?>";
-	const chaptername = "<?=$chaptername?>";
-	const author = "<?= $author ?>";
-	const lastvisit = "<?=$lastupdate?>";
-	const imgurl = "<?=$img_url?>";
-	lastread.set(articleid,uri,articlename,chaptername,author,lastvisit,imgurl);
-	
+<?php if (Ss::use_js() && !$isSearchEngine) : ?>
+setTimeout(function() {
+    $.ajax({
+        type: "post",
+        url: "/api/reader_js.php",
+        data: {
+            articleid: <?=json_encode((string)$articleid, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>,
+            chapterid: <?=json_encode((string)$chapterid, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>,
+            pid: <?=json_encode((string)$now_pid, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>
+        },
+        success: function(data) {
+            $('#article').html(data);
+        },
+        error: function() {
+            $('#article').html('<div class="error-text">加载失败，请刷新重试</div>');
+        }
+    });
+}, 200);
+<?php endif ?>
+const articleid = <?=json_encode((string)$articleid, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>;
+const chapterid = <?=json_encode((string)$chapterid, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>;
+const uri = <?=json_encode((string)$current_uri_raw, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>;
+const articlename = <?=json_encode((string)$articlename, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>;
+const chaptername = <?=json_encode((string)$chaptername, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>;
+const author = <?=json_encode((string)$author, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>;
+const lastvisit = <?=json_encode((string)$lastupdate, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>;
+const imgurl = <?=json_encode((string)$img_url, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>;
+if (typeof lastread !== 'undefined' && lastread && typeof lastread.set === 'function') {
+    lastread.set(articleid, uri, articlename, chaptername, author, lastvisit, imgurl);
+}
 </script>
 <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
