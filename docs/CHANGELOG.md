@@ -1,3 +1,4 @@
+- biqugewap v5：继续收尾 tpl_recentread/tpl_error/static JS；阅读记录清空改为只清本站记录、不再 localStorage.clear；修复阅读记录脏数据自动清洗；搜索浮层改为显式 show/hide；404 返回首页统一跟随站点地址。
 ## 2026-03-09 biqugewap v4 首页书友收藏榜显示热修
 - 模板：`biqugewap`
 - 范围：仅修正 `themes/biqugewap/tpl_home.php` 首页书友收藏榜列表项 HTML 结构，不动 CSS。

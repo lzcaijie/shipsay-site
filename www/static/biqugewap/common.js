@@ -44,12 +44,14 @@ $(function(){
             $('body').css({"overflow-y":"auto"});
         }
     );
-    $("#opensearch").click(function(){
-        $("#searchguide").toggle();
+    $("#opensearch").on("click", function(e){
+        e.preventDefault();
+        $("#searchguide").show();
         $('body').css({"overflow-y":"hidden"});
     });
-    $("#closesearch").click(function(){
-        $("#searchguide").toggle();
+    $("#closesearch").on("click", function(e){
+        e.preventDefault();
+        $("#searchguide").hide();
         $('body').css({"overflow-y":"auto"});
     });
 })
