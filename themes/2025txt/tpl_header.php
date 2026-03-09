@@ -43,7 +43,6 @@ $rank_entry_attr = htmlspecialchars($rank_entry_raw, ENT_QUOTES, 'UTF-8');
 <a class="active" href="<?=$site_home_url_attr?>" title="<?=$site_name_html?>">首页</a>
 <?php if ($allbooks_url_raw !== ''): ?><a href="<?=$allbooks_url_attr?>" title="书库">书库</a><?php else: ?><a aria-disabled="true">书库</a><?php endif; ?>
 <?php if ($full_allbooks_url_raw !== ''): ?><a href="<?=$full_allbooks_url_attr?>" title="全本">全本</a><?php else: ?><a aria-disabled="true">全本</a><?php endif; ?>
-<?php if ($search_url_raw !== ''): ?><a href="<?=$search_url_attr?>">搜索</a><?php else: ?><a aria-disabled="true">搜索</a><?php endif; ?>
 <?php if ($rank_entry_raw !== ''): ?><a href="<?=$rank_entry_attr?>" rel="nofollow">排行</a><?php else: ?><a aria-disabled="true" rel="nofollow">排行</a><?php endif; ?>
 <?php if ($recent_url_raw !== ''): ?><a href="<?=$recent_url_attr?>" rel="nofollow">足迹</a><?php else: ?><a aria-disabled="true" rel="nofollow">足迹</a><?php endif; ?>
 </div>
