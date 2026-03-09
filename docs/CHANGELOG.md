@@ -1,3 +1,11 @@
+## 2026-03-09-16 | 模板 | biquge 排行页与阅读页继续复扫（v4）
+- 范围：仅调整 `themes/biquge/tpl_rank.php`、`themes/biquge/tpl_reader.php`、`www/static/biquge/readpage.js`、`www/static/biquge/style.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 修正：`tpl_rank.php` 补齐单榜页 canonical / og / 面包屑结构化数据，并把榜单切换条改成当前项高亮；继续保持 biquge 现有榜单 DOM，不回退去套别的模板结构。
+- 修正：`tpl_rank.php` 统一对书名、作者、更新时间与榜单标题做安全输出，减少变量里带引号或特殊字符时的页面破版风险。
+- 修正：`tpl_reader.php` 继续按当前核心真实链接口径收口，章节页标题/og/canonical/底部 JS 参数统一安全输出；上一章/下一章禁用态改为文本，不再输出 `javascript:void(0)` 伪链接。
+- 清理：`www/static/biquge/readpage.js` 去掉 `document.write()` 旧写法，改为挂载到阅读页占位节点渲染；阅读设置仍保持原功能与 cookie 兼容，不改接口。
+- 微调：`www/static/biquge/style.css` 仅补阅读页导航换行与单榜页当前 tab 高亮，不动正文排版主结构。
+
 ## 2026-03-09-15 | 模板 | biquge 排行更多按钮与模板继续复扫（v3）
 - 范围：仅调整 `themes/biquge/tpl_top.php`、`themes/biquge/tpl_footer.php`、`themes/biquge/tpl_home.php`、`themes/biquge/tpl_category.php`、`themes/biquge/tpl_search.php`、`themes/biquge/tpl_author.php`、`www/static/biquge/style.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 修正：`tpl_top.php` 的每个榜单卡片补齐“更多”按钮，并正式消费 `top_rank_limit` 控制单榜展示数量，避免聚合榜继续整列全量输出。

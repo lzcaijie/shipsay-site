@@ -452,6 +452,28 @@ article p{
     text-align: center;
     margin-bottom: 10px;
 }
+.read_nav{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    line-height:1.8;
+    margin:12px auto 0;
+    font-size:14px;
+}
+.read_nav_sep{
+    color:#999;
+}
+.read_nav .w_gray{
+    color:#999;
+}
+.rank-switches a.active{
+    color:#fff;
+    background:#88C6E5;
+    padding:0 8px;
+    border-radius:12px;
+}
 
 /* 分类列表页 */
 .category-commend{
@@ -578,6 +600,11 @@ article p{
   }
   article{
     width:95%;
+  }
+
+  .read_nav{
+    gap:6px;
+    font-size:13px;
   }
 
   .lastupdate a span:last-child,
