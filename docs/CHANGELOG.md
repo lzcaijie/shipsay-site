@@ -1,3 +1,11 @@
+## 2026-03-09-10 | 模板 | 88ds 收尾清理非标准辅助模板（v6）
+- 范围：仅调整 `themes/88ds/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 对齐：按 `V5_1_TEMPLATE_STANDARD.md` 的标准模板文件集合与母模板口径复扫 88ds，确认模板标准正式集合不包含 `tpl_page_top.php`、`tpl_search_form.php`、`tpl_rank_list.php` 这类额外辅助模板。
+- 收口：将 `tpl_page_top.php` 与 `tpl_search_form.php` 的通用展示逻辑内收回 `tpl_header.php` 的局部 helper，现有页面继续通过 header 统一输出顶部与搜索，不再额外依赖辅助模板文件。
+- 清理：删除 `themes/88ds/tpl_page_top.php`、`themes/88ds/tpl_search_form.php`、`themes/88ds/tpl_rank_list.php`；其中排行明细继续由 `shipsay/app/top.php` 自动回落到 `tpl_rank.php`，不动核心。
+- 结论：88ds 最终文件集合继续向母模板标准收口，保留当前已验证正常的页面链路与展示，不再保留会干扰模板标准判断的额外辅助文件。
+
+
 ## 2026-03-09-09 | 模板 | 88ds 收尾修正阅读记录页与详情页前50章（v5）
 - 范围：仅调整 `themes/88ds/tpl_recentread.php`、`themes/88ds/tpl_info.php` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 修正：`tpl_recentread.php` 回退到 88ds 当前已验证可用的旧稳定页头结构，只保留“返回 + 阅读记录 + 首页 + 搜索框”，移除上一轮额外接入的内页公共 tabs，避免阅读记录页继续被公共头部样式带偏。

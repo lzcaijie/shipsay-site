@@ -43,7 +43,7 @@ $recentread_ld = [
     </div>
   </div>
 
-  <?php require_once __THEME_DIR__ . '/tpl_search_form.php'; ?>
+  <?php ss_render_search_form(); ?>
 
   <div id="content">
     <div class="article">
