@@ -1198,3 +1198,87 @@ form.search .go{
     max-height:3.3em;
   }
 }
+
+
+/* ===== 88ds v3: 搜索框最终收口 + 通用图文卡片移动端收口 ===== */
+form.search{
+  position:relative;
+  width:auto;
+  height:auto;
+  min-height:38px;
+  margin:5px;
+  padding:10px;
+  border:1px solid #e0e0e0;
+  background:#f4f4f4;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:nowrap;
+  box-sizing:border-box;
+}
+
+form.search .searchinput{
+  flex:1 1 auto;
+  min-width:0;
+  width:auto;
+  height:38px;
+  line-height:38px;
+  padding:0 10px;
+  box-sizing:border-box;
+}
+
+form.search .go{
+  position:static;
+  flex:0 0 72px;
+  width:72px;
+  height:38px;
+  line-height:38px;
+}
+
+.cover .block{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+}
+
+.cover .block .block_img{
+  float:none;
+  flex:0 0 82px;
+  margin-right:0;
+}
+
+.cover .block .block_txt{
+  flex:1 1 auto;
+  min-width:0;
+  overflow:hidden;
+}
+
+.chapter-preview li a{
+  display:block;
+}
+
+@media (max-width: 768px){
+  .cover .block{
+    gap:10px;
+  }
+
+  .cover .block .block_img{
+    flex-basis:82px;
+  }
+
+  .cover .block .block_img img{
+    width:80px;
+    height:100px;
+  }
+
+  .cover .block .block_txt{
+    min-width:0;
+  }
+
+  .cover .block .block_txt .book-meta,
+  .cover .block .block_txt .book-desc,
+  .cover .block .block_txt p{
+    overflow:hidden;
+    word-break:break-all;
+  }
+}

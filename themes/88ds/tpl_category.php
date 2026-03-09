@@ -50,7 +50,7 @@ $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
 <body>
   <div class="header">
     <div class="back">
-      <a href="javascript:history.go(-1);">返回</a>
+      <a href="<?=$site_home_url_attr?>">返回</a>
     </div>
     <h1><?=$category_heading_html?></h1>
     <div class="reg">

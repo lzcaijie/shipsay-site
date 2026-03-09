@@ -17,9 +17,9 @@ $footer_sitemap_sm_attr = htmlspecialchars($footer_site_base_raw . '/sitemap/sm_
     <p>Copyright &copy; <?=$year?> <?=$footer_site_name_html?> All Rights Reserved.</p>
 
     <div class="site-maps">
-        <a href="<?=$footer_sitemap_xml_attr?>" title="XML SiteMap" target="_blank">XML SiteMap</a>
+        <a href="<?=$footer_sitemap_xml_attr?>" title="XML SiteMap">XML SiteMap</a>
         |
-        <a href="<?=$footer_sitemap_sm_attr?>" title="神马 SiteMap" target="_blank">神马 SiteMap</a>
+        <a href="<?=$footer_sitemap_sm_attr?>" title="神马 SiteMap">神马 SiteMap</a>
     </div>
 </div>
 
