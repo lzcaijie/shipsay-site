@@ -1,3 +1,9 @@
+## 2026-03-10 | 模板 | biqugewap 详情/目录补齐长尾词与推荐收口（v7）
+- 范围：仅调整 `themes/biqugewap/tpl_info.php`、`tpl_indexlist.php`、`www/static/biqugewap/book.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 收口：`tpl_info.php`、`tpl_indexlist.php` 统一补回“百度长尾词推荐”区块，判断条件与链接字段保持一致，统一消费 `langtailrows -> info_url / langname`。
+- 收口：`tpl_indexlist.php` 重新补回“人气小说推荐”区块，与详情页保持同一套入口与展示口径；有数据时显示 5 条，无数据时给出兜底文案。
+- 收口：`tpl_info.php`、`tpl_indexlist.php` 的简介区统一包一层 `bookintro-content`，并在 `book.css` 增补受控溢出规则，避免移动端简介中的长文本 / 富文本把容器撑坏。
+
 ## 2026-03-10 | 模板 | biqugewap 详情/目录/底部统一收口（v6）
 - 范围：仅调整 `themes/biqugewap/tpl_info.php`、`tpl_indexlist.php`、`tpl_footer.php` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与主样式文件。
 - 收口：`tpl_info.php` 的章节预览由旧 `lastarr` 最新章节块改为优先消费 `preview_chapters`，详情页恢复“1-50章”预览；无预览时才回退现有章节数组。
