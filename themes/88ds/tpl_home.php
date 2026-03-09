@@ -73,7 +73,7 @@ $home_ld = [
         </ul>
     </div>
 
-    <?php require_once 'tpl_search_form.php'; ?>
+    <?php ss_render_search_form(); ?>
 
     <div class="article">
       <h2><span>推荐排行</span></h2>

@@ -56,7 +56,7 @@ $author_count_int = isset($author_count) ? intval($author_count) : (is_array($re
   <?php
   $page_title = $author_name_raw !== '' ? $author_name_raw : '作者作品';
   $page_back_url = $site_home_url_raw;
-  require __THEME_DIR__ . '/tpl_page_top.php';
+  ss_render_page_top(['page_title' => $page_title, 'page_back_url' => $page_back_url, 'site_home_url' => $site_home_url_raw]);
   ?>
 
   <div id="content">

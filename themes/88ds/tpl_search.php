@@ -69,7 +69,7 @@ $search_highlight = function ($text) use ($searchkey_raw, $search_lower) {
   <?php
   $page_title = '搜索结果';
   $page_back_url = $site_home_url_raw;
-  require __THEME_DIR__ . '/tpl_page_top.php';
+  ss_render_page_top(['page_title' => $page_title, 'page_back_url' => $page_back_url, 'site_home_url' => $site_home_url_raw]);
   ?>
 
   <div id="content">

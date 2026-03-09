@@ -84,7 +84,7 @@ echo json_encode([
     $page_title = $articlename;
     $page_back_url = !empty($info_url) ? (string)$info_url : ($sort_url_raw !== '' ? $sort_url_raw : $site_home_url_raw);
     $page_back_label = '返回详情';
-    require __THEME_DIR__ . '/tpl_page_top.php';
+    ss_render_page_top(['page_title' => $page_title, 'page_back_url' => $page_back_url, 'page_back_label' => $page_back_label, 'site_home_url' => $site_home_url_raw]);
     ?>
 
 		<div class="cover">
