@@ -1,3 +1,12 @@
+## 2026-03-09 2025txt v3
+- 继续按 v5 与 shipsay 母模板收口 2025txt，未动核心目录。
+- tpl_header.php：补齐排行入口，公共导航改为优先消费 rank_entry_url / fake_top。
+- tpl_rank.php：去掉写死 /rank/ 路径，canonical 与榜单切换统一消费 rank_detail_base。
+- tpl_top.php：聚合榜入口改为优先消费 rank_entry_url / fake_top，不再以 fake_rankstr 作为默认导航来源。
+- tpl_search.php、tpl_error.php：去掉写死 /search/ fallback，搜索入口缺失时改为禁用提交。
+- www/static/2025txt/css/2025.css：修正 font-face 的旧 /public/font 路径。
+- 清理未使用静态资源：chapter.css、detail.css、font/bootstrap.min.js、js/base.js、js/layer.js、js/protect-page.js、js/protect-ptcms.js。
+
 ## 2026-03-09-11 | 模板 | 2025txt 去掉 tag/user 并合并双头部（v2）
 - 范围：仅新增/调整 `themes/2025txt/*`、`www/static/2025txt/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 对齐：按 `V5_1_TEMPLATE_STANDARD.md` 与 `themes/shipsay/*` 母模板集合收口；`tpl_tag.php`、`user/*`、`tpl_headerr.php` 不再保留在 2025txt 母模板中。

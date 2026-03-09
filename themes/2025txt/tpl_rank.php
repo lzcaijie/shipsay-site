@@ -7,19 +7,45 @@
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('rank');
+$title_arr = [
+  'allvisit'=>'总排行榜','monthvisit'=>'月排行榜','weekvisit'=>'周排行榜','dayvisit'=>'日排行榜',
+  'allvote'=>'总推荐榜','monthvote'=>'月推荐榜','weekvote'=>'周推荐榜','dayvote'=>'日推荐榜',
+  'goodnum'=>'收藏榜'
+];
+$current_query = isset($query) && isset($title_arr[$query]) ? (string)$query : 'allvisit';
+$page_title = isset($page_title) && $page_title ? (string)$page_title : $title_arr[$current_query];
+$rank_entry_url_raw = '';
+if (!empty($rank_entry_url)) {
+    $rank_entry_url_raw = rtrim((string)$rank_entry_url, '/') . '/';
+} elseif (!empty($fake_top)) {
+    $rank_entry_url_raw = rtrim((string)$fake_top, '/') . '/';
+}
+$rank_detail_base_raw = !empty($rank_detail_base) ? rtrim((string)$rank_detail_base, '/') . '/' : $rank_entry_url_raw;
+$rank_url_raw = $rank_detail_base_raw !== '' ? $rank_detail_base_raw . $current_query . '/' : '';
+if (trim($seo_title) === '' || trim($seo_title) === SITE_NAME) {
+    $seo_title = $page_title . '_' . SITE_NAME;
+}
+if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) {
+    $seo_keywords = $page_title . ',' . SITE_NAME . ',排行榜,热门小说';
+}
+if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) {
+    $seo_description = $page_title . '榜单，尽在' . SITE_NAME . '。';
+}
+$site_home_url_raw = !empty($site_url) ? (string)$site_url : '/';
+$site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
+$rank_url_attr = htmlspecialchars($rank_url_raw, ENT_QUOTES, 'UTF-8');
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
 <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-<link rel="canonical" href="<?=$site_url?>/rank/<?=$query?>/">
+<?php if ($rank_url_raw !== ''): ?><link rel="canonical" href="<?=$rank_url_attr?>"><?php endif; ?>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="renderer" content="webkit|ie-comp|ie-stand">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta http-equiv="Cache-Control" content="no-transform">
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <meta name="applicable-device" content="pc,mobile">
-
-<link rel="stylesheet" href="/static/<?=$theme_dir?>/css/2025.css?v=20221207" />
+<link rel="stylesheet" href="/static/<?=$theme_dir?>/css/2025.css?v=20251207" />
 </head>
 
 <body class="rank-page">
@@ -32,7 +58,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('rank');
       <svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M358.997 512l311.168-311.168a42.667 42.667 0 1 0-60.33-60.33L268.5 481.834a42.667 42.667 0 0 0 0 60.33L609.835 883.5a42.667 42.667 0 0 0 60.33-60.331L358.997 512z"></path></svg>
     </a>
     <div class="header-m-center"><?=$page_title?></div>
-    <a class="header-m-right" href="/">
+    <a class="header-m-right" href="<?=$site_home_url_attr?>">
       <svg class="icon" viewBox="0 0 1025 1024" xmlns="http://www.w3.org/2000/svg"><path d="M938.977859 1024c-100.292785 0-198.718416 0-298.210992 0 0-113.362855 0-226.458974 0-340.355301-85.889034 0-170.17765 0-255.799948 0 0 112.829383 0 225.658765 0 339.821829-100.292785 0-199.251889 0-299.277937 0 0-4.534514 0-8.802292 0-13.07007 0-176.579318 0-352.891899 0.266736-529.471216 0-5.868195 3.46757-13.870279 8.002084-17.604585 138.436051-111.228966 277.138838-222.191196 416.108362-333.153425 0.533472-0.533472 1.600417-0.800208 3.200834-1.333681 45.345142 36.276114 91.223756 72.818963 136.835634 109.361813 91.490492 73.352436 182.980985 146.704871 275.004949 219.523834 10.402709 8.26882 14.403751 16.53764 14.403751 29.874446-0.533472 173.911956-0.266736 347.557176-0.266736 521.469133C938.977859 1013.864027 938.977859 1018.932014 938.977859 1024z"></path></svg>
     </a>
   </div>
@@ -40,18 +66,10 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('rank');
 
 <div class="container">
   <ol class="navigator">
-    <li><a href="/"><?=SITE_NAME?></a></li>
+    <li><a href="<?=$site_home_url_attr?>"><?=SITE_NAME?></a></li>
     <li class="active"><?=$page_title?></li>
   </ol>
 </div>
-
-<?php
-$title_arr = [
-  'allvisit'=>'总排行榜','monthvisit'=>'月排行榜','weekvisit'=>'周排行榜','dayvisit'=>'日排行榜',
-  'allvote'=>'总推荐榜','monthvote'=>'月推荐榜','weekvote'=>'周推荐榜','dayvote'=>'日推荐榜',
-  'goodnum'=>'收藏榜'
-];
-?>
 
 <div class="container">
 
@@ -59,7 +77,11 @@ $title_arr = [
     <div class="rank-switch-title">切换榜单</div>
     <div class="rank-switch-list">
       <?php foreach($title_arr as $k=>$t): ?>
-        <a href="/rank/<?=$k?>/" class="<?php if($query==$k):?>active<?php endif;?>"><?=$t?></a>
+        <?php if($rank_detail_base_raw !== ''): ?>
+          <a href="<?=htmlspecialchars($rank_detail_base_raw . $k . '/', ENT_QUOTES, 'UTF-8')?>" class="<?php if($current_query==$k):?>active<?php endif;?>"><?=$t?></a>
+        <?php else: ?>
+          <a class="<?php if($current_query==$k):?>active<?php endif;?>" aria-disabled="true"><?=$t?></a>
+        <?php endif; ?>
       <?php endforeach; ?>
     </div>
   </div>
@@ -94,7 +116,6 @@ $title_arr = [
               <?php if(!empty($v['sortname_2'])): ?><i>·</i><span><?=$v['sortname_2']?></span><?php endif; ?>
             </div>
 
-            <!-- ✅ 永远输出简介占位，保证每个卡片高度更一致，减少空洞 -->
             <div class="intro"><?=$intro?></div>
 
             <div class="tags">
@@ -183,21 +204,18 @@ $title_arr = [
   color:#222 !important;
   text-decoration:none !important;
   display:block !important;
-  max-height:2.6em !important; /* 标题最多两行 */
+  max-height:2.6em !important;
   overflow:hidden !important;
 }
 .rank-page .rank-item .meta{margin:6px 0 6px !important;color:#888 !important;}
 .rank-page .rank-item .meta i{margin:0 6px !important;color:#bbb !important;font-style:normal !important;}
-
-/* ✅ 简介固定占两行高度：即便没简介也不让卡片变矮 */
 .rank-page .rank-item .intro{
   color:#666 !important;
   line-height:1.6 !important;
-  min-height:3.2em !important;  /* 两行占位 */
+  min-height:3.2em !important;
   max-height:3.2em !important;
   overflow:hidden !important;
 }
-
 .rank-page .rank-item .tags span{
   display:inline-block !important;
   margin:8px 8px 0 0 !important;
@@ -207,9 +225,7 @@ $title_arr = [
   color:#666 !important;
   font-size:12px !important;
 }
-
 .rank-page .rank-list:after{content:"" !important;display:block !important;clear:both !important;}
-
 @media (max-width:767px){
   .rank-page .rank-item{width:100% !important;margin-right:0 !important;}
   .rank-page .rank-switch-list{gap:8px !important;}
@@ -218,5 +234,3 @@ $title_arr = [
 </style>
 
 <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
-</body>
-</html>

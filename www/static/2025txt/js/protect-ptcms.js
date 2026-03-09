@@ -1,1 +1,0 @@
-(function(){var _0x1a7b=["Android","webOS","iPhone","iPad","iPod","BlackBerry","IEMobile","Opera Mini"];var isMobile=new RegExp(_0x1a7b.join("|"),"i").test(navigator.userAgent);if(!isMobile){document.body.innerHTML='<div style="text-align:center; margin-top:100px; font-size:24px; color:red;">⚠ 无法显示此页面<br><br>错误代码： HTTP ERROR</div>';}})();

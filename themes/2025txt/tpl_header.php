@@ -8,12 +8,19 @@ $search_url_raw = function_exists('ss_search_url')
     ? (string)ss_search_url()
     : ((isset($fake_search) && $fake_search) ? (string)$fake_search : '');
 $recent_url_raw = !empty($fake_recentread) ? (string)$fake_recentread : '';
+$rank_entry_raw = '';
+if (!empty($rank_entry_url)) {
+    $rank_entry_raw = (string)$rank_entry_url;
+} elseif (!empty($fake_top)) {
+    $rank_entry_raw = (string)$fake_top;
+}
 $site_name_html = htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8');
 $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
 $allbooks_url_attr = htmlspecialchars($allbooks_url_raw, ENT_QUOTES, 'UTF-8');
 $full_allbooks_url_attr = htmlspecialchars($full_allbooks_url_raw, ENT_QUOTES, 'UTF-8');
 $search_url_attr = htmlspecialchars($search_url_raw, ENT_QUOTES, 'UTF-8');
 $recent_url_attr = htmlspecialchars($recent_url_raw, ENT_QUOTES, 'UTF-8');
+$rank_entry_attr = htmlspecialchars($rank_entry_raw, ENT_QUOTES, 'UTF-8');
 ?>
 <div class="header-common">
 <div class="container">
@@ -35,6 +42,7 @@ $recent_url_attr = htmlspecialchars($recent_url_raw, ENT_QUOTES, 'UTF-8');
 <?php if ($allbooks_url_raw !== ''): ?><a href="<?=$allbooks_url_attr?>" title="书库">书库</a><?php else: ?><a aria-disabled="true">书库</a><?php endif; ?>
 <?php if ($full_allbooks_url_raw !== ''): ?><a href="<?=$full_allbooks_url_attr?>" title="全本">全本</a><?php else: ?><a aria-disabled="true">全本</a><?php endif; ?>
 <?php if ($search_url_raw !== ''): ?><a href="<?=$search_url_attr?>">搜索</a><?php else: ?><a aria-disabled="true">搜索</a><?php endif; ?>
+<?php if ($rank_entry_raw !== ''): ?><a href="<?=$rank_entry_attr?>" rel="nofollow">排行</a><?php else: ?><a aria-disabled="true" rel="nofollow">排行</a><?php endif; ?>
 <?php if ($recent_url_raw !== ''): ?><a href="<?=$recent_url_attr?>" rel="nofollow">足迹</a><?php else: ?><a aria-disabled="true" rel="nofollow">足迹</a><?php endif; ?>
 </div>
 <div class="cf"></div>

@@ -2,7 +2,7 @@
 <?php
 $search_url_safe = function_exists('ss_search_url')
     ? ss_search_url()
-    : ((isset($fake_search) && $fake_search) ? $fake_search : '/search/');
+    : ((isset($fake_search) && $fake_search) ? $fake_search : '');
 ?>
 <!DOCTYPE html>
 <html lang="zh-cmn-Hans">
