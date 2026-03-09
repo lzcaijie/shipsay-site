@@ -1117,3 +1117,84 @@ form.search .go{
   border-radius:3px;
   cursor:pointer;
 }
+
+
+/* ===== 88ds v2: 首页分类展开 + 搜索框 + 移动端摘要收口 ===== */
+form.search{
+  padding:10px;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  box-sizing:border-box;
+}
+
+form.search .searchinput{
+  flex:1 1 auto;
+  min-width:0;
+  width:auto;
+  height:34px;
+  line-height:34px;
+  border:1px solid #ddd;
+  border-radius:3px;
+  padding:0 10px;
+  outline:none;
+  background:#fff;
+}
+
+form.search .go{
+  position:static;
+  right:auto;
+  top:auto;
+  flex:0 0 72px;
+  width:72px;
+  height:34px;
+  line-height:34px;
+  padding:0;
+  border:1px solid #208181;
+  background:#208181;
+  color:#fff;
+  border-radius:3px;
+  cursor:pointer;
+}
+
+.block_txt{
+  min-width:0;
+}
+
+.block_txt .book-title,
+.block_txt h2,
+.block_txt h3{
+  overflow:hidden;
+}
+
+.block_txt .book-title a,
+.block_txt h2 a,
+.block_txt h3 a{
+  display:block;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+
+.block_txt .book-meta{
+  line-height:1.6;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.block_txt .book-desc{
+  line-height:1.65;
+  word-break:break-all;
+  overflow:hidden;
+}
+
+@media (max-width: 768px){
+  .block_txt .book-desc{
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    max-height:3.3em;
+  }
+}

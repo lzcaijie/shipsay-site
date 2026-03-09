@@ -4,6 +4,19 @@ function reloadcode() {
     img.src = img.src.split('?')[0] + '?' + Math.random();
 }
 
+
+function toggleSort() {
+    var el = document.getElementById('submenu');
+    if (!el) return false;
+    if (window.jQuery && typeof window.jQuery.fn.slideToggle === 'function') {
+        window.jQuery(el).stop(true, true).slideToggle(120);
+    } else {
+        var hidden = (el.style.display === 'none') || (window.getComputedStyle && window.getComputedStyle(el).display === 'none');
+        el.style.display = hidden ? 'block' : 'none';
+    }
+    return false;
+}
+
 function st() {
     return false;
 }

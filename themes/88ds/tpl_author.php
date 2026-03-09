@@ -95,11 +95,11 @@ $author_count_int = isset($author_count) ? intval($author_count) : (is_array($re
               </a>
             </div>
             <div class="block_txt">
-              <h2><a href="<?=$info_url_attr?>"><?=$title_html?></a></h2>
-              <p>作者：<?=$author_name_html?></p>
-              <p>分类：<?=$sort_html?> / <?=$status_html?></p>
-              <p>字数：<?=$words_html?>万字 / 更新：<?=$lastupdate_html?></p>
-              <p><?=$intro_html?></p>
+              <h2 class="book-title"><a href="<?=$info_url_attr?>"><?=$title_html?></a></h2>
+              <p class="book-meta">作者：<?=$author_name_html?></p>
+              <p class="book-meta">分类：<?=$sort_html?> / <?=$status_html?></p>
+              <p class="book-meta">字数：<?=$words_html?>万字 / 更新：<?=$lastupdate_html?></p>
+              <p class="book-desc"><?=$intro_html?></p>
             </div>
           </div>
         <?php endforeach; ?>
