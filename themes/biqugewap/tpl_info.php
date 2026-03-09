@@ -57,11 +57,12 @@ $pageTitle = $seo_title;
                     <p class="book-meta"><?=$isfull?> | <?=$words_w?>万字</p>
                 </div>
 	        </div>
+<?php $recentread_url_info = !empty($recentread_url_attr) ? $recentread_url_attr : (!empty($fake_recentread) ? $fake_recentread : 'javascript:history.go(-1)'); ?>
 	        <div class="last"><?=$lastupdate_cn?>更新到：<a href="<?=$last_url?>" title="<?=$lastchapter?>" rel="chapter"><?=$lastchapter?></a></div>
     	    <ul class="book-info-btn">
     	        <li><a href="<?=$first_url?>">立即阅读</a></li>
     	        <li><a href="<?=$index_url?>">章节目录</a></li>
-    	        <li><a id="addbookcase" href="javascript:addbookcase('<?=$articleid?>','<?=$articlename?>');">加入书架</a></li>
+    	        <li><a href="<?=$recentread_url_info?>">阅读记录</a></li>
     	    </ul>
 	    </div>
 		<div class="clear"></div>

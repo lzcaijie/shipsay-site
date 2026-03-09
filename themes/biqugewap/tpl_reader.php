@@ -31,6 +31,7 @@ $pageDescription .= '，作者：' . $author . '。';
 $full_allbooks_url_safe = !empty($full_allbooks_url)
     ? $full_allbooks_url
     : ('/quanben' . (isset($allbooks_url) ? $allbooks_url : '/sort/'));
+$recentread_url_reader = !empty($recentread_url_attr) ? $recentread_url_attr : (!empty($fake_recentread) ? $fake_recentread : 'javascript:history.go(-1)');
 
 ?>
 <!DOCTYPE html>
@@ -144,7 +145,7 @@ $pageDescription = $seo_description;
                 <?php if($pre_cid == 0): ?><span class="gray" id="prev_url">没有了</span><?php else: ?><a href="<?=$pre_url?>" rel="prev" id="prev_url">上一章</a><?php endif ?>
             <?php endif ?>
 	        	<a href="<?=$info_url?>" rel="index" id="info_url">目录</a>
-	        	<a href="javascript:addbookcase('<?=$articleid?>','<?=$articlename?>','<?=$chapterid?>','<?=$chaptername?>');" class="addbookcase">加书签</a>
+	        	<a href="<?=$recentread_url_reader?>" class="reader-record-link">阅读记录</a>
 		    	<?php if($nextpage_url != ''): ?>
                 <a href="<?=$nextpage_url?>" rel="next" id="next_url">下一页</a>
             <?php else: ?>
@@ -186,7 +187,7 @@ $pageDescription = $seo_description;
                 <?php if($pre_cid == 0): ?><span class="gray" id="prev_url">没有了</span><?php else: ?><a href="<?=$pre_url?>" rel="prev" id="prev_url">上一章</a><?php endif ?>
             <?php endif ?>
 	        	<a href="<?=$info_url?>" rel="index" id="info_url">目录</a>
-	        	<a href="javascript:addbookcase('<?=$articleid?>','<?=$articlename?>','<?=$chapterid?>','<?=$chaptername?>');" class="addbookcase">加书签</a>
+	        	<a href="<?=$recentread_url_reader?>" class="reader-record-link">阅读记录</a>
 		    	<?php if($nextpage_url != ''): ?>
                 <a href="<?=$nextpage_url?>" rel="next" id="next_url">下一页</a>
             <?php else: ?>
@@ -216,7 +217,6 @@ $pageDescription = $seo_description;
 
     <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 
-    <script src="/static/<?=$theme_dir?>/user.js"></script>
     <script src="/static/<?=$theme_dir?>/readpage.js"></script>
     <script src="/static/<?=$theme_dir?>/tempbookcase.js"></script>
 
@@ -268,9 +268,6 @@ $pageDescription = $seo_description;
                     <span class="guide-nav-h">记录</span>
                 </a>
             </nav>
-            <div class="guide-footer">
-                <a href="/bookcase/"><svg id="icon-person" viewBox="0 0 16 16"><g><path d="M12 5a4 4 0 1 0-8 0 4 4 0 0 0 8 0zM3 5a5 5 0 1 1 10 0A5 5 0 0 1 3 5z"></path><path d="M8 9c-4.397 0-8 2.883-8 6.5a.5.5 0 1 0 1 0C1 12.49 4.113 10 8 10s7 2.49 7 5.5a.5.5 0 1 0 1 0C16 11.883 12.397 9 8 9z"></path></g></svg>会员书架</a>
-            </div>
         </div>
     </div>
 

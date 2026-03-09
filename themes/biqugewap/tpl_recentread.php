@@ -56,9 +56,6 @@ $full_allbooks_url_safe = !empty($full_allbooks_url)
             <span class="guide-nav-h">记录</span>
         </a>
     </nav>
-            <div class="guide-footer">
-                <a href="/bookcase/"><svg id="icon-person" viewBox="0 0 16 16"><g><path d="M12 5a4 4 0 1 0-8 0 4 4 0 0 0 8 0zM3 5a5 5 0 1 1 10 0A5 5 0 0 1 3 5z"></path><path d="M8 9c-4.397 0-8 2.883-8 6.5a.5.5 0 1 0 1 0C1 12.49 4.113 10 8 10s7 2.49 7 5.5a.5.5 0 1 0 1 0C16 11.883 12.397 9 8 9z"></path></g></svg>会员书架</a>
-            </div>
         </div>
     </div>
 

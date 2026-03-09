@@ -21,7 +21,7 @@ $full_allbooks_url_home = !empty($full_allbooks_url) ? $full_allbooks_url : '';
 </head>
 <body>
 	<header class="header">
-		<div class="left"><a href="/bookcase/"><svg id="icon-person" viewBox="0 0 16 16"><g><path d="M12 5a4 4 0 1 0-8 0 4 4 0 0 0 8 0zM3 5a5 5 0 1 1 10 0A5 5 0 0 1 3 5z"></path><path d="M8 9c-4.397 0-8 2.883-8 6.5a.5.5 0 1 0 1 0C1 12.49 4.113 10 8 10s7 2.49 7 5.5a.5.5 0 1 0 1 0C16 11.883 12.397 9 8 9z"></path></g></svg></a></div>
+		<div class="left"><a href="<?=$recentread_url_home?>" title="阅读记录"><svg id="icon-history" viewBox="0 0 16 16"><path d="M8 1a7 7 0 1 0 6.93 8h-1.02A6 6 0 1 1 8 2c1.66 0 3.16.67 4.24 1.76L10 6h5V1l-2.05 2.05A6.97 6.97 0 0 0 8 1z"></path><path d="M7.5 4h1v4.2l3 1.8-.5.86-3.5-2.1V4z"></path></svg></a></div>
 		<div class="center"><?=SITE_NAME?></div>
 		<div class="right">
 		    <a id="opensearch" href="javascript:" title="搜索"><svg id="icon-search" viewBox="0 0 17 18"><path d="M12.775 14.482l3.371 3.372a.5.5 0 0 0 .708-.708l-3.372-3.37-1.817-1.818a.5.5 0 1 0-.707.707l1.817 1.817zM1 7.14a6 6 0 1 1 12 0 6 6 0 0 1-12 0zm13 0a7 7 0 1 0-14 0 7 7 0 0 0 14 0z"></path></svg></a>
