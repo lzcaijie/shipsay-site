@@ -112,7 +112,7 @@ $full_allbooks_url_home = !empty($full_allbooks_url) ? $full_allbooks_url : '';
 		</div>
 		<ul class="list">
 		    <?php elseif( $k < 5 ) : ?>
-            <li><span><?=$k+1?></span><a href="<?=$v['info_url']?>" title="<?=$v['articlename']?><?=$v['articlename']?></a><a href="<?=$v['author_url']?><?=$v['author']?></a></li>
+            <li><span><?=$k+1?></span><a href="<?=$v['info_url']?>" title="<?=$v['articlename']?>"><?=$v['articlename']?></a><a href="<?=$v['author_url']?>"><?=$v['author']?></a></li>
             <?php endif?><?php endforeach?>
 		</ul>
 		<div class="clear"></div>
