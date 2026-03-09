@@ -27,16 +27,17 @@ $allbooks_url_info = !empty($allbooks_url) ? htmlspecialchars((string)$allbooks_
 $full_allbooks_url_info = !empty($full_allbooks_url) ? htmlspecialchars((string)$full_allbooks_url, ENT_QUOTES, 'UTF-8') : $allbooks_url_info;
 $intro_html = !empty($intro) ? (string)$intro : (!empty($intro_des) ? '<p>' . nl2br(htmlspecialchars((string)$intro_des, ENT_QUOTES, 'UTF-8')) . '</p>' : '<p>暂无简介</p>');
 $langtail_rows = !empty($langtailrows) && is_array($langtailrows) ? array_slice($langtailrows, 0, 12) : [];
-$postdate_rows = !empty($postdate) && is_array($postdate) ? $postdate : [];
+$postdate_rows = !empty($postdate) && is_array($postdate) ? array_slice($postdate, 0, 5) : [];
+$latest_rows = !empty($lastchapter_arr) && is_array($lastchapter_arr) ? array_slice($lastchapter_arr, 0, 12) : [];
 $preview_rows = [];
-if (!empty($preview_chapters) && is_array($preview_chapters)) {
-    $preview_rows = array_slice($preview_chapters, 0, 50);
-} elseif (!empty($chapterrows) && is_array($chapterrows)) {
+if (!empty($chapterrows) && is_array($chapterrows)) {
     $preview_rows = array_slice($chapterrows, 0, 50);
+} elseif (!empty($preview_chapters) && is_array($preview_chapters)) {
+    $preview_rows = array_slice($preview_chapters, 0, 50);
 } elseif (!empty($lastchapter_arr) && is_array($lastchapter_arr)) {
-    $preview_rows = array_slice($lastchapter_arr, 0, 50);
+    $preview_rows = array_slice(array_reverse($lastchapter_arr), 0, 50);
 }
-$preview_end = min(max((int)$chapters, 0), 50);
+$preview_end = min(count($preview_rows), 50);
 $preview_title = $preview_end > 0 ? '1-' . $preview_end . '章' : '章节预览';
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
@@ -91,9 +92,24 @@ $preview_title = $preview_end > 0 ? '1-' . $preview_end . '章' : '章节预览'
         <div class="clear"></div>
     </div>
     <div class="bookintro"><div class="bookintro-content"><?=$intro_html?></div></div>
+    <div class="bookchapter">
+        <h2>最新12章<span class="pull-right">倒序更新</span></h2>
+        <ul>
+            <?php if (!empty($latest_rows)): ?>
+            <?php foreach($latest_rows as $v): ?>
+            <?php $cid_url_attr = htmlspecialchars((string)$v['cid_url'], ENT_QUOTES, 'UTF-8'); $cname_html = htmlspecialchars((string)$v['cname'], ENT_QUOTES, 'UTF-8'); ?>
+            <li><a href="<?=$cid_url_attr?>" title="<?=$cname_html?>" rel="chapter"><?=$cname_html?></a></li>
+            <?php endforeach; ?>
+            <?php else: ?>
+            <li>暂无最新章节</li>
+            <?php endif; ?>
+        </ul>
+        <a href="<?=$index_url_attr?>" class="bookchaptermore">全部章节目录</a>
+        <div class="clear"></div>
+    </div>
     <?php if (!empty($langtail_rows)): ?>
     <div class="booktail">
-        <h2>百度长尾词推荐</h2>
+        <h2>相关小说推荐</h2>
         <div class="booktail-links">
             <?php foreach($langtail_rows as $v): ?>
             <a href="<?=htmlspecialchars((string)$v['info_url'], ENT_QUOTES, 'UTF-8')?>" title="<?=htmlspecialchars((string)$v['langname'], ENT_QUOTES, 'UTF-8')?>"><?=htmlspecialchars((string)$v['langname'], ENT_QUOTES, 'UTF-8')?></a>
@@ -119,7 +135,7 @@ $preview_title = $preview_end > 0 ? '1-' . $preview_end . '章' : '章节预览'
     <div class="rank mt0 mb0">
         <h4>人气小说推荐<a class="pull-right" href="<?=$rank_entry_url_info?>">More+</a></h4>
         <div class="content">
-            <?php if (!empty($postdate_rows)): foreach($postdate_rows as $k => $v): ?><?php if($k < 5):?>
+            <?php if (!empty($postdate_rows)): foreach($postdate_rows as $v): ?>
             <?php $book_info_url_attr = htmlspecialchars((string)$v['info_url'], ENT_QUOTES, 'UTF-8'); $book_title_html = htmlspecialchars((string)$v['articlename'], ENT_QUOTES, 'UTF-8'); $book_intro_html = htmlspecialchars((string)$v['intro_des'], ENT_QUOTES, 'UTF-8'); $book_author_url_attr = htmlspecialchars((string)$v['author_url'], ENT_QUOTES, 'UTF-8'); $book_author_html = htmlspecialchars((string)$v['author'], ENT_QUOTES, 'UTF-8'); $book_img_attr = htmlspecialchars((string)$v['img_url'], ENT_QUOTES, 'UTF-8'); ?>
             <dl>
                 <a href="<?=$book_info_url_attr?>" class="cover" title="<?=$book_title_html?>"><img class="lazy" src="/static/<?=$theme_dir?>/nocover.jpg" data-original="<?=$book_img_attr?>" alt="<?=$book_title_html?>"></a>
@@ -127,7 +143,7 @@ $preview_title = $preview_end > 0 ? '1-' . $preview_end . '章' : '章节预览'
                 <dd><?=$book_intro_html?></dd>
                 <dd><a href="<?=$book_author_url_attr?>"><?=$book_author_html?></a></dd>
             </dl>
-             <?php endif; endforeach; else: ?>
+            <?php endforeach; else: ?>
             <dl><dd>暂无推荐内容</dd></dl>
             <?php endif; ?>
         </div>
