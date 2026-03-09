@@ -145,3 +145,19 @@ function set(mode, value) {
         }
     }
 }
+
+
+function ssSubmitSearch(form) {
+    if (!form) return false;
+    var key = form.querySelector('input[name="searchkey"]');
+    var action = form.getAttribute('action') || form.getAttribute('data-action') || '';
+    if (action) form.setAttribute('action', action);
+    if (!key) return action !== '';
+    var val = (key.value || '').replace(/^\s+|\s+$/g, '');
+    if (val === '') {
+        key.focus();
+        return false;
+    }
+    key.value = val;
+    return action !== '';
+}

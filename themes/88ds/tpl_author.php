@@ -53,18 +53,11 @@ $author_count_int = isset($author_count) ? intval($author_count) : (is_array($re
   <script type="application/ld+json"><?=json_encode($author_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
   <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <body>
-  <div class="header">
-    <div class="back">
-      <a href="javascript:history.go(-1);">返回</a>
-    </div>
-    <h1><?=$author_name_html?></h1>
-    <div class="reg">
-      <a href="javascript:st();void 0;" id="st" rel="nofollow" class="login_topbtn c_index_login">繁</a>
-      <a href="<?=$site_home_url_attr?>" class="login_topbtn c_index_login">首页</a>
-    </div>
-  </div>
-
-  <?php require_once 'tpl_search_form.php'; ?>
+  <?php
+  $page_title = $author_name_raw !== '' ? $author_name_raw : '作者作品';
+  $page_back_url = $site_home_url_raw;
+  require __THEME_DIR__ . '/tpl_page_top.php';
+  ?>
 
   <div id="content">
     <div class="article">

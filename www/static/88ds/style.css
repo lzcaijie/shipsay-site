@@ -760,525 +760,213 @@ clear: both;
 }
 
 .chapter li.more {
-text-align: right;
-}
-
-.chapter li.even {
-background-color: #F4F4F4;
-}
-
-.chapter li {
-margin: 0px 0;
-padding: 5px 0px;
-border-bottom: 1px solid #DDD;
+text-align:right;
 }
 
 .chapter li.more a {
-color: #ff0000;
-padding-right: 30px;
+color:#ff0000;
+padding-right:20px;
+}
+
+.chapter li.even {
+background-color:#F4F4F4;
+}
+
+.chapter li {
+margin:0;
+padding:5px 0;
+border-bottom:1px solid #DDD;
 }
 
 .chapter li a {
-display: block;
-padding: 5px 7px;
-color: #666;
-overflow: hidden;
+display:block;
+padding:5px 10px;
+color:#666;
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap;
 }
 
 .index-container {
-display: flex;
-justify-content: space-between;
-padding: 10px;
+display:flex;
+flex-wrap:wrap;
+align-items:center;
+justify-content:center;
+gap:8px;
+padding:10px;
 }
 
+.index-container a,
 .index-container-btn {
-background: #208181;
-border-radius: 3px;
-height: 34px;
-line-height: 34px;
-text-align: center;
-display: block;
-color: #fff;
-width: 25%;
+background:#208181;
+border-radius:3px;
+height:34px;
+line-height:34px;
+text-align:center;
+display:inline-block;
+color:#fff;
+padding:0 14px;
 }
 
 #indexselect {
-width: 49%;
-margin: 0 1rem;
-text-indent: 5px;
-border: none;
-border-bottom: 1px solid #208181;
-background: #fff;
-outline: none;
+min-width:120px;
+height:34px;
+padding:0 8px;
+border:1px solid #ddd;
+border-radius:3px;
+background:#fff;
+outline:none;
 }
 
 #nr1 p {
-text-indent: 2rem;
-margin: 1rem 0;
+text-indent:2rem;
+margin:1rem 0;
 }
 
 .textyzm{
-border: 1px solid #ddd;
-height: 40px;
-line-height: 40px;
-width: 70%;
-border-radius: 4px;
-font-size: 16px;
-padding-left: 5px;
--moz-box-sizing: border-box;
--webkit-box-sizing: border-box;
--o-box-sizing: border-box;
--ms-box-sizing: border-box;
-box-sizing: border-box;
+border:1px solid #ddd;
+height:40px;
+line-height:40px;
+width:70%;
+border-radius:4px;
+font-size:16px;
+padding-left:5px;
+-moz-box-sizing:border-box;
+-webkit-box-sizing:border-box;
+-o-box-sizing:border-box;
+-ms-box-sizing:border-box;
+box-sizing:border-box;
 }
 
-/* 新模板移动端优化 */
-@media (max-width: 768px) {
-
-  .header .back a,
-  .header .reg a,
-  .ablum_read span a,
-  .chapter li a,
-  .index-container a,
-  .block_txt a,
-  button,
-  input[type="button"] {
-
-    min-height: 44px;
-
-    min-width: 44px;
-
-    padding: 12px 16px;
-
-    font-size: 16px;
-
-    line-height: 1.4;
-
-  }
-
-  
-  .chapter li a {
-
-    padding: 12px 16px;
-
-    display: block;
-
-    min-height: 44px;
-
-  }
-
-  
-  .block_img img {
-
-    max-width: 120px;
-
-    height: auto;
-
-  }
-
-  
-  .header h1 {
-
-    font-size: 18px;
-
-    padding: 0 10px;
-
-  }
-
-  
-  .intro_info a {
-
-    margin: 5px;
-
-    padding: 8px 12px;
-
-    display: inline-block;
-
-  }
-
-  
-  a, button, input[type="button"] {
-
-    -webkit-tap-highlight-color: rgba(74, 144, 226, 0.2);
-
-    tap-highlight-color: rgba(74, 144, 226, 0.2);
-
-  }
-
-  
-  .index-container {
-
-    padding: 15px 10px;
-
-    margin: 20px 0;
-
-    border-top: 1px solid #eee;
-
-  }
-
-  
-  .index-container a {
-
-    margin: 0 3px;
-
-    padding: 8px 12px;
-
-    display: inline-block;
-
-  }
-
+/* ===== 88ds v4 最小差异修复：按 v5 标准回收过强覆盖 ===== */
+.header h1 {
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
 }
 
-/* 通用图片优化 */
-.block_img img {
-
-  width: 120px;
-
-  height: 160px;
-
-  object-fit: cover;
-
-  border-radius: 4px;
-
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-
-}
-
-/* 章节列表优化 */
-.chapter li {
-
-  padding: 10px 15px;
-
-  border-bottom: 1px solid #f0f0f0;
-
-}
-
-.chapter li a {
-
-  color: #333;
-
-  text-decoration: none;
-
-  display: block;
-
-}
-
-.chapter li a:hover {
-
-  color: #4a90e2;
-
-}
-
-.chapter .even {
-
-  background-color: #f9f9f9;
-
-}
-
-.chapter .more {
-
-  text-align: center;
-
-  padding: 15px;
-
-  background-color: #f5f5f5;
-
-}
-
-.chapter .more a {
-
-  color: #4a90e2;
-
-  font-weight: bold;
-
-}
-
-/* 分页容器优化 */
-.index-container {
-
-  text-align: center;
-
-  padding: 20px 10px;
-
-  margin: 30px 0;
-
-  border-top: 1px solid #eee;
-
-  border-bottom: 1px solid #eee;
-
-}
-
-.index-container a {
-
-  display: inline-block;
-
-  margin: 0 5px;
-
-  padding: 8px 12px;
-
-  background: #f0f0f0;
-
-  color: #333;
-
-  text-decoration: none;
-
-  border-radius: 4px;
-
-  min-width: 36px;
-
-  text-align: center;
-
-}
-
-.index-container a:hover {
-
-  background: #e0e0e0;
-
-}
-
-.index-container .current {
-
-  background: #4a90e2;
-
-  color: white;
-
-}
-
-/* ====== 下面是我们在 88ds 原样式基础上的“稳定补丁” ====== */
-/* 1) 列表块清浮动：修复排行/分类等页面错乱 */
-.block:after{
+.block:after {
 content:"";
 display:block;
 clear:both;
 }
 
-/* 2) 右侧简介不要写死高度（否则不同长度会裁切/错位） */
-.block_txt{
+.block_txt {
 height:auto;
 min-height:100px;
+min-width:0;
+overflow:hidden;
 }
 
-/* 3) 搜索框自适应（所有含 .search 的页面通用） */
-.search form{
+.block_txt .book-title,
+.block_txt h2,
+.block_txt h3 {
+line-height:1.6;
+overflow:hidden;
+}
+
+.block_txt .book-title a,
+.block_txt h2 a,
+.block_txt h3 a {
+display:block;
+overflow:hidden;
+white-space:nowrap;
+text-overflow:ellipsis;
+}
+
+.block_txt .book-meta {
+line-height:1.6;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.block_txt .book-desc {
+line-height:1.65;
+word-break:break-all;
+overflow:hidden;
+}
+
+form.search {
+padding:10px;
+background:#fff;
 display:flex;
 align-items:center;
-gap:8px;
+gap:10px;
+box-sizing:border-box;
 }
 
-.search input[type="text"],.search input[type="search"]{
-flex:1;
-width:100%;
+form.search .searchinput {
+flex:1 1 auto;
+min-width:0;
+width:auto;
 height:34px;
 line-height:34px;
 border:1px solid #ddd;
 border-radius:3px;
 padding:0 10px;
+outline:none;
 background:#fff;
 }
 
-.search input[type="submit"],.search button{
+form.search .go {
+position:static;
+right:auto;
+top:auto;
+flex:0 0 64px;
+width:64px;
 height:34px;
 line-height:34px;
-padding:0 14px;
+padding:0;
 border:1px solid #208181;
 background:#208181;
 color:#fff;
 border-radius:3px;
 cursor:pointer;
 }
-/* —— 搜索框统一样式（tpl_search_form.php）—— */
-form.search{
-  padding:10px;
-  background:#fff;
-  display:flex;
-  align-items:center;
-  gap:10px;
+
+form.search .go[disabled] {
+background:#c9d3d3;
+border-color:#c9d3d3;
+color:#fff;
+cursor:not-allowed;
 }
 
-form.search .searchinput{
-  flex:1;
-  width:100%;
-  height:34px;
-  line-height:34px;
-  border:1px solid #ddd;
-  border-radius:3px;
-  padding:0 10px;
-  outline:none;
-  background:#fff;
+.page-mini-nav {
+margin-bottom:0;
 }
 
-form.search .go{
-  height:34px;
-  line-height:34px;
-  padding:0 14px;
-  border:1px solid #208181;
-  background:#208181;
-  color:#fff;
-  border-radius:3px;
-  cursor:pointer;
-}
+@media (max-width:768px) {
+  .header h1 {
+    width:46%;
+    font-size:18px;
+  }
 
+  .reg {
+    font-size:14px;
+  }
 
-/* ===== 88ds v2: 首页分类展开 + 搜索框 + 移动端摘要收口 ===== */
-form.search{
-  padding:10px;
-  background:#fff;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  box-sizing:border-box;
-}
+  .login_topbtn {
+    padding:4px 6px;
+    margin-left:4px;
+  }
 
-form.search .searchinput{
-  flex:1 1 auto;
-  min-width:0;
-  width:auto;
-  height:34px;
-  line-height:34px;
-  border:1px solid #ddd;
-  border-radius:3px;
-  padding:0 10px;
-  outline:none;
-  background:#fff;
-}
-
-form.search .go{
-  position:static;
-  right:auto;
-  top:auto;
-  flex:0 0 72px;
-  width:72px;
-  height:34px;
-  line-height:34px;
-  padding:0;
-  border:1px solid #208181;
-  background:#208181;
-  color:#fff;
-  border-radius:3px;
-  cursor:pointer;
-}
-
-.block_txt{
-  min-width:0;
-}
-
-.block_txt .book-title,
-.block_txt h2,
-.block_txt h3{
-  overflow:hidden;
-}
-
-.block_txt .book-title a,
-.block_txt h2 a,
-.block_txt h3 a{
-  display:block;
-  overflow:hidden;
-  white-space:nowrap;
-  text-overflow:ellipsis;
-}
-
-.block_txt .book-meta{
-  line-height:1.6;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.block_txt .book-desc{
-  line-height:1.65;
-  word-break:break-all;
-  overflow:hidden;
-}
-
-@media (max-width: 768px){
-  .block_txt .book-desc{
+  .block_txt .book-desc {
     display:-webkit-box;
     -webkit-box-orient:vertical;
     -webkit-line-clamp:2;
     max-height:3.3em;
   }
-}
 
-
-/* ===== 88ds v3: 搜索框最终收口 + 通用图文卡片移动端收口 ===== */
-form.search{
-  position:relative;
-  width:auto;
-  height:auto;
-  min-height:38px;
-  margin:5px;
-  padding:10px;
-  border:1px solid #e0e0e0;
-  background:#f4f4f4;
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex-wrap:nowrap;
-  box-sizing:border-box;
-}
-
-form.search .searchinput{
-  flex:1 1 auto;
-  min-width:0;
-  width:auto;
-  height:38px;
-  line-height:38px;
-  padding:0 10px;
-  box-sizing:border-box;
-}
-
-form.search .go{
-  position:static;
-  flex:0 0 72px;
-  width:72px;
-  height:38px;
-  line-height:38px;
-}
-
-.cover .block{
-  display:flex;
-  align-items:flex-start;
-  gap:10px;
-}
-
-.cover .block .block_img{
-  float:none;
-  flex:0 0 82px;
-  margin-right:0;
-}
-
-.cover .block .block_txt{
-  flex:1 1 auto;
-  min-width:0;
-  overflow:hidden;
-}
-
-.chapter-preview li a{
-  display:block;
-}
-
-@media (max-width: 768px){
-  .cover .block{
-    gap:10px;
+  .index-container {
+    justify-content:space-between;
   }
 
-  .cover .block .block_img{
-    flex-basis:82px;
-  }
-
-  .cover .block .block_img img{
-    width:80px;
-    height:100px;
-  }
-
-  .cover .block .block_txt{
-    min-width:0;
-  }
-
-  .cover .block .block_txt .book-meta,
-  .cover .block .block_txt .book-desc,
-  .cover .block .block_txt p{
-    overflow:hidden;
-    word-break:break-all;
+  .index-container a,
+  .index-container-btn,
+  #indexselect {
+    width:100%;
+    margin:0;
+    box-sizing:border-box;
   }
 }

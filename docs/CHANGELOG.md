@@ -1,3 +1,12 @@
+## 2026-03-09-08 | 模板 | 88ds 回收过强 CSS 并补齐内页统一头部（v4）
+- 范围：仅调整 `themes/88ds/*`、`www/static/88ds/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 修正：`tpl_header.php` 补齐 `ss_search_url / ss_recentread_url / ss_top_url` 基础 helper，避免内页搜索入口与公共入口在变量缺失时直接失效。
+- 新增：`tpl_page_top.php` 作为 88ds 内页统一顶部模块；分类页、详情页、目录页、阅读记录页、作者页、搜索页、排行页/聚合页统一接入“返回 + 公共导航 + 分类展开 + 搜索框”。
+- 修正：`tpl_search_form.php` 改为统一 `action + data-action + onsubmit` 口径，配合 `common.js` 的 `ssSubmitSearch()` 做最小兜底，避免内页点击搜索无反应。
+- 修正：`style.css` 删除上一轮新增的大块强覆盖尾补丁，回收会冲掉 88ds 原结构的通用图片/章节/分页/触控区规则，只保留搜索框、图文卡片、移动端摘要与分页的最小收口。
+- 修正：`tpl_footer.php` 去掉 sitemap 链接 `target="_blank"`，继续遵守站内链接不新开窗口规则。
+- 结论：本轮问题继续定性为“内页顶部未统一 + 新增 CSS 覆盖过强”，优先按 v5 标准回到模板层统一和最小差异 CSS 收口，不反向动核心。
+
 ## 2026-03-09-07 | 文档 | Shipsay v14 标准文档最终收束（只动 docs）
 - 修正：`VARIABLE_MAP.md` 将排行聚合页输入正式收口为 `top_sections / top_rank_lists / top_rank_limit`，不再把 `allvisit{sortid}` / `monthvisit{sortid}` / `weekvisit{sortid}` 继续写成母模板常用标准输入。
 - 修正：`VARIABLE_MAP.md` 删除 2026-03-07 历史扫描补充大段，避免把阶段性备忘误当成现行标准；历史过程说明统一留在 `CHANGELOG.md`。
@@ -135,15 +144,6 @@
 > - 写清：日期、类型、版本号（可自定义）、涉及路径、回滚方式/要点。
 
 ---
-
-
-## 2026-03-09 | 模板 | 88ds v3（链路与移动端收口）
-- 范围：仅调整 `themes/88ds/*`、`www/static/88ds/style.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
-- 修正：`tpl_info.php` 补齐“最新 12 章 + 前 50 章顺序预览”，继续只消费现有章节变量，不反向改核心。
-- 修正：`tpl_info.php`、`tpl_indexlist.php`、`tpl_reader.php` 收口页头返回链路，避免继续依赖 `history.go(-1)` 导致页内返回不稳定；`tpl_reader.php` 同步改回统一 `__THEME_DIR__` 头尾 include。
-- 修正：`tpl_category.php` 的顶部返回入口改为站点首页，减少从详情页点入栏目页后只能回详情的历史链路干扰。
-- 修正：`tpl_footer.php` 去掉 sitemap 链接的 `target="_blank"`，继续遵守站内链接不新开窗口规则。
-- 调整：`www/static/88ds/style.css` 继续只做最小补丁，收口搜索框固定高度/按钮定位冲突，并把分类页/作者页/搜索页等图文卡片统一为更稳定的移动端左图右文节奏。
 
 ## 2026-03-09 | 标准 | Shipsay 核心页模板红线收口（第六轮 / info-indexlist-reader）
 - 范围：仅调整 `themes/shipsay/tpl_info.php`、`tpl_indexlist.php`、`tpl_reader.php` 与 `root/docs`，继续遵守“模板适配核心、不动 app/class/include/configs”。

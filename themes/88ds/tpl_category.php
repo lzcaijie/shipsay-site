@@ -48,18 +48,11 @@ $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
   <script type="application/ld+json"><?=json_encode($category_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
   <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <body>
-  <div class="header">
-    <div class="back">
-      <a href="<?=$site_home_url_attr?>">返回</a>
-    </div>
-    <h1><?=$category_heading_html?></h1>
-    <div class="reg">
-      <a href="javascript:st();void 0;" id="st" rel="nofollow" class="login_topbtn c_index_login">繁</a>
-      <a href="<?=$site_home_url_attr?>" class="login_topbtn c_index_login">首页</a>
-    </div>
-  </div>
-
-  <?php require_once 'tpl_search_form.php'; ?>
+  <?php
+  $page_title = $category_name_raw;
+  $page_back_url = $site_home_url_raw;
+  require __THEME_DIR__ . '/tpl_page_top.php';
+  ?>
 
   <div id="content">
     <div class="cover">
