@@ -80,10 +80,10 @@ $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
           </a>
         </div>
         <div class="block_txt">
-          <h2><a href="<?=$info_url_attr?>"><?=$title_html?></a></h2>
-          <p>作者：<?=$author_html?></p>
-          <p>更新：<?=$lastupdate_html?></p>
-          <p><?=$intro_html?></p>
+          <h2 class="book-title"><a href="<?=$info_url_attr?>"><?=$title_html?></a></h2>
+          <p class="book-meta">作者：<?=$author_html?></p>
+          <p class="book-meta">更新：<?=$lastupdate_html?></p>
+          <p class="book-desc"><?=$intro_html?></p>
         </div>
       </div>
       <?php endforeach ?><?php endif ?>

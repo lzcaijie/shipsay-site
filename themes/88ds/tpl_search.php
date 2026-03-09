@@ -106,10 +106,10 @@ $search_highlight = function ($text) use ($searchkey_raw, $search_lower) {
               </a>
             </div>
             <div class="block_txt">
-              <h2><a href="<?=$info_url_attr?>"><?=$search_highlight($title_raw)?></a></h2>
-              <p>作者：<?=$search_highlight($author_raw)?></p>
-              <p>分类：<?=htmlspecialchars($sortname_raw, ENT_QUOTES, 'UTF-8')?></p>
-              <p><?=$search_highlight($intro_raw)?></p>
+              <h2 class="book-title"><a href="<?=$info_url_attr?>"><?=$search_highlight($title_raw)?></a></h2>
+              <p class="book-meta">作者：<?=$search_highlight($author_raw)?></p>
+              <p class="book-meta">分类：<?=htmlspecialchars($sortname_raw, ENT_QUOTES, 'UTF-8')?></p>
+              <p class="book-desc"><?=$search_highlight($intro_raw)?></p>
             </div>
           </div>
         <?php endforeach ?>

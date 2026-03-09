@@ -56,7 +56,7 @@ $home_ld = [
 
     <div class="nav">
       <ul>
-        <li><a href="javascript:;" onclick="toggleSort();" rel="nofollow">分类</a></li>
+        <li><a href="javascript:;" onclick="return toggleSort();" rel="nofollow">分类</a></li>
         <li><?php if ($rank_entry_raw !== ''): ?><a href="<?=$rank_entry_attr?>">排行</a><?php else: ?><span>排行</span><?php endif; ?></li>
         <li><?php if ($full_allbooks_url_raw !== ''): ?><a href="<?=$full_allbooks_url_attr?>">全本</a><?php else: ?><span>全本</span><?php endif; ?></li>
         <li><?php if ($recentread_url_raw !== ''): ?><a href="<?=$recentread_url_attr?>" rel="nofollow">足迹</a><?php else: ?><span>足迹</span><?php endif; ?></li>
@@ -86,9 +86,9 @@ $home_ld = [
             </a>
           </div>
           <div class="block_txt">
-            <h3><a href="<?=$info_url_attr?>"><?=$title_html?></a></h3>
-            <p>作者：<?=$author_html?></p>
-            <p><?=$intro_html?></p>
+            <h3 class="book-title"><a href="<?=$info_url_attr?>"><?=$title_html?></a></h3>
+            <p class="book-meta">作者：<?=$author_html?></p>
+            <p class="book-desc"><?=$intro_html?></p>
           </div>
         <div class="clear"></div>
         <ul>
@@ -111,9 +111,9 @@ $home_ld = [
             </a>
           </div>
           <div class="block_txt">
-            <h3><a href="<?=$info_url_attr?>"><?=$title_html?></a></h3>
-            <p>作者：<?=$author_html?></p>
-            <p><?=$intro_html?></p>
+            <h3 class="book-title"><a href="<?=$info_url_attr?>"><?=$title_html?></a></h3>
+            <p class="book-meta">作者：<?=$author_html?></p>
+            <p class="book-desc"><?=$intro_html?></p>
           </div>
         <div class="clear"></div>
         <ul>
@@ -136,9 +136,9 @@ $home_ld = [
             </a>
           </div>
           <div class="block_txt">
-            <h3><a href="<?=$info_url_attr?>"><?=$title_html?></a></h3>
-            <p>作者：<?=$author_html?></p>
-            <p><?=$intro_html?></p>
+            <h3 class="book-title"><a href="<?=$info_url_attr?>"><?=$title_html?></a></h3>
+            <p class="book-meta">作者：<?=$author_html?></p>
+            <p class="book-desc"><?=$intro_html?></p>
           </div>
         <div class="clear"></div>
         <ul>
@@ -161,9 +161,9 @@ $home_ld = [
             </a>
           </div>
           <div class="block_txt">
-            <h3><a href="<?=$info_url_attr?>"><?=$title_html?></a></h3>
-            <p>作者：<?=$author_html?></p>
-            <p><?=$intro_html?></p>
+            <h3 class="book-title"><a href="<?=$info_url_attr?>"><?=$title_html?></a></h3>
+            <p class="book-meta">作者：<?=$author_html?></p>
+            <p class="book-desc"><?=$intro_html?></p>
           </div>
         <div class="clear"></div>
         <ul>
