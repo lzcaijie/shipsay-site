@@ -118,7 +118,7 @@ json_encode([
 	    <div class="ablum_read" id="chapterlist">
 		  <span class="left"><a href="<?=$first_url_attr?>">开始阅读</a></span>
           <span><a href="<?=$index_url_attr?>">查看目录</a></span>
-          <span><a href="javascript:;" onclick="addbookcase('<?=$articleid?>','<?=$articlename?>','0','0')" rel="nofollow">加入书架</a></span>
+          <span><a href="<?=$site_home_url_attr?>">返回首页</a></span>
 	    </div>
 	    <div class="intro"><?=$article_title_html?> 小说简介</div>
 	    <div class="intro_info">
