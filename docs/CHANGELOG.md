@@ -1,9 +1,8 @@
-## 2026-03-09-19 | 模板 | biquge 首页/分类/搜索/作者页复扫收尾（v7）
-- 范围：仅调整 `themes/biquge/tpl_home.php`、`themes/biquge/tpl_category.php`、`themes/biquge/tpl_search.php`、`themes/biquge/tpl_author.php`、`www/static/biquge/style.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
-- 修正：`tpl_home.php` 补首页 canonical / mobile-agent / og / WebSite 结构化数据，首页推荐、分类首卡、最近更新与最新入库统一做数组判空与安全输出，并继续正式消费 `home_lastupdate_num / home_postdate_num` 控制列表数量。
-- 修正：`tpl_category.php` 补分类页 canonical / mobile-agent / 面包屑结构化数据，列表卡片、更新时间与入库列表统一安全输出；没有更多内容时改为明确空态，不再静默留白。
-- 修正：`tpl_search.php` / `tpl_author.php` 补页面标题区、面包屑与 SEO 兜底逻辑；搜索词、作者名、作品列表与简介统一安全输出，继续保持当前核心搜索/作者链路不动。
-- 微调：`www/static/biquge/style.css` 只补首页/分类/搜索/作者页的页面作用域移动端卡片节奏，统一封面尺寸、标题收缩与简介高度，不重写现有 DOM 结构。
+## 2026-03-09-20 | 模板 | biquge 分类卡片手机端简介溢出修正（v8）
+- 范围：仅调整 `www/static/biquge/style.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 biquge 模板文件。
+- 修正：手机端分类/搜索/作者/首页左图右文卡片补 `flex:1; min-width:0;`，避免文本列在窄屏下不收缩，导致简介溢出到下一条。
+- 修正：移动端封面卡片补统一间距、标题/作者单行省略与简介 4 行截断，保持当前 DOM 结构不变，只做页面作用域样式收口。
+- 结论：本轮属于收尾期样式兜底修正，只恢复 biquge 手机端之前正常的简介展示节奏，不回退去改模板主结构。
 
 ## 2026-03-09-18 | 模板 | biquge 详情/目录/阅读记录继续收口（v6）
 - 范围：仅调整 `themes/biquge/tpl_info.php`、`themes/biquge/tpl_indexlist.php`、`themes/biquge/tpl_recentread.php`、`www/static/biquge/style.css`、`www/static/biquge/tempbookcase.js` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
