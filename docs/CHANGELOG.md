@@ -1,3 +1,10 @@
+## 2026-03-09 biqugewap v3
+- 继续按 v5 标准收口 `tpl_top / tpl_rank / tpl_indexlist / tpl_category / tpl_author`，不动核心目录与 CSS 主样式。
+- `tpl_top.php` 改为正式消费 `top_sections / top_rank_lists / top_rank_limit`，去掉模板内自查库 SQL 与分类榜拼装，排行入口统一跟随 `rank_entry_url / rank_detail_base / fake_top`。
+- `tpl_rank.php` 修正旧单榜页标题、入口与未转义输出，去掉错误的多余 `</span>` 标签，榜单标题改正式跟随当前 `query / page_title`。
+- `tpl_indexlist.php` 去掉写死每页 50 章，目录分页改优先跟随 `per_indexlist / per_page`，保留当前手机端结构只做模板层安全输出与空态补齐。
+- `tpl_category.php` / `tpl_author.php` 统一公共 guide 入口、首页/排行/记录链接来源，并补书名、作者、简介等安全输出。
+
 ## 2026-03-09 biqugewap v2
 - 清理模板层会员系统残留：移除会员书架/登录注册模板、删除 user.js、去掉加书签/加入书架与 /bookcase/ 入口。
 - guide 更多弹层统一移除会员书架按钮，首页头部左侧入口改为阅读记录。
