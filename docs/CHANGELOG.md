@@ -1,3 +1,10 @@
+## 2026-03-10 | 模板 | biqugewap 详情/目录/底部统一收口（v6）
+- 范围：仅调整 `themes/biqugewap/tpl_info.php`、`tpl_indexlist.php`、`tpl_footer.php` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与主样式文件。
+- 收口：`tpl_info.php` 的章节预览由旧 `lastarr` 最新章节块改为优先消费 `preview_chapters`，详情页恢复“1-50章”预览；无预览时才回退现有章节数组。
+- 收口：`tpl_indexlist.php` 按详情页同体系重排为书封信息区 + 简介区 + 章节目录区，顶部按钮、最新章节信息与底部推荐模块和详情页保持同一套展示口径。
+- 收口：`tpl_footer.php` 统一补回站点地图一行，并继续由公共 footer 输出搜索浮层与回到顶部，不再把网站地图分散写到各页面。
+- 收口：`tpl_info.php` 补回缺失的更多菜单容器，使详情页与目录页继续共用同一套头部交互。
+
 - biqugewap v5：继续收尾 tpl_recentread/tpl_error/static JS；阅读记录清空改为只清本站记录、不再 localStorage.clear；修复阅读记录脏数据自动清洗；搜索浮层改为显式 show/hide；404 返回首页统一跟随站点地址。
 ## 2026-03-09 biqugewap v4 首页书友收藏榜显示热修
 - 模板：`biqugewap`
