@@ -1,3 +1,10 @@
+## 2026-03-09-17 | 模板 | biquge 排行页与阅读记录显示修正（v5）
+- 范围：仅调整 `themes/biquge/tpl_top.php`、`themes/biquge/tpl_rank.php`、`www/static/biquge/style.css`、`www/static/biquge/tempbookcase.js` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 修正：排行聚合页与单榜页补页面专用 class，并把榜单切换区单独收口为 `top-rank-links`；手机端不再被全局 `.info-commend` 隐藏规则误伤，排行入口恢复正常显示。
+- 修正：`style.css` 仅对 biquge 排行页补移动端榜单切换栅格与“更多”按钮对齐样式，继续保持当前 DOM 结构，不回退去改核心输出。
+- 修正：`tempbookcase.js` 重写阅读记录列表清洗逻辑，读取 `bookList` 时自动跳过本地已失效/残缺的旧记录并回写清理，解决阅读记录页只有最新一条有数据、后面多行空白的问题。
+- 微调：阅读记录输出增加基础转义与空列表文案，避免本地存储里带脏数据时把整行结构顶坏。
+
 ## 2026-03-09-16 | 模板 | biquge 排行页与阅读页继续复扫（v4）
 - 范围：仅调整 `themes/biquge/tpl_rank.php`、`themes/biquge/tpl_reader.php`、`www/static/biquge/readpage.js`、`www/static/biquge/style.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 修正：`tpl_rank.php` 补齐单榜页 canonical / og / 面包屑结构化数据，并把榜单切换条改成当前项高亮；继续保持 biquge 现有榜单 DOM，不回退去套别的模板结构。

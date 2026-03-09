@@ -54,13 +54,13 @@ $rank_ld = [
 <meta property="og:description" content="<?=$h($seo_description)?>">
 <script type="application/ld+json"><?=json_encode($rank_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
-<div class="container">
+<div class="container rank-detail-page">
     <div class="border3-2 mt8 mb20">
         <div class="info-title">
             <a href="<?=$h($site_home_url_raw)?>">首页</a> &gt; <?php if ($rank_entry_url_raw !== ''): ?><a href="<?=$h($rank_entry_url_raw)?>">排行榜</a><?php else: ?>排行榜<?php endif; ?> &gt; <?=$h($current_title)?>
         </div>
         <div class="info-chapters-title"><strong><?=$h($current_title)?></strong></div>
-        <div class="info-commend rank-switches">
+        <div class="info-commend rank-switches top-rank-links">
             <?php foreach ($title_arr as $key => $label): ?>
                 <?php $is_active = $current_query === $key; ?>
                 <a href="<?=$h($rank_detail_base_raw . $key . '/')?>" class="<?=$is_active ? 'active' : ''?>"><?=$h($label)?></a>
