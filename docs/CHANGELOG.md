@@ -1,25 +1,9 @@
-## 2026-03-09-10 | 模板 | 88ds 收尾清理非标准辅助模板（v6）
-- 范围：仅调整 `themes/88ds/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
-- 对齐：按 `V5_1_TEMPLATE_STANDARD.md` 的标准模板文件集合与母模板口径复扫 88ds，确认模板标准正式集合不包含 `tpl_page_top.php`、`tpl_search_form.php`、`tpl_rank_list.php` 这类额外辅助模板。
-- 收口：将 `tpl_page_top.php` 与 `tpl_search_form.php` 的通用展示逻辑内收回 `tpl_header.php` 的局部 helper，现有页面继续通过 header 统一输出顶部与搜索，不再额外依赖辅助模板文件。
-- 清理：删除 `themes/88ds/tpl_page_top.php`、`themes/88ds/tpl_search_form.php`、`themes/88ds/tpl_rank_list.php`；其中排行明细继续由 `shipsay/app/top.php` 自动回落到 `tpl_rank.php`，不动核心。
-- 结论：88ds 最终文件集合继续向母模板标准收口，保留当前已验证正常的页面链路与展示，不再保留会干扰模板标准判断的额外辅助文件。
-
-
-## 2026-03-09-09 | 模板 | 88ds 收尾修正阅读记录页与详情页前50章（v5）
-- 范围：仅调整 `themes/88ds/tpl_recentread.php`、`themes/88ds/tpl_info.php` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
-- 修正：`tpl_recentread.php` 回退到 88ds 当前已验证可用的旧稳定页头结构，只保留“返回 + 阅读记录 + 首页 + 搜索框”，移除上一轮额外接入的内页公共 tabs，避免阅读记录页继续被公共头部样式带偏。
-- 修正：`tpl_info.php` 重新消费 app 已给出的 `$preview_chapters`，在“最新 12 章”后补回“前 50 章顺序预览”，不反向改核心，不再遗漏详情页标准章节预览区。
-- 结论：88ds 本轮按 v5 标准收尾时，阅读记录页继续尊重旧稳定布局，详情页恢复“最新12 + 前50章”的既定展示链路。
-
-## 2026-03-09-08 | 模板 | 88ds 回收过强 CSS 并补齐内页统一头部（v4）
-- 范围：仅调整 `themes/88ds/*`、`www/static/88ds/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
-- 修正：`tpl_header.php` 补齐 `ss_search_url / ss_recentread_url / ss_top_url` 基础 helper，避免内页搜索入口与公共入口在变量缺失时直接失效。
-- 新增：`tpl_page_top.php` 作为 88ds 内页统一顶部模块；分类页、详情页、目录页、阅读记录页、作者页、搜索页、排行页/聚合页统一接入“返回 + 公共导航 + 分类展开 + 搜索框”。
-- 修正：`tpl_search_form.php` 改为统一 `action + data-action + onsubmit` 口径，配合 `common.js` 的 `ssSubmitSearch()` 做最小兜底，避免内页点击搜索无反应。
-- 修正：`style.css` 删除上一轮新增的大块强覆盖尾补丁，回收会冲掉 88ds 原结构的通用图片/章节/分页/触控区规则，只保留搜索框、图文卡片、移动端摘要与分页的最小收口。
-- 修正：`tpl_footer.php` 去掉 sitemap 链接 `target="_blank"`，继续遵守站内链接不新开窗口规则。
-- 结论：本轮问题继续定性为“内页顶部未统一 + 新增 CSS 覆盖过强”，优先按 v5 标准回到模板层统一和最小差异 CSS 收口，不反向动核心。
+## 2026-03-09-08 | 模板 | 2025 母模板复制为 2025txt（首轮收口）
+- 范围：新增 `themes/2025txt/*`、`www/static/2025txt/*`，仅做 2025 → 2025txt 母模板复制与首轮标准收口；不动 `app / class / include / configs`。
+- 处理：复制 `themes/2025` 与 `www/static/2025` 形成 `2025txt` 基线，后续子模板从 `2025txt` 派生，不再直接改原 `2025`。
+- 修正：收掉会影响模板改名的硬编码路径，`tpl_tag.php` 不再写死 `/static/2025/css/2025.css`；`css/2025.css` 的字体资源改成相对路径；`js/tempbookcase.js` 改为消费 footer 下发的 `SS_THEME_DIR / SS_STATIC_BASE`，不再写死 `/static/2025/nocover.jpg`。
+- 修正：`tpl_header.php` 统一阅读记录入口兜底变量；`tpl_top.php` 优先消费 `rank_entry_url / rank_detail_base`；`tpl_error.php` / `tpl_top.php` 的头部引入位置改回 `body` 内，避免把头部 HTML 输出到 `head` 区。
+- 说明：当前首轮只处理“改名后会直接出问题”的硬编码与公共入口口径，不主动改已经正常显示的手机端主结构；会员链路与更多页面标准化留待后续轮次继续收口。
 
 ## 2026-03-09-07 | 文档 | Shipsay v14 标准文档最终收束（只动 docs）
 - 修正：`VARIABLE_MAP.md` 将排行聚合页输入正式收口为 `top_sections / top_rank_lists / top_rank_limit`，不再把 `allvisit{sortid}` / `monthvisit{sortid}` / `weekvisit{sortid}` 继续写成母模板常用标准输入。
