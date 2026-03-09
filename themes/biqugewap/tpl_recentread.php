@@ -9,6 +9,8 @@
 $full_allbooks_url_safe = !empty($full_allbooks_url)
     ? $full_allbooks_url
     : ('/quanben' . (isset($allbooks_url) ? $allbooks_url : '/sort/'));
+$rank_entry_url_recent = !empty($rank_entry_url) ? $rank_entry_url : (!empty($fake_top) ? $fake_top : $site_url);
+$recentread_url_safe = !empty($recentread_url_attr) ? $recentread_url_attr : (!empty($fake_recentread) ? $fake_recentread : $site_url);
 ?>
 </head>
 <body>
@@ -22,7 +24,7 @@ $full_allbooks_url_safe = !empty($full_allbooks_url)
 		<div class="clear"></div>
 	</header>
 	<div class="fixed">	<div class="rank mt0 mb0 min-height">
-		<h4>阅读记录<a href="javascript:removeall();" onclick="return confirm('确定要移除全部记录吗？')" class="pull-right">清空记录</a></h4>
+		<h4>阅读记录<a href="#" id="clearRecentRead" class="pull-right">清空记录</a></h4>
 		<div class="content" id="tempBookcase"></div>
 		<div class="clear"></div>
 	</div>
@@ -30,7 +32,15 @@ $full_allbooks_url_safe = !empty($full_allbooks_url)
 <script src="/static/<?=$theme_dir?>/tempbookcase.js"></script>
     <script>
         showtempbooks();
-        $("#del_temp").on('click',function(){return false;});
+        $(document).on('click', '#clearRecentRead', function(e){
+            e.preventDefault();
+            if (confirm('确定要移除全部记录吗？')) {
+                removeall();
+            }
+        });
+        $(document).on('click', '#del_temp', function(){
+            return false;
+        });
     </script>
     <div id="guide" class="guide">
         <div class="guide-content">
@@ -43,7 +53,7 @@ $full_allbooks_url_safe = !empty($full_allbooks_url)
             <i class="icon icon-sort"></i>
             <span class="guide-nav-h">分类</span>
         </a>
-        <a href="<?=!empty($rank_entry_url) ? $rank_entry_url : $fake_top?>" class="guide-nav-a">
+        <a href="<?=$rank_entry_url_recent?>" class="guide-nav-a">
             <i class="icon icon-rank"></i>
             <span class="guide-nav-h">排行榜</span>
         </a>
@@ -51,7 +61,7 @@ $full_allbooks_url_safe = !empty($full_allbooks_url)
             <i class="icon icon-end"></i>
             <span class="guide-nav-h">全本</span>
         </a>
-        <a href="<?=!empty($recentread_url_attr) ? $recentread_url_attr : $fake_recentread?>" class="guide-nav-a">
+        <a href="<?=$recentread_url_safe?>" class="guide-nav-a">
             <i class="icon icon-free"></i>
             <span class="guide-nav-h">记录</span>
         </a>
