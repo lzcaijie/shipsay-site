@@ -132,6 +132,16 @@ json_encode([
 	      <?php endforeach ?>
 	      <li class="more"><a href="<?=$index_url_attr?>">更多章节&gt;&gt;</a></li>
         </ul>
+        <?php if (!empty($preview_chapters) && is_array($preview_chapters)): ?>
+        <div class="intro"><?=$article_title_html?> 前50章顺序预览</div>
+        <ul class="chapter" id="chapterlist_preview">
+          <?php foreach ($preview_chapters as $k => $v): ?>
+          <?php $preview_url_attr = htmlspecialchars((string)$v['cid_url'], ENT_QUOTES, 'UTF-8'); $preview_name_html = htmlspecialchars((string)$v['cname'], ENT_QUOTES, 'UTF-8'); ?>
+          <li class="<?php if($k % 2 != 0):?>even<?php endif?>"><a href="<?=$preview_url_attr?>"><?=$preview_name_html?></a></li>
+          <?php endforeach; ?>
+          <li class="more"><a href="<?=$index_url_attr?>">查看完整目录&gt;&gt;</a></li>
+        </ul>
+        <?php endif; ?>
       </div>
     </div>
 
