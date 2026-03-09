@@ -1,52 +1,7 @@
-## 2026-03-09 biquge v9 final cleanup
-- 收尾清理 biquge：补齐通用空态样式 `biquge-page-empty`，避免首页/列表/搜索/作者等空数据块无样式。
-- `tpl_top.php` 补 canonical / mobile-agent / og:url / 面包屑 ld+json，并把聚合榜空态改回页面作用域样式。
-- `tpl_rank.php` / `tpl_reader.php` 清掉残余行内样式，统一改为样式表类名。
-- `tpl_error.php` 行内样式迁回 `style.css`，返回上一页从伪链接改为按钮写法。
-- 删除未引用静态资源：`www/static/biquge/js/protect-page.js`、`www/static/biquge/js/protect-ptcms.js`。
-
-## 2026-03-09-20 | 模板 | biquge 分类卡片手机端简介溢出修正（v8）
-- 范围：仅调整 `www/static/biquge/style.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 biquge 模板文件。
-- 修正：手机端分类/搜索/作者/首页左图右文卡片补 `flex:1; min-width:0;`，避免文本列在窄屏下不收缩，导致简介溢出到下一条。
-- 修正：移动端封面卡片补统一间距、标题/作者单行省略与简介 4 行截断，保持当前 DOM 结构不变，只做页面作用域样式收口。
-- 结论：本轮属于收尾期样式兜底修正，只恢复 biquge 手机端之前正常的简介展示节奏，不回退去改模板主结构。
-
-## 2026-03-09-18 | 模板 | biquge 详情/目录/阅读记录继续收口（v6）
-- 范围：仅调整 `themes/biquge/tpl_info.php`、`themes/biquge/tpl_indexlist.php`、`themes/biquge/tpl_recentread.php`、`www/static/biquge/style.css`、`www/static/biquge/tempbookcase.js` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
-- 修正：`tpl_info.php` 继续按当前核心真实变量链收口，补齐 canonical / mobile-agent / breadcrumb 结构化数据，详情页书名、作者、目录入口、推荐位与最新章节统一安全输出，空列表时给明确兜底文案。
-- 修正：`tpl_indexlist.php` 去掉目录页每页 50 章的模板层硬编码，改为优先消费当前 `per_page / per_indexlist`；目录分页说明、canonical、章节分组标题与空目录提示一起收口。
-- 修正：`tpl_recentread.php` 补阅读记录页面包屑、canonical 与“清空记录”工具栏，表头改成页面内结构节点，不再继续用无 href 的假链接撑表头。
-- 修正：`tempbookcase.js` 新增 `removeAll()` / `removeall()`，清空时只移除阅读记录相关 localStorage 键，不再误伤其它本地缓存；列表行 class 也同步收口到页面专用样式。
-- 微调：`style.css` 仅追加详情页目录入口、目录空态与阅读记录页作用域样式，不改 biquge 其它页面主结构。
-
-## 2026-03-09-17 | 模板 | biquge 排行页与阅读记录显示修正（v5）
-- 范围：仅调整 `themes/biquge/tpl_top.php`、`themes/biquge/tpl_rank.php`、`www/static/biquge/style.css`、`www/static/biquge/tempbookcase.js` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
-- 修正：排行聚合页与单榜页补页面专用 class，并把榜单切换区单独收口为 `top-rank-links`；手机端不再被全局 `.info-commend` 隐藏规则误伤，排行入口恢复正常显示。
-- 修正：`style.css` 仅对 biquge 排行页补移动端榜单切换栅格与“更多”按钮对齐样式，继续保持当前 DOM 结构，不回退去改核心输出。
-- 修正：`tempbookcase.js` 重写阅读记录列表清洗逻辑，读取 `bookList` 时自动跳过本地已失效/残缺的旧记录并回写清理，解决阅读记录页只有最新一条有数据、后面多行空白的问题。
-- 微调：阅读记录输出增加基础转义与空列表文案，避免本地存储里带脏数据时把整行结构顶坏。
-
-## 2026-03-09-16 | 模板 | biquge 排行页与阅读页继续复扫（v4）
-- 范围：仅调整 `themes/biquge/tpl_rank.php`、`themes/biquge/tpl_reader.php`、`www/static/biquge/readpage.js`、`www/static/biquge/style.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
-- 修正：`tpl_rank.php` 补齐单榜页 canonical / og / 面包屑结构化数据，并把榜单切换条改成当前项高亮；继续保持 biquge 现有榜单 DOM，不回退去套别的模板结构。
-- 修正：`tpl_rank.php` 统一对书名、作者、更新时间与榜单标题做安全输出，减少变量里带引号或特殊字符时的页面破版风险。
-- 修正：`tpl_reader.php` 继续按当前核心真实链接口径收口，章节页标题/og/canonical/底部 JS 参数统一安全输出；上一章/下一章禁用态改为文本，不再输出 `javascript:void(0)` 伪链接。
-- 清理：`www/static/biquge/readpage.js` 去掉 `document.write()` 旧写法，改为挂载到阅读页占位节点渲染；阅读设置仍保持原功能与 cookie 兼容，不改接口。
-- 微调：`www/static/biquge/style.css` 仅补阅读页导航换行与单榜页当前 tab 高亮，不动正文排版主结构。
-
-## 2026-03-09-15 | 模板 | biquge 排行更多按钮与模板继续复扫（v3）
-- 范围：仅调整 `themes/biquge/tpl_top.php`、`themes/biquge/tpl_footer.php`、`themes/biquge/tpl_home.php`、`themes/biquge/tpl_category.php`、`themes/biquge/tpl_search.php`、`themes/biquge/tpl_author.php`、`www/static/biquge/style.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
-- 修正：`tpl_top.php` 的每个榜单卡片补齐“更多”按钮，并正式消费 `top_rank_limit` 控制单榜展示数量，避免聚合榜继续整列全量输出。
-- 修正：`tpl_footer.php` 将两个网站地图入口单独收成一行，底部版权与站点地图职责分开，手机端更顺眼。
-- 继续复扫：`tpl_home.php / tpl_category.php / tpl_search.php / tpl_author.php` 统一补数组判空与安全输出，减少变量缺失时的 notice 风险；不改主结构、不动核心。
-- 微调：`www/static/biquge/style.css` 只补聚合榜“更多”按钮、双列卡片宽度与 footer sitemap 行样式，继续保持当前 DOM 结构优先。
-
-## 2026-03-09-14 | 模板 | biquge 顶部改为手机端直接显示（v2）
-- 范围：仅调整 `themes/biquge/tpl_header.php`、`www/static/biquge/style.css`、`www/static/biquge/common.js` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
-- 修正：手机端顶部不再默认折叠成“菜单”按钮；头部站名、搜索框与导航改为直接显示，避免首页首屏只剩站名 + 菜单按钮。
-- 修正：`tpl_header.php` 去掉移动端专用 `menu-btn` 折叠入口，头部搜索与导航直接按当前真实链接输出，不再依赖前端切换隐藏显示。
-- 微调：`style.css` 仅对头部/导航/搜索区补移动端布局样式，导航按 5 列栅格自动换行，搜索框改为整行展开，保持现有页面主体结构不动。
-- 清理：`www/static/biquge/common.js` 删除已经无引用的 `menu_toggle()` 与 `document.write()` 搜索注入旧逻辑。
+## 2026-03-09 biqugewap v1 起手模板收口
+- 模板：`biqugewap`
+- 范围：仅首轮模板层收口，不动核心目录，不先动 CSS。
+- 调整：修正 footer / error 搜索入口不再模板层写死 `/search/`；首页排行 More 入口改跟随当前排行变量；修正首页收藏榜错误链接；详情页去掉站内 `target="_blank"`；搜索页统一单一 head/body 结构并补搜索词安全输出；阅读页去掉 `javascript:void(0)` 伪链接并修正蜘蛛分页旧 `/read/` 写死链路。
 
 ## 2026-03-09-13 | 模板 | 2025txt 头部搜索死链收口（v6）
 - 范围：仅调整 `themes/2025txt/tpl_header.php`、`www/static/2025txt/css/2025.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
@@ -222,15 +177,6 @@
 # CHANGELOG（分站 shipsay-site，最新在最前）
 
 > 说明：
-## 2026-03-09-06 | 模板 | biquge 起手版第一轮（模板层基线收口）
-- 范围：仅调整 `themes/biquge/*`、`www/static/biquge/common.js` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
-- 收口：补齐 `themes/biquge/tpl_rank.php`、`tpl_top.php`，让 biquge 模板具备 v5 标准要求的排行聚合页与单榜页模板入口。
-- 收口：`tpl_header.php` 改为模板内直接输出搜索表单与公共入口，搜索与排行/阅读记录链接优先跟随当前核心变量，不再依赖写死 `/search/` 的旧 `document.write()` 入口。
-- 收口：`tpl_error.php` 去掉 `/search/` 硬编码兜底；`tpl_footer.php` 去掉站内 sitemap 链接的 `target="_blank"`。
-- 收口：`tpl_info.php` 目录入口改为只消费上游 `$index_url`；`tpl_indexlist.php` 目录分页改为优先消费 app 已准备的 `$htmltitle`，不再在模板内写死旧 `/index/` 分页兜底。
-- 收口：`tpl_reader.php` 改为使用主题标准 include 方式，阅读页“章节目录”入口改为优先使用 `$index_url`，并去掉蜘蛛分页里的硬编码 `/read/...` 链接。
-- 收口：`tpl_recentread.php` 统一改回 `__THEME_DIR__` include 方式；`www/static/biquge/common.js` 的搜索函数同步去掉硬编码 `/search/`。
-
 > - 本文件只记录“分站侧功能/接口/安全策略”变更（新增写在最前）。
 > - 日常操作流程/部署/一致性验证：见 `docs/OPS.md`。
 >

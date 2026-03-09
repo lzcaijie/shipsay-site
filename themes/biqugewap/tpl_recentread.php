@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <title>阅读记录 - <?=SITE_NAME?></title>
-<?php require_once 'tpl_header.php';?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php';?>
 <?php
 $full_allbooks_url_safe = !empty($full_allbooks_url)
     ? $full_allbooks_url
@@ -26,7 +26,7 @@ $full_allbooks_url_safe = !empty($full_allbooks_url)
 		<div class="content" id="tempBookcase"></div>
 		<div class="clear"></div>
 	</div>
-	<?php require_once 'tpl_footer.php'; ?>	
+	<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>	
 <script src="/static/<?=$theme_dir?>/tempbookcase.js"></script>
     <script>
         showtempbooks();
@@ -43,7 +43,7 @@ $full_allbooks_url_safe = !empty($full_allbooks_url)
             <i class="icon icon-sort"></i>
             <span class="guide-nav-h">分类</span>
         </a>
-        <a href="<?=$fake_top?>" class="guide-nav-a">
+        <a href="<?=!empty($rank_entry_url) ? $rank_entry_url : $fake_top?>" class="guide-nav-a">
             <i class="icon icon-rank"></i>
             <span class="guide-nav-h">排行榜</span>
         </a>
@@ -51,7 +51,7 @@ $full_allbooks_url_safe = !empty($full_allbooks_url)
             <i class="icon icon-end"></i>
             <span class="guide-nav-h">全本</span>
         </a>
-        <a href="<?=$fake_recentread?>" class="guide-nav-a">
+        <a href="<?=!empty($recentread_url_attr) ? $recentread_url_attr : $fake_recentread?>" class="guide-nav-a">
             <i class="icon icon-free"></i>
             <span class="guide-nav-h">记录</span>
         </a>
