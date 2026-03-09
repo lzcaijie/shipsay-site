@@ -1,13 +1,8 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 
 <?php
-// 目录页链接兜底（避免写死 /index/ 破坏后台路由/伪静态配置）
-$index_url_safe = '';
-if (isset($index_url) && $index_url) {
-    $index_url_safe = $index_url;
-} elseif (isset($articleid) && $articleid && class_exists('Url') && method_exists('Url', 'index_url')) {
-    $index_url_safe = Url::index_url($articleid);
-}
+$index_url_raw = isset($index_url) && $index_url ? (string)$index_url : '';
+$index_url_attr = htmlspecialchars($index_url_raw, ENT_QUOTES, 'UTF-8');
 ?>
 
 <?php
@@ -43,8 +38,8 @@ if (!function_exists('ss_e')) {
     $showViewAllLink = $totalChapters > $chaptersPerPage;
     ?>
 
-    <?php if ($showViewAllLink): ?>
-    <link rel="prefetch" href="<?=$index_url_safe?>" as="document" />
+    <?php if ($showViewAllLink && $index_url_raw !== ''): ?>
+    <link rel="prefetch" href="<?=$index_url_attr?>" as="document" />
     <?php endif; ?>
 
     <script type="application/ld+json">
@@ -150,7 +145,11 @@ if (!function_exists('ss_e')) {
 
                 <div class="detail-book-buttons">
                     <a href="<?=$first_url?>" class="detail-book-btn start">开始阅读</a>
-                    <a href="<?=$index_url_safe?>" class="detail-book-btn directory">章节目录</a>
+                    <?php if ($index_url_raw !== ""): ?>
+                    <a href="<?=$index_url_attr?>" class="detail-book-btn directory">章节目录</a>
+                    <?php else: ?>
+                    <span class="detail-book-btn directory disabled" aria-disabled="true">章节目录</span>
+                    <?php endif; ?>
                 </div>
 
                 <div class="detail-book-intro">
@@ -182,9 +181,9 @@ if (!function_exists('ss_e')) {
                 <div class="detail-chapters-count">共<?=$chapters?>章</div>
             </div>
 
-            <?php if ($showViewAllLink): ?>
+            <?php if ($showViewAllLink && $index_url_raw !== ""): ?>
             <div class="detail-view-all">
-                <a href="<?=$index_url_safe?>" class="detail-view-all-btn">
+                <a href="<?=$index_url_attr?>" class="detail-view-all-btn">
                     查看完整目录（共<?=$chapters?>章）
                 </a>
             </div>
@@ -213,9 +212,9 @@ if (!function_exists('ss_e')) {
                 ?>
             </div>
 
-            <?php if ($showViewAllLink): ?>
+            <?php if ($showViewAllLink && $index_url_raw !== ""): ?>
             <div class="detail-view-all">
-                <a href="<?=$index_url_safe?>" class="detail-view-all-btn">
+                <a href="<?=$index_url_attr?>" class="detail-view-all-btn">
                     查看完整目录（共<?=$chapters?>章）
                 </a>
             </div>

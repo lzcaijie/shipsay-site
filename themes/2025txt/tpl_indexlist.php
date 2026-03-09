@@ -11,30 +11,26 @@ if (isset($pid) && $pid > 1) {
 
 // 计算章节范围
 $chaptersPerPage = 50;
-$currentPage = isset($pid) ? $pid : 1;
+$currentPage = isset($pid) ? max(1, (int)$pid) : 1;
 $startChapter = ($currentPage - 1) * $chaptersPerPage + 1;
 $endChapter = min($currentPage * $chaptersPerPage, $chapters);
-$totalPages = ceil($chapters / $chaptersPerPage);
+$totalPages = max(1, (int)ceil($chapters / $chaptersPerPage));
 
-// 分页链接生成函数
-function getPageUrl($articleid, $page = 1) {
+function ss2025txt_index_page_url($articleid, $page = 1) {
     $page = (int)$page;
     if ($page < 1) $page = 1;
-
-    // 优先走 CMS 的 Url::index_url（避免写死 /index/ 破坏后台路由/伪静态配置）
     if (class_exists('Url') && method_exists('Url', 'index_url')) {
-        return Url::index_url($articleid, $page);
+        return (string)Url::index_url($articleid, $page);
     }
-
-    // 兜底（保持旧结构）
-    if ($page == 1) {
-        return "/index/{$articleid}/";
-    }
-    return "/index/{$articleid}/{$page}/";
+    return '';
 }
 
-// 当前页面URL
-$currentUrl = getPageUrl($articleid, $currentPage);
+$currentUrlRaw = isset($uri) && $uri ? (string)$uri : ((isset($index_url) && $index_url) ? (string)$index_url : '');
+$currentUrlAttr = htmlspecialchars($currentUrlRaw, ENT_QUOTES, 'UTF-8');
+$prevPageUrlRaw = ($currentPage > 1) ? ss2025txt_index_page_url($articleid, $currentPage - 1) : '';
+$prevPageUrlAttr = htmlspecialchars($prevPageUrlRaw, ENT_QUOTES, 'UTF-8');
+$nextPageUrlRaw = ($currentPage < $totalPages) ? ss2025txt_index_page_url($articleid, $currentPage + 1) : '';
+$nextPageUrlAttr = htmlspecialchars($nextPageUrlRaw, ENT_QUOTES, 'UTF-8');
 ?>
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
@@ -45,14 +41,14 @@ $pageTitle = $seo_title;
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
 <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 
-<link rel="canonical" href="<?=$site_url?><?=$currentUrl?>">
+<?php if ($currentUrlRaw !== ""): ?><link rel="canonical" href="<?=$currentUrlAttr?>"><?php endif; ?>
 
-<?php if ($currentPage > 1): ?>
-<link rel="prev" href="<?=$site_url?><?=getPageUrl($articleid, $currentPage-1)?>" />
+<?php if ($prevPageUrlRaw !== ""): ?>
+<link rel="prev" href="<?=$prevPageUrlAttr?>" />
 <?php endif; ?>
 
-<?php if ($currentPage < $totalPages): ?>
-<link rel="next" href="<?=$site_url?><?=getPageUrl($articleid, $currentPage+1)?>" />
+<?php if ($nextPageUrlRaw !== ""): ?>
+<link rel="next" href="<?=$nextPageUrlAttr?>" />
 <?php endif; ?>
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
@@ -115,7 +111,7 @@ $pageTitle = $seo_title;
       "@type": "ListItem",
       "position": 4,
       "name": "章节目录<?=($currentPage > 1) ? '第' . $currentPage . '页' : ''?>",
-      "item": "<?=$site_url?><?=$currentUrl?>"
+      "item": "<?=$currentUrlAttr?>"
     }
   ]
 }
@@ -124,7 +120,7 @@ $pageTitle = $seo_title;
 <meta property="og:type" content="article">
 <meta property="og:title" content="<?=$pageTitle?>">
 <meta property="og:description" content="《<?=$articlename?>》章节目录第<?=$currentPage?>页，作者：<?=$author?>，总章节：<?=$chapters?>章。">
-<meta property="og:url" content="<?=$site_url?><?=$currentUrl?>">
+<?php if ($currentUrlRaw !== ""): ?><meta property="og:url" content="<?=$currentUrlAttr?>"><?php endif; ?>
 <meta property="og:image" content="<?=$img_url?>">
 <meta property="og:image:alt" content="<?=$articlename?>封面">
 
@@ -196,24 +192,25 @@ $pageTitle = $seo_title;
 
         <!-- 分页导航 -->
         <div class="chapter-pagination">
-            <?php if ($currentPage > 1): ?>
-            <a href="<?=getPageUrl($articleid, $currentPage-1)?>" class="chapter-page-btn prev">上一页</a>
+            <?php if ($prevPageUrlRaw !== ""): ?>
+            <a href="<?=$prevPageUrlAttr?>" class="chapter-page-btn prev">上一页</a>
             <?php endif; ?>
 
             <div class="chapter-page-info">
                 第 <?=$currentPage?> 页 / 共 <?=$totalPages?> 页
             </div>
 
-            <?php if ($currentPage < $totalPages): ?>
-            <a href="<?=getPageUrl($articleid, $currentPage+1)?>" class="chapter-page-btn next">下一页</a>
+            <?php if ($nextPageUrlRaw !== ""): ?>
+            <a href="<?=$nextPageUrlAttr?>" class="chapter-page-btn next">下一页</a>
             <?php endif; ?>
 
             <?php if ($totalPages > 1): ?>
             <div class="chapter-page-select">
                 <span>跳转到：</span>
-                <select onchange="window.location.href=this.value">
+                <select onchange="if(this.value){window.location.href=this.value;}">
                     <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                    <option value="<?=getPageUrl($articleid, $i)?>" <?=($i == $currentPage) ? 'selected' : ''?>><?=$i?></option>
+                    <?php $pageUrlRaw = ($i === $currentPage) ? $currentUrlRaw : ss2025txt_index_page_url($articleid, $i); ?>
+                    <option value="<?=htmlspecialchars($pageUrlRaw, ENT_QUOTES, 'UTF-8')?>" <?=($i == $currentPage) ? 'selected' : ''?><?=($pageUrlRaw === '') ? ' disabled="disabled"' : ''?>><?=$i?></option>
                     <?php endfor; ?>
                 </select>
             </div>

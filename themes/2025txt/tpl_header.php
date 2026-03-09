@@ -7,7 +7,9 @@ $full_allbooks_url_raw = !empty($full_allbooks_url) ? (string)$full_allbooks_url
 $search_url_raw = function_exists('ss_search_url')
     ? (string)ss_search_url()
     : ((isset($fake_search) && $fake_search) ? (string)$fake_search : '');
-$recent_url_raw = !empty($fake_recentread) ? (string)$fake_recentread : '';
+$recent_url_raw = function_exists('ss_recentread_url')
+    ? (string)ss_recentread_url()
+    : ((!empty($fake_recentread)) ? (string)$fake_recentread : '');
 $rank_entry_raw = '';
 if (!empty($rank_entry_url)) {
     $rank_entry_raw = (string)$rank_entry_url;
