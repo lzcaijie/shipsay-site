@@ -1,3 +1,9 @@
+## 2026-03-09 biqugewap v8
+- 详情页补回“最新12章”区，并保持“1-50章”顺序预览。
+- 详情页、目录页将“百度长尾词推荐”统一改为“相关小说推荐”。
+- 目录页重新引入 neighbor 推荐数据，补回“人气小说推荐”内容。
+- book.css 仅增强简介富文本防溢出，不改主布局。
+
 ## 2026-03-10 | 模板 | biqugewap 详情/目录补齐长尾词与推荐收口（v7）
 - 范围：仅调整 `themes/biqugewap/tpl_info.php`、`tpl_indexlist.php`、`www/static/biqugewap/book.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 收口：`tpl_info.php`、`tpl_indexlist.php` 统一补回“百度长尾词推荐”区块，判断条件与链接字段保持一致，统一消费 `langtailrows -> info_url / langname`。
