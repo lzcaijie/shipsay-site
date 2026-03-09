@@ -86,7 +86,7 @@ $rank_ld = [
                 </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                <div style="padding:20px;color:#888;">暂无排行榜数据</div>
+                <div class="biquge-page-empty rank-empty">暂无排行榜数据</div>
             <?php endif; ?>
         </div>
     </div>

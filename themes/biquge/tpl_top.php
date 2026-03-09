@@ -13,6 +13,14 @@ $rank_limit = isset($top_rank_limit) && (int)$top_rank_limit > 0 ? (int)$top_ran
 $h = static function ($value) {
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 };
+$rank_ld = [
+    '@context' => 'https://schema.org',
+    '@type' => 'BreadcrumbList',
+    'itemListElement' => [
+        ['@type' => 'ListItem', 'position' => 1, 'name' => SITE_NAME, 'item' => $site_home_url_raw],
+        ['@type' => 'ListItem', 'position' => 2, 'name' => '排行榜', 'item' => $rank_entry_url_raw !== '' ? $rank_entry_url_raw : $site_home_url_raw],
+    ],
+];
 ?>
 <!DOCTYPE html>
 <html lang="zh">
@@ -21,6 +29,15 @@ $h = static function ($value) {
 <title><?=$h($seo_title)?></title>
 <meta name="keywords" content="<?=$h($seo_keywords)?>">
 <meta name="description" content="<?=$h($seo_description)?>">
+<?php if ($rank_entry_url_raw !== ''): ?>
+<meta name="mobile-agent" content="format=html5;url=<?=$h($rank_entry_url_raw)?>">
+<link rel="canonical" href="<?=$h($rank_entry_url_raw)?>">
+<meta property="og:url" content="<?=$h($rank_entry_url_raw)?>">
+<?php endif; ?>
+<meta property="og:type" content="website">
+<meta property="og:title" content="<?=$h($seo_title)?>">
+<meta property="og:description" content="<?=$h($seo_description)?>">
+<script type="application/ld+json"><?=json_encode($rank_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container top-rank-page">
     <div class="border3-2 mt8">
@@ -73,7 +90,7 @@ $h = static function ($value) {
                     </div>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <div style="padding:20px;color:#888;">暂无数据</div>
+                    <div class="biquge-page-empty top-rank-empty">暂无数据</div>
                 <?php endif; ?>
             </div>
         <?php endfor; ?>
