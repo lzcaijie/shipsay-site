@@ -35,6 +35,8 @@ foreach ($searchEngines as $bot) {
   $index_url_raw = (string)$index_url;
   $index_url_attr = htmlspecialchars($index_url_raw, ENT_QUOTES, 'UTF-8');
   $author_url_attr = htmlspecialchars((string)$author_url, ENT_QUOTES, 'UTF-8');
+  $reader_back_url_raw = $index_url_raw !== '' ? $index_url_raw : ($info_url_raw !== '' ? $info_url_raw : $site_home_url_raw);
+  $reader_back_url_attr = htmlspecialchars($reader_back_url_raw, ENT_QUOTES, 'UTF-8');
   $chaptername_html = htmlspecialchars((string)$chaptername, ENT_QUOTES, 'UTF-8');
   $article_title_html = htmlspecialchars((string)$articlename, ENT_QUOTES, 'UTF-8');
   $author_html = htmlspecialchars((string)$author, ENT_QUOTES, 'UTF-8');
@@ -110,12 +112,12 @@ foreach ($searchEngines as $bot) {
     text-decoration: none;
 }
 </style>
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body id="nr_body" class="nr_all c_nr">
     <div class="header">
       <div class="back">
-        <a href="javascript:history.go(-1);">返回</a>
+        <a href="<?=$reader_back_url_attr?>">返回</a>
       </div>
       <h1><a href="<?=$info_url_attr?>" id="bookname"><?=$article_title_html?></a></h1>
       <div class="reg">
@@ -241,4 +243,4 @@ foreach ($searchEngines as $bot) {
         }, 200);
     <?php endif ?>
     </script>
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

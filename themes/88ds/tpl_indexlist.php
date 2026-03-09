@@ -8,7 +8,10 @@ $site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '
 $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
 $sort_url_raw = (string)Sort::ss_sorturl($sortid);
 $sort_url_attr = htmlspecialchars($sort_url_raw, ENT_QUOTES, 'UTF-8');
-$info_url_attr = htmlspecialchars((string)$info_url, ENT_QUOTES, 'UTF-8');
+$index_back_url_raw = $sort_url_raw !== '' ? $sort_url_raw : $site_home_url_raw;
+$index_back_url_attr = htmlspecialchars($index_back_url_raw, ENT_QUOTES, 'UTF-8');
+$info_url_raw = isset($info_url) ? (string)$info_url : '';
+$info_url_attr = htmlspecialchars($info_url_raw, ENT_QUOTES, 'UTF-8');
 $article_title_html = htmlspecialchars((string)$articlename, ENT_QUOTES, 'UTF-8');
 $sortname_html = htmlspecialchars((string)$sortname, ENT_QUOTES, 'UTF-8');
 ?>
@@ -82,9 +85,9 @@ echo json_encode([
 <body>
     <div class="header">
       <div class="back">
-        <a href="<?=$info_url_attr?>">返回详情</a>
+        <a href="<?=$index_back_url_attr?>">返回</a>
       </div>
-      <h1><a href="<?=$info_url_attr?>"><?=$article_title_html?></a></h1>
+      <h1><?php if ($info_url_raw !== ''): ?><a href="<?=$info_url_attr?>"><?=$article_title_html?></a><?php else: ?><?=$article_title_html?><?php endif; ?></h1>
       <div class="reg">
         <a href="javascript:st();void 0;" id="st" rel="nofollow" class="login_topbtn c_index_login">繁</a>
 		<a href="<?=$site_home_url_attr?>" class="login_topbtn c_index_login">首页</a>

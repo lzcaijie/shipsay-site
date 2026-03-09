@@ -136,6 +136,15 @@
 
 ---
 
+
+## 2026-03-09 | 模板 | 88ds v3（链路与移动端收口）
+- 范围：仅调整 `themes/88ds/*`、`www/static/88ds/style.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 修正：`tpl_info.php` 补齐“最新 12 章 + 前 50 章顺序预览”，继续只消费现有章节变量，不反向改核心。
+- 修正：`tpl_info.php`、`tpl_indexlist.php`、`tpl_reader.php` 收口页头返回链路，避免继续依赖 `history.go(-1)` 导致页内返回不稳定；`tpl_reader.php` 同步改回统一 `__THEME_DIR__` 头尾 include。
+- 修正：`tpl_category.php` 的顶部返回入口改为站点首页，减少从详情页点入栏目页后只能回详情的历史链路干扰。
+- 修正：`tpl_footer.php` 去掉 sitemap 链接的 `target="_blank"`，继续遵守站内链接不新开窗口规则。
+- 调整：`www/static/88ds/style.css` 继续只做最小补丁，收口搜索框固定高度/按钮定位冲突，并把分类页/作者页/搜索页等图文卡片统一为更稳定的移动端左图右文节奏。
+
 ## 2026-03-09 | 标准 | Shipsay 核心页模板红线收口（第六轮 / info-indexlist-reader）
 - 范围：仅调整 `themes/shipsay/tpl_info.php`、`tpl_indexlist.php`、`tpl_reader.php` 与 `root/docs`，继续遵守“模板适配核心、不动 app/class/include/configs”。
 - 收口：详情页 `tpl_info.php` 的目录按钮不再输出空 `href`；当上游未提供 `$index_url` 时，模板只做禁用展示，不再靠空链接冒充真实目录入口。
