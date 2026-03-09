@@ -157,7 +157,6 @@ $pageDescription = $seo_description;
                 <?php if($pre_cid == 0): ?><a id="linkPrev" href="#" title=""><i class="glyphicon glyphicon-backward" aria-hidden="true"></i> 无上章</a><?php else: ?><a id="linkPrev" href="<?=$pre_url?>"><i class="glyphicon glyphicon-backward" aria-hidden="true"></i> 上一章</a><?php endif ?>
             <?php endif ?>  
 <a id="linkIndex" href="<?=$info_url?>" disable="disabled"><i class="glyphicon glyphicon-th-list" aria-hidden="true"></i> 目 录</a>
-<a href="javascript:addbookcase('<?=$articleid?>','<?=$articlename?>','<?=$chapterid?>','<?=$chaptername?>');" class="addbookcase_r">加书签</a>
 <?php if($nextpage_url != ''): ?>
                 <a id="linkNext" href="<?=$nextpage_url?>">下一页 <i class="glyphicon glyphicon-forward" aria-hidden="true"></i></a>
             <?php else: ?>
@@ -183,7 +182,6 @@ $pageDescription = $seo_description;
                 <?php if($pre_cid == 0): ?><a id="linkPrev" href="#" title=""><i class="glyphicon glyphicon-backward" aria-hidden="true"></i> 无上章</a><?php else: ?><a id="linkPrev" href="<?=$pre_url?>"><i class="glyphicon glyphicon-backward" aria-hidden="true"></i> 上一章</a><?php endif ?>
             <?php endif ?>  
 <a id="linkIndex" href="<?=$info_url?>" disable="disabled"><i class="glyphicon glyphicon-th-list" aria-hidden="true"></i> 目 录</a>
-<a href="javascript:addbookcase('<?=$articleid?>','<?=$articlename?>','<?=$chapterid?>','<?=$chaptername?>');" class="addbookcase_r">加书签</a>
 <?php if($nextpage_url != ''): ?>
                 <a id="linkNext" href="<?=$nextpage_url?>">下一页 <i class="glyphicon glyphicon-forward" aria-hidden="true"></i></a>
             <?php else: ?>
@@ -227,7 +225,6 @@ window.addEventListener('load', function () {
   var scripts = [
     "/static/" + themeDir + "/js/readpage.js?v=20221207",
     "/static/" + themeDir + "/js/tempbookcase.js?v=20221207",
-    "/static/" + themeDir + "/js/user.js?v=20221207",
     "/static/" + themeDir + "/layer/layer.js?v=20221207"
   ];
   (function next(i){

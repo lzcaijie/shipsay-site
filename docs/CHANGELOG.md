@@ -1,3 +1,11 @@
+## 2026-03-09-11 | 模板 | 2025txt 去掉 tag/user 并合并双头部（v2）
+- 范围：仅新增/调整 `themes/2025txt/*`、`www/static/2025txt/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 对齐：按 `V5_1_TEMPLATE_STANDARD.md` 与 `themes/shipsay/*` 母模板集合收口；`tpl_tag.php`、`user/*`、`tpl_headerr.php` 不再保留在 2025txt 母模板中。
+- 收口：`tpl_header.php` 改为与母模板同口径的可变链接消费方式，去掉 `/search/`、`/history.html` 等硬编码 fallback；链接缺失时仅做禁用展示，不再反向造业务入口。
+- 清理：删除 `themes/2025txt/tpl_tag.php`、`themes/2025txt/tpl_headerr.php`、`themes/2025txt/user/*` 与 `www/static/2025txt/js/user.js`；`tpl_info.php` / `tpl_reader.php` 同步移除加入书架/加书签入口。
+- 修正：`www/static/2025txt/js/2025.js` 去掉登录/注册/书架自动注入；`tpl_recentread.php` 页面文案收口为“阅读记录”。
+- 结论：2025txt 本轮继续按“保留正常手机端结构、先清多余会员系统与非标准文件”的方式收口，为后续子模板直接复用母模板做准备。
+
 ## 2026-03-09-08 | 模板 | 2025 母模板复制为 2025txt（首轮收口）
 - 范围：新增 `themes/2025txt/*`、`www/static/2025txt/*`，仅做 2025 → 2025txt 母模板复制与首轮标准收口；不动 `app / class / include / configs`。
 - 处理：复制 `themes/2025` 与 `www/static/2025` 形成 `2025txt` 基线，后续子模板从 `2025txt` 派生，不再直接改原 `2025`。

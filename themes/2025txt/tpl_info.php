@@ -151,7 +151,6 @@ if (!function_exists('ss_e')) {
                 <div class="detail-book-buttons">
                     <a href="<?=$first_url?>" class="detail-book-btn start">开始阅读</a>
                     <a href="<?=$index_url_safe?>" class="detail-book-btn directory">章节目录</a>
-                    <a href="javascript:addbookcase('<?=$articleid?>','<?=$articlename?>');" class="detail-book-btn bookshelf">加入书架</a>
                 </div>
 
                 <div class="detail-book-intro">
