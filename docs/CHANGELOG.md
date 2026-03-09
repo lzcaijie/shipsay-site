@@ -1,3 +1,8 @@
+## 2026-03-09 biqugewap v4 首页书友收藏榜显示热修
+- 模板：`biqugewap`
+- 范围：仅修正 `themes/biqugewap/tpl_home.php` 首页书友收藏榜列表项 HTML 结构，不动 CSS。
+- 修正：收藏榜第 2-5 条书名/作者链接标签在 v3 后存在缺失闭合与内容错位，导致手机端只显示序号、正文区域留白；本轮改回正常的书名链接 + 作者链接结构。
+
 ## 2026-03-09 biqugewap v3
 - 继续按 v5 标准收口 `tpl_top / tpl_rank / tpl_indexlist / tpl_category / tpl_author`，不动核心目录与 CSS 主样式。
 - `tpl_top.php` 改为正式消费 `top_sections / top_rank_lists / top_rank_limit`，去掉模板内自查库 SQL 与分类榜拼装，排行入口统一跟随 `rank_entry_url / rank_detail_base / fake_top`。
