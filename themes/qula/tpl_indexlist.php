@@ -1,113 +1,162 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
+<?php
+if (!function_exists('ss_qh')) {
+    function ss_qh($s){ return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
+}
 
+$site_home_url_raw = '/';
+$site_home_url_attr = ss_qh($site_home_url_raw);
+$sort_url_raw = isset($sortid) ? (string)Sort::ss_sorturl($sortid) : '';
+$sort_url_attr = ss_qh($sort_url_raw);
+$info_url_raw = isset($info_url) ? (string)$info_url : '';
+$info_url_attr = ss_qh($info_url_raw);
+$index_url_raw = isset($index_url) ? (string)$index_url : '';
+$index_url_attr = ss_qh($index_url_raw);
+$author_url_raw = isset($author_url) ? (string)$author_url : '';
+$author_url_attr = ss_qh($author_url_raw);
+$uri_raw = isset($uri) ? (string)$uri : $index_url_raw;
+$uri_attr = ss_qh($uri_raw);
+$img_url_attr = ss_qh(isset($img_url) ? $img_url : '');
+$first_url_attr = ss_qh(isset($first_url) ? $first_url : '');
+$last_url_attr = ss_qh(isset($last_url) ? $last_url : '');
+$intro_html = isset($intro_des) ? (string)$intro_des : '';
+$list_rows = (isset($list_arr) && is_array($list_arr)) ? $list_arr : [];
+$latest_rows = (isset($lastarr) && is_array($lastarr)) ? $lastarr : [];
+$related_rows = (isset($langtailrows) && is_array($langtailrows)) ? $langtailrows : [];
+
+require_once __ROOT_DIR__ . '/shipsay/seo.php';
+require_once __ROOT_DIR__ . '/shipsay/include/neighbor.php';
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('indexlist');
+$popular_rows = (isset($postdate) && is_array($postdate)) ? $postdate : [];
+?>
 <!DOCTYPE html>
 <head>
-        <?php
-    require_once __ROOT_DIR__.'/shipsay/seo.php';
-    list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('indexlist');
-    ?>
-    <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
-    <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
-    <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
+    <meta charset="UTF-8">
+    <title><?=ss_qh($seo_title)?></title>
+    <meta name="keywords" content="<?=ss_qh($seo_keywords)?>">
+    <meta name="description" content="<?=ss_qh($seo_description)?>">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="mobile-agent" content="format=html5;url=<?=$uri_attr?>">
+    <?php if ($uri_raw !== ''): ?>
+    <link rel="canonical" href="<?=$uri_attr?>">
+    <?php endif; ?>
     <meta property="og:type" content="novel">
-    <meta property="og:title" content="<?=$articlename?>">
-    <meta property="og:description" content="《<?=$articlename?>》<?=$intro_des?>">
-    <meta property="og:image" content="<?=$img_url?>"/>
-    <meta property="og:novel:category" content="<?=$sortname?>">
-    <meta property="og:novel:author" content="<?=$author?>">
-    <meta property="og:novel:author_link" content="<?=$site_url?><?=$author_url?>">
-    <meta property="og:novel:book_name" content="<?=$articlename?>">
-    <meta property="og:novel:read_url" content="<?=$site_url?><?=$uri?>">
-    <meta property="og:novel:url" content="<?=$site_url?><?=$uri?>">
-    <meta property="og:novel:status" content="<?=$isfull?>">
-    <meta property="og:novel:update_time" content="<?=$lastupdate?>">
-    <meta property="og:novel:lastest_chapter_name" content="<?=$lastchapter?>">
-    <meta property="og:novel:lastest_chapter_url" content="<?=$site_url?><?=$last_url?>">
-  <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
-  <div class="container">
-        <div class="row row-detail">
-            <div class="layout layout-col1">
-                <h2 class="layout-tit"><a href="/"><?=SITE_NAME?></a> > <?=$articlename?>最新章节列表</h2>
-                <div class="detail-box">
-                    <div class="imgbox">
-                        <img alt="<?=$articlename?>" src="<?=$img_url?>"  onerror="this.src='/static/<?=$theme_dir?>/nocover.jpg'"  />
-                        
-                                <i class="flag xs-hidden"></i>
-                        
-                    </div>
-                    <div class="info">
-                        <div class="top">
-                            <h1><?=$articlename?></h1>
-                            <div class="fix">
-                                <p>作&nbsp;&nbsp;者：<a href="<?=$author_url?>"><?=$author?></a></p>
-                                <p class="xs-show">类&nbsp;&nbsp;别：<?=$sortname?></p>
-                                <p class="xs-show">状&nbsp;&nbsp;态：<?=$isfull?></p>
-                                <p class="opt"> <span class="xs-hidden"> 动&nbsp;&nbsp;作：</span>
-                                  <a href="<?=$first_url?>" class="xs-show btn-read">开始阅读</a>
-                                  <a rel="nofollow" href="#footer" class="btn-tobtm">直达底部</a> <i class="xs-hidden">、</i>
-                                </p>
-                                <p>最后更新：<?=$lastupdate?> </p>
-                               <p>字&nbsp;&nbsp;数：<span><?=$words_w?> 万</span></p>
-                            </div>
-                        </div>
-                        <div class="desc xs-hidden" >
-                          <?=$intro_des?>
-                        </div>
-                    </div>
-                    <div class="m-desc xs-show">
-                        <strong>简介:</strong>
-                        <?=$intro_des?>
-                    </div>
+    <meta property="og:title" content="<?=ss_qh($articlename)?>">
+    <meta property="og:description" content="<?=ss_qh('《'.$articlename.'》'.$seo_description)?>">
+    <meta property="og:image" content="<?=$img_url_attr?>">
+    <meta property="og:novel:category" content="<?=ss_qh($sortname)?>">
+    <meta property="og:novel:author" content="<?=ss_qh($author)?>">
+    <meta property="og:novel:author_link" content="<?=$author_url_attr?>">
+    <meta property="og:novel:book_name" content="<?=ss_qh($articlename)?>">
+    <meta property="og:novel:read_url" content="<?=$first_url_attr?>">
+    <meta property="og:novel:url" content="<?=$info_url_attr?>">
+    <meta property="og:novel:status" content="<?=ss_qh($isfull)?>">
+    <meta property="og:novel:update_time" content="<?=ss_qh($lastupdate)?>">
+    <meta property="og:novel:lastest_chapter_name" content="<?=ss_qh($lastchapter)?>">
+    <meta property="og:novel:lastest_chapter_url" content="<?=$last_url_attr?>">
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
+<div class="container">
+    <div class="row row-detail">
+        <div class="layout layout-col1">
+            <h2 class="layout-tit"><a href="<?=$site_home_url_attr?>"><?=SITE_NAME?></a> &gt; <?php if($sort_url_raw !== ''): ?><a href="<?=$sort_url_attr?>"><?=ss_qh($sortname)?></a> &gt; <?php endif; ?><a href="<?=$info_url_attr?>"><?=ss_qh($articlename)?></a> &gt; 目录页</h2>
+            <div class="detail-box">
+                <div class="imgbox">
+                    <img alt="<?=ss_qh($articlename)?>" src="<?=$img_url_attr?>" onerror="this.src='/static/<?=$theme_dir?>/nocover.jpg';this.onerror=null;" />
+                    <i class="flag xs-hidden"></i>
                 </div>
+                <div class="info">
+                    <div class="top">
+                        <h1><?=ss_qh($articlename)?></h1>
+                        <div class="fix">
+                            <p>作&nbsp;&nbsp;者：<?php if($author_url_raw !== ''): ?><a href="<?=$author_url_attr?>"><?=ss_qh($author)?></a><?php else: ?><?=ss_qh($author)?><?php endif; ?></p>
+                            <p>类&nbsp;&nbsp;别：<?=ss_qh($sortname)?></p>
+                            <p>状&nbsp;&nbsp;态：<?=ss_qh($isfull)?></p>
+                            <p>最后更新：<?=ss_qh(((isset($lastupdate_cn) && $lastupdate_cn) ? $lastupdate_cn : $lastupdate))?></p>
+                            <p>字&nbsp;&nbsp;数：<span><?=ss_qh($words_w)?> 万</span></p>
+                            <p>首&nbsp;&nbsp;章：<?php if($first_url_attr !== ''): ?><a href="<?=$first_url_attr?>">开始阅读</a><?php else: ?>暂无<?php endif; ?></p>
+                            <p class="opt">
+                                <span class="xs-hidden">动&nbsp;&nbsp;作：</span>
+                                <?php if($first_url_attr !== ''): ?><a href="<?=$first_url_attr?>" class="xs-show btn-read">开始阅读</a><?php endif; ?>
+                                <?php if($info_url_raw !== ''): ?><a href="<?=$info_url_attr?>" class="btn-tobtm">返回详情</a><?php endif; ?>
+                                <a rel="nofollow" href="#footer" class="btn-tobtm">直达底部</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="desc xs-hidden"><?=$intro_html?></div>
+                </div>
+                <div class="m-desc xs-show"><strong>简介：</strong><?=$intro_html?></div>
             </div>
-            相关小说：
-<?php foreach ($langtailrows as $v) : ?>
-<a href="<?=$v['info_url']?>" title="<?= $v['langname'] ?>"><?= $v['langname'] ?></a>、
-<?php endforeach ?></br>
-        
         </div>
-  <div class="row row-section">
-            <div class="layout layout-col1">
-                <h2 class="layout-tit">《<?=$articlename?>》最新章节</h2>
-                <div class="section-box">
-                    <ul class="section-list fix">
-                <?php if($lastarr != ''): ?><?php foreach($lastarr as $k => $v): ?>
-                 <li><a href="<?=$v['cid_url'] ?>"><?=$v['cname'] ?></a></li>
-                <?php endforeach ?><?php endif ?>
-          </ul>
-                </div>
-<h2 class="layout-tit">《<?=$articlename?>》正文</h2>
-                <div class="section-box">
-                    <ul class="section-list fix">
-				<?php foreach($list_arr as $v): ?>
-				<li><a href="<?=$v['cid_url']?>"><?=$v['cname']?></a></li>
-            <?php endforeach ?>
-        </div>
-    <div  class="index-container"><?=$htmltitle?></div>
-
     </div>
-			<div class="clr"></div>
-				</dl>
-			</div>
-    
-    </section>
 
+    <div class="row row-section">
+        <div class="layout layout-col1">
+            <h2 class="layout-tit">最新章节信息</h2>
+            <div class="qula-meta-box">
+                <p>最新章节：<?php if($last_url_attr !== ''): ?><a href="<?=$last_url_attr?>"><?=ss_qh($lastchapter)?></a><?php else: ?><?=ss_qh($lastchapter)?><?php endif; ?></p>
+                <p>更新时间：<?=ss_qh(((isset($lastupdate_cn) && $lastupdate_cn) ? $lastupdate_cn : $lastupdate))?></p>
+                <p>目录页仅展示当前分页章节，详情页展示前 50 章预览。</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-section">
+        <div class="layout layout-col1">
+            <h2 class="layout-tit">内容简介</h2>
+            <div class="qula-intro-box"><?=$intro_html?></div>
+        </div>
+    </div>
+
+    <div class="row row-section">
+        <div class="layout layout-col1">
+            <h2 class="layout-tit">《<?=ss_qh($articlename)?>》顺序目录分页</h2>
+            <div class="section-box">
+                <ul class="section-list fix">
+                    <?php foreach($list_rows as $v): ?>
+                        <?php if(isset($v['chaptertype']) && (int)$v['chaptertype'] === 1): ?>
+                        <li><strong><?=ss_qh($v['cname'])?></strong></li>
+                        <?php else: ?>
+                        <li><a href="<?=ss_qh($v['cid_url'])?>"><?=ss_qh($v['cname'])?></a></li>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <div class="index-container"><?=isset($htmltitle) ? $htmltitle : ''?></div>
+        </div>
+    </div>
+
+    <div class="row row-section">
+        <div class="layout layout-col1">
+            <h2 class="layout-tit">相关小说推荐</h2>
+            <div class="qula-link-list">
+                <?php if(!empty($related_rows)): ?>
+                    <?php foreach($related_rows as $v): ?>
+                    <a href="<?=ss_qh($v['info_url'])?>" title="<?=ss_qh($v['langname'])?>"><?=ss_qh($v['langname'])?></a>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <span class="nav-disabled">暂无相关推荐</span>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-section">
+        <div class="layout layout-col1">
+            <h2 class="layout-tit">人气小说推荐</h2>
+            <div class="section-box">
+                <ul class="section-list fix">
+                    <?php if(!empty($popular_rows)): ?>
+                        <?php foreach($popular_rows as $v): ?>
+                        <li><a href="<?=ss_qh($v['info_url'])?>"><?=ss_qh($v['articlename'])?></a></li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li>暂无人气推荐</li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
-<script>
-(function(){
-    var bp = document.createElement('script');
-    bp.src = "//zz.bdstatic.com/linksubmit/push.js";
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(bp, s);
-})();
-</script>
-<script>
-(function(){
-    var s = document.createElement("script");
-    s.src = "https://cdn.sm.cn/auto/push.js";
-    var r = document.getElementsByTagName("script")[0];
-    r.parentNode.insertBefore(s, r)
-})();
-</script>
-
 <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

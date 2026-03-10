@@ -1,3 +1,12 @@
+## 2026-03-10-02 | 模板 | qula 第二轮按 v5 收详情/目录/排行与阅读页手机翻页自适应（v2）
+- 范围：仅调整 `themes/qula/*`、`www/static/qula/style.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 修正：`tpl_reader.php` 对应手机端阅读翻页区改为 flex 自适应，`上一页 / 目录 / 下一页` 在 3 个或 4 个按钮场景下都不再固定占 25% 留白。
+- 收口：`tpl_info.php` 与 `tpl_indexlist.php` 改为同体系输出，统一为书籍信息 / 最新章节信息 / 简介 / 顺序目录或预览 / 相关小说推荐 / 人气小说推荐，不再保留原先零散长尾链接与破碎闭合标签。
+- 收口：`tpl_rank.php` 不再把同一份 `articlerows` 重复渲染成 4 列假榜单；当前单榜页统一消费 `page_title / articlerows / rank_detail_base / rank_entry_url`。
+- 收口：`tpl_top.php` 改为正式消费 `top_sections / top_rank_lists / top_rank_limit`，不再继续写死 `fake_rankstr` 拼榜单入口。
+- 微调：`www/static/qula/style.css` 新增 `qula-*` 页面作用域样式，只补当前详情/目录/排行与阅读翻页区，不扩散影响全站其他模板。
+- 结论：qula 第二轮先把核心内容页与排行链路收成可集中测试状态；后续由你一次性实测再按页面补尾。
+
 ## 2026-03-10-01 | 模板 | qula 首轮按 v5 清会员残留与旧入口（v1）
 - 范围：仅调整 `themes/qula/*`、`www/static/qula/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 清理：删除 `themes/qula/user/*` 与 `www/static/qula/user.js`，模板层不再保留会员书架、登录/注册、加入书架/书签等入口。
