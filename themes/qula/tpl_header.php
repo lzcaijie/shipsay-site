@@ -20,6 +20,9 @@ if (function_exists('ss_search_url')) {
 if ($search_url_safe === '' && isset($fake_search) && trim((string)$fake_search) !== '') {
     $search_url_safe = trim((string)$fake_search);
 }
+if ($search_url_safe === '') {
+    $search_url_safe = '/search/';
+}
 
 $recentread_url_safe = '';
 if (function_exists('ss_recentread_url')) {
@@ -75,12 +78,7 @@ $search_placeholder_attr = htmlspecialchars($search_placeholder, ENT_QUOTES, 'UT
 
 <div class="header">
   <h1 class="logo"><a href="<?=$site_home_url_attr?>"><?=SITE_NAME?></a></h1>
-  <form
-    name="t_frmsearch"
-    method="get"
-    class="search-form"
-    <?php if ($search_url_safe !== ''): ?>action="<?=$search_url_attr?>" onsubmit="return chkval()"<?php else: ?>onsubmit="return false;"<?php endif; ?>
-  >
+  <form name="t_frmsearch" method="get" action="<?=$search_url_attr?>" class="search-form" onsubmit="return chkval()">
     <input
       autocomplete="off"
       id="searchkey"
