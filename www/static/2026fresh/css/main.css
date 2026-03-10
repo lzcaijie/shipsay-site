@@ -397,3 +397,10 @@ img{max-width:100%;display:block}
 .kv b a,.info .line a,.item .muted a{color:var(--pri)}
 .maincol .chaptercard > .list .item,
 .sidecol .list .item{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+
+/* ====== 2026fresh v5 第三轮：阅读页 / 列表页信息收口 ====== */
+.tag.active{background:rgba(45,91,255,.08);border-color:rgba(45,91,255,.28);color:var(--pri)}
+.content p{margin:.45em 0}
+.content img,.content table{max-width:100%}
+.content a{color:var(--pri);word-break:break-all}

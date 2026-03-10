@@ -1,3 +1,11 @@
+## 2026-03-10-04 | 模板 | 2026fresh 第三轮收尾（阅读页 / 分类页 / 作者页 / 搜索页 / 阅读记录）
+- 范围：仅调整 `themes/2026fresh/tpl_reader.php`、`tpl_search.php`、`tpl_author.php`、`tpl_category.php`、`tpl_recentread.php`、`www/static/2026fresh/css/main.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 收口：`tpl_reader.php` 补齐阅读页 canonical、`mobile-agent`、OG、`BreadcrumbList` 与页面包屑，`og:novel:index_url` 只在真实目录链接存在时输出，不再混填其它业务入口；章节标题、作者、字数、更新时间与目录按钮统一按展示层安全输出。
+- 收口：`tpl_category.php`、`tpl_author.php` 按 v5 列表页口径补齐 canonical、`mobile-agent`、OG、`BreadcrumbList`，并清掉模板层裸输出的书名/作者/链接属性；分类筛选与分页继续只消费 app 已提供的真实链接。
+- 收口：`tpl_search.php`、`tpl_recentread.php` 继续按最小差异修复安全输出，搜索词、结果列表、热门推荐、阅读记录推荐位统一做转义；不新增业务 URL 拼接，不改现有数据逻辑。
+- 微调：`www/static/2026fresh/css/main.css` 仅补 `tag.active` 与阅读正文受控内容的轻样式，不重排主结构。
+- 结论：本轮把 2026fresh 剩余高风险页面先收完到可测试状态，后续优先等真实页面回归测试结果，不主动继续大改。
+
 ## 2026-03-10-03 | 模板 | 2026fresh 详情页 / 目录页按 v5 第二轮收口
 - 范围：仅调整 `themes/2026fresh/tpl_info.php`、`themes/2026fresh/tpl_indexlist.php`、`www/static/2026fresh/css/main.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 收口：`tpl_info.php` 正式引入 `shipsay/include/neighbor.php`，详情页底部推荐不再依赖偶发变量；相关推荐统一改为“相关小说推荐”，推荐阅读统一改为“人气小说推荐”，章节预览标题改为“顺序 1-50章”口径，最新章节标题改为“最新12章”。

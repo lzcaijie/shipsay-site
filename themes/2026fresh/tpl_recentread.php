@@ -1,11 +1,19 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
+<?php
+$site_home_url_raw = isset($site_home_url_raw) && $site_home_url_raw ? (string)$site_home_url_raw : (!empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/');
+$site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
+$recentread_page_title = '阅读记录_' . SITE_NAME;
+$recentread_page_title_html = htmlspecialchars($recentread_page_title, ENT_QUOTES, 'UTF-8');
+$recentread_page_description = SITE_NAME . '阅读记录页。';
+$recentread_page_description_html = htmlspecialchars($recentread_page_description, ENT_QUOTES, 'UTF-8');
+?>
 <!doctype html>
 <html lang="zh">
 <head>
 <meta charset="utf-8">
-<title>阅读记录_<?=SITE_NAME?></title>
-<meta name="keywords" content="阅读记录,阅读历史,<?=SITE_NAME?>">
-<meta name="description" content="<?=SITE_NAME?>阅读记录页。">
+<title><?=$recentread_page_title_html?></title>
+<meta name="keywords" content="阅读记录,阅读历史,<?=htmlspecialchars(SITE_NAME, ENT_QUOTES, 'UTF-8')?>">
+<meta name="description" content="<?=$recentread_page_description_html?>">
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body>
@@ -21,17 +29,24 @@
 
 <main class="wrap">
   <section class="card">
+    <div class="muted" style="margin-bottom:10px;line-height:1.7;"><a href="<?=$site_home_url_attr?>">首页</a> &gt; <span>阅读记录</span></div>
     <div class="card-hd"><h2 class="h2">最近阅读</h2></div>
     <div id="ss_recent_list" class="list" style="margin-top:10px;"></div>
     <div id="ss_recent_empty" class="muted" style="display:none;margin-top:10px;">暂无阅读记录。</div>
   </section>
 
-  <?php if(!empty($popular)): ?>
+  <?php if(!empty($popular) && is_array($popular)): ?>
   <section class="card">
     <div class="card-hd"><h2 class="h2">大家都在看</h2></div>
     <div class="list">
-      <?php $i=0; foreach($popular as $v): $i++; if($i>12) break; ?>
-        <a class="item" href="<?=$v['info_url']?>"><?=$v['articlename']?> <span class="muted">/ <?=$v['author']?></span></a>
+      <?php $i=0; foreach($popular as $v): $i++; if($i>12) break; if(empty($v) || !is_array($v)) continue; ?>
+        <?php
+          $info_url_raw = !empty($v['info_url']) ? (string)$v['info_url'] : '';
+          $title_raw = !empty($v['articlename']) ? (string)$v['articlename'] : '';
+          $author_raw = !empty($v['author']) ? (string)$v['author'] : '';
+          if($info_url_raw === '' || $title_raw === '') continue;
+        ?>
+        <a class="item" href="<?=htmlspecialchars($info_url_raw, ENT_QUOTES, 'UTF-8')?>"><?=htmlspecialchars($title_raw, ENT_QUOTES, 'UTF-8')?><?php if($author_raw !== ''): ?> <span class="muted">/ <?=htmlspecialchars($author_raw, ENT_QUOTES, 'UTF-8')?></span><?php endif; ?></a>
       <?php endforeach; ?>
     </div>
   </section>
