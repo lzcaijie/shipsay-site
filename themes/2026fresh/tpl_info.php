@@ -1,4 +1,5 @@
 <?php if (!defined('__ROOT_DIR__')) exit;
+require_once __ROOT_DIR__.'/shipsay/include/neighbor.php';
 
 $author_link = !empty($author_url) ? $author_url : '';
 
@@ -52,18 +53,29 @@ if (!empty($chapter_source) && is_array($chapter_source)) {
   });
   $chapter_show = array_slice($tmp, 0, 50);
 }
+$chapter_preview_end = count($chapter_show);
 
 $last_show = array();
-if (!empty($lastarr) && is_array($lastarr)) {
+if (!empty($lastchapter_arr) && is_array($lastchapter_arr)) {
+  $last_show = array_slice($lastchapter_arr, 0, 12);
+} elseif (!empty($lastarr) && is_array($lastarr)) {
   $last_show = array_slice($lastarr, 0, 12);
 }
 
-$rec_rows = array();
-if (!empty($neighbor) && is_array($neighbor)) {
-  $rec_rows = $neighbor;
-} elseif (!empty($commend) && is_array($commend)) {
-  $rec_rows = $commend;
+$related_rows = array();
+if (isset($is_langtail) && intval($is_langtail) === 1 && !empty($langtailrows) && is_array($langtailrows)) {
+  $related_rows = array_slice($langtailrows, 0, 12);
 }
+
+$hot_rows = array();
+if (!empty($postdate) && is_array($postdate)) {
+  $hot_rows = $postdate;
+} elseif (!empty($neighbor) && is_array($neighbor)) {
+  $hot_rows = $neighbor;
+} elseif (!empty($commend) && is_array($commend)) {
+  $hot_rows = $commend;
+}
+
 $canonical_url = (!empty($site_url) && !empty($uri)) ? rtrim((string)$site_url, '/') . (string)$uri : '';
 ?>
 <!doctype html>
@@ -122,7 +134,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
     <?php if(!empty($last_show) && is_array($last_show)): ?>
     <section class="card">
       <div class="card-hd">
-        <h2 class="h2">最新章节</h2>
+        <h2 class="h2">最新12章</h2>
         <?php if(!empty($index_url)): ?><a class="more" href="<?=$index_url?>">全部目录</a><?php else: ?><span class="more" aria-disabled="true">全部目录</span><?php endif; ?>
       </div>
       <div class="list">
@@ -141,7 +153,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
     <?php if(!empty($chapter_show) && is_array($chapter_show)): ?>
     <section class="card chaptercard">
       <div class="card-hd">
-        <h2 class="h2">章节目录（前50章）</h2>
+        <h2 class="h2">顺序 1-<?=$chapter_preview_end?>章</h2>
         <?php if(!empty($index_url)): ?><a class="more" href="<?=$index_url?>">全部目录</a><?php else: ?><span class="more" aria-disabled="true">全部目录</span><?php endif; ?>
       </div>
       <div class="chapters-grid">
@@ -180,11 +192,11 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
       </div>
     </section>
 
-    <?php if (isset($is_langtail) && $is_langtail == 1 && !empty($langtailrows) && is_array($langtailrows)) : ?>
+    <?php if (!empty($related_rows)): ?>
     <section class="card">
-      <h2 class="h2">相关推荐</h2>
+      <h2 class="h2">相关小说推荐</h2>
       <div class="tags">
-        <?php foreach ($langtailrows as $v) :
+        <?php foreach ($related_rows as $v) :
           if(empty($v) || !is_array($v)) continue;
           if(empty($v['info_url']) || empty($v['langname'])) continue;
         ?>
@@ -194,11 +206,11 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
     </section>
     <?php endif; ?>
 
-    <?php if(!empty($rec_rows) && is_array($rec_rows)): ?>
+    <?php if(!empty($hot_rows) && is_array($hot_rows)): ?>
     <section class="card">
-      <h2 class="h2">推荐阅读</h2>
+      <h2 class="h2">人气小说推荐</h2>
       <div class="list" style="margin-top:10px;">
-        <?php $r=0; foreach($rec_rows as $v):
+        <?php $r=0; foreach($hot_rows as $v):
           $r++; if($r>10) break;
           if(empty($v) || !is_array($v)) continue;
           $u = isset($v['info_url']) ? $v['info_url'] : '';
