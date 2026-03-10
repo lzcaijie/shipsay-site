@@ -1,3 +1,12 @@
+## 2026-03-10-02 | 模板 | 2026fresh 按 v5 首轮收口（公共链接 / 排行页 / 阅读记录）
+- 范围：仅调整 `themes/2026fresh/*`、`www/static/2026fresh/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 收口：`tpl_header.php` 去掉 `/search/`、`/history.html`、`/rank/allvisit/` 这类模板层硬编码 fallback，统一改为优先消费上游真实 `fake_search / fake_recentread / rank_entry_url / fake_top`；缺失时在模板层做禁用展示，不再反向造旧链路。
+- 收口：`tpl_home.php / tpl_author.php / tpl_category.php / tpl_search.php / tpl_info.php / tpl_indexlist.php / tpl_reader.php / tpl_recentread.php / tpl_error.php` 的顶部搜索与公共入口统一消费 header 下发的 `*_raw / *_attr`，缺链接时禁用，不再默认提交到当前页或写死旧地址。
+- 修正：`tpl_rank.php` 不再写死 `/rank/{type}/`，单榜页切换统一消费 `rank_detail_base`；`tpl_top.php` 改为正式消费 `top_sections / top_rank_lists / top_rank_limit`，不再继续输出旧的分类拼装榜。
+- 修正：`www/static/2026fresh/js/tempbookcase.js` 与 `js/vendor/tempbookcase.js` 的 `removeAll()` 不再 `localStorage.clear()` 全清；仅删除本模板阅读记录键，避免误伤站内其它本地存储。
+- 微调：`www/static/2026fresh/css/main.css` 仅补齐禁用态与聚合排行页所需样式，不大改现有页面主结构。
+- 结论：本轮先收高风险公共链路与排行页，继续遵守“先模板层、后 CSS、最小差异修复”的 v5 口径。
+
 ## 2026-03-10-01 | 模板 | fresh2026 重命名为 2026fresh（目录与静态目录）
 - 范围：仅调整 `themes/fresh2026 -> themes/2026fresh`、`www/static/fresh2026 -> www/static/2026fresh` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 处理：本轮只做模板目录与静态目录重命名，模板内部继续沿用 `__THEME_DIR__` 与 `$theme_dir` 动态取路径，不新增硬编码静态路径。

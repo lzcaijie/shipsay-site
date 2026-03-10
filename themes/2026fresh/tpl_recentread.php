@@ -4,15 +4,15 @@
 <head>
 <meta charset="utf-8">
 <title>阅读记录_<?=SITE_NAME?></title>
-<meta name="keywords" content="阅读记录,书架,<?=SITE_NAME?>">
-<meta name="description" content="<?=SITE_NAME?>阅读记录（临时书架）。">
-<?php require_once 'tpl_header.php'; ?>
+<meta name="keywords" content="阅读记录,阅读历史,<?=SITE_NAME?>">
+<meta name="description" content="<?=SITE_NAME?>阅读记录页。">
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body>
 
 <header class="topbar">
   <div class="wrap">
-    <a class="brand" href="/"><?=SITE_NAME?></a>
+    <a class="brand" href="<?=$site_home_url_attr?>"><?=$site_name_html?></a>
     <div class="crumb">阅读记录</div>
     <div class="spacer"></div>
     <button class="link" type="button" id="ss_clear_all">清空</button>
@@ -38,7 +38,7 @@
   <?php endif; ?>
 </main>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 
 <script>
 (function(){
@@ -48,7 +48,7 @@
   var btnClear=document.getElementById('ss_clear_all');
 
   function esc(s){
-    return String(s||'').replace(/[&<>"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])});
+    return String(s||'').replace(/[&<>"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])});
   }
 
   function load(){

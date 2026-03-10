@@ -1,44 +1,50 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 <?php
-  $use_js = (class_exists('Ss') && method_exists('Ss','use_js')) ? Ss::use_js() : 0;
-  $cur_url = Url::chapter_url($articleid, $chapterid, ($now_pid>1?$now_pid:0));
+$sort_link = '';
+if (!empty($sorturl)) {
+  $sort_link = $sorturl;
+} elseif (!empty($sortid) && class_exists('Sort') && method_exists('Sort', 'ss_sorturl')) {
+  $sort_link = Sort::ss_sorturl($sortid);
+} elseif (!empty($sortid) && class_exists('Sort') && method_exists('Sort', 'category_url')) {
+  $sort_link = Sort::category_url($sortid, 1);
+}
 
-  $sort_link = '';
-  if (!empty($sorturl)) {
-    $sort_link = $sorturl;
-  } elseif (!empty($sortid) && class_exists('Sort') && method_exists('Sort', 'ss_sorturl')) {
-    $sort_link = Sort::ss_sorturl($sortid);
-  } elseif (!empty($sortid) && class_exists('Sort') && method_exists('Sort', 'category_url')) {
-    $sort_link = Sort::category_url($sortid, 1);
-  }
+if (!isset($max_pid) || intval($max_pid) < 1) {
+  $max_pid = 1;
+}
+if (!isset($now_pid) || intval($now_pid) < 1) {
+  $now_pid = 1;
+}
+$now_pid = intval($now_pid);
+$max_pid = intval($max_pid);
 
+$left_url = '';
+$left_txt = '';
+if (!empty($prevpage_url)) {
+  $left_url = $prevpage_url;
+  $left_txt = '上一页';
+} elseif (!empty($pre_url)) {
+  $left_url = $pre_url;
+  $left_txt = '上一章';
+} else {
   $left_url = '';
-  $left_txt = '';
-  if (!empty($prevpage_url)) {
-    $left_url = $prevpage_url;
-    $left_txt = '上一页';
-  } elseif (!empty($pre_url)) {
-    $left_url = $pre_url;
-    $left_txt = '上一章';
-  } else {
-    $left_url = '';
-    $left_txt = '上一章';
-  }
+  $left_txt = '上一章';
+}
 
+$right_url = '';
+$right_txt = '';
+if (!empty($nextpage_url)) {
+  $right_url = $nextpage_url;
+  $right_txt = '下一页';
+} elseif (!empty($next_url)) {
+  $right_url = $next_url;
+  $right_txt = '下一章';
+} else {
   $right_url = '';
-  $right_txt = '';
-  if (!empty($nextpage_url)) {
-    $right_url = $nextpage_url;
-    $right_txt = '下一页';
-  } elseif (!empty($next_url)) {
-    $right_url = $next_url;
-    $right_txt = '下一章';
-  } else {
-    $right_url = '';
-    $right_txt = '下一章';
-  }
+  $right_txt = '下一章';
+}
 
-  $mid_txt = ($max_pid>1) ? ('第 '.$now_pid.' / '.$max_pid.' 页 · 目录') : '章节目录';
+$mid_txt = ($max_pid>1) ? ('第 ' . $now_pid . ' / ' . $max_pid . ' 页 · 目录') : '章节目录';
 ?>
 <!doctype html>
 <html lang="zh">
@@ -51,18 +57,18 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('reader');
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
 <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body class="readbg" id="readbg">
 
 <header class="topbar">
   <div class="wrap">
-    <a class="brand" href="/"><?=SITE_NAME?></a>
-    <form class="search" action="<?=ss_search_url()?>" method="get">
-      <input type="text" name="searchkey" placeholder="书名 / 作者" autocomplete="off">
-      <button type="submit">搜索</button>
+    <a class="brand" href="<?=$site_home_url_attr?>"><?=$site_name_html?></a>
+    <form class="search" method="get"<?php if($search_url_raw !== ''): ?> action="<?=$search_url_attr?>"<?php else: ?> onsubmit="return false;"<?php endif; ?>>
+      <input type="text" name="searchkey" placeholder="<?=$search_placeholder_attr?>" autocomplete="off">
+      <button type="submit"<?php if($search_url_raw === ''): ?> disabled="disabled" aria-disabled="true"<?php endif; ?>>搜索</button>
     </form>
-    <a class="link" href="<?=ss_recentread_url()?>">记录</a>
+    <?php if($recentread_url_raw !== ''): ?><a class="link" href="<?=$recentread_url_attr?>">记录</a><?php else: ?><span class="link" aria-disabled="true">记录</span><?php endif; ?>
   </div>
 </header>
 
@@ -85,13 +91,13 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('reader');
 
       <div class="pager readnav" style="margin-top:14px;">
         <?php if(!empty($left_url)): ?><a href="<?=$left_url?>"><?=$left_txt?></a><?php else: ?><span class="muted"><?=$left_txt?></span><?php endif; ?>
-        <a class="mid" href="<?=$index_url?>"><?=$mid_txt?></a>
+        <?php if(!empty($index_url)): ?><a class="mid" href="<?=$index_url?>"><?=$mid_txt?></a><?php else: ?><span class="mid" aria-disabled="true"><?=$mid_txt?></span><?php endif; ?>
         <?php if(!empty($right_url)): ?><a href="<?=$right_url?>"><?=$right_txt?></a><?php else: ?><span class="muted"><?=$right_txt?></span><?php endif; ?>
       </div>
 
       <div class="readtools">
-        <a class="toolbtn" href="<?=$info_url?>">书籍详情</a>
-        <a class="toolbtn" href="<?=ss_recentread_url()?>">阅读记录</a>
+        <?php if(!empty($info_url)): ?><a class="toolbtn" href="<?=$info_url?>">书籍详情</a><?php else: ?><span class="toolbtn" aria-disabled="true">书籍详情</span><?php endif; ?>
+        <?php if($recentread_url_raw !== ''): ?><a class="toolbtn" href="<?=$recentread_url_attr?>">阅读记录</a><?php else: ?><span class="toolbtn" aria-disabled="true">阅读记录</span><?php endif; ?>
         <button class="toolbtn" type="button" id="btnNight">夜间</button>
       </div>
     </section>
@@ -102,8 +108,8 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('reader');
       <div class="bookhead">
         <img class="coverbig" loading="lazy" src="<?=ss_nocover_url()?>" data-src="<?=$img_url?>" onerror="this.src='<?=ss_nocover_url()?>';this.onerror=null;">
         <div class="info">
-          <div class="h2" style="margin-bottom:6px;"><a href="<?=$info_url?>"><?=$articlename?></a></div>
-          <div class="muted">作者：<a href="<?=$author_url?>"><?=$author?></a></div>
+          <div class="h2" style="margin-bottom:6px;"><?php if(!empty($info_url)): ?><a href="<?=$info_url?>"><?=$articlename?></a><?php else: ?><?=$articlename?><?php endif; ?></div>
+          <div class="muted">作者：<?php if(!empty($author_url)): ?><a href="<?=$author_url?>"><?=$author?></a><?php else: ?><?=$author?><?php endif; ?></div>
           <div class="muted">分类：<?php if(!empty($sort_link)): ?><a href="<?=$sort_link?>"><?=$sortname?></a><?php else: ?><?=$sortname?><?php endif; ?></div>
           <div class="muted">状态：<?=$isfull?> · <?=$words_w?>万字</div>
         </div>
@@ -112,7 +118,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('reader');
   </aside>
 </main>
 
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 
 <script>
 (function(){

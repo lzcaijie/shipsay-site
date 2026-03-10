@@ -345,3 +345,46 @@ img{max-width:100%;display:block}
 }
 .dot{margin:0 6px;color:var(--muted)}
 .li-title a{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ====== v5 首轮收口：禁用态 + 聚合排行页 ====== */
+.search button[disabled]{opacity:.45;cursor:not-allowed}
+.topbar .link[aria-disabled="true"],
+.topbtn[aria-disabled="true"],
+.footer-disabled,
+.tabs span[aria-disabled="true"],
+.more[aria-disabled="true"],
+.btn[aria-disabled="true"],
+.toolbtn[aria-disabled="true"],
+.chip[aria-disabled="true"]{
+  color:var(--muted);
+  border-color:var(--bd);
+  background:#f7f7f7;
+}
+.topbar .link[aria-disabled="true"],
+.topbtn[aria-disabled="true"],
+.footer-disabled,
+.tabs span[aria-disabled="true"],
+.more[aria-disabled="true"]{
+  border:none;
+  background:transparent;
+}
+.top-rank-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}
+.top-card{margin:0}
+.top-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.top-card-head h2{margin:0;font-size:17px;line-height:1.35}
+.top-card-head a,.top-card-head span{font-size:13px;color:var(--muted);white-space:nowrap}
+.top-card-list{list-style:none;margin:0;padding:0}
+.top-card-list li{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-top:1px dashed var(--bd)}
+.top-card-list li:first-child{border-top:none;padding-top:0}
+.rank-num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:#f5f5f5;color:#555;font-weight:700;flex:0 0 28px;font-style:normal}
+.top-card-list li:nth-child(1) .rank-num{background:#ffede8;color:#ff5a36}
+.top-card-list li:nth-child(2) .rank-num{background:#fff3df;color:#f59a23}
+.top-card-list li:nth-child(3) .rank-num{background:#eef4ff;color:#4b6bfb}
+.rank-main{min-width:0;flex:1 1 auto;display:flex;flex-direction:column;gap:4px}
+.rank-bookname{display:block;font-size:15px;line-height:1.45;color:#222;text-decoration:none;font-weight:700;word-break:break-all}
+.rank-bookname.no-link{color:#666}
+.rank-main em{font-style:normal;font-size:13px;line-height:1.4;color:#888;word-break:break-all}
+.rank-empty{color:#888;justify-content:center;padding:18px 0}
+@media (max-width:767px){
+  .top-rank-grid{grid-template-columns:1fr}
+}

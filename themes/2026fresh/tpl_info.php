@@ -64,6 +64,7 @@ if (!empty($neighbor) && is_array($neighbor)) {
 } elseif (!empty($commend) && is_array($commend)) {
   $rec_rows = $commend;
 }
+$canonical_url = (!empty($site_url) && !empty($uri)) ? rtrim((string)$site_url, '/') . (string)$uri : '';
 ?>
 <!doctype html>
 <html lang="zh">
@@ -76,19 +77,19 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
 <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-<link href="<?=$site_url?><?=$uri?>" rel="canonical">
+<?php if ($canonical_url !== ''): ?><link rel="canonical" href="<?=ss_h($canonical_url)?>"><?php endif; ?>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
 <body>
 
 <header class="topbar">
   <div class="wrap">
-    <a class="brand" href="/"><?=SITE_NAME?></a>
-    <form class="search" action="<?=ss_search_url()?>" method="get">
-      <input type="text" name="searchkey" placeholder="书名 / 作者" autocomplete="off">
-      <button type="submit">搜索</button>
+    <a class="brand" href="<?=$site_home_url_attr?>"><?=$site_name_html?></a>
+    <form class="search" method="get"<?php if($search_url_raw !== ''): ?> action="<?=$search_url_attr?>"<?php else: ?> onsubmit="return false;"<?php endif; ?>>
+      <input type="text" name="searchkey" placeholder="<?=$search_placeholder_attr?>" autocomplete="off">
+      <button type="submit"<?php if($search_url_raw === ''): ?> disabled="disabled" aria-disabled="true"<?php endif; ?>>搜索</button>
     </form>
-    <a class="link" href="<?=ss_recentread_url()?>">记录</a>
+    <?php if($recentread_url_raw !== ''): ?><a class="link" href="<?=$recentread_url_attr?>">记录</a><?php else: ?><span class="link" aria-disabled="true">记录</span><?php endif; ?>
   </div>
 </header>
 
@@ -96,19 +97,19 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
   <div class="maincol">
     <section class="card bookhead">
       <img class="coverbig" loading="lazy"
-           src="/static/<?=$theme_dir?>/nocover.jpg"
+           src="<?=ss_nocover_url()?>"
            data-src="<?=$img_url?>"
            alt="<?=$articlename?>"
-           onerror="this.src='/static/<?=$theme_dir?>/nocover.jpg';this.onerror=null;">
+           onerror="this.src='<?=ss_nocover_url()?>';this.onerror=null;">
       <div class="info">
         <h1 class="h1"><?=$articlename?></h1>
         <div class="line">作者：<?php if(!empty($author_link)): ?><a href="<?=$author_link?>"><?=$author?></a><?php else: ?><?=$author?><?php endif; ?></div>
         <div class="line">分类：<?php if(!empty($sort_link)): ?><a href="<?=$sort_link?>"><?=$sortname?></a><?php else: ?><?=$sortname?><?php endif; ?></div>
         <div class="line">状态：<?=$isfull?> · <?=$words_w?>万字 · 人气 <?=$allvisit?></div>
-        <div class="line">更新：<?=$lastupdate_cn?> · <a href="<?=$last_url?>"><?=$lastchapter?></a></div>
+        <div class="line">更新：<?=$lastupdate_cn?> · <?php if(!empty($last_url)): ?><a href="<?=$last_url?>"><?=$lastchapter?></a><?php else: ?><?=$lastchapter?><?php endif; ?></div>
         <div class="btnrow">
-          <a class="btn primary" href="<?=$first_url?>">开始阅读</a>
-          <a class="btn" href="<?=$index_url?>">章节目录</a>
+          <?php if(!empty($first_url)): ?><a class="btn primary" href="<?=$first_url?>">开始阅读</a><?php else: ?><span class="btn primary" aria-disabled="true">开始阅读</span><?php endif; ?>
+          <?php if(!empty($index_url)): ?><a class="btn" href="<?=$index_url?>">章节目录</a><?php else: ?><span class="btn" aria-disabled="true">章节目录</span><?php endif; ?>
         </div>
       </div>
     </section>
@@ -122,7 +123,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
     <section class="card">
       <div class="card-hd">
         <h2 class="h2">最新章节</h2>
-        <a class="more" href="<?=$index_url?>">全部目录</a>
+        <?php if(!empty($index_url)): ?><a class="more" href="<?=$index_url?>">全部目录</a><?php else: ?><span class="more" aria-disabled="true">全部目录</span><?php endif; ?>
       </div>
       <div class="list">
         <?php foreach($last_show as $v):
@@ -141,7 +142,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
     <section class="card chaptercard">
       <div class="card-hd">
         <h2 class="h2">章节目录（前50章）</h2>
-        <a class="more" href="<?=$index_url?>">全部目录</a>
+        <?php if(!empty($index_url)): ?><a class="more" href="<?=$index_url?>">全部目录</a><?php else: ?><span class="more" aria-disabled="true">全部目录</span><?php endif; ?>
       </div>
       <div class="chapters-grid">
         <?php foreach($chapter_show as $v):
@@ -174,8 +175,8 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
         <div><span>更新</span><b><?=$lastupdate_cn?></b></div>
       </div>
       <div class="btnrow" style="margin-top:10px;">
-        <a class="btn" href="<?=ss_recentread_url()?>">阅读记录</a>
-        <a class="btn" href="/">回首页</a>
+        <?php if($recentread_url_raw !== ''): ?><a class="btn" href="<?=$recentread_url_attr?>">阅读记录</a><?php else: ?><span class="btn" aria-disabled="true">阅读记录</span><?php endif; ?>
+        <a class="btn" href="<?=$site_home_url_attr?>">回首页</a>
       </div>
     </section>
 
