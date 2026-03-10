@@ -23,6 +23,19 @@ $intro_html = isset($intro_des) ? (string)$intro_des : '';
 $list_rows = (isset($list_arr) && is_array($list_arr)) ? $list_arr : [];
 $latest_rows = (isset($lastarr) && is_array($lastarr)) ? $lastarr : [];
 $related_rows = (isset($langtailrows) && is_array($langtailrows)) ? $langtailrows : [];
+$latest_chapter_name_raw = isset($lastchapter) ? (string)$lastchapter : '';
+$latest_chapter_url_raw = isset($last_url) ? (string)$last_url : '';
+if (($latest_chapter_name_raw === '' || $latest_chapter_url_raw === '') && !empty($latest_rows)) {
+    $latest_first = $latest_rows[0];
+    if ($latest_chapter_name_raw === '' && isset($latest_first['cname'])) {
+        $latest_chapter_name_raw = (string)$latest_first['cname'];
+    }
+    if ($latest_chapter_url_raw === '' && isset($latest_first['cid_url'])) {
+        $latest_chapter_url_raw = (string)$latest_first['cid_url'];
+    }
+}
+$latest_chapter_name_attr = ss_qh($latest_chapter_name_raw);
+$latest_chapter_url_attr = ss_qh($latest_chapter_url_raw);
 
 require_once __ROOT_DIR__ . '/shipsay/seo.php';
 require_once __ROOT_DIR__ . '/shipsay/include/neighbor.php';
@@ -95,9 +108,8 @@ $popular_rows = (isset($postdate) && is_array($postdate)) ? $postdate : [];
         <div class="layout layout-col1">
             <h2 class="layout-tit">最新章节信息</h2>
             <div class="qula-meta-box">
-                <p>最新章节：<?php if($last_url_attr !== ''): ?><a href="<?=$last_url_attr?>"><?=ss_qh($lastchapter)?></a><?php else: ?><?=ss_qh($lastchapter)?><?php endif; ?></p>
+                <p>最新章节：<?php if($latest_chapter_url_raw !== ''): ?><a href="<?=$latest_chapter_url_attr?>"><?=$latest_chapter_name_attr?></a><?php else: ?><?=$latest_chapter_name_attr !== '' ? $latest_chapter_name_attr : '暂无'?><?php endif; ?></p>
                 <p>更新时间：<?=ss_qh(((isset($lastupdate_cn) && $lastupdate_cn) ? $lastupdate_cn : $lastupdate))?></p>
-                <p>目录页仅展示当前分页章节，详情页展示前 50 章预览。</p>
             </div>
         </div>
     </div>

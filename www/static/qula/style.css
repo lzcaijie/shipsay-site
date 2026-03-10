@@ -1749,3 +1749,39 @@ display:block;
     padding: 12px 10px;
   }
 }
+
+
+/* qula v5 r5 */
+.topbar-con {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-indent: 0;
+}
+.topbar-sethome,
+.topbar-addfavorite {
+  background: none;
+  padding-left: 0;
+  margin-right: 18px;
+}
+.topbar a {
+  display: inline-block;
+  line-height: 28px;
+}
+.topbar-right {
+  float: none;
+  margin-left: auto;
+}
+
+.qula-meta-box {
+  min-height: 0;
+}
+
+@media (min-width: 1025px) {
+  .detail-box .info .top .fix {
+    padding-right: 10px;
+  }
+  .detail-box .info p {
+    line-height: 28px;
+  }
+}
