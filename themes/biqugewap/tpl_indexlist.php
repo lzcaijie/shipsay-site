@@ -39,9 +39,9 @@ $first_url_attr = htmlspecialchars((string)$first_url, ENT_QUOTES, 'UTF-8');
 $info_url_attr = htmlspecialchars((string)$info_url, ENT_QUOTES, 'UTF-8');
 $intro_html = !empty($intro) ? (string)$intro : (!empty($intro_des) ? '<p>' . nl2br(htmlspecialchars((string)$intro_des, ENT_QUOTES, 'UTF-8')) . '</p>' : '<p>暂无简介</p>');
 $langtail_rows = !empty($langtailrows) && is_array($langtailrows) ? array_slice($langtailrows, 0, 12) : [];
-$postdate_rows = !empty($postdate) && is_array($postdate) ? array_slice($postdate, 0, 5) : [];
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 require_once __ROOT_DIR__.'/shipsay/include/neighbor.php';
+$postdate_rows = !empty($postdate) && is_array($postdate) ? array_slice($postdate, 0, 5) : [];
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('indexlist');
 if (trim((string)$seo_title) === '' || trim((string)$seo_title) === SITE_NAME) {
     $seo_title = $articlename . '章节目录' . ($current_page > 1 ? '第' . $current_page . '页' : '') . '_' . SITE_NAME;
