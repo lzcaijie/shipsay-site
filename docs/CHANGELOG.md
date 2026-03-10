@@ -1,3 +1,4 @@
+- 2026-03-10 2026fresh v5 r4：修复详情页/目录页白屏问题，原因是 tpl_info.php 与 tpl_indexlist.php 在引入 tpl_header.php 前提前调用 ss_h()；现改为直接使用 htmlspecialchars() 输出 canonical，避免模板级 fatal。
 ## 2026-03-10-04 | 模板 | 2026fresh 第三轮收尾（阅读页 / 分类页 / 作者页 / 搜索页 / 阅读记录）
 - 范围：仅调整 `themes/2026fresh/tpl_reader.php`、`tpl_search.php`、`tpl_author.php`、`tpl_category.php`、`tpl_recentread.php`、`www/static/2026fresh/css/main.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 收口：`tpl_reader.php` 补齐阅读页 canonical、`mobile-agent`、OG、`BreadcrumbList` 与页面包屑，`og:novel:index_url` 只在真实目录链接存在时输出，不再混填其它业务入口；章节标题、作者、字数、更新时间与目录按钮统一按展示层安全输出。
