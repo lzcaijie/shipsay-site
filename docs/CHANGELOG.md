@@ -1,3 +1,7 @@
+- shuyue v2：继续按 v5 收口模板层，仍只调整 `themes/shuyue/*` 与 `docs/CHANGELOG.md`；统一 `tpl_header.php / tpl_footer.php / tpl_error.php / tpl_search.php / tpl_author.php / tpl_recentread.php` 的站点首页、搜索、排行、阅读记录真实链接消费，不再在面包屑和错误页里继续写死首页旧入口。
+- shuyue v2：`tpl_info.php / tpl_indexlist.php / tpl_reader.php` 收口详情页、目录页、阅读页的真实链接链路；阅读页蜘蛛分页改为消费 `Url::chapter_url()`，不再硬写 `/read/{aid}/{cid}/{pid}.html`；详情页与目录页补齐最新章节/目录/相关推荐的同体系展示。
+- shuyue v2：`tpl_rank.php / tpl_top.php` 继续按 v5 统一为真实排行入口 + 聚合榜/单榜切换展示，并补齐头部导航高亮脚本，避免排行页进入后头部状态不一致。
+
 - shuyue v1：以本次上传的 `tpl_shuyue5_20260302` 备份为基线，恢复 `themes/shuyue/*` 与 `www/static/shuyue/*` 的完整模板骨架；当前完整包里 `themes/shuyue` 仅剩 `tpl_home.php / tpl_category.php / tpl_recentread.php`，且 `www/static/shuyue` 为空，已先按最小差异补回可运行模板层。
 - shuyue v1：不恢复会员系统相关文件，删除 `themes/shuyue/user/*`、`www/static/shuyue/js/user.js`，并同步去掉详情页/阅读页的加入书架与加入书签入口。
 - shuyue v1：`tpl_header.php / tpl_error.php / tpl_rank.php / tpl_top.php` 改为优先消费程序真实搜索、排行、阅读记录链接；不再默认写死 `/search/`、`/rank/` 等旧链路；缺失时改为禁用展示。

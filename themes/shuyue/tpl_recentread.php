@@ -1,14 +1,18 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
+<?php
+$site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
+$site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
+?>
 <!DOCTYPE html>
 <html lang="cmn-Hans">
 <head>
     <meta name="robots" content="noindex,follow">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>最近阅读-<?=SITE_NAME?></title>
-    <?php require_once 'tpl_header.php'; ?>
+    <title>最近阅读-<?=htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8')?></title>
+    <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container body-content">
     <ol class="breadcrumb hidden-xs">
-        <li><a href="/" title="<?=SITE_NAME?>"><i class="glyphicon glyphicon-home fs-14" aria-hidden="true"></i> 首页</a></li>
+        <li><a href="<?=$site_home_url_attr?>" title="<?=htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8')?>"><i class="glyphicon glyphicon-home fs-14" aria-hidden="true"></i> 首页</a></li>
         <li class="active">最近阅读</li>
     </ol>
     <div class="panel panel-default" style="min-height:600px;">
@@ -17,8 +21,8 @@
     </div>
     <div class="clear"></div>
 </div>
-<?php require_once 'tpl_footer.php'; ?>
-<script src="/static/<?=$theme_dir?>/js/tempbookcase.js?v=<?=date('Ymd', time())?>"></script>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
+<script src="/static/<?=htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8')?>/js/tempbookcase.js?v=<?=date('Ymd', time())?>"></script>
 <script>showtempbooks();</script>
-<script src="/static/<?=$theme_dir?>/js/layer.js"></script>
+<script src="/static/<?=htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8')?>/js/layer.js"></script>
 <script>nav_sel('nav_his');</script>
