@@ -1,3 +1,8 @@
+- shuyue v1：以本次上传的 `tpl_shuyue5_20260302` 备份为基线，恢复 `themes/shuyue/*` 与 `www/static/shuyue/*` 的完整模板骨架；当前完整包里 `themes/shuyue` 仅剩 `tpl_home.php / tpl_category.php / tpl_recentread.php`，且 `www/static/shuyue` 为空，已先按最小差异补回可运行模板层。
+- shuyue v1：不恢复会员系统相关文件，删除 `themes/shuyue/user/*`、`www/static/shuyue/js/user.js`，并同步去掉详情页/阅读页的加入书架与加入书签入口。
+- shuyue v1：`tpl_header.php / tpl_error.php / tpl_rank.php / tpl_top.php` 改为优先消费程序真实搜索、排行、阅读记录链接；不再默认写死 `/search/`、`/rank/` 等旧链路；缺失时改为禁用展示。
+- shuyue v1：`tpl_footer.php` 与 `www/static/shuyue/js/tempbookcase.js` 收口全站链接行为，移除非友情链接 `target="_blank"`；阅读记录清空只删除自身记录，不再 `localStorage.clear()` 全清。
+
 - qula v5 r6：修正 `tpl_header.php` 头部搜索地址取值顺序；当 `ss_search_url()` 存在但返回空值时，自动回退到 `fake_search`，避免搜索框被渲染为禁用不可输入。
 ## 2026-03-10 qula v5 r5
 - qula：头部移除书库榜单入口，保留首页/排行榜单/完本小说/阅读记录。
