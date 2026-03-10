@@ -69,6 +69,26 @@
 </style>
 <script src="/static/<?=$theme_dir?>/tempbookcase.js"></script>
 <?php require_once 'tpl_header.php'; ?>
+<style>
+.user_right{width:1024px;max-width:100%;margin:10px auto 0;min-height:0;border:none;background:transparent;box-sizing:border-box}
+.user_right>div:first-child{border:1px solid #b4d9e7;border-bottom:none;background:#f7f7f7}
+.user_right .r_2{margin:0;border:1px solid #b4d9e7;background:#e9faff;padding:0 18px;box-sizing:border-box}
+#history{padding:0}
+#tempBookcase{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap}
+#tempBookcase .bookone{float:none;display:flex;align-items:center;width:50%;box-sizing:border-box;padding:16px 14px;min-height:104px;border-bottom:1px solid #b4d9e7}
+#tempBookcase .bcimg{float:none;flex:0 0 58px;padding-right:12px}
+#tempBookcase .bcimg img{display:block;width:48px;height:69px;object-fit:cover}
+#tempBookcase .bcinfo{flex:1;min-width:0;position:relative;padding-right:72px}
+#tempBookcase .casename,#tempBookcase .upcase{height:auto;line-height:1.8;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+#tempBookcase .casedel{position:absolute;right:0;top:50%;transform:translateY(-50%)}
+#tempBookcase .casedel a{position:static;display:inline-block;margin-right:0}
+@media (max-width:1024px){
+  .user_right{width:auto;margin:0;background:#e9faff}
+  .user_right .r_2{padding:0 10px}
+  #tempBookcase .bookone{width:100%;padding:14px 0}
+  #tempBookcase .bcinfo{padding-right:68px}
+}
+</style>
 <script>$('.nav li:nth-last-child(1)').css('background', '#5E8E9E');</script>
 <div class="user_right">
     <div style="background: #F7F7F7; padding: 8px 0px; font-size: 14px; text-align: center; font-weight: bold; border-bottom: 1px solid #E6E6E6;">阅读记录</div>
