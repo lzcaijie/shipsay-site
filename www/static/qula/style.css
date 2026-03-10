@@ -293,10 +293,11 @@ body {
 }
 
 .m-nav li {
-  flex: 1 1 auto;
+  flex: 1 1 20%;
 }
 
 .m-nav li a {
+  display: block;
   color: #fff;
 }
 
@@ -866,10 +867,10 @@ display:block;
 .row-rank .layout-col1,
 .row-detail .layout-col1,
 .row-section .layout-col1 {
-  width: 253px;
-  margin-right: 4px;
+  width: 100%;
+  margin-right: 0;
   margin-bottom: 10px;
-  float: left;
+  float: none;
   padding-bottom: 0;
   border: 2px solid #88C6E5;
 }
@@ -1148,11 +1149,14 @@ display:block;
   }
 
   .detail-box .opt {
-    position: absolute;
-    top: 155px;
-    left: 0;
-    padding: 0 7px;
+    position: static;
+    top: auto;
+    left: auto;
+    width: 100%;
+    padding: 8px 0 0;
+    margin-top: 8px;
     display: flex;
+    flex-wrap: nowrap;
     overflow: visible !important;
   }
 
@@ -1624,6 +1628,33 @@ display:block;
 .qula-rank-single {
   padding: 8px 0 12px;
 }
+.qula-rank-single li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qula-rank-single .s1 {
+  flex: 0 0 32px;
+  max-width: none;
+}
+
+.qula-rank-single .s2 {
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+}
+
+.qula-rank-single .s4 {
+  flex: 0 0 120px;
+  text-align: center;
+}
+
+.qula-rank-single .s5 {
+  flex: 0 0 56px;
+  width: auto;
+}
+
 
 @media (max-width: 1024px) {
   .reader-main .section-opt {
@@ -1638,7 +1669,7 @@ display:block;
     float: none;
     width: auto;
     min-width: 0;
-    flex: 1 1 25%;
+    flex: 1 1 0;
     box-sizing: border-box;
     padding: 10px 4px;
     line-height: 1.4;
@@ -1666,6 +1697,23 @@ display:block;
   .qula-rank-card {
     width: 100%;
     margin-bottom: 12px;
+  }
+
+  .qula-rank-single li {
+    gap: 6px;
+  }
+
+  .qula-rank-single .s1 {
+    flex: 0 0 24px;
+  }
+
+  .qula-rank-single .s4 {
+    flex: 0 0 72px;
+    text-align: right;
+  }
+
+  .qula-rank-single .s5 {
+    flex: 0 0 44px;
   }
 
   .qula-link-list,
