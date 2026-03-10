@@ -1,5 +1,5 @@
 //搜索框
-function search(){const placestr = '可搜书名和作者，请您少字也别输错字。';document.write('<form name="t_frmsearch" method="post" action="/search/"  target="_blank" class="search-form" onsubmit="return chkval()"><input autocomplete="off" id="searchkey" type="text" name="searchkey" class="input-text input-key" placeholder="'+placestr+'"><button type="submit" name="Submit" id="search_btn" class="btn-tosearch" value="搜索" title="搜索" >搜索</button></form>');}
+function search(){const placestr='可搜书名和作者，请您少字也别输错字。';const searchUrl=(window.SS_SEARCH_URL||'').toString();if(searchUrl){document.write('<form name="t_frmsearch" method="get" action="'+searchUrl+'" class="search-form" onsubmit="return chkval()"><input autocomplete="off" id="searchkey" type="text" name="searchkey" class="input-text input-key" placeholder="'+placestr+'"><button type="submit" name="Submit" id="search_btn" class="btn-tosearch" value="搜索" title="搜索" >搜索</button></form>');}else{document.write('<form class="search-form search-form-disabled" onsubmit="return false;"><input autocomplete="off" type="text" class="input-text input-key" placeholder="'+placestr+'" disabled><button type="button" class="btn-tosearch" disabled>搜索</button></form>');}}
 function chkval(){
 	let skey = '';
 	if($('#searchkey').val() == ''){

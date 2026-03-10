@@ -120,7 +120,13 @@ LastRead.prototype = {
 
   removeAll: function () {
     if (!!window.localStorage) {
-      window.localStorage.clear();
+      var v = this.getItem(this.bookList) ? this.getItem(this.bookList).split("#") : Array();
+      if (v.length) {
+        for (i in v) {
+          this.removeItem(v[i]);
+        }
+      }
+      this.removeItem(this.bookList);
     } else {
       var v = this.getItem(this.bookList) ? this.getItem(this.bookList).split("#") : Array();
       if (v.length) {
@@ -157,15 +163,15 @@ function showtempbooks() {
         bookhtml += '<li class="bookone">';
         bookhtml += '<div class="bcimg">';
         // books[i][0] = info_url（详情页）
-        bookhtml += '<a href="' + books[i][0] + '" target="_blank">';
+        bookhtml += '<a href="' + books[i][0] + '">';
         bookhtml += '<img height="69" width="48" src="' + cover + '" style="display:inline;" onerror="this.src=\'/static/qula/nocover.jpg\'">';
         bookhtml += "</a>";
         bookhtml += "</div>";
 
         bookhtml += '<div class="bcinfo">';
-        bookhtml += '<div class="casename" style="line-height:35px;">书名：<a href="' + books[i][0] + '" target="_blank">' + books[i][2] + "</a></div>";
+        bookhtml += '<div class="casename" style="line-height:35px;">书名：<a href="' + books[i][0] + '">' + books[i][2] + "</a></div>";
         // books[i][1] = uri（阅读记录/继续阅读）
-        bookhtml += '<div class="upcase" style="height:36px;">记录：<a href="' + books[i][1] + '" target="_blank">' + books[i][3] + "</a></div>";
+        bookhtml += '<div class="upcase" style="height:36px;">记录：<a href="' + books[i][1] + '">' + books[i][3] + "</a></div>";
         bookhtml += '<div class="casedel"><a href="javascript:removebook(\'' + books[i][0] + '\')" onclick="return confirm(\'确定要将本书移除吗？\')">移除</a></div>';
         bookhtml += "</div>";
 

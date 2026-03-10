@@ -55,7 +55,6 @@ if (isset($index_url) && $index_url) {
                                 <p class="xs-show">状&nbsp;&nbsp;态：<?=$isfull?></p>
                                 <p class="opt"> <span class="xs-hidden"> 动&nbsp;&nbsp;作：</span>
                                   <a href="<?=$first_url?>" class="xs-show btn-read">开始阅读</a>
-                                  <a rel="nofollow" href="javascript:addbookcase('<?=$articleid?>','<?=$articlename?>')" class="btn_toBookShelf">加入书架</a> <i class="xs-hidden">、</i>
                                   <a rel="nofollow" href="#footer" class="btn-tobtm">直达底部</a> <i class="xs-hidden">、</i>
                                 </p>
                                 <p>最后更新：<?=$lastupdate?> </p>
