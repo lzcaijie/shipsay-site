@@ -1506,3 +1506,171 @@ display:block;
     display: block;
     width: 25%;
 }
+/* qula v5 r2 */
+.qula-view-all {
+  text-align: center;
+  padding: 16px 0 6px;
+}
+
+.qula-view-all-btn {
+  display: inline-block;
+  padding: 10px 24px;
+  border-radius: 4px;
+  background: #4e9ec9;
+  color: #fff;
+  text-decoration: none;
+}
+
+.qula-meta-box,
+.qula-intro-box,
+.qula-link-list {
+  padding: 14px 15px;
+  line-height: 1.9;
+  color: #555;
+}
+
+.qula-meta-box p {
+  margin: 0 0 6px;
+}
+
+.qula-link-list a {
+  display: inline-block;
+  margin: 0 12px 8px 0;
+  color: #444;
+}
+
+.qula-rank-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.qula-rank-back {
+  font-size: 13px;
+  font-weight: normal;
+}
+
+.qula-rank-nav {
+  padding: 12px 15px 0;
+  line-height: 1.8;
+}
+
+.qula-rank-nav a {
+  display: inline-block;
+  margin: 0 10px 10px 0;
+  padding: 4px 10px;
+  border: 1px solid #d9e8ef;
+  border-radius: 3px;
+  color: #444;
+}
+
+.qula-rank-nav a.active {
+  background: #4e9ec9;
+  border-color: #4e9ec9;
+  color: #fff;
+}
+
+.qula-rank-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.qula-rank-card {
+  width: calc(50% - 6px);
+  border: 1px solid #d9e8ef;
+  background: #fff;
+}
+
+.qula-rank-card-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: #f5fbfe;
+  border-bottom: 1px solid #d9e8ef;
+}
+
+.qula-rank-card-hd a {
+  font-size: 13px;
+}
+
+.qula-rank-list {
+  margin: 0;
+  padding: 8px 12px 12px 28px;
+}
+
+.qula-rank-list li {
+  margin: 0;
+  line-height: 2;
+}
+
+.qula-rank-list li .num {
+  display: inline-block;
+  width: 22px;
+  color: #888;
+}
+
+.qula-rank-list li .author {
+  margin-left: 8px;
+  color: #888;
+}
+
+.qula-rank-list li.empty {
+  color: #888;
+}
+
+.qula-rank-single {
+  padding: 8px 0 12px;
+}
+
+@media (max-width: 1024px) {
+  .reader-main .section-opt {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 0;
+  }
+
+  .reader-main .section-opt a {
+    float: none;
+    width: auto;
+    min-width: 0;
+    flex: 1 1 25%;
+    box-sizing: border-box;
+    padding: 10px 4px;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+
+  .reader-main .m-bottom-opt {
+    margin-top: 20px;
+  }
+
+  .qula-rank-head {
+    display: block;
+  }
+
+  .qula-rank-back {
+    display: inline-block;
+    margin-top: 8px;
+  }
+
+  .qula-rank-grid {
+    display: block;
+    padding: 10px 0;
+  }
+
+  .qula-rank-card {
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .qula-link-list,
+  .qula-meta-box,
+  .qula-intro-box {
+    padding: 12px 10px;
+  }
+}
