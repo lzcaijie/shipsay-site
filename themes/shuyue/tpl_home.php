@@ -11,7 +11,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
 <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <link rel="canonical" href="<?=$site_url?>">
-<?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once __THEME_DIR__ . '/tpl_fun.php'; ?>
+<?php require_once __DIR__ . '/tpl_header.php'; require_once __DIR__ . '/tpl_fun.php'; ?>
 <?php $top_url_safe = !empty($fake_top) ? $fake_top : '/rank/'; ?>
 
 <div class="body_46f container body-content">
@@ -177,4 +177,4 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
     </div>
 </div>
 <?php $page_end_scripts = "<script>nav_sel('nav_index');</script>"; ?>
-<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
+<?php require_once __DIR__ . '/tpl_footer.php'; ?>
