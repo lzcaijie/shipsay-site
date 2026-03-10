@@ -1,49 +1,7 @@
-## 2026-03-10 | 模板 | biqugewap 详情/目录推荐数据热修（v9）
-- 范围：仅调整 `themes/biqugewap/tpl_info.php`、`tpl_indexlist.php` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与主样式。
-- 修正：`tpl_info.php`、`tpl_indexlist.php` 中 `postdate_rows` 之前在 `require_once neighbor.php` 前就被截取，导致详情页/目录页底部“人气小说推荐”永远拿不到 `neighbor.php` 注入后的推荐数据；本轮改为先引入 `neighbor.php`，再截取 `postdate`。
-- 保持：详情页继续维持“最新12章 + 顺序 1-50 章”；目录页继续维持与详情页同体系；`相关小说推荐` 文案与简介防溢出保持 v7/v8 口径不变。
-
-## 2026-03-09 biqugewap v8
-- 详情页补回“最新12章”区，并保持“1-50章”顺序预览。
-- 详情页、目录页将“百度长尾词推荐”统一改为“相关小说推荐”。
-- 目录页重新引入 neighbor 推荐数据，补回“人气小说推荐”内容。
-- book.css 仅增强简介富文本防溢出，不改主布局。
-
-## 2026-03-10 | 模板 | biqugewap 详情/目录补齐长尾词与推荐收口（v7）
-- 范围：仅调整 `themes/biqugewap/tpl_info.php`、`tpl_indexlist.php`、`www/static/biqugewap/book.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
-- 收口：`tpl_info.php`、`tpl_indexlist.php` 统一补回“百度长尾词推荐”区块，判断条件与链接字段保持一致，统一消费 `langtailrows -> info_url / langname`。
-- 收口：`tpl_indexlist.php` 重新补回“人气小说推荐”区块，与详情页保持同一套入口与展示口径；有数据时显示 5 条，无数据时给出兜底文案。
-- 收口：`tpl_info.php`、`tpl_indexlist.php` 的简介区统一包一层 `bookintro-content`，并在 `book.css` 增补受控溢出规则，避免移动端简介中的长文本 / 富文本把容器撑坏。
-
-## 2026-03-10 | 模板 | biqugewap 详情/目录/底部统一收口（v6）
-- 范围：仅调整 `themes/biqugewap/tpl_info.php`、`tpl_indexlist.php`、`tpl_footer.php` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与主样式文件。
-- 收口：`tpl_info.php` 的章节预览由旧 `lastarr` 最新章节块改为优先消费 `preview_chapters`，详情页恢复“1-50章”预览；无预览时才回退现有章节数组。
-- 收口：`tpl_indexlist.php` 按详情页同体系重排为书封信息区 + 简介区 + 章节目录区，顶部按钮、最新章节信息与底部推荐模块和详情页保持同一套展示口径。
-- 收口：`tpl_footer.php` 统一补回站点地图一行，并继续由公共 footer 输出搜索浮层与回到顶部，不再把网站地图分散写到各页面。
-- 收口：`tpl_info.php` 补回缺失的更多菜单容器，使详情页与目录页继续共用同一套头部交互。
-
-- biqugewap v5：继续收尾 tpl_recentread/tpl_error/static JS；阅读记录清空改为只清本站记录、不再 localStorage.clear；修复阅读记录脏数据自动清洗；搜索浮层改为显式 show/hide；404 返回首页统一跟随站点地址。
-## 2026-03-09 biqugewap v4 首页书友收藏榜显示热修
-- 模板：`biqugewap`
-- 范围：仅修正 `themes/biqugewap/tpl_home.php` 首页书友收藏榜列表项 HTML 结构，不动 CSS。
-- 修正：收藏榜第 2-5 条书名/作者链接标签在 v3 后存在缺失闭合与内容错位，导致手机端只显示序号、正文区域留白；本轮改回正常的书名链接 + 作者链接结构。
-
-## 2026-03-09 biqugewap v3
-- 继续按 v5 标准收口 `tpl_top / tpl_rank / tpl_indexlist / tpl_category / tpl_author`，不动核心目录与 CSS 主样式。
-- `tpl_top.php` 改为正式消费 `top_sections / top_rank_lists / top_rank_limit`，去掉模板内自查库 SQL 与分类榜拼装，排行入口统一跟随 `rank_entry_url / rank_detail_base / fake_top`。
-- `tpl_rank.php` 修正旧单榜页标题、入口与未转义输出，去掉错误的多余 `</span>` 标签，榜单标题改正式跟随当前 `query / page_title`。
-- `tpl_indexlist.php` 去掉写死每页 50 章，目录分页改优先跟随 `per_indexlist / per_page`，保留当前手机端结构只做模板层安全输出与空态补齐。
-- `tpl_category.php` / `tpl_author.php` 统一公共 guide 入口、首页/排行/记录链接来源，并补书名、作者、简介等安全输出。
-
-## 2026-03-09 biqugewap v2
-- 清理模板层会员系统残留：移除会员书架/登录注册模板、删除 user.js、去掉加书签/加入书架与 /bookcase/ 入口。
-- guide 更多弹层统一移除会员书架按钮，首页头部左侧入口改为阅读记录。
-- 保持手机端现有样式与主结构，不做 CSS 调整，只做模板层最小差异收口。
-
-## 2026-03-09 biqugewap v1 起手模板收口
-- 模板：`biqugewap`
-- 范围：仅首轮模板层收口，不动核心目录，不先动 CSS。
-- 调整：修正 footer / error 搜索入口不再模板层写死 `/search/`；首页排行 More 入口改跟随当前排行变量；修正首页收藏榜错误链接；详情页去掉站内 `target="_blank"`；搜索页统一单一 head/body 结构并补搜索词安全输出；阅读页去掉 `javascript:void(0)` 伪链接并修正蜘蛛分页旧 `/read/` 写死链路。
+## 2026-03-10-01 | 模板 | fresh2026 重命名为 2026fresh（目录与静态目录）
+- 范围：仅调整 `themes/fresh2026 -> themes/2026fresh`、`www/static/fresh2026 -> www/static/2026fresh` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 处理：本轮只做模板目录与静态目录重命名，模板内部继续沿用 `__THEME_DIR__` 与 `$theme_dir` 动态取路径，不新增硬编码静态路径。
+- 结论：后续该模板统一以 `2026fresh` 作为母模板目录名，便于与 `2025 / 2025txt` 体系区分；旧 `fresh2026` 目录不再保留。
 
 ## 2026-03-09-13 | 模板 | 2025txt 头部搜索死链收口（v6）
 - 范围：仅调整 `themes/2025txt/tpl_header.php`、`www/static/2025txt/css/2025.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
