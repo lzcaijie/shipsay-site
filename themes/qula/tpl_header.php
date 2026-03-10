@@ -74,9 +74,9 @@ $search_placeholder = '可搜书名和作者，请您少字也别输错字。';
   <?php endif; ?>
 </ul>
 <ul class="m-nav">
+  <li><a href="/">首页</a></li>
   <?php if ($top_url_safe): ?><li><a href="<?=htmlspecialchars($top_url_safe, ENT_QUOTES, 'UTF-8')?>">排行</a></li><?php endif; ?>
   <?php if ($allbooks_url_safe): ?><li><a href="<?=htmlspecialchars($allbooks_url_safe, ENT_QUOTES, 'UTF-8')?>">书库</a></li><?php endif; ?>
   <?php if ($full_allbooks_url_safe): ?><li><a href="<?=htmlspecialchars($full_allbooks_url_safe, ENT_QUOTES, 'UTF-8')?>">完本</a></li><?php endif; ?>
   <?php if ($recentread_url_safe): ?><li><a href="<?=htmlspecialchars($recentread_url_safe, ENT_QUOTES, 'UTF-8')?>" rel="nofollow">阅读记录</a></li><?php endif; ?>
-  <?php if ($search_url_safe): ?><li><a href="<?=htmlspecialchars($search_url_safe, ENT_QUOTES, 'UTF-8')?>" rel="nofollow">搜索</a></li><?php endif; ?>
 </ul>
