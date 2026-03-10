@@ -16,7 +16,7 @@ $curid = 0;
     <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
     <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
     <link rel="canonical" href="<?=$cateurl?>">
-    <?php require_once __DIR__ . '/tpl_header.php'; require_once __DIR__ . '/tpl_fun.php'; ?>
+    <?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once 'tpl_fun.php'; ?>
 <div class="class">
     <ul class="container">
         <?php if(!empty($sortcategory) && is_array($sortcategory)): ?>
@@ -89,4 +89,4 @@ if($fullflag){
     $page_end_scripts = "<script>nav_sel('nav_sort');nav_sel('sort{$curid}');</script>";
 }
 ?>
-<?php require_once __DIR__ . '/tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>

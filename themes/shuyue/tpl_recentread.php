@@ -5,7 +5,7 @@
     <meta name="robots" content="noindex,follow">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>最近阅读-<?=SITE_NAME?></title>
-    <?php require_once __DIR__ . '/tpl_header.php'; ?>
+    <?php require_once 'tpl_header.php'; ?>
 <div class="container body-content">
     <ol class="breadcrumb hidden-xs">
         <li><a href="/" title="<?=SITE_NAME?>"><i class="glyphicon glyphicon-home fs-14" aria-hidden="true"></i> 首页</a></li>
@@ -17,7 +17,7 @@
     </div>
     <div class="clear"></div>
 </div>
-<?php require_once __DIR__ . '/tpl_footer.php'; ?>
+<?php require_once 'tpl_footer.php'; ?>
 <script src="/static/<?=$theme_dir?>/js/tempbookcase.js?v=<?=date('Ymd', time())?>"></script>
 <script>showtempbooks();</script>
 <script src="/static/<?=$theme_dir?>/js/layer.js"></script>
