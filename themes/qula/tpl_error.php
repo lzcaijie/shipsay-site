@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <title>404-<?=SITE_NAME?></title>
 <?php
-$search_url_safe = function_exists('ss_search_url') ? ss_search_url() : ((isset($fake_search)&&$fake_search)?$fake_search:'/search/');
+$search_url_safe = function_exists('ss_search_url') ? ss_search_url() : ((isset($fake_search) && $fake_search) ? $fake_search : '');
 ?>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 </head>
@@ -17,10 +17,14 @@ $search_url_safe = function_exists('ss_search_url') ? ss_search_url() : ((isset(
     <a href="/" rel="nofollow">返回首页</a>
     &nbsp;|&nbsp;<a href="javascript:history.back();" rel="nofollow">返回上一页</a>
   </div>
-  <form action="<?=$search_url_safe?>" method="get" style="margin:12px 0;">
+  <?php if ($search_url_safe): ?>
+  <form action="<?=htmlspecialchars($search_url_safe, ENT_QUOTES, 'UTF-8')?>" method="get" style="margin:12px 0;">
     <input type="text" name="searchkey" placeholder="搜索书名/作者" style="padding:8px;width:240px;max-width:80%;" required>
     <button type="submit" style="padding:8px 12px;">搜索</button>
   </form>
+  <?php else: ?>
+  <div style="margin:12px 0;color:#999;">当前未配置搜索入口</div>
+  <?php endif; ?>
 </div>
 <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
 </body>

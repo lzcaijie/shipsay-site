@@ -1,32 +1,12 @@
-- 2026-03-10 2026fresh v5 r4：修复详情页/目录页白屏问题，原因是 tpl_info.php 与 tpl_indexlist.php 在引入 tpl_header.php 前提前调用 ss_h()；现改为直接使用 htmlspecialchars() 输出 canonical，避免模板级 fatal。
-## 2026-03-10-04 | 模板 | 2026fresh 第三轮收尾（阅读页 / 分类页 / 作者页 / 搜索页 / 阅读记录）
-- 范围：仅调整 `themes/2026fresh/tpl_reader.php`、`tpl_search.php`、`tpl_author.php`、`tpl_category.php`、`tpl_recentread.php`、`www/static/2026fresh/css/main.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
-- 收口：`tpl_reader.php` 补齐阅读页 canonical、`mobile-agent`、OG、`BreadcrumbList` 与页面包屑，`og:novel:index_url` 只在真实目录链接存在时输出，不再混填其它业务入口；章节标题、作者、字数、更新时间与目录按钮统一按展示层安全输出。
-- 收口：`tpl_category.php`、`tpl_author.php` 按 v5 列表页口径补齐 canonical、`mobile-agent`、OG、`BreadcrumbList`，并清掉模板层裸输出的书名/作者/链接属性；分类筛选与分页继续只消费 app 已提供的真实链接。
-- 收口：`tpl_search.php`、`tpl_recentread.php` 继续按最小差异修复安全输出，搜索词、结果列表、热门推荐、阅读记录推荐位统一做转义；不新增业务 URL 拼接，不改现有数据逻辑。
-- 微调：`www/static/2026fresh/css/main.css` 仅补 `tag.active` 与阅读正文受控内容的轻样式，不重排主结构。
-- 结论：本轮把 2026fresh 剩余高风险页面先收完到可测试状态，后续优先等真实页面回归测试结果，不主动继续大改。
-
-## 2026-03-10-03 | 模板 | 2026fresh 详情页 / 目录页按 v5 第二轮收口
-- 范围：仅调整 `themes/2026fresh/tpl_info.php`、`themes/2026fresh/tpl_indexlist.php`、`www/static/2026fresh/css/main.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
-- 收口：`tpl_info.php` 正式引入 `shipsay/include/neighbor.php`，详情页底部推荐不再依赖偶发变量；相关推荐统一改为“相关小说推荐”，推荐阅读统一改为“人气小说推荐”，章节预览标题改为“顺序 1-50章”口径，最新章节标题改为“最新12章”。
-- 收口：`tpl_indexlist.php` 调整为与详情页同体系，补齐“书籍信息区 / 最新章节信息 / 内容简介 / 顺序目录分页 / 相关小说推荐 / 人气小说推荐”六块内容；目录页同时补 canonical 与 prev/next 链接，分页继续只消费真实目录链接。
-- 微调：`www/static/2026fresh/css/main.css` 只补简介与目录列表所需的轻样式，不重排现有主结构。
-- 结论：本轮继续遵守“先模板层、后 CSS、最小差异修复”，把详情页和目录页收成同一套 v5 展示口径。
-
-## 2026-03-10-02 | 模板 | 2026fresh 按 v5 首轮收口（公共链接 / 排行页 / 阅读记录）
-- 范围：仅调整 `themes/2026fresh/*`、`www/static/2026fresh/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
-- 收口：`tpl_header.php` 去掉 `/search/`、`/history.html`、`/rank/allvisit/` 这类模板层硬编码 fallback，统一改为优先消费上游真实 `fake_search / fake_recentread / rank_entry_url / fake_top`；缺失时在模板层做禁用展示，不再反向造旧链路。
-- 收口：`tpl_home.php / tpl_author.php / tpl_category.php / tpl_search.php / tpl_info.php / tpl_indexlist.php / tpl_reader.php / tpl_recentread.php / tpl_error.php` 的顶部搜索与公共入口统一消费 header 下发的 `*_raw / *_attr`，缺链接时禁用，不再默认提交到当前页或写死旧地址。
-- 修正：`tpl_rank.php` 不再写死 `/rank/{type}/`，单榜页切换统一消费 `rank_detail_base`；`tpl_top.php` 改为正式消费 `top_sections / top_rank_lists / top_rank_limit`，不再继续输出旧的分类拼装榜。
-- 修正：`www/static/2026fresh/js/tempbookcase.js` 与 `js/vendor/tempbookcase.js` 的 `removeAll()` 不再 `localStorage.clear()` 全清；仅删除本模板阅读记录键，避免误伤站内其它本地存储。
-- 微调：`www/static/2026fresh/css/main.css` 仅补齐禁用态与聚合排行页所需样式，不大改现有页面主结构。
-- 结论：本轮先收高风险公共链路与排行页，继续遵守“先模板层、后 CSS、最小差异修复”的 v5 口径。
-
-## 2026-03-10-01 | 模板 | fresh2026 重命名为 2026fresh（目录与静态目录）
-- 范围：仅调整 `themes/fresh2026 -> themes/2026fresh`、`www/static/fresh2026 -> www/static/2026fresh` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
-- 处理：本轮只做模板目录与静态目录重命名，模板内部继续沿用 `__THEME_DIR__` 与 `$theme_dir` 动态取路径，不新增硬编码静态路径。
-- 结论：后续该模板统一以 `2026fresh` 作为母模板目录名，便于与 `2025 / 2025txt` 体系区分；旧 `fresh2026` 目录不再保留。
+## 2026-03-10-01 | 模板 | qula 首轮按 v5 清会员残留与旧入口（v1）
+- 范围：仅调整 `themes/qula/*`、`www/static/qula/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 清理：删除 `themes/qula/user/*` 与 `www/static/qula/user.js`，模板层不再保留会员书架、登录/注册、加入书架/书签等入口。
+- 收口：`tpl_header.php` 改为直接输出真实搜索表单与公共导航，去掉 `login()` / `MLogin()` 注入，排行与阅读记录入口优先消费真实变量，不再默认写死 `/rank/`；同步下发 `SS_SEARCH_URL` 给静态搜索脚本。
+- 收口：`tpl_error.php` 不再写死 `/search/` fallback；搜索入口缺失时只做提示，不再反造旧搜索链路。
+- 修正：`tpl_footer.php` 去掉非友情链接的 `target="_blank"`；移动端 footer 改为首页 / 阅读记录 / 排行 / 顶部。
+- 修正：`www/static/qula/tempbookcase.js` 的 `removeAll()` 不再 `localStorage.clear()` 全清，同时移除阅读记录详情/继续阅读链接的 `target="_blank"`。
+- 清理：`www/static/qula/common.js` 的搜索函数不再写死 `/search/` 与新开窗口；未再使用的 `www/static/qula/history.js`、`www/static/qula/motheme.js` 一并删除。
+- 结论：qula 首轮先按 v5 把“多余会员系统 + 旧入口 + 全清本地存储”这批高风险问题清掉，后续再继续收详情页、目录页、排行页。
 
 ## 2026-03-09-13 | 模板 | 2025txt 头部搜索死链收口（v6）
 - 范围：仅调整 `themes/2025txt/tpl_header.php`、`www/static/2025txt/css/2025.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。

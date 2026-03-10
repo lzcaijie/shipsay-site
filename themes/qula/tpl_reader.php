@@ -255,8 +255,6 @@ $pageDescription .= '，作者：' . $author . '。';
                     <?php endif; ?>
                 </div>
                 
-                <a href="javascript:addbookcase('<?=$articleid?>','<?=$articlename?>','<?=$chapterid?>','<?=$chaptername?>')" class="btn-addbs">『加入书签，方便阅读』</a>
-
                 <div class="section-opt m-bottom-opt" style="margin: 0px; top: 0">
                     <?php if($prevpage_url != ''): ?>
                         <a id="prev_url" href="<?=$prevpage_url?>"> 上一页</a>
