@@ -27,7 +27,6 @@ $allbooks_url_info = !empty($allbooks_url) ? htmlspecialchars((string)$allbooks_
 $full_allbooks_url_info = !empty($full_allbooks_url) ? htmlspecialchars((string)$full_allbooks_url, ENT_QUOTES, 'UTF-8') : $allbooks_url_info;
 $intro_html = !empty($intro) ? (string)$intro : (!empty($intro_des) ? '<p>' . nl2br(htmlspecialchars((string)$intro_des, ENT_QUOTES, 'UTF-8')) . '</p>' : '<p>暂无简介</p>');
 $langtail_rows = !empty($langtailrows) && is_array($langtailrows) ? array_slice($langtailrows, 0, 12) : [];
-$postdate_rows = !empty($postdate) && is_array($postdate) ? array_slice($postdate, 0, 5) : [];
 $latest_rows = !empty($lastchapter_arr) && is_array($lastchapter_arr) ? array_slice($lastchapter_arr, 0, 12) : [];
 $preview_rows = [];
 if (!empty($chapterrows) && is_array($chapterrows)) {
@@ -57,7 +56,9 @@ $preview_title = $preview_end > 0 ? '1-' . $preview_end . '章' : '章节预览'
 <meta http-equiv="Cache-Control" content="no-transform">
 <meta http-equiv="Cache-Control" content="no-siteapp">
 <link rel="stylesheet" href="/static/<?=$theme_dir?>/book.css">
-<?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once __ROOT_DIR__ .'/shipsay/include/neighbor.php';
+$postdate_rows = !empty($postdate) && is_array($postdate) ? array_slice($postdate, 0, 5) : [];
+?>
 </head>
 <body>
     <header class="header">

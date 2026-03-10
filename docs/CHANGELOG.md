@@ -1,3 +1,8 @@
+## 2026-03-10 | 模板 | biqugewap 详情/目录推荐数据热修（v9）
+- 范围：仅调整 `themes/biqugewap/tpl_info.php`、`tpl_indexlist.php` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与主样式。
+- 修正：`tpl_info.php`、`tpl_indexlist.php` 中 `postdate_rows` 之前在 `require_once neighbor.php` 前就被截取，导致详情页/目录页底部“人气小说推荐”永远拿不到 `neighbor.php` 注入后的推荐数据；本轮改为先引入 `neighbor.php`，再截取 `postdate`。
+- 保持：详情页继续维持“最新12章 + 顺序 1-50 章”；目录页继续维持与详情页同体系；`相关小说推荐` 文案与简介防溢出保持 v7/v8 口径不变。
+
 ## 2026-03-09 biqugewap v8
 - 详情页补回“最新12章”区，并保持“1-50章”顺序预览。
 - 详情页、目录页将“百度长尾词推荐”统一改为“相关小说推荐”。
