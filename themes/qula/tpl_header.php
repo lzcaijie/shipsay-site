@@ -2,7 +2,13 @@
 <!-- header -->
 <?php
 $top_url_safe = !empty($rank_entry_url) ? $rank_entry_url : (!empty($fake_top) ? $fake_top : '');
-$search_url_safe = function_exists('ss_search_url') ? ss_search_url() : ((isset($fake_search) && $fake_search) ? $fake_search : '');
+$search_url_safe = '';
+if (function_exists('ss_search_url')) {
+    $search_url_safe = (string) ss_search_url();
+}
+if ($search_url_safe === '' && isset($fake_search) && $fake_search) {
+    $search_url_safe = (string) $fake_search;
+}
 $recentread_url_safe = function_exists('ss_recentread_url') ? ss_recentread_url() : ((isset($fake_recentread) && $fake_recentread) ? $fake_recentread : '');
 $allbooks_url_safe = !empty($allbooks_url) ? $allbooks_url : '';
 $full_allbooks_url_safe = !empty($full_allbooks_url) ? $full_allbooks_url : ($allbooks_url_safe ? ('/quanben' . $allbooks_url_safe) : '');
