@@ -618,13 +618,21 @@ display:block;
   }
 
   .topbar,
-  .nav,
-  .pc-footer {
+  .nav {
     display: none;
   }
 
+  .pc-footer {
+    display: block;
+    width: auto;
+    margin: 0 10px;
+    padding: 12px 10px 16px;
+    line-height: 1.8;
+    font-size: 12px;
+  }
+
   .m-footer {
-    display: flex;
+    display: none;
   }
 
   .m-nav {
@@ -1555,14 +1563,17 @@ display:block;
 }
 
 .qula-rank-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   padding: 12px 15px 0;
   line-height: 1.8;
 }
 
 .qula-rank-nav a {
   display: inline-block;
-  margin: 0 10px 10px 0;
-  padding: 4px 10px;
+  margin: 0 0 10px;
+  padding: 4px 12px;
   border: 1px solid #d9e8ef;
   border-radius: 3px;
   color: #444;
@@ -1626,12 +1637,13 @@ display:block;
 }
 
 .qula-rank-single {
-  padding: 8px 0 12px;
+  padding: 10px 15px 14px;
 }
 .qula-rank-single li {
   display: flex;
   align-items: center;
   gap: 8px;
+  padding: 4px 0;
 }
 
 .qula-rank-single .s1 {
@@ -1689,6 +1701,16 @@ display:block;
     margin-top: 8px;
   }
 
+  .qula-rank-nav {
+    gap: 8px;
+    padding: 10px 10px 0;
+  }
+
+  .qula-rank-nav a {
+    margin: 0 0 8px;
+    padding: 4px 10px;
+  }
+
   .qula-rank-grid {
     display: block;
     padding: 10px 0;
@@ -1699,8 +1721,13 @@ display:block;
     margin-bottom: 12px;
   }
 
+  .qula-rank-single {
+    padding: 10px 10px 12px;
+  }
+
   .qula-rank-single li {
     gap: 6px;
+    padding: 4px 0;
   }
 
   .qula-rank-single .s1 {
