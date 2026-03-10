@@ -1,3 +1,10 @@
+## 2026-03-10-03 | 模板 | 2026fresh 详情页 / 目录页按 v5 第二轮收口
+- 范围：仅调整 `themes/2026fresh/tpl_info.php`、`themes/2026fresh/tpl_indexlist.php`、`www/static/2026fresh/css/main.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 收口：`tpl_info.php` 正式引入 `shipsay/include/neighbor.php`，详情页底部推荐不再依赖偶发变量；相关推荐统一改为“相关小说推荐”，推荐阅读统一改为“人气小说推荐”，章节预览标题改为“顺序 1-50章”口径，最新章节标题改为“最新12章”。
+- 收口：`tpl_indexlist.php` 调整为与详情页同体系，补齐“书籍信息区 / 最新章节信息 / 内容简介 / 顺序目录分页 / 相关小说推荐 / 人气小说推荐”六块内容；目录页同时补 canonical 与 prev/next 链接，分页继续只消费真实目录链接。
+- 微调：`www/static/2026fresh/css/main.css` 只补简介与目录列表所需的轻样式，不重排现有主结构。
+- 结论：本轮继续遵守“先模板层、后 CSS、最小差异修复”，把详情页和目录页收成同一套 v5 展示口径。
+
 ## 2026-03-10-02 | 模板 | 2026fresh 按 v5 首轮收口（公共链接 / 排行页 / 阅读记录）
 - 范围：仅调整 `themes/2026fresh/*`、`www/static/2026fresh/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 收口：`tpl_header.php` 去掉 `/search/`、`/history.html`、`/rank/allvisit/` 这类模板层硬编码 fallback，统一改为优先消费上游真实 `fake_search / fake_recentread / rank_entry_url / fake_top`；缺失时在模板层做禁用展示，不再反向造旧链路。
