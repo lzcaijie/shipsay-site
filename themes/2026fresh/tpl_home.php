@@ -16,12 +16,12 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
 
 <header class="topbar">
   <div class="wrap">
-    <a class="brand" href="/"><?=SITE_NAME?></a>
-    <form class="search" action="<?=ss_search_url()?>" method="get">
-      <input type="text" name="searchkey" placeholder="书名 / 作者" autocomplete="off">
-      <button type="submit">搜索</button>
+    <a class="brand" href="<?=$site_home_url_attr?>"><?=$site_name_html?></a>
+    <form class="search" method="get"<?php if($search_url_raw !== ''): ?> action="<?=$search_url_attr?>"<?php else: ?> onsubmit="return false;"<?php endif; ?>>
+      <input type="text" name="searchkey" placeholder="<?=$search_placeholder_attr?>" autocomplete="off">
+      <button type="submit"<?php if($search_url_raw === ''): ?> disabled="disabled" aria-disabled="true"<?php endif; ?>>搜索</button>
     </form>
-    <a class="topbtn" href="<?=ss_recentread_url()?>">记录</a>
+    <?php if($recentread_url_raw !== ''): ?><a class="topbtn" href="<?=$recentread_url_attr?>">记录</a><?php else: ?><span class="topbtn" aria-disabled="true">记录</span><?php endif; ?>
   </div>
 </header>
 
@@ -31,7 +31,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
     <section class="card">
       <div class="card-hd">
         <h2 class="h2">热门推荐</h2>
-        <a class="more" href="<?=ss_top_url()?>">更多排行</a>
+        <?php if($rank_entry_raw !== ''): ?><a class="more" href="<?=$rank_entry_attr?>">更多排行</a><?php else: ?><span class="more" aria-disabled="true">更多排行</span><?php endif; ?>
       </div>
       <div class="books-grid">
         <?php if(!empty($commend)): $i=0; foreach($commend as $v): $i++; if($i>6) break; ?>
@@ -50,7 +50,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
     <section class="card">
       <div class="card-hd">
         <h2 class="h2">最新更新</h2>
-        <?php if(isset($allbooks_url)): ?><a class="more" href="<?=$allbooks_url?>">最近更多</a><?php endif; ?>
+        <?php if(isset($allbooks_url) && $allbooks_url): ?><a class="more" href="<?=$allbooks_url?>">最近更多</a><?php endif; ?>
       </div>
       <div class="list">
         <?php if(!empty($lastupdate)): foreach($lastupdate as $v): ?>
@@ -74,16 +74,16 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
     <section class="card">
       <h2 class="h2">快捷入口</h2>
       <div class="tabs" style="margin-top:10px;">
-        <a href="<?=ss_top_url()?>">排行</a>
-        <a href="<?=ss_recentread_url()?>">记录</a>
-        <a href="<?=ss_search_url()?>">搜索</a>
+        <?php if($rank_entry_raw !== ''): ?><a href="<?=$rank_entry_attr?>">排行</a><?php else: ?><span aria-disabled="true">排行</span><?php endif; ?>
+        <?php if($recentread_url_raw !== ''): ?><a href="<?=$recentread_url_attr?>">记录</a><?php else: ?><span aria-disabled="true">记录</span><?php endif; ?>
+        <?php if($search_url_raw !== ''): ?><a href="<?=$search_url_attr?>">搜索</a><?php else: ?><span aria-disabled="true">搜索</span><?php endif; ?>
       </div>
     </section>
 
     <section class="card">
       <div class="card-hd">
         <h2 class="h2">分类</h2>
-        <?php if(isset($allbooks_url)): ?><a class="more" href="<?=$allbooks_url?>">全部</a><?php endif; ?>
+        <?php if(isset($allbooks_url) && $allbooks_url): ?><a class="more" href="<?=$allbooks_url?>">全部</a><?php endif; ?>
       </div>
       <div class="tags">
         <?php foreach(Sort::ss_sorthead() as $v): ?>
@@ -106,3 +106,5 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
 </main>
 
 <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
+</body>
+</html>

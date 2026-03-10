@@ -16,12 +16,12 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
 
 <header class="topbar">
   <div class="wrap">
-    <a class="brand" href="/"><?=SITE_NAME?></a>
-    <form class="search" action="<?=ss_search_url()?>" method="get">
-      <input type="text" name="searchkey" placeholder="书名 / 作者" autocomplete="off">
-      <button type="submit">搜索</button>
+    <a class="brand" href="<?=$site_home_url_attr?>"><?=$site_name_html?></a>
+    <form class="search" method="get"<?php if($search_url_raw !== ''): ?> action="<?=$search_url_attr?>"<?php else: ?> onsubmit="return false;"<?php endif; ?>>
+      <input type="text" name="searchkey" placeholder="<?=$search_placeholder_attr?>" autocomplete="off">
+      <button type="submit"<?php if($search_url_raw === ''): ?> disabled="disabled" aria-disabled="true"<?php endif; ?>>搜索</button>
     </form>
-    <a class="topbtn" href="<?=ss_recentread_url()?>">记录</a>
+    <?php if($recentread_url_raw !== ''): ?><a class="topbtn" href="<?=$recentread_url_attr?>">记录</a><?php else: ?><span class="topbtn" aria-disabled="true">记录</span><?php endif; ?>
   </div>
 </header>
 
@@ -78,3 +78,5 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
 </main>
 
 <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
+</body>
+</html>
