@@ -57,6 +57,6 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('search');
 </div>
 <style>.tipss{text-align:center; display:none; padding:30px 0px;background: #fff;font-size:14px;}</style>
 <style>@media screen and (max-width:768px){.tipss{width: 100%;border: none;}}</style>
-<script>if(document.getElementById("nr") == null ){ document.getElementById("tipss").style.display = "block";}</script>
+<script>(function(){var nr=document.getElementById("nr");var tipss=document.getElementById("tipss");if(!nr && tipss){tipss.style.display="block";}})();</script>
 
 <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
