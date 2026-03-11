@@ -1,3 +1,5 @@
+- shuyue v5：目录页 `tpl_indexlist.php` 补齐长尾相关推荐展示，按 v5 标准与详情页保持同一套标题/判断条件/链接字段/展示字段；范围仅 `themes/shuyue/tpl_indexlist.php` 与 `docs/CHANGELOG.md`。
+
 - shuyue v4：继续按 v5 收模板层真实链接收尾，范围仅 `themes/shuyue/*` 与 `docs/CHANGELOG.md`；不动 `app / class / include / configs`，也不回改其他已封版模板。
 - shuyue v4：`tpl_info.php / tpl_indexlist.php / tpl_reader.php` 去掉模板层自造目录页与当前页链接的 fallback，不再继续回退 `Url::index_url()`、`SERVER_NAME + REQUEST_URI` 这类模板拼接链路；缺失时改为空或禁用展示。
 - shuyue v4：`tpl_search.php / tpl_recentread.php` 继续做最小差异收口，搜索页缺封面时统一走当前主题 `nocover.jpg`，阅读记录页标题/面包屑/面板文案统一为“阅读记录”。

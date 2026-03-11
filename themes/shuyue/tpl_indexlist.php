@@ -71,6 +71,18 @@ require_once __ROOT_DIR__ . '/shipsay/include/neighbor.php';
         <div class="panel-body text-justify"><?=$intro_html?></div>
     </div>
 
+    <?php if (!empty($langtailrows) && is_array($langtailrows)): ?>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <strong>相关推荐：</strong>
+            <?php foreach ($langtailrows as $v): ?>
+                <?php $langtail_url_attr = htmlspecialchars((string)$v['info_url'], ENT_QUOTES, 'UTF-8'); $langname_html = htmlspecialchars((string)$v['langname'], ENT_QUOTES, 'UTF-8'); ?>
+                <a href="<?=$langtail_url_attr?>"><?=$langname_html?></a>&nbsp;
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <div class="panel panel-default">
         <div class="panel-heading"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> 章节列表<?php if ($pid > 1): ?>（第<?=$pid?>页）<?php endif; ?></div>
         <dl class="panel-body panel-chapterlist">
