@@ -1,7 +1,12 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 <?php
-$cateurl=$_SERVER['SERVER_PORT']==443?'https://':'http://';
-$cateurl.=$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
+$site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
+$canonical_raw = !empty($uri) ? rtrim((string)$site_url, '/') . (string)$uri : $site_home_url_raw;
+$canonical_attr = htmlspecialchars($canonical_raw, ENT_QUOTES, 'UTF-8');
+$allbooks_url_raw = !empty($allbooks_url) ? (string)$allbooks_url : '';
+$allbooks_url_attr = htmlspecialchars($allbooks_url_raw, ENT_QUOTES, 'UTF-8');
+$theme_dir_attr = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
+$nocover_url_attr = '/static/' . $theme_dir_attr . '/nocover.jpg';
 $curid = 0;
 ?>
 <!DOCTYPE html>
@@ -15,7 +20,7 @@ $curid = 0;
     <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
     <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
     <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-    <link rel="canonical" href="<?=$cateurl?>">
+    <link rel="canonical" href="<?=$canonical_attr?>">
     <?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once 'tpl_fun.php'; ?>
 <div class="class">
     <ul class="container">
@@ -30,7 +35,7 @@ $curid = 0;
 <div class="container body-content">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> 热门<?php if($sortname !='全部小说'):?><?=$sortname?><?php endif ?>小说<a class="pull-right" href="<?=$allbooks_url?>">More+</a>
+            <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> 热门<?php if($sortname !='全部小说'):?><?=$sortname?><?php endif ?>小说<?php if ($allbooks_url_raw !== ''): ?><a class="pull-right" href="<?=$allbooks_url_attr?>">More+</a><?php endif; ?>
         </div>
         <div class="panel-body">
             <div class="row">
@@ -39,7 +44,7 @@ $curid = 0;
                 <div class="col-xs-4 book-coverlist">
                     <div class="row">
                         <div class="col-sm-5">
-                            <a href="<?=$v['info_url']?>" class="cover_46f thumbnail" style="background-image:url(<?=(!empty($v['img_url'])?$v['img_url']:'/static/'.$theme_dir.'/nocover.jpg')?>)" ></a>
+                            <a href="<?=$v['info_url']?>" class="cover_46f thumbnail" style="background-image:url(<?=(!empty($v['img_url'])?$v['img_url']:$nocover_url_attr)?>)" ></a>
                         </div>
                         <div class="col-sm-7 pl0">
                             <div class="caption">

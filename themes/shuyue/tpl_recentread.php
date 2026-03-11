@@ -2,6 +2,10 @@
 <?php
 $site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
 $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
+$theme_dir_attr = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
+$page_end_scripts = '<script src="/static/' . $theme_dir_attr . '/js/tempbookcase.js?v=' . date('Ymd', time()) . '"></script>'
+    . '<script src="/static/' . $theme_dir_attr . '/js/layer.js"></script>'
+    . '<script>showtempbooks();nav_sel(\'nav_his\');</script>';
 ?>
 <!DOCTYPE html>
 <html lang="cmn-Hans">
@@ -22,7 +26,3 @@ $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
     <div class="clear"></div>
 </div>
 <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
-<script src="/static/<?=htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8')?>/js/tempbookcase.js?v=<?=date('Ymd', time())?>"></script>
-<script>showtempbooks();</script>
-<script src="/static/<?=htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8')?>/js/layer.js"></script>
-<script>nav_sel('nav_his');</script>

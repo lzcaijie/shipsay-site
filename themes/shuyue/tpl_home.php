@@ -6,18 +6,25 @@
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
+$site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
+$site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
+$rank_entry_raw = !empty($rank_entry_url) ? (string)$rank_entry_url : (!empty($fake_top) ? (string)$fake_top : '');
+$rank_entry_attr = htmlspecialchars($rank_entry_raw, ENT_QUOTES, 'UTF-8');
+$allbooks_url_raw = !empty($allbooks_url) ? (string)$allbooks_url : '';
+$allbooks_url_attr = htmlspecialchars($allbooks_url_raw, ENT_QUOTES, 'UTF-8');
+$theme_dir_attr = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
+$nocover_url_attr = '/static/' . $theme_dir_attr . '/nocover.jpg';
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
 <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-<link rel="canonical" href="<?=$site_url?>">
+<link rel="canonical" href="<?=$site_home_url_attr?>">
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; require_once 'tpl_fun.php'; ?>
-<?php $top_url_safe = !empty($rank_entry_url) ? $rank_entry_url : (!empty($fake_top) ? $fake_top : ''); ?>
 
 <div class="body_46f container body-content">
     <div class="section_46f panel panel-default">
         <div class="title_46f panel-heading">
-            <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> 推荐阅读<a class="pull-right" href="<?=$top_url_safe?>">More+</a>
+            <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> 推荐阅读<?php if ($rank_entry_raw !== ''): ?><a class="pull-right" href="<?=$rank_entry_attr?>">More+</a><?php endif; ?>
         </div>
         <div class="content_46f panel-body">
             <div class="list_46f row">
@@ -26,7 +33,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
                 <div class="col-xs-4 book-coverlist">
                     <div class="row">
                         <div class="col-sm-5">
-                            <a href="<?=$v['info_url']?>" class="cover_46f thumbnail" style="background-image:url(<?=(!empty($v['img_url'])?$v['img_url']:'/static/'.$theme_dir.'/nocover.jpg')?>)"></a>
+                            <a href="<?=$v['info_url']?>" class="cover_46f thumbnail" style="background-image:url(<?=(!empty($v['img_url'])?$v['img_url']:$nocover_url_attr)?>)"></a>
                         </div>
                         <div class="col-sm-7 pl0">
                             <div class="caption">
@@ -134,7 +141,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
         <div class="col-md-4">
             <div class="section_46f panel panel-default">
                 <div class="title_46f panel-heading">
-                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> 新书推荐<a class="pull-right" href="<?=$allbooks_url?>">More+</a>
+                    <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span> 新书推荐<?php if ($allbooks_url_raw !== ''): ?><a class="pull-right" href="<?=$allbooks_url_attr?>">More+</a><?php endif; ?>
                 </div>
                 <table class="table">
                     <tbody>
@@ -154,7 +161,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
         <div class="col-md-8 pl0">
             <div class="section_46f panel panel-default">
                 <div class="title_46f panel-heading">
-                    <span class="glyphicon glyphicon-time" aria-hidden="true"></span> 最近更新<a class="pull-right" href="<?=$allbooks_url?>">More+</a>
+                    <span class="glyphicon glyphicon-time" aria-hidden="true"></span> 最近更新<?php if ($allbooks_url_raw !== ''): ?><a class="pull-right" href="<?=$allbooks_url_attr?>">More+</a><?php endif; ?>
                 </div>
                 <table class="table">
                     <tbody>

@@ -1,3 +1,7 @@
+- shuyue v3：继续按 v5 收口未触及页面，范围仅 `themes/shuyue/*` 与 `docs/CHANGELOG.md`；不动 `app / class / include / configs`，也不回带其他模板。
+- shuyue v3：修正 `tpl_recentread.php` 的脚本输出顺序，阅读记录页改为通过 `page_end_scripts` 在 footer 关闭前输出 `tempbookcase.js / layer.js` 与 `nav_sel('nav_his')`，避免脚本落在 `</body></html>` 之后。
+- shuyue v3：`tpl_home.php / tpl_category.php / tpl_author.php` 继续按真实站点链接收口 canonical 与公共入口，首页与列表页的 `More+` 链接只消费真实 `rank_entry_url / fake_top / allbooks_url`，分类页 canonical 不再临时拼接 `SERVER_NAME + REQUEST_URI`。
+
 - shuyue v2：继续按 v5 收口模板层，仍只调整 `themes/shuyue/*` 与 `docs/CHANGELOG.md`；统一 `tpl_header.php / tpl_footer.php / tpl_error.php / tpl_search.php / tpl_author.php / tpl_recentread.php` 的站点首页、搜索、排行、阅读记录真实链接消费，不再在面包屑和错误页里继续写死首页旧入口。
 - shuyue v2：`tpl_info.php / tpl_indexlist.php / tpl_reader.php` 收口详情页、目录页、阅读页的真实链接链路；阅读页蜘蛛分页改为消费 `Url::chapter_url()`，不再硬写 `/read/{aid}/{cid}/{pid}.html`；详情页与目录页补齐最新章节/目录/相关推荐的同体系展示。
 - shuyue v2：`tpl_rank.php / tpl_top.php` 继续按 v5 统一为真实排行入口 + 聚合榜/单榜切换展示，并补齐头部导航高亮脚本，避免排行页进入后头部状态不一致。

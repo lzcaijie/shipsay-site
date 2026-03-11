@@ -2,6 +2,9 @@
 <?php
 $site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
 $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
+$canonical_raw = !empty($uri) ? rtrim((string)$site_url, '/') . (string)$uri : $site_home_url_raw;
+$canonical_attr = htmlspecialchars($canonical_raw, ENT_QUOTES, 'UTF-8');
+$author_url_attr = htmlspecialchars((string)$author_url, ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
 <html lang="cmn-Hans">
@@ -14,7 +17,7 @@ $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
     <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
     <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
     <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-    <link rel="canonical" href="<?=$site_url?><?=$uri?>">
+    <link rel="canonical" href="<?=$canonical_attr?>">
     <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container body-content">
     <ol class="breadcrumb hidden-xs">
@@ -28,14 +31,14 @@ $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
         </div>
         <div class="panel-body">
             <p>
-                <a href="<?=$author_url?>"><?=$author?></a>是一名非常出色的小说作者，TA的作品包括：
+                <a href="<?=$author_url_attr?>"><?=$author?></a>是一名非常出色的小说作者，TA的作品包括：
                 <?php if (is_array($res)): ?><?php foreach ($res as $v): ?>
                     《<a href="<?=$v['info_url']?>"><?=$v['articlename']?></a>》
                 <?php endforeach; ?><?php endif; ?>
                 等等，小说可谓是本本精品，字字珠玑。
-                <a href="<?=$author_url?>"><?=$author?></a>所写的小说情节跌宕起伏、扣人心弦，情节与文笔俱佳。
-                <?=htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8')?>强烈建议您到正版网站阅读<a href="<?=$author_url?>"><?=$author?></a>的小说作品，您的每一次阅读都是对作者的认可！
-                如果您在<?=htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8')?>阅读<a href="<?=$author_url?>"><?=$author?></a>作品时，遇到问题，请及时反馈，我们将第一时间解决，争取为您奉上一场阅读盛宴！
+                <a href="<?=$author_url_attr?>"><?=$author?></a>所写的小说情节跌宕起伏、扣人心弦，情节与文笔俱佳。
+                <?=htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8')?>强烈建议您到正版网站阅读<a href="<?=$author_url_attr?>"><?=$author?></a>的小说作品，您的每一次阅读都是对作者的认可！
+                如果您在<?=htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8')?>阅读<a href="<?=$author_url_attr?>"><?=$author?></a>作品时，遇到问题，请及时反馈，我们将第一时间解决，争取为您奉上一场阅读盛宴！
             </p>
         </div>
     </div>
