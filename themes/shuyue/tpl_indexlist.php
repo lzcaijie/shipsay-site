@@ -3,12 +3,15 @@
 $pid = (isset($pid) && (int)$pid > 0) ? (int)$pid : 1;
 $site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
 $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
-$canonical_raw = rtrim((string)$site_url, '/') . (string)$uri;
+$canonical_raw = (!empty($site_url) && !empty($uri)) ? rtrim((string)$site_url, '/') . (string)$uri : '';
 $sort_url_raw = Sort::ss_sorturl($sortid);
 $sort_url_attr = htmlspecialchars($sort_url_raw, ENT_QUOTES, 'UTF-8');
 $info_url_attr = htmlspecialchars((string)$info_url, ENT_QUOTES, 'UTF-8');
 $first_url_attr = htmlspecialchars((string)$first_url, ENT_QUOTES, 'UTF-8');
-$author_url_attr = htmlspecialchars((string)$author_url, ENT_QUOTES, 'UTF-8');
+$last_url_raw = !empty($last_url) ? (string)$last_url : '';
+$last_url_attr = htmlspecialchars($last_url_raw, ENT_QUOTES, 'UTF-8');
+$author_url_raw = !empty($author_url) ? (string)$author_url : '';
+$author_url_attr = htmlspecialchars($author_url_raw, ENT_QUOTES, 'UTF-8');
 $img_url_attr = htmlspecialchars((string)$img_url, ENT_QUOTES, 'UTF-8');
 $intro_html = !empty($intro_p) ? $intro_p : $intro_des;
 require_once __ROOT_DIR__ . '/shipsay/include/neighbor.php';
@@ -41,7 +44,7 @@ require_once __ROOT_DIR__ . '/shipsay/include/neighbor.php';
                 <div class="col-sm-10 pl0">
                     <h1 class="bookTitle" style="margin-top:0;"><a href="<?=$info_url_attr?>" title="<?=$articlename?>"><?=$articlename?></a> <small class="text-muted" style="font-size:14px;">章节目录</small></h1>
                     <p class="booktag">
-                        <a class="red" href="<?=$author_url_attr?>" title="<?=$author?>"><i class="glyphicon glyphicon-user fs-12" aria-hidden="true"></i> <?=$author?></a>
+                        <?php if ($author_url_raw !== ""): ?><a class="red" href="<?=$author_url_attr?>" title="<?=$author?>"><i class="glyphicon glyphicon-user fs-12" aria-hidden="true"></i> <?=$author?></a><?php else: ?><span class="red"><i class="glyphicon glyphicon-user fs-12" aria-hidden="true"></i> <?=$author?></span><?php endif; ?>
                         <span class="blue"><i class="glyphicon glyphicon-font fs-12" aria-hidden="true"></i> <?=$words_w?>万字</span>
                         <span class="blue"><i class="glyphicon glyphicon-hourglass fs-12" aria-hidden="true"></i> <?=$isfull?></span>
                         <span class="blue"><i class="glyphicon glyphicon-time fs-12" aria-hidden="true"></i> <?=$lastupdate_cn?></span>
@@ -59,7 +62,7 @@ require_once __ROOT_DIR__ . '/shipsay/include/neighbor.php';
     <div class="panel panel-default">
         <div class="panel-heading"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> 最新章节信息</div>
         <div class="panel-body">
-            <p style="margin:0;">最新章节：<a class="text-danger" href="<?=$last_url?>" title="<?=$lastchapter?>"><?=$lastchapter?></a> <span class="text-muted">（<?=$lastupdate_cn?>）</span></p>
+            <p style="margin:0;">最新章节：<?php if ($last_url_raw !== ""): ?><a class="text-danger" href="<?=$last_url_attr?>" title="<?=$lastchapter?>"><?=$lastchapter?></a><?php else: ?><span class="text-danger"><?=$lastchapter?></span><?php endif; ?> <span class="text-muted">（<?=$lastupdate_cn?>）</span></p>
         </div>
     </div>
 
