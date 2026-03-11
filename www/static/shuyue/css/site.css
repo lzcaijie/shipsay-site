@@ -115,7 +115,7 @@ hr{margin:15px 0}
 a.thumbnail.active,a.thumbnail:focus,a.thumbnail:hover{border-color:#337ab7}
 #content{background-color:transparent}
 #content2{background-color:transparent}
-#rtext{font-size:20px;padding:0 5%;word-break:break-all;line-height:2.6;text-align:justify;}
+#rtext{font-size:18px;padding:0 5%;word-break:break-all;line-height:2.6;text-align:justify;}
 #rtext p{text-indent:2.6em;line-height:3em;margin:.8em 0;text-align:justify;overflow:hidden}
 .readPager{height: 30px;margin:5px 0;width:100%;display:flex;line-height: 30px;}
 .readPager a{text-align:center;width:33.33%}
