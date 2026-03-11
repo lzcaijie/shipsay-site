@@ -5,9 +5,9 @@ var ReadSet = {
     fontcolor: ["#111111", "#111111", "#111111", "#111111", "#111111", "#111111"],
     fontcname: ["1", "2", "3", "4", "5", "6"],
     fontcvalue: "#111111",
-    fontsize: ["20px", "22px", "24px"],
+    fontsize: ["18px", "20px", "22px"],
     fontsname: ["小", "中", "大"],
-    fontsvalue: "22px",
+    fontsvalue: "20px",
     pageid: "apage",
     textid: "rtext",
     SetBgcolor: function (color) {

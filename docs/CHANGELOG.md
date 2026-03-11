@@ -1,3 +1,6 @@
+- shuyue v6：阅读页字号默认档整体下调一档；`www/static/shuyue/js/pagetop.js` 的阅读设置由 `20/22/24` 调整为 `18/20/22`，默认值由 `22px` 改为 `20px`，即默认显示按原“小”档收口。
+- shuyue v6：修正阅读页字号切换受 CSS 顶住的问题；`www/static/shuyue/css/site.css` 中 `#rtext` 默认字号改为 `20px`，`#BookText` 改为继承字号，保证“小/中/大”切换真正作用到正文。
+
 - shuyue v5：目录页 `tpl_indexlist.php` 补齐长尾相关推荐展示，按 v5 标准与详情页保持同一套标题/判断条件/链接字段/展示字段；范围仅 `themes/shuyue/tpl_indexlist.php` 与 `docs/CHANGELOG.md`。
 
 - shuyue v4：继续按 v5 收模板层真实链接收尾，范围仅 `themes/shuyue/*` 与 `docs/CHANGELOG.md`；不动 `app / class / include / configs`，也不回改其他已封版模板。
