@@ -1,15 +1,29 @@
-function setCookies(cookieName,cookieValue,minutes){ let today = new Date(); let expire = new Date(); let exp=minutes*1000*60||1000*3600*24*365;expire.setTime(today.getTime() + exp); document.cookie = cookieName+'='+escape(cookieValue)+ ';expires='+expire.toGMTString()+'; path=/'; } 
-function readCookies(cookieName){ let theCookie=''+document.cookie; let ind=theCookie.indexOf(cookieName); if (ind==-1 || cookieName=='') return ''; let ind1=theCookie.indexOf(';',ind); if (ind1==-1) ind1=theCookie.length; let rico_ret = theCookie.substring(ind+cookieName.length+1,ind1).replace(/%/g, '%25'); return unescape(decodeURI(rico_ret)); }
-
-
-function login() {
-    if ($.cookie('ss_username')) {
-        document.writeln("<a href='/history.html'>阅读历史</a> | <a href='/bookcase/' title='我的书架'>会员书架</a> | <a href='/logout/' title='退出登录'>退出</a>");
-    } else {
-        document.writeln("<a href='/history.html'>阅读历史</a> | <a href='/login/'>登录</a> | <a href='/register'>注册</a>");
+//右键选择内容
+function stop() {
+    return false;
+}
+document.oncontextmenu = stop;
+var rico_ret = '不能复制!';
+document.onkeydown = function() {
+    if ((event.ctrlKey) && ((event.keyCode == 67) || (event.keyCode == 86))) {
+        alert(decodeURI(rico_ret));
     }
 }
 
+action = window.location.pathname;
+
+function login() {
+    var html = [];
+    if (window.SS_RANK_ENTRY_URL) {
+        html.push("<a href='" + window.SS_RANK_ENTRY_URL + "' title='排行榜'>排行榜</a>");
+    }
+    if (window.SS_RECENTREAD_URL) {
+        html.push("<a href='" + window.SS_RECENTREAD_URL + "' title='阅读记录' rel='nofollow'>阅读记录</a>");
+    }
+    if (html.length) {
+        document.writeln(html.join(" | "));
+    }
+}
 
 // ie7以下的浏览器提示
 var isIE = !!window.ActiveXObject;
@@ -47,160 +61,131 @@ function is_mobile() {
     }
     var result = regex_match.exec(u);
     if (null == result) {
-        return false
-    } else {
-        return true
+        return false;
     }
+    return true;
 }
-
 
 //历史记录
 var _num = 100;
 
 function LastRead(){
-	this.bookList="bookList"
-	}
-LastRead.prototype={	
-	set:function(bid,tid,title,texttitle,author,sortname){
-		if(!(bid&&tid&&title&&texttitle&&author&&sortname))return;
-		var v=bid+'#'+tid+'#'+title+'#'+texttitle+'#'+author+'#'+sortname;
-		this.setItem(bid,v);
-		this.setBook(bid)		
-		},
-	
-	get:function(k){
-		return this.getItem(k)?this.getItem(k).split("#"):"";						
-		},
-	
-	remove:function(k){
-		this.removeItem(k);
-		this.removeBook(k)			
-		},
-	
-	setBook:function(v){
-		var reg=new RegExp("(^|#)"+v); 
-		var books =	this.getItem(this.bookList);
-		if(books==""){
-			books=v
-			}
-		 else{
-			 if(books.search(reg)==-1){
-				 books+="#"+v				 
-				 }
-			 else{
-				  books.replace(reg,"#"+v)
-				 }	 
-			 }	
-			this.setItem(this.bookList,books)
-		
-		},
-	
-	getBook:function(){
-		var v=this.getItem(this.bookList)?this.getItem(this.bookList).split("#"):Array();
-		var books=Array();
-		if(v.length){
-			
-			for(var i=0;i<v.length;i++){
-				var tem=this.getItem(v[i]).split('#');	
-				if(i>v.length-(_num+1)){
-					if (tem.length>3)	books.push(tem);
-				}
-				else{
-					lastread.remove(tem[0]);
-				}
-			}		
-		}
-		return books		
-	},
-	
-	removeBook:function(v){		
-	    var reg=new RegExp("(^|#)"+v); 
-		var books =	this.getItem(this.bookList);
-		if(!books){
-			books=""
-			}
-		 else{
-			 if(books.search(reg)!=-1){	
-			      books=books.replace(reg,"")
-				 }	 
-			 
-			 }	
-			this.setItem(this.bookList,books)		
-		
-		},
-	
-	setItem:function(k,v){
-		if(!!window.localStorage){		
-			localStorage.setItem(k,v);		
-		}
-		else{
-			var expireDate=new Date();
-			  var EXPIR_MONTH=30*24*3600*1000;			
-			  expireDate.setTime(expireDate.getTime()+12*EXPIR_MONTH)
-			  document.cookie=k+"="+encodeURIComponent(v)+";expires="+expireDate.toGMTString()+"; path=/";		
-			}			
-		},
-		
-	getItem:function(k){
-		var value=""
-		var result=""				
-		if(!!window.localStorage){
-			result=window.localStorage.getItem(k);
-			 value=result||"";	
-		}
-		else{
-			var reg=new RegExp("(^| )"+k+"=([^;]*)(;|\x24)");
-			var result=reg.exec(document.cookie);
-			if(result){
-				value=decodeURIComponent(result[2])||""}				
-		}
-		return value
-		
-		},
-	
-	removeItem:function(k){		
-		if(!!window.localStorage){
-		 window.localStorage.removeItem(k);		
-		}
-		else{
-			var expireDate=new Date();
-			expireDate.setTime(expireDate.getTime()-1000)	
-			document.cookie=k+"= "+";expires="+expireDate.toGMTString()							
-		}
-		},	
-	removeAll:function(){
-		if(!!window.localStorage){
-		 window.localStorage.clear();		
-		}
-		else{
-		var v=this.getItem(this.bookList)?this.getItem(this.bookList).split("#"):Array();
-		var books=Array();
-		if(v.length){
-			for( i in v ){
-				var tem=this.removeItem(v[k])				
-				}		
-			}
-			this.removeItem(this.bookList)				
-		}
-		}	
-	}
+    this.bookList = "bookList";
+}
+LastRead.prototype = {
+    set:function(bid,tid,title,texttitle,author,sortname){
+        if(!(bid&&tid&&title&&texttitle&&author&&sortname)) return;
+        var v = bid + '#' + tid + '#' + title + '#' + texttitle + '#' + author + '#' + sortname;
+        this.setItem(bid,v);
+        this.setBook(bid);
+    },
+    get:function(k){
+        return this.getItem(k) ? this.getItem(k).split("#") : "";
+    },
+    remove:function(k){
+        this.removeItem(k);
+        this.removeBook(k);
+    },
+    setBook:function(v){
+        var reg = new RegExp("(^|#)" + v);
+        var books = this.getItem(this.bookList);
+        if (books == "") {
+            books = v;
+        } else if (books.search(reg) == -1) {
+            books += "#" + v;
+        } else {
+            books = books.replace(reg, "#" + v);
+        }
+        this.setItem(this.bookList, books);
+    },
+    getBook:function(){
+        var v = this.getItem(this.bookList) ? this.getItem(this.bookList).split("#") : [];
+        var books = [];
+        if (v.length) {
+            for (var i = 0; i < v.length; i++) {
+                var raw = this.getItem(v[i]);
+                var tem = raw ? raw.split('#') : [];
+                if (i > v.length - (_num + 1)) {
+                    if (tem.length > 3) books.push(tem);
+                } else if (tem.length > 0) {
+                    lastread.remove(tem[0]);
+                }
+            }
+        }
+        return books;
+    },
+    removeBook:function(v){
+        var reg = new RegExp("(^|#)" + v);
+        var books = this.getItem(this.bookList);
+        if (!books) {
+            books = "";
+        } else if (books.search(reg) != -1) {
+            books = books.replace(reg, "");
+        }
+        this.setItem(this.bookList, books);
+    },
+    setItem:function(k,v){
+        if (!!window.localStorage) {
+            localStorage.setItem(k,v);
+        } else {
+            var expireDate = new Date();
+            var EXPIR_MONTH = 30 * 24 * 3600 * 1000;
+            expireDate.setTime(expireDate.getTime() + 12 * EXPIR_MONTH);
+            document.cookie = k + "=" + encodeURIComponent(v) + ";expires=" + expireDate.toGMTString() + "; path=/";
+        }
+    },
+    getItem:function(k){
+        var value = "";
+        var result = "";
+        if (!!window.localStorage) {
+            result = window.localStorage.getItem(k);
+            value = result || "";
+        } else {
+            var reg = new RegExp("(^| )" + k + "=([^;]*)(;|$)");
+            result = reg.exec(document.cookie);
+            if (result) {
+                value = decodeURIComponent(result[2]) || "";
+            }
+        }
+        return value;
+    },
+    removeItem:function(k){
+        if (!!window.localStorage) {
+            window.localStorage.removeItem(k);
+        } else {
+            var expireDate = new Date();
+            expireDate.setTime(expireDate.getTime() - 1000);
+            document.cookie = k + "= ;expires=" + expireDate.toGMTString();
+        }
+    },
+    removeAll:function(){
+        var v = this.getItem(this.bookList) ? this.getItem(this.bookList).split("#") : [];
+        if (v.length) {
+            for (var i = 0; i < v.length; i++) {
+                if (v[i]) {
+                    this.removeItem(v[i]);
+                }
+            }
+        }
+        this.removeItem(this.bookList);
+    }
+};
 function showbook(){
-	var showbook=document.getElementById('showbook');
-	var bookhtml='';
-	var books=lastread.getBook();
-	var books=books.reverse();
-	if(books.length){
-		for(var i=0 ;i<books.length;i++){
-			bookhtml+='<div class="bookbox"><div class="p10"><span class="num">'+(i+1)+'</span><div class="bookinfo"><h4 class="bookname"><a href="'+books[i][0]+'">'+books[i][2]+'</a></h4><div class="cat">分类：'+books[i][5]+'</div><div class="author">作者：'+books[i][4]+'</div><div class="update"><span>已读到：</span><a href="'+books[i][1]+'">'+books[i][3]+'</a></div></div><div class="delbutton"><a class="del_but" href="javascript:removebook(\''+books[i][0]+'\')">删除</a></div></div></div>';
-		}
-	}else{
-		bookhtml+='<div style="height:100px;line-height:100px; text-align:center">还木有任何书籍( ˙﹏˙ )</div>'
-	}
-	showbook.innerHTML=bookhtml;
+    var showbook = document.getElementById('showbook');
+    if (!showbook) return;
+    var bookhtml = '';
+    var books = lastread.getBook().reverse();
+    if (books.length) {
+        for (var i = 0; i < books.length; i++) {
+            bookhtml += '<div class="bookbox"><div class="p10"><span class="num">' + (i + 1) + '</span><div class="bookinfo"><h4 class="bookname"><a href="' + books[i][0] + '">' + books[i][2] + '</a></h4><div class="cat">分类：' + books[i][5] + '</div><div class="author">作者：' + books[i][4] + '</div><div class="update"><span>已读到：</span><a href="' + books[i][1] + '">' + books[i][3] + '</a></div></div><div class="delbutton"><a class="del_but" href="javascript:removebook(\'' + books[i][0] + '\')">删除</a></div></div></div>';
+        }
+    } else {
+        bookhtml += '<div style="height:100px;line-height:100px; text-align:center">还木有任何书籍( ˙﹏˙ )</div>';
+    }
+    showbook.innerHTML = bookhtml;
 }
 function removebook(k){
-	lastread.remove(k);
-	showbook()
+    lastread.remove(k);
+    showbook();
 }
 window.lastread = new LastRead();
-

@@ -1,6 +1,5 @@
 <?php if (!defined('__ROOT_DIR__')) exit; require_once __ROOT_DIR__ . '/shipsay/configs/report.ini.php';?>
 <?php
-// 变量安全兜底（避免 notice）
 $userAgent   = $_SERVER['HTTP_USER_AGENT'] ?? '';
 $articlename = isset($articlename) ? $articlename : '';
 $chaptername = isset($chaptername) ? $chaptername : '';
@@ -10,6 +9,8 @@ $info_url    = isset($info_url) ? $info_url : '';
 $uri         = isset($uri) ? $uri : '';
 $isfull      = isset($isfull) ? $isfull : '';
 $site_url    = isset($site_url) ? $site_url : '';
+$index_url_raw = isset($index_url) && $index_url ? (string)$index_url : '';
+$link_index_url = $index_url_raw !== '' ? $index_url_raw : $info_url;
 
 $articleid   = isset($articleid) ? $articleid : 0;
 $chapterid   = isset($chapterid) ? $chapterid : 0;
@@ -62,7 +63,7 @@ $pageDescription .= '，作者：' . $author . '。';
 <head>
     <meta charset="UTF-8">
 
-        <?php
+    <?php
     require_once __ROOT_DIR__.'/shipsay/seo.php';
     list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('reader');
     $pageTitle = $seo_title;
@@ -82,7 +83,7 @@ $pageDescription .= '，作者：' . $author . '。';
     <meta property="og:novel:category" content="<?=$sortname?>小说">
     <meta property="og:novel:author" content="<?=$author?>">
     <meta property="og:novel:book_name" content="<?=$articlename?>">
-    <meta property="og:novel:index_url" content="<?=$info_url?>">
+    <meta property="og:novel:index_url" content="<?=$link_index_url?>">
     <meta property="og:novel:info_url" content="<?=$info_url?>">
     <meta property="og:novel:status" content="<?=$isfull?>">
     <meta property="og:novel:chapter_name" content="<?=$chaptername?>">
@@ -121,7 +122,6 @@ $pageDescription .= '，作者：' . $author . '。';
     </style>
 
 <?php require_once 'tpl_header.php'; ?>
-<script src="/static/<?=$theme_dir?>/user.js"></script>
 
 <div class="spider-pagination" aria-label="章节分页导航">
     <?php if ($max_pid > 1): ?>
@@ -135,7 +135,8 @@ $pageDescription .= '，作者：' . $author . '。';
             <?php if ($i == $now_pid): ?>
                 <strong><?=$i?></strong>
             <?php else: ?>
-                <a href="/read/<?=$articleid?>/<?=$chapterid?>/<?=$i?>.html"><?=$i?></a>
+                <?php $spider_page_url = class_exists('Url') ? Url::chapter_url($articleid, $chapterid, $i) : ''; ?>
+                <?php if ($spider_page_url !== ''): ?><a href="<?=$spider_page_url?>"><?=$i?></a><?php endif; ?>
             <?php endif; ?>
         <?php endfor; ?>
 
@@ -173,10 +174,6 @@ $pageDescription .= '，作者：' . $author . '。';
                 <?php endif; ?>
             </h1>
 
-            <p class="booktag">
-                <a class="red" id="a_addbookcase" href="javascript:addbookcase('<?=$articleid?>','<?=$articlename?>','<?=$chapterid?>','<?=$chaptername?>')">加入书签</a>
-            </p>
-
             <div class="readcontent" id="rtext">
                 <p>天才一秒记住【<?=SITE_NAME?>】地址：<?=$site_url?></p>
 
@@ -193,7 +190,7 @@ $pageDescription .= '，作者：' . $author . '。';
                 <?php else: ?>
                     <?php if($pre_cid == 0): ?><a id="linkPrev" class="btn btn-default" href="javascript:void(0);">书首页</a><?php else: ?><a id="linkPrev" class="btn btn-default" href="<?=$pre_url?>">上一章</a><?php endif ?>
                 <?php endif ?>
-                <a id="linkIndex" class="btn btn-default" href="<?=$info_url?>" disable="disabled">书页/目录</a>
+                <a id="linkIndex" class="btn btn-default" href="<?=$link_index_url?>">书页/目录</a>
                 <?php if($nextpage_url != ''): ?>
                     <a id="linkNext" class="btn btn-default" href="<?=$nextpage_url?>">下一页</a>
                 <?php else: ?>
