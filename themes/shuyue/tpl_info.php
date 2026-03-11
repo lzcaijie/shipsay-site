@@ -1,20 +1,17 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 <?php
-$index_url_raw = '';
-if (!empty($index_url)) {
-    $index_url_raw = (string)$index_url;
-} elseif (!empty($articleid) && class_exists('Url') && method_exists('Url', 'index_url')) {
-    $index_url_raw = Url::index_url($articleid);
-}
+$index_url_raw = !empty($index_url) ? (string)$index_url : '';
 $site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
 $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
-$canonical_raw = rtrim((string)$site_url, '/') . (string)$uri;
+$canonical_raw = (!empty($site_url) && !empty($uri)) ? rtrim((string)$site_url, '/') . (string)$uri : '';
 $sort_url_raw = Sort::ss_sorturl($sortid);
 $sort_url_attr = htmlspecialchars($sort_url_raw, ENT_QUOTES, 'UTF-8');
 $index_url_attr = htmlspecialchars($index_url_raw, ENT_QUOTES, 'UTF-8');
-$last_url_attr = htmlspecialchars((string)$last_url, ENT_QUOTES, 'UTF-8');
+$last_url_raw = !empty($last_url) ? (string)$last_url : '';
+$last_url_attr = htmlspecialchars($last_url_raw, ENT_QUOTES, 'UTF-8');
 $first_url_attr = htmlspecialchars((string)$first_url, ENT_QUOTES, 'UTF-8');
-$author_url_attr = htmlspecialchars((string)$author_url, ENT_QUOTES, 'UTF-8');
+$author_url_raw = !empty($author_url) ? (string)$author_url : '';
+$author_url_attr = htmlspecialchars($author_url_raw, ENT_QUOTES, 'UTF-8');
 $img_url_attr = htmlspecialchars((string)$img_url, ENT_QUOTES, 'UTF-8');
 $intro_html = !empty($intro) ? $intro : $intro_des;
 require_once __ROOT_DIR__ . '/shipsay/include/neighbor.php';
@@ -41,10 +38,10 @@ require_once __ROOT_DIR__ . '/shipsay/include/neighbor.php';
     <meta property="og:novel:read_url" content="<?=htmlspecialchars($canonical_raw, ENT_QUOTES, 'UTF-8')?>"/>
     <meta property="og:url" content="<?=htmlspecialchars($canonical_raw, ENT_QUOTES, 'UTF-8')?>"/>
     <meta property="og:novel:status" content="<?=htmlspecialchars((string)$isfull, ENT_QUOTES, 'UTF-8')?>"/>
-    <meta property="og:novel:author_link" content="<?=htmlspecialchars(rtrim((string)$site_url, '/') . (string)$author_url, ENT_QUOTES, 'UTF-8')?>">
+    <?php if ($author_url_raw !== ""): ?><meta property="og:novel:author_link" content="<?=htmlspecialchars(rtrim((string)$site_url, '/') . $author_url_raw, ENT_QUOTES, 'UTF-8')?>"><?php endif; ?>
     <meta property="og:novel:update_time" content="<?=htmlspecialchars((string)$lastupdate, ENT_QUOTES, 'UTF-8')?>" />
     <meta property="og:novel:latest_chapter_name" content="<?=htmlspecialchars((string)$lastchapter, ENT_QUOTES, 'UTF-8')?>"/>
-    <meta property="og:novel:latest_chapter_url" content="<?=htmlspecialchars(rtrim((string)$site_url, '/') . (string)$last_url, ENT_QUOTES, 'UTF-8')?>"/>
+    <?php if ($last_url_raw !== ""): ?><meta property="og:novel:latest_chapter_url" content="<?=htmlspecialchars(rtrim((string)$site_url, '/') . $last_url_raw, ENT_QUOTES, 'UTF-8')?>"/><?php endif; ?>
     <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container body-content">
     <ol class="breadcrumb hidden-xs">
@@ -60,7 +57,7 @@ require_once __ROOT_DIR__ . '/shipsay/include/neighbor.php';
                 <div class="col-sm-10 pl0">
                     <h1 class="bookTitle"><?=$articlename?></h1>
                     <p class="booktag">
-                        <a class="red" href="<?=$author_url_attr?>" title="<?=$author?>"><i class="glyphicon glyphicon-user fs-12" aria-hidden="true"></i> <?=$author?></a>
+                        <?php if ($author_url_raw !== ""): ?><a class="red" href="<?=$author_url_attr?>" title="<?=$author?>"><i class="glyphicon glyphicon-user fs-12" aria-hidden="true"></i> <?=$author?></a><?php else: ?><span class="red"><i class="glyphicon glyphicon-user fs-12" aria-hidden="true"></i> <?=$author?></span><?php endif; ?>
                         <span class="blue"><i class="glyphicon glyphicon-font fs-12" aria-hidden="true"></i> <?=$words_w?>万字</span>
                         <span class="blue"><i class="glyphicon glyphicon-hourglass fs-12" aria-hidden="true"></i> <?=$isfull?></span>
                         <span class="blue"><i class="glyphicon glyphicon-time fs-12" aria-hidden="true"></i> <?=$lastupdate_cn?></span>
@@ -73,7 +70,7 @@ require_once __ROOT_DIR__ . '/shipsay/include/neighbor.php';
                         <div class="clear"></div>
                     </div>
                     <hr/>
-                    <p>最新章节：<a class="text-danger" href="<?=$last_url_attr?>" title="<?=$lastchapter?>"><?=$lastchapter?></a></p>
+                    <p>最新章节：<?php if ($last_url_raw !== ""): ?><a class="text-danger" href="<?=$last_url_attr?>" title="<?=$lastchapter?>"><?=$lastchapter?></a><?php else: ?><span class="text-danger"><?=$lastchapter?></span><?php endif; ?></p>
                 </div>
                 <div class="clear"></div>
             </div>

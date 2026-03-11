@@ -12,15 +12,15 @@ $page_end_scripts = '<script src="/static/' . $theme_dir_attr . '/js/tempbookcas
 <head>
     <meta name="robots" content="noindex,follow">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>最近阅读-<?=htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8')?></title>
+    <title>阅读记录-<?=htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8')?></title>
     <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container body-content">
     <ol class="breadcrumb hidden-xs">
         <li><a href="<?=$site_home_url_attr?>" title="<?=htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8')?>"><i class="glyphicon glyphicon-home fs-14" aria-hidden="true"></i> 首页</a></li>
-        <li class="active">最近阅读</li>
+        <li class="active">阅读记录</li>
     </ol>
     <div class="panel panel-default" style="min-height:600px;">
-        <div class="panel-heading"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> 最近阅读<a class="pull-right" href="javascript:removeall();"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 清空记录</a></div>
+        <div class="panel-heading"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> 阅读记录<a class="pull-right" href="javascript:removeall();"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> 清空记录</a></div>
         <table class="table" id="tempBookcase"></table>
     </div>
     <div class="clear"></div>

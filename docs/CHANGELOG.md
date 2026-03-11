@@ -1,3 +1,7 @@
+- shuyue v4：继续按 v5 收模板层真实链接收尾，范围仅 `themes/shuyue/*` 与 `docs/CHANGELOG.md`；不动 `app / class / include / configs`，也不回改其他已封版模板。
+- shuyue v4：`tpl_info.php / tpl_indexlist.php / tpl_reader.php` 去掉模板层自造目录页与当前页链接的 fallback，不再继续回退 `Url::index_url()`、`SERVER_NAME + REQUEST_URI` 这类模板拼接链路；缺失时改为空或禁用展示。
+- shuyue v4：`tpl_search.php / tpl_recentread.php` 继续做最小差异收口，搜索页缺封面时统一走当前主题 `nocover.jpg`，阅读记录页标题/面包屑/面板文案统一为“阅读记录”。
+
 - shuyue v3：继续按 v5 收口未触及页面，范围仅 `themes/shuyue/*` 与 `docs/CHANGELOG.md`；不动 `app / class / include / configs`，也不回带其他模板。
 - shuyue v3：修正 `tpl_recentread.php` 的脚本输出顺序，阅读记录页改为通过 `page_end_scripts` 在 footer 关闭前输出 `tempbookcase.js / layer.js` 与 `nav_sel('nav_his')`，避免脚本落在 `</body></html>` 之后。
 - shuyue v3：`tpl_home.php / tpl_category.php / tpl_author.php` 继续按真实站点链接收口 canonical 与公共入口，首页与列表页的 `More+` 链接只消费真实 `rank_entry_url / fake_top / allbooks_url`，分类页 canonical 不再临时拼接 `SERVER_NAME + REQUEST_URI`。

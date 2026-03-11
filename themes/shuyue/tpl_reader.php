@@ -17,12 +17,17 @@ foreach ($searchEngines as $bot) {
 }
 $site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
 $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
+$site_url_text_html = htmlspecialchars((string)$site_url, ENT_QUOTES, 'UTF-8');
 $sort_url_raw = Sort::ss_sorturl($sortid);
 $sort_url_attr = htmlspecialchars($sort_url_raw, ENT_QUOTES, 'UTF-8');
-$reader_url_raw = !empty($uri) ? rtrim((string)$site_url, '/') . (string)$uri : ((($_SERVER['SERVER_PORT'] ?? '') == 443 ? 'https://' : 'http://') . ($_SERVER['SERVER_NAME'] ?? '') . ($_SERVER['REQUEST_URI'] ?? ''));
+$reader_url_raw = (!empty($site_url) && !empty($uri)) ? rtrim((string)$site_url, '/') . (string)$uri : '';
 $reader_url_attr = htmlspecialchars($reader_url_raw, ENT_QUOTES, 'UTF-8');
-$index_url_raw = !empty($index_url) ? (string)$index_url : ((class_exists('Url') && method_exists('Url', 'index_url') && !empty($articleid)) ? Url::index_url($articleid) : '');
+$index_url_raw = !empty($index_url) ? (string)$index_url : '';
 $index_url_attr = htmlspecialchars($index_url_raw, ENT_QUOTES, 'UTF-8');
+$info_url_raw = !empty($info_url) ? (string)$info_url : '';
+$info_url_attr = htmlspecialchars($info_url_raw, ENT_QUOTES, 'UTF-8');
+$author_url_raw = !empty($author_url) ? (string)$author_url : '';
+$author_url_attr = htmlspecialchars($author_url_raw, ENT_QUOTES, 'UTF-8');
 ?>
 <?php require_once __ROOT_DIR__ . '/shipsay/include/neighbor.php'; ?>
 <!DOCTYPE html>
@@ -42,12 +47,12 @@ $index_url_attr = htmlspecialchars($index_url_raw, ENT_QUOTES, 'UTF-8');
     <meta property="og:novel:category" content="<?=htmlspecialchars((string)$sortname, ENT_QUOTES, 'UTF-8')?>小说">
     <meta property="og:novel:author" content="<?=htmlspecialchars((string)$author, ENT_QUOTES, 'UTF-8')?>">
     <meta property="og:novel:book_name" content="<?=htmlspecialchars((string)$articlename, ENT_QUOTES, 'UTF-8')?>">
-    <meta property="og:novel:index_url" content="<?=htmlspecialchars((string)$info_url, ENT_QUOTES, 'UTF-8')?>">
-    <meta property="og:novel:info_url" content="<?=htmlspecialchars((string)$info_url, ENT_QUOTES, 'UTF-8')?>">
+    <?php if ($info_url_raw !== ""): ?><meta property="og:novel:index_url" content="<?=$info_url_attr?>">
+    <meta property="og:novel:info_url" content="<?=$info_url_attr?>"><?php endif; ?>
     <meta property="og:novel:status" content="<?=htmlspecialchars((string)$isfull, ENT_QUOTES, 'UTF-8')?>">
     <meta property="og:novel:chapter_name" content="<?=htmlspecialchars((string)$chaptername, ENT_QUOTES, 'UTF-8')?>">
-    <meta property="og:novel:chapter_url" content="<?=$reader_url_attr?>">
-    <link rel="canonical" href="<?=$reader_url_attr?>">
+    <?php if ($reader_url_raw !== ""): ?><meta property="og:novel:chapter_url" content="<?=$reader_url_attr?>">
+    <link rel="canonical" href="<?=$reader_url_attr?>"><?php endif; ?>
     <meta http-equiv="Cache-Control" content="no-transform">
     <meta http-equiv="Cache-Control" content="no-siteapp">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -83,7 +88,7 @@ $index_url_attr = htmlspecialchars($index_url_raw, ENT_QUOTES, 'UTF-8');
     <ol class="breadcrumb hidden-xs">
         <li><a href="<?=$site_home_url_attr?>" title="<?=htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8')?>"><i class="glyphicon glyphicon-home fs-14" aria-hidden="true"></i> 首页</a></li>
         <li><a href="<?=$sort_url_attr?>"><?=$sortname?></a></li>
-        <li><a href="<?=$info_url?>"><?=$articlename?></a></li>
+        <li><?php if ($info_url_raw !== ""): ?><a href="<?=$info_url_attr?>"><?=$articlename?></a><?php else: ?><?=$articlename?><?php endif; ?></li>
         <li class="active"><?=$chaptername?><?php if ($max_pid > 1): ?><span style="font-size:14px;color:#666;margin-left:10px;">（第<?=$now_pid?>页/共<?=$max_pid?>页）</span><?php endif; ?></li>
         <span class="pull-right" id="ReadSet"></span>
     </ol>
@@ -93,15 +98,15 @@ $index_url_attr = htmlspecialchars($index_url_raw, ENT_QUOTES, 'UTF-8');
         <div class="page-header text-center">
             <h1 class="readTitle"><?=$chaptername?><?php if ($max_pid > 1): ?><span style="font-size:14px;color:#666;margin-left:10px;">（第<?=$now_pid?>页/共<?=$max_pid?>页）</span><?php endif; ?></h1>
             <p class="text-center booktag">
-                <a class="blue" href="<?=$info_url?>"><i class="glyphicon glyphicon-book fs-12" aria-hidden="true"></i> <?=$articlename?></a>
-                <a class="blue" href="<?=isset($author_url) ? $author_url : '#'?>" title="<?=$author?>"><i class="glyphicon glyphicon-user fs-12" aria-hidden="true"></i> <?=$author?></a>
+                <?php if ($info_url_raw !== ""): ?><a class="blue" href="<?=$info_url_attr?>"><i class="glyphicon glyphicon-book fs-12" aria-hidden="true"></i> <?=$articlename?></a><?php else: ?><span class="blue"><i class="glyphicon glyphicon-book fs-12" aria-hidden="true"></i> <?=$articlename?></span><?php endif; ?>
+                <?php if ($author_url_raw !== ""): ?><a class="blue" href="<?=$author_url_attr?>" title="<?=$author?>"><i class="glyphicon glyphicon-user fs-12" aria-hidden="true"></i> <?=$author?></a><?php else: ?><span class="blue"><i class="glyphicon glyphicon-user fs-12" aria-hidden="true"></i> <?=$author?></span><?php endif; ?>
             </p>
         </div>
 
         <div class="panel-body" id="rtext">
             <div id="booktxt">
                 <article id="article" class="content">
-                    <p>天才一秒记住【<?=htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8')?>】地址：<?=htmlspecialchars((string)$site_url, ENT_QUOTES, 'UTF-8')?></p>
+                    <p>天才一秒记住【<?=htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8')?>】地址：<?=$site_url_text_html?></p>
                     <div id="BookText">
                         <?php if ($isSearchEngine || !Ss::use_js()): ?>
                             <?=$rico_content?>
@@ -207,7 +212,15 @@ document.addEventListener('DOMContentLoaded', function () {
         <?php endif; ?>
         try {
             if (window.lastread && typeof lastread.set === 'function') {
-                lastread.set('<?=$info_url?>', '<?=$uri?>', '<?=$articlename?>', '<?=$chaptername?>', '<?=$author?>', '<?=date('m-d')?>', '<?=$img_url?>');
+                lastread.set(
+                    <?=json_encode((string)$info_url_raw, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>,
+                    <?=json_encode((string)$uri, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>,
+                    <?=json_encode((string)$articlename, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>,
+                    <?=json_encode((string)$chaptername, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>,
+                    <?=json_encode((string)$author, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>,
+                    <?=json_encode(date('m-d'), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>,
+                    <?=json_encode((string)$img_url, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>
+                );
             }
         } catch (e) {}
     }

@@ -2,6 +2,8 @@
 <?php
 $site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
 $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
+$theme_dir_attr = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
+$nocover_url_attr = '/static/' . $theme_dir_attr . '/nocover.jpg';
 $searchkey_text = isset($searchkey) ? trim((string)$searchkey) : '';
 $searchkey_html = htmlspecialchars($searchkey_text, ENT_QUOTES, 'UTF-8');
 $has_search_res = !empty($search_count) && !empty($search_res) && is_array($search_res);
@@ -35,7 +37,7 @@ $has_search_res = !empty($search_count) && !empty($search_res) && is_array($sear
                     <div class="col-xs-4 book-coverlist">
                         <div class="row">
                             <div class="col-sm-5">
-                                <a href="<?=$v['info_url']?>" class="thumbnail" style="background-image:url(<?=(!empty($v['img_url']) ? $v['img_url'] : '/static/' . $theme_dir . '/nocover.jpg')?>)"></a>
+                                <a href="<?=$v['info_url']?>" class="thumbnail" style="background-image:url(<?=(!empty($v['img_url']) ? $v['img_url'] : $nocover_url_attr)?>)"></a>
                             </div>
                             <div class="col-sm-7 pl0">
                                 <div class="caption">
