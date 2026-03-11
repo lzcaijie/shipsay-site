@@ -1,3 +1,6 @@
+- shuyue v7：阅读页字号再整体下调一档；`www/static/shuyue/js/pagetop.js` 的阅读设置由 `18/20/22` 调整为 `16/18/20`，默认值由 `20px` 改为 `18px`，即默认仍显示“中”，但视觉上比上一轮再小一档。
+- shuyue v7：`www/static/shuyue/css/site.css` 中 `#rtext` 默认字号由 `20px` 改为 `18px`，继续与 `#BookText` 的继承字号配合，保证正文默认显示和“小/中/大”切换一致。
+
 - shuyue v6：阅读页字号默认档整体下调一档；`www/static/shuyue/js/pagetop.js` 的阅读设置由 `20/22/24` 调整为 `18/20/22`，默认值由 `22px` 改为 `20px`，即默认显示按原“小”档收口。
 - shuyue v6：修正阅读页字号切换受 CSS 顶住的问题；`www/static/shuyue/css/site.css` 中 `#rtext` 默认字号改为 `20px`，`#BookText` 改为继承字号，保证“小/中/大”切换真正作用到正文。
 
