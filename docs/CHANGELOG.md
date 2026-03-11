@@ -1,27 +1,11 @@
-- shuyue v7：阅读页字号再整体下调一档；`www/static/shuyue/js/pagetop.js` 的阅读设置由 `18/20/22` 调整为 `16/18/20`，默认值由 `20px` 改为 `18px`，即默认仍显示“中”，但视觉上比上一轮再小一档。
-- shuyue v7：`www/static/shuyue/css/site.css` 中 `#rtext` 默认字号由 `20px` 改为 `18px`，继续与 `#BookText` 的继承字号配合，保证正文默认显示和“小/中/大”切换一致。
-
-- shuyue v6：阅读页字号默认档整体下调一档；`www/static/shuyue/js/pagetop.js` 的阅读设置由 `20/22/24` 调整为 `18/20/22`，默认值由 `22px` 改为 `20px`，即默认显示按原“小”档收口。
-- shuyue v6：修正阅读页字号切换受 CSS 顶住的问题；`www/static/shuyue/css/site.css` 中 `#rtext` 默认字号改为 `20px`，`#BookText` 改为继承字号，保证“小/中/大”切换真正作用到正文。
-
-- shuyue v5：目录页 `tpl_indexlist.php` 补齐长尾相关推荐展示，按 v5 标准与详情页保持同一套标题/判断条件/链接字段/展示字段；范围仅 `themes/shuyue/tpl_indexlist.php` 与 `docs/CHANGELOG.md`。
-
-- shuyue v4：继续按 v5 收模板层真实链接收尾，范围仅 `themes/shuyue/*` 与 `docs/CHANGELOG.md`；不动 `app / class / include / configs`，也不回改其他已封版模板。
-- shuyue v4：`tpl_info.php / tpl_indexlist.php / tpl_reader.php` 去掉模板层自造目录页与当前页链接的 fallback，不再继续回退 `Url::index_url()`、`SERVER_NAME + REQUEST_URI` 这类模板拼接链路；缺失时改为空或禁用展示。
-- shuyue v4：`tpl_search.php / tpl_recentread.php` 继续做最小差异收口，搜索页缺封面时统一走当前主题 `nocover.jpg`，阅读记录页标题/面包屑/面板文案统一为“阅读记录”。
-
-- shuyue v3：继续按 v5 收口未触及页面，范围仅 `themes/shuyue/*` 与 `docs/CHANGELOG.md`；不动 `app / class / include / configs`，也不回带其他模板。
-- shuyue v3：修正 `tpl_recentread.php` 的脚本输出顺序，阅读记录页改为通过 `page_end_scripts` 在 footer 关闭前输出 `tempbookcase.js / layer.js` 与 `nav_sel('nav_his')`，避免脚本落在 `</body></html>` 之后。
-- shuyue v3：`tpl_home.php / tpl_category.php / tpl_author.php` 继续按真实站点链接收口 canonical 与公共入口，首页与列表页的 `More+` 链接只消费真实 `rank_entry_url / fake_top / allbooks_url`，分类页 canonical 不再临时拼接 `SERVER_NAME + REQUEST_URI`。
-
-- shuyue v2：继续按 v5 收口模板层，仍只调整 `themes/shuyue/*` 与 `docs/CHANGELOG.md`；统一 `tpl_header.php / tpl_footer.php / tpl_error.php / tpl_search.php / tpl_author.php / tpl_recentread.php` 的站点首页、搜索、排行、阅读记录真实链接消费，不再在面包屑和错误页里继续写死首页旧入口。
-- shuyue v2：`tpl_info.php / tpl_indexlist.php / tpl_reader.php` 收口详情页、目录页、阅读页的真实链接链路；阅读页蜘蛛分页改为消费 `Url::chapter_url()`，不再硬写 `/read/{aid}/{cid}/{pid}.html`；详情页与目录页补齐最新章节/目录/相关推荐的同体系展示。
-- shuyue v2：`tpl_rank.php / tpl_top.php` 继续按 v5 统一为真实排行入口 + 聚合榜/单榜切换展示，并补齐头部导航高亮脚本，避免排行页进入后头部状态不一致。
-
-- shuyue v1：以本次上传的 `tpl_shuyue5_20260302` 备份为基线，恢复 `themes/shuyue/*` 与 `www/static/shuyue/*` 的完整模板骨架；当前完整包里 `themes/shuyue` 仅剩 `tpl_home.php / tpl_category.php / tpl_recentread.php`，且 `www/static/shuyue` 为空，已先按最小差异补回可运行模板层。
-- shuyue v1：不恢复会员系统相关文件，删除 `themes/shuyue/user/*`、`www/static/shuyue/js/user.js`，并同步去掉详情页/阅读页的加入书架与加入书签入口。
-- shuyue v1：`tpl_header.php / tpl_error.php / tpl_rank.php / tpl_top.php` 改为优先消费程序真实搜索、排行、阅读记录链接；不再默认写死 `/search/`、`/rank/` 等旧链路；缺失时改为禁用展示。
-- shuyue v1：`tpl_footer.php` 与 `www/static/shuyue/js/tempbookcase.js` 收口全站链接行为，移除非友情链接 `target="_blank"`；阅读记录清空只删除自身记录，不再 `localStorage.clear()` 全清。
+## 2026-03-12 | 模板 | simple 首轮按 v5 清会员残留与旧入口（v1）
+- 范围：仅调整 `themes/simple/*`、`www/static/simple/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 清理：删除 `themes/simple/user/*` 与 `www/static/simple/user.js`；`tpl_info.php` / `tpl_reader.php` 不再保留加入书架、加入书签入口。
+- 收口：`tpl_header.php` 去掉前台登录/注册/书架注入，公共导航统一保留首页 / 书库 / 全本 / 排行 / 阅读记录，搜索链路不再默认写死 `/search/` fallback。
+- 收口：`tpl_error.php` 搜索表单改为优先消费真实搜索入口，缺失时只做禁用展示，不再反造旧搜索链路。
+- 收口：`tpl_recentread.php` 切到 `tempbookcase.js` 的阅读记录展示，页面文案统一为“阅读记录”。
+- 修正：`www/static/simple/common.js` 与 `tempbookcase.js` 的 `removeAll()` 不再 `localStorage.clear()` 全清；`common.js` 的旧会员入口文案一并清掉。
+- 修正：`tpl_author.php`、`tpl_indexlist.php`、`tpl_info.php`、`tpl_reader.php` 不再继续加载 `user.js`，避免删除会员静态后页面脚本报错。
 
 - qula v5 r6：修正 `tpl_header.php` 头部搜索地址取值顺序；当 `ss_search_url()` 存在但返回空值时，自动回退到 `fake_search`，避免搜索框被渲染为禁用不可输入。
 ## 2026-03-10 qula v5 r5
