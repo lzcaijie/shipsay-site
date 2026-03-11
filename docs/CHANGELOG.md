@@ -1,3 +1,10 @@
+## 2026-03-12 | 模板 | simple 第二轮按 v5 收搜索链路与底部地图（v2)
+- 范围：仅调整 `themes/simple/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 `www/static/simple/*`。
+- 修正：`tpl_home.php` 与 `tpl_search.php` 的搜索表单不再使用未定义的 `$search_url_safe`；改为直接消费头部已整理好的 `search_url_raw / search_url_attr / search_placeholder_attr`。
+- 修正：首页与搜索页搜索表单移除旧的 `action=login` 隐藏字段，保留 `searchtype=all`，并在搜索入口缺失时改为禁用提交。
+- 收口：`tpl_footer.php` 的底部版权与地图拆成两行输出，地图单独占一行，避免手机端一整行过长；友情链接文案同步统一为“友情链接”。
+- 收口：`tpl_info.php`、`tpl_indexlist.php`、`tpl_reader.php` 的面包屑首页入口统一消费头部已整理好的真实首页链接，不再继续直接写 `$site_url` 或 `/`。
+
 ## 2026-03-12 | 模板 | simple 首轮按 v5 清会员残留与旧入口（v1）
 - 范围：仅调整 `themes/simple/*`、`www/static/simple/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 清理：删除 `themes/simple/user/*` 与 `www/static/simple/user.js`；`tpl_info.php` / `tpl_reader.php` 不再保留加入书架、加入书签入口。
