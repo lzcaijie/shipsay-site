@@ -17,10 +17,10 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('search');
 <div class="container">
 	<div class="content">
 		<div class="search">
-			<form name="articlesearch" method="post" action="<?=$search_url_safe?>">
-				<input name="searchkey" type="text" class="text" id="searchkey" size="10" maxlength="50" placeholder="搜索从这里开始..." />
-				<input type="hidden" name="action" value="login" />
-				<button type="submit" name="submit">搜  索</button>
+			<form name="articlesearch" method="post"<?php if ($search_url_raw !== ''): ?> action="<?=$search_url_attr?>"<?php else: ?> onsubmit="return false;"<?php endif; ?>>
+				<input name="searchkey" type="text" class="text" id="searchkey" size="10" maxlength="50" placeholder="<?=$search_placeholder_attr?>" />
+				<input type="hidden" name="searchtype" value="all" />
+				<button type="submit" name="submit"<?php if ($search_url_raw === ''): ?> disabled="disabled" aria-disabled="true"<?php endif; ?>>搜  索</button>
 			</form>
 		</div>
 		<div class="clear"></div>

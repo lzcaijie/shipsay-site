@@ -17,7 +17,7 @@
 <div class="container">
     <div class="content">
         <ol class="breadcrumb">
-            <li><a href="<?=$site_url?>" title="<?=SITE_NAME?>">首页</a></li>
+            <li><a href="<?=$site_home_url_attr?>" title="<?=SITE_NAME?>">首页</a></li>
             <li><a href="<?=Sort::ss_sorturl($sortid)?>"><?=$sortname?></a></li>
             <li><a href="<?=$info_url?>"><?=$articlename?></a></li>
             <li class="active">目录</li>
