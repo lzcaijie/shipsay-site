@@ -8,20 +8,20 @@ if (!function_exists('ss_h')) {
 if (!function_exists('ss_search_url')) {
     function ss_search_url(){
         global $fake_search;
-        return !empty($fake_search) ? (string)$fake_search : '/search/';
+        return !empty($fake_search) ? (string)$fake_search : '';
     }
 }
 if (!function_exists('ss_recentread_url')) {
     function ss_recentread_url(){
         global $fake_recentread;
-        return !empty($fake_recentread) ? (string)$fake_recentread : '/history.html';
+        return !empty($fake_recentread) ? (string)$fake_recentread : '';
     }
 }
 if (!function_exists('ss_top_url')) {
     function ss_top_url(){
         global $rank_entry_url, $fake_top;
         if (!empty($rank_entry_url)) return (string)$rank_entry_url;
-        return !empty($fake_top) ? (string)$fake_top : '/top/';
+        return !empty($fake_top) ? (string)$fake_top : '';
     }
 }
 if (!function_exists('ss_render_search_form')) {

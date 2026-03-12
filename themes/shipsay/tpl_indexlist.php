@@ -70,6 +70,7 @@ $indexlist_breadcrumb_ld = [
 <meta property="og:title" content="<?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:url" content="<?=$indexlist_url_attr?>">
+<style>.chapter-wide-row{width:100%;display:block;}.chapter-empty-row{width:100%;display:block;}</style>
 <script type="application/ld+json"><?=json_encode($indexlist_breadcrumb_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container">
@@ -102,14 +103,14 @@ $indexlist_breadcrumb_ld = [
                     <?php foreach ($list_arr as $v): ?>
                         <?php if (isset($v['chaptertype']) && intval($v['chaptertype']) === 1): ?>
                             <?php $cname_html = htmlspecialchars((string)$v['cname'], ENT_QUOTES, 'UTF-8'); ?>
-                            <li style="width:100%"><?=$cname_html?></li>
+                            <li class="chapter-wide-row"><?=$cname_html?></li>
                         <?php else: ?>
                             <?php $cid_url_attr = htmlspecialchars((string)$v['cid_url'], ENT_QUOTES, 'UTF-8'); $cname_html = htmlspecialchars((string)$v['cname'], ENT_QUOTES, 'UTF-8'); ?>
                             <li><a href="<?=$cid_url_attr?>" title="<?=$article_title_html?> <?=$cname_html?>"><?=$cname_html?></a></li>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <li style="width:100%">暂无章节数据</li>
+                    <li class="chapter-empty-row">暂无章节数据</li>
                 <?php endif; ?>
             </ul>
             <div class="index-container"><?=$htmltitle?></div>

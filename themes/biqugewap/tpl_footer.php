@@ -1,5 +1,5 @@
 <?php
-$search_url_safe = function_exists('ss_search_url') ? ss_search_url() : ((isset($fake_search) && $fake_search) ? $fake_search : '/search/');
+$search_url_safe = function_exists('ss_search_url') ? ss_search_url() : ((isset($fake_search) && $fake_search) ? $fake_search : '');
 $site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
 $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
 $footer_site_base_raw = rtrim($site_home_url_raw, '/');
@@ -7,7 +7,8 @@ $footer_sitemap_sm_attr = htmlspecialchars($footer_site_base_raw . '/sitemap/sm_
 $footer_sitemap_xml_attr = htmlspecialchars($footer_site_base_raw . '/sitemap/sitemap.xml', ENT_QUOTES, 'UTF-8');
 if (!function_exists('ss_search_kw_url')) {
     function ss_search_kw_url($kw){
-        $base = function_exists('ss_search_url') ? ss_search_url() : ((isset($GLOBALS['fake_search']) && $GLOBALS['fake_search']) ? $GLOBALS['fake_search'] : '/search/');
+        $base = function_exists('ss_search_url') ? ss_search_url() : ((isset($GLOBALS['fake_search']) && $GLOBALS['fake_search']) ? $GLOBALS['fake_search'] : '');
+        if ($base === '') return 'javascript:void(0)';
         $sep = (strpos($base, '?') !== false) ? '&' : '?';
         return $base . $sep . 'searchkey=' . rawurlencode($kw);
     }
@@ -28,9 +29,9 @@ if (!function_exists('ss_search_kw_url')) {
     <script>imglazy();</script>
     <div id="searchguide">
         <div class="search">
-    		<form name="search" action="<?=$search_url_safe?>" method="get">
+    		<form name="search"<?php if ($search_url_safe !== ""): ?> action="<?=$search_url_safe?>"<?php else: ?> onsubmit="return false;"<?php endif; ?> method="get">
     			<input type="text" placeholder="可搜书名，请您少字也别输错字" value="" name="searchkey" class="search" id="searchkey" autocomplete="on" required>
-    			<button type="submit">搜 索</button>
+    			<button type="submit"<?php if ($search_url_safe === ""): ?> disabled="disabled" aria-disabled="true"<?php endif; ?>>搜 索</button>
     		</form>
     		<a id="closesearch" href="javascript:" title="取消" class="icon icon-more active"></a>
     	</div>

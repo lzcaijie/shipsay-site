@@ -182,6 +182,19 @@ else
 	$jump_html.='<li><a href="'.$next_url.'">&gt;&gt;</a></li>';
 	$jump_html_wap.='</select><a class="index-container-btn" href="'.$next_url.'">下一页</a>';
 }
+
+$category_hot_rows = [];
+$sql=$sortid > 0 ? $rico_sql.'AND sortid = '. $sortid : $rico_sql;
+$sql .= ' ORDER BY weekvisit DESC LIMIT 21';
+if(isset($redis))
+{
+    $category_hot_rows=$redis->ss_redis_getrows($sql,$home_cache_time);
+}
+else
+{
+    $category_hot_rows=$db->ss_getrows($sql);
+}
+
 $sql=$rico_sql.$sortidstr.' ORDER BY postdate DESC LIMIT '.$category_per_page;
 if(isset($redis))
 {

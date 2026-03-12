@@ -15,15 +15,6 @@ if (!empty($sorturl)) {
   $sort_link = Sort::category_url($sortid, 1);
 }
 
-if (!function_exists('ss_indexlist_page_url')) {
-  function ss_indexlist_page_url($articleid, $pageNo){
-    if (class_exists('Url') && method_exists('Url', 'index_url')) {
-      return Url::index_url($articleid, $pageNo);
-    }
-    return '';
-  }
-}
-
 $current_url_raw = isset($uri) && $uri ? (string)$uri : ((isset($index_url) && $index_url) ? (string)$index_url : '');
 $current_url_attr = htmlspecialchars($current_url_raw, ENT_QUOTES, 'UTF-8');
 $canonical_url = $current_url_raw;
@@ -31,10 +22,10 @@ if ($canonical_url !== '' && !preg_match('#^https?://#i', $canonical_url) && !em
   $canonical_url = rtrim((string)$site_url, '/') . $canonical_url;
 }
 
-$prev_page_url = $pid > 1 ? ss_indexlist_page_url($articleid, $pid - 1) : '';
-$next_page_url = $pid < $total_pages ? ss_indexlist_page_url($articleid, $pid + 1) : '';
-$prev_page_url_attr = htmlspecialchars((string)$prev_page_url, ENT_QUOTES, 'UTF-8');
-$next_page_url_attr = htmlspecialchars((string)$next_page_url, ENT_QUOTES, 'UTF-8');
+$prev_page_url = '';
+$next_page_url = '';
+$prev_page_url_attr = '';
+$next_page_url_attr = '';
 
 $per_page_now = (!empty($list_arr) && is_array($list_arr)) ? count($list_arr) : 0;
 $per_page_base = (!empty($rico_arr) && is_array($rico_arr) && !empty($rico_arr[0]) && is_array($rico_arr[0])) ? count($rico_arr[0]) : $per_page_now;
@@ -144,29 +135,9 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('indexlist');
       </div>
 
       <div class="pager">
-        <?php if($pid > 1 && $prev_page_url !== ''): ?>
-          <a href="<?=$prev_page_url?>">上一页</a>
-        <?php else: ?>
-          <span class="muted">上一页</span>
-        <?php endif; ?>
-
         <span class="muted">第 <?=$pid?> / <?=$total_pages?> 页</span>
-
-        <?php if($pid < $total_pages && $next_page_url !== ''): ?>
-          <a href="<?=$next_page_url?>">下一页</a>
-        <?php else: ?>
-          <span class="muted">下一页</span>
-        <?php endif; ?>
-
-        <?php if($total_pages > 1): ?>
-          <span class="select">
-            <select onchange="if(this.value){location.href=this.value}">
-              <?php for($i=1;$i<=$total_pages;$i++): ?>
-                <?php $page_url = $i === $pid ? $current_url_raw : ss_indexlist_page_url($articleid, $i); ?>
-                <option value="<?=htmlspecialchars((string)$page_url, ENT_QUOTES, 'UTF-8')?>"<?=$i==$pid?' selected':''?><?php if($page_url===''): ?> disabled="disabled"<?php endif; ?>>第 <?=$i?> 页</option>
-              <?php endfor; ?>
-            </select>
-          </span>
+        <?php if(isset($htmltitle) && trim((string)$htmltitle) !== ""): ?>
+          <div class="index-container"><?=$htmltitle?></div>
         <?php endif; ?>
       </div>
     </section>

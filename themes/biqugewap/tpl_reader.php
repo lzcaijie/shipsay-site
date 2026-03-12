@@ -103,7 +103,21 @@ $pageDescription = $seo_description;
 		<div class="clear"></div>
 	</header>
 	
-	<div class="spider-pagination" aria-label="章节分页导航">
+	
+<?php
+$reader_recentread_url = !empty($recentread_url_attr) ? (string)$recentread_url_attr : (!empty($fake_recentread) ? (string)$fake_recentread : '');
+$reader_rank_url = !empty($rank_entry_url) ? (string)$rank_entry_url : (!empty($fake_top) ? (string)$fake_top : '');
+if (!function_exists('ss_reader_page_url')) {
+    function ss_reader_page_url($articleid, $chapterid, $page){
+        if (class_exists('Url') && method_exists('Url', 'chapter_url')) {
+            return (string)Url::chapter_url($articleid, $chapterid, $page);
+        }
+        return '';
+    }
+}
+?>
+
+<div class="spider-pagination" aria-label="章节分页导航">
         <?php if ($max_pid > 1): ?>
             <?php if ($now_pid > 1): ?>
                 <a href="<?=$prevpage_url?>" rel="prev">上一页</a>
@@ -201,7 +215,7 @@ $pageDescription = $seo_description;
 	</div>
 
     <div class="rank mt0 mb0">
-        <h4>人气小说推荐<a class="pull-right" href="<?=$fake_top?>">More+</a></h4>
+        <h4>人气小说推荐<?php if($reader_rank_url !== ""): ?><a class="pull-right" href="<?=$reader_rank_url?>">More+</a><?php else: ?><span class="pull-right">More+</span><?php endif; ?></h4>
         <div class="content">
             <?php foreach($postdate as $k => $v): ?><?php if($k < 3):?>
             <dl>
@@ -255,7 +269,7 @@ $pageDescription = $seo_description;
                     <i class="icon icon-sort"></i>
                     <span class="guide-nav-h">分类</span>
                 </a>
-                <a href="<?=$fake_top?>" class="guide-nav-a">
+                <?php if($reader_rank_url !== ""): ?><a href="<?=$reader_rank_url?>" class="guide-nav-a"><?php else: ?><a href="javascript:void(0)" class="guide-nav-a" aria-disabled="true"><?php endif; ?>
                     <i class="icon icon-rank"></i>
                     <span class="guide-nav-h">排行榜</span>
                 </a>
@@ -263,7 +277,7 @@ $pageDescription = $seo_description;
                     <i class="icon icon-end"></i>
                     <span class="guide-nav-h">全本</span>
                 </a>
-                <a href="<?=$fake_recentread?>" class="guide-nav-a">
+                <?php if($reader_recentread_url !== ""): ?><a href="<?=$reader_recentread_url?>" class="guide-nav-a"><?php else: ?><a href="javascript:void(0)" class="guide-nav-a" aria-disabled="true"><?php endif; ?>
                     <i class="icon icon-free"></i>
                     <span class="guide-nav-h">记录</span>
                 </a>

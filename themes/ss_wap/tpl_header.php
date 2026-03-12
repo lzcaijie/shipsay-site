@@ -39,7 +39,7 @@ if (!function_exists('ss_search_url')) {
         global $search_url, $fake_search;
         if (!empty($search_url)) return (string)$search_url;
         if (!empty($fake_search)) return (string)$fake_search;
-        return '/search/';
+        return '';
     }
 }
 if (!function_exists('ss_recentread_url')) {
@@ -108,7 +108,7 @@ if (!function_exists('ss_render_search_form')) {
         ss_submit_search_js();
         ?>
 <div class="<?=$wrapper_class_attr?>">
-<form id="t_frmsearch" name="t_frmsearch" method="<?=$method?>" action="<?=$search_url_attr?>" onsubmit="return ssSubmitSearch(this);">
+<form id="t_frmsearch" name="t_frmsearch" method="<?=$method?>"<?php if ($search_url_raw !== ""): ?> action="<?=$search_url_attr?>" onsubmit="return ssSubmitSearch(this);"<?php else: ?> onsubmit="return false;"<?php endif; ?>>
     <table cellpadding="0" cellspacing="0" style="width:100%;">
         <tr>
             <td style="width:50px;"><div id="type" class="type">综合</div></td>
@@ -117,7 +117,7 @@ if (!function_exists('ss_render_search_form')) {
                 <input type="hidden" name="searchtype" value="all">
             </td>
             <td style="width:35px; background-color:#0080C0; background-image:url('/static/<?=$theme_dir_attr?>/search.png'); background-repeat:no-repeat; background-position:center">
-                <input name="t_btnsearch" type="submit" value="" class="go">
+                <input name="t_btnsearch" type="submit" value="" class="go"<?php if ($search_url_raw === ""): ?> disabled="disabled" aria-disabled="true"<?php endif; ?>>
             </td>
         </tr>
     </table><span id="s_tips"></span>

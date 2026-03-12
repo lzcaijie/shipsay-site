@@ -60,15 +60,7 @@
             <div class="layout layout2 layout-col1">
                 <h2 class="layout-tit"><?php if($sortname !=''):?><?=$sortname?><?php else:?>小说书库<?php endif ?></h2>
                 <ul class="txt-list txt-list-row3">
-<?php
-    $sql = $sortid > 0 ? $rico_sql.'AND sortid = '. $sortid : $rico_sql;
-    $sql .= ' ORDER BY weekvisit DESC LIMIT 21';
-    if(isset($redis)) {
-        $weekvisit10 = $redis->ss_redis_getrows($sql, $home_cache_time);
-    } else {
-        $weekvisit10 = $db->ss_getrows($sql);
-    }
-?>
+<?php $weekvisit10 = (isset($category_hot_rows) && is_array($category_hot_rows)) ? array_slice($category_hot_rows, 0, 21) : []; ?>
 <div class="recombook">
 <dl>
     <?php foreach($weekvisit10 as $k => $v) {if($k < 21 ){ ?>

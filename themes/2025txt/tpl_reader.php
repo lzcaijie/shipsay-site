@@ -118,6 +118,18 @@ $pageDescription = $seo_description;
 <li class="active"><?=$chaptername?></li>
 </ol>
 
+
+<?php
+if (!function_exists('ss_reader_page_url')) {
+    function ss_reader_page_url($articleid, $chapterid, $page){
+        if (class_exists('Url') && method_exists('Url', 'chapter_url')) {
+            return (string)Url::chapter_url($articleid, $chapterid, $page);
+        }
+        return '';
+    }
+}
+?>
+
 <div class="spider-pagination" aria-label="章节分页导航">
     <?php if ($max_pid > 1): ?>
         <?php if ($now_pid > 1): ?>
@@ -130,7 +142,7 @@ $pageDescription = $seo_description;
             <?php if ($i == $now_pid): ?>
                 <strong><?=$i?></strong>
             <?php else: ?>
-                <a href="/read/<?=$articleid?>/<?=$chapterid?>/<?=$i?>.html"><?=$i?></a>
+                <?php $reader_page_url = ss_reader_page_url($articleid, $chapterid, $i); ?><?php if($reader_page_url !== ""): ?><a href="<?=$reader_page_url?>"><?=$i?></a><?php else: ?><span><?=$i?></span><?php endif; ?>
             <?php endif; ?>
         <?php endfor; ?>
 

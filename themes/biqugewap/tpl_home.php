@@ -17,6 +17,8 @@ $rank_week_url_home = (!empty($rank_detail_base) ? rtrim($rank_detail_base, '/')
 $rank_goodnum_url_home = (!empty($rank_detail_base) ? rtrim($rank_detail_base, '/') . '/goodnum/' : $rank_entry_url_home);
 $recentread_url_home = !empty($recentread_url_attr) ? $recentread_url_attr : (!empty($fake_recentread) ? $fake_recentread : '');
 $full_allbooks_url_home = !empty($full_allbooks_url) ? $full_allbooks_url : '';
+$weekvisit_rows_home = (isset($home_rank_weekvisit) && is_array($home_rank_weekvisit)) ? $home_rank_weekvisit : [];
+$goodnum_rows_home = (isset($home_rank_goodnum) && is_array($home_rank_goodnum)) ? $home_rank_goodnum : [];
 ?>
 </head>
 <body>
@@ -38,7 +40,7 @@ $full_allbooks_url_home = !empty($full_allbooks_url) ? $full_allbooks_url : '';
             <i class="icon icon-sort"></i>
             <span class="guide-nav-h">分类</span>
         </a>
-        <a href="<?=$rank_entry_url_home?>" class="guide-nav-a">
+        <?php if($rank_entry_url_home !== ""): ?><a href="<?=$rank_entry_url_home?>" class="guide-nav-a"><?php else: ?><a href="javascript:void(0)" class="guide-nav-a" aria-disabled="true"><?php endif; ?>
             <i class="icon icon-rank"></i>
             <span class="guide-nav-h">排行榜</span>
         </a>
@@ -52,7 +54,7 @@ $full_allbooks_url_home = !empty($full_allbooks_url) ? $full_allbooks_url : '';
         </a>
     </nav>
 	<div class="rank">
-		<h4>热门小说推荐<a class="pull-right" href="<?=$rank_entry_url_home?>">More+</a></h4>
+		<h4>热门小说推荐<?php if($rank_entry_url_home !== ""): ?><a class="pull-right" href="<?=$rank_entry_url_home?>">More+</a><?php else: ?><span class="pull-right">More+</span><?php endif; ?></h4>
 		<div class="content">
 		    <?php foreach($commend as $k => $v): ?><?php if($k < 5):?>
 			<dl>
@@ -66,17 +68,9 @@ $full_allbooks_url_home = !empty($full_allbooks_url) ? $full_allbooks_url : '';
 		<div class="clear"></div>
 	</div>
 	<div class="rank">
-		<h4>本周人气榜<a class="pull-right" href="<?=$rank_week_url_home?>">More+</a></h4>
+		<h4>本周人气榜<?php if($rank_week_url_home !== ""): ?><a class="pull-right" href="<?=$rank_week_url_home?>">More+</a><?php else: ?><span class="pull-right">More+</span><?php endif; ?></h4>
 		<div class="content">
-		    <?php
-                         $sql =  $rico_sql;
-                            $sql .= ' ORDER BY weekvisit DESC LIMIT 5';
-                            if(isset($redis)) {
-                            $weekvisit5 = $redis->ss_redis_getrows($sql, $home_cache_time);
-                            } else {
-                            $weekvisit5 = $db->ss_getrows($sql);
-                            }
-                            foreach($weekvisit5 as $k => $v): ?><?php if($k == 0):?>
+		    <?php foreach($weekvisit_rows_home as $k => $v): ?><?php if($k == 0):?>
 			<dl>
 				<a href="<?=$v['info_url']?>" class="cover" title="<?=$v['articlename']?>"><img class="lazy" src="/static/<?=$theme_dir?>/nocover.jpg" data-original="<?=$v['img_url']?>" alt="<?=$v['articlename']?>"></a>
 				<dt><span><?=$k+1?></span><a href="<?=$v['info_url']?>" title="<?=$v['articlename']?>"><?=$v['articlename']?></a></dt>
@@ -92,17 +86,9 @@ $full_allbooks_url_home = !empty($full_allbooks_url) ? $full_allbooks_url : '';
 		<div class="clear"></div>
 	</div>
 	<div class="rank">
-		<h4>书友收藏榜<a class="pull-right" href="<?=$rank_goodnum_url_home?>">More+</a></h4>
+		<h4>书友收藏榜<?php if($rank_goodnum_url_home !== ""): ?><a class="pull-right" href="<?=$rank_goodnum_url_home?>">More+</a><?php else: ?><span class="pull-right">More+</span><?php endif; ?></h4>
 		<div class="content">
-			<?php
-                         $sql =  $rico_sql;
-                            $sql .= ' ORDER BY goodnum DESC LIMIT 5';
-                            if(isset($redis)) {
-                            $weekvisit5 = $redis->ss_redis_getrows($sql, $home_cache_time);
-                            } else {
-                            $weekvisit5 = $db->ss_getrows($sql);
-                            }
-                            foreach($weekvisit5 as $k => $v): ?><?php if($k == 0):?>
+			<?php foreach($goodnum_rows_home as $k => $v): ?><?php if($k == 0):?>
 			<dl>
 				<a href="<?=$v['info_url']?>" class="cover" title="<?=$v['articlename']?>"><img class="lazy" src="/static/<?=$theme_dir?>/nocover.jpg" data-original="<?=$v['img_url']?>" alt="<?=$v['articlename']?>"></a>
 				<dt><span><?=$k+1?></span><a href="<?=$v['info_url']?>" title="<?=$v['articlename']?>"><?=$v['articlename']?></a></dt>

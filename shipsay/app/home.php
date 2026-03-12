@@ -46,6 +46,27 @@ else
 {
 	$lastupdate=$db->ss_getrows($sql);
 }
+
+$home_rank_weekvisit = [];
+$sql=$rico_sql.'ORDER BY weekvisit DESC LIMIT 5';
+if(isset($redis))
+{
+    $home_rank_weekvisit=$redis->ss_redis_getrows($sql,$home_cache_time,1);
+}
+else
+{
+    $home_rank_weekvisit=$db->ss_getrows($sql);
+}
+$home_rank_goodnum = [];
+$sql=$rico_sql.'ORDER BY goodnum DESC LIMIT 5';
+if(isset($redis))
+{
+    $home_rank_goodnum=$redis->ss_redis_getrows($sql,$home_cache_time,1);
+}
+else
+{
+    $home_rank_goodnum=$db->ss_getrows($sql);
+}
 $sql=$rico_sql.'ORDER BY postdate DESC LIMIT '.$home_postdate_num;
 if(isset($redis))
 {
