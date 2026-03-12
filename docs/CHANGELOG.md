@@ -1,3 +1,8 @@
+## 2026-03-12 | 模板 | simple 第九轮修聚合榜顶部入口为 PC/手机都单行横排（v9）
+- 范围：仅调整 `themes/simple/tpl_top.php` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 `www/static/simple/*`。
+- 修正：聚合榜页顶部 6 个榜单入口在桌面端继续保持一整行横排；手机端撤回单列纵向排列，改为同样单行横排，超出宽度时允许横向滑动，不再出现 6 行堆叠。
+- 保持：聚合榜下方 6 个榜单内容卡片继续维持桌面端 2 列 3 行、手机端单列，不扩散改动到单榜页与其他页面。
+
 ## 2026-03-12 | 模板 | simple 第八轮纠正聚合榜布局口径（v8）
 - 范围：仅调整 `themes/simple/tpl_top.php` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 `www/static/simple/*`。
 - 修正：聚合榜页顶部 6 个榜单入口恢复为桌面端单行横排，撤回上一轮把 PC 端入口改成两列的错误理解。
