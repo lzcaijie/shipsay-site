@@ -1,8 +1,16 @@
-## 2026-03-12 | ss_wap 第三轮按 v5 清理未引用静态残留（v3)
-- 范围：仅调整 `docs/CHANGELOG.md`，并删除 `www/static/ss_wap/` 下已确认未引用的静态残留；不动 `app / class / include / configs` 与其他模板文件。
-- 清理：删除 `www/static/ss_wap/checkcode.php`、`www/static/ss_wap/arial.ttf`、`www/static/ss_wap/js/protect-page.js`、`www/static/ss_wap/js/protect-ptcms.js`。
-- 依据：`ss_wap` 当前已删除 `user/` 会员模板、也不存在登录/注册验证码入口；上述 4 个文件在当前 `themes/ss_wap/*` 与站内代码中均无有效引用，保留只会干扰后续模板基线判断。
-- 保持：`www/static/ss_wap/common.js`、`tempbookcase.js`、`style.css`、`search.png`、`nocover.jpg`、`favicon.ico`、`js/jquery*.js` 仍为当前模板实际使用文件，本轮不动。
+## 2026-03-12 | 模板 | ss_wap 第四轮按 v5 统一首页/完本/底部/详情 OG 真实链接（v4）
+- 范围：仅调整 `themes/ss_wap/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 `www/static/ss_wap/*`。
+- 修正：`tpl_header.php` 补齐 `ss_site_base_url()`、`ss_abs_url()`、`ss_full_allbooks_url()`，把站点根地址、绝对链接拼装、完本入口 fallback 统一收回到头部 helper，避免分散在页面里继续各写一套。
+- 修正：`tpl_home.php` 的完本入口改为统一消费 `ss_full_allbooks_url()`；分类展开菜单对齐母模板口径，跳过排行入口与“排行”类目，避免首页菜单与排行页重复。
+- 修正：`tpl_footer.php` 首页入口真正改为消费 `ss_home_url()`，不再回退使用 `site_url` 旧拼法，保持头尾首页链接一致。
+- 修正：`tpl_info.php` 补 canonical，并将 `og:novel:author_link / read_url / url / lastest_chapter_url` 统一改为通过 `ss_abs_url()` 生成，避免模板层继续直接拼接 `site_url + path`。
+
+## 2026-03-12 | 模板 | ss_wap 第三轮按 v5 收首页/搜索/阅读记录/排行真实链接（v3)
+- 范围：仅调整 `themes/ss_wap/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 `www/static/ss_wap/*`。
+- 修正：`tpl_header.php` 补齐 `ss_home_url()`，并让 `ss_search_url()`、`ss_recentread_url()` 优先消费上游已提供的真实链接；模板层不再只盯 `site_url / fake_search / fake_recentread` 旧变量。
+- 修正：`tpl_author.php`、`tpl_category.php`、`tpl_indexlist.php`、`tpl_info.php`、`tpl_reader.php`、`tpl_search.php`、`tpl_rank.php`、`tpl_top.php`、`tpl_recentread.php`、`tpl_error.php` 的首页入口统一改为消费真实首页链接，不再继续写死 `/`。
+- 修正：`tpl_footer.php` 的首页 / 阅读记录 / 排行入口统一改走 `ss_home_url()`、`ss_recentread_url()`、`ss_top_url()`，保持与 v5 头尾口径一致。
+- 结论：本轮先把 `ss_wap` 仍残留的“模板层写死旧链路”收干净，继续遵守最小差异修复，不扩散到样式与核心。
 
 ## 2026-03-12 | ss_wap 第二轮按 v5 标准内联搜索表单并删除多余模板文件（v2）
 - 将首页与搜索页内的搜索表单直接内联回 `tpl_home.php`、`tpl_search.php`。
