@@ -1,13 +1,17 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 
 <?php
+if (!function_exists('ss_search_url')) {
+    function ss_search_url(){
+        global $fake_search;
+        return !empty($fake_search) ? (string)$fake_search : '/search/';
+    }
+}
 $theme_dir_raw = (string)$theme_dir;
 $theme_dir_attr = htmlspecialchars($theme_dir_raw, ENT_QUOTES, 'UTF-8');
 $site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
 $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
-$search_url_raw = function_exists('ss_search_url')
-    ? (string)ss_search_url()
-    : ((isset($fake_search) && $fake_search) ? (string)$fake_search : '');
+$search_url_raw = (string)ss_search_url();
 $allbooks_url_raw = isset($allbooks_url) && $allbooks_url ? (string)$allbooks_url : '';
 $full_allbooks_url_raw = isset($full_allbooks_url) && $full_allbooks_url ? (string)$full_allbooks_url : '';
 $rank_entry_raw = isset($rank_entry_url) && $rank_entry_url ? (string)$rank_entry_url : ((isset($fake_top) && $fake_top) ? (string)$fake_top : '');

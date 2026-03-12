@@ -32,10 +32,10 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
 
 		<div class="content-right" id="fengyou">
 			<div class="search hidden-xs">
-				<form name="articlesearch" method="post"<?php if ($search_url_raw !== ''): ?> action="<?=$search_url_attr?>"<?php else: ?> onsubmit="return false;"<?php endif; ?>>
+				<form name="articlesearch" method="post" action="<?=$search_url_attr?>">
 					<input name="searchkey" type="text" class="text" id="searchkey" size="10" maxlength="50" placeholder="<?=$search_placeholder_attr?>">
 					<input type="hidden" name="searchtype" value="all">
-					<button type="submit" name="submit"<?php if ($search_url_raw === ''): ?> disabled="disabled" aria-disabled="true"<?php endif; ?>>搜  索</button>
+					<button type="submit" name="submit">搜  索</button>
 				</form>
 			</div>
 			<h2 class="visible-xs">阅读排行榜</h2>

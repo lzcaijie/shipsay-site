@@ -1,3 +1,9 @@
+## 2026-03-12 | 模板 | simple 第四轮去当前生效的禁右键并恢复搜索可点击（v4）
+- 范围：仅调整 `themes/simple/*`、`www/static/simple/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`；`protect-page.js` 本轮明确不动。
+- 修正：移除 `www/static/simple/common.js` 当前正在全站生效的禁右键 / 禁复制脚本，不再拦截右键菜单与 Ctrl+C / Ctrl+V。
+- 修正：`tpl_header.php` 补本模板自己的 `ss_search_url()` fallback；当页面没有下发 `fake_search` 时，搜索表单默认回退到 `/search/`，不再出现“可以输入但按钮点不动”。
+- 收口：`tpl_home.php`、`tpl_search.php`、`tpl_error.php` 的搜索表单改为直接提交到真实搜索入口，不再在搜索地址为空时渲染禁用按钮。
+
 ## 2026-03-12 | 模板 | simple 第三轮补目录页 / 阅读页 SEO 与搜索结果口径（v3）
 - 范围：仅调整 `themes/simple/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 `www/static/simple/*`。
 - 收口：`tpl_indexlist.php` 补齐目录页 canonical / OG / BreadcrumbList 结构化数据，并把目录页补成“书籍信息 / 最新章节 / 简介 / 长尾相关推荐 / 当前页目录 / 相关阅读”同体系输出。
