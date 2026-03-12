@@ -1,3 +1,11 @@
+## 2026-03-12 | 模板 | simple 第三轮补目录页 / 阅读页 SEO 与搜索结果口径（v3）
+- 范围：仅调整 `themes/simple/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 `www/static/simple/*`。
+- 收口：`tpl_indexlist.php` 补齐目录页 canonical / OG / BreadcrumbList 结构化数据，并把目录页补成“书籍信息 / 最新章节 / 简介 / 长尾相关推荐 / 当前页目录 / 相关阅读”同体系输出。
+- 修正：目录页返回详情按钮只消费真实 `info_url`；章节目录标题补齐总章节数与当前页文案，不再只是裸目录列表。
+- 收口：`tpl_reader.php` 补齐阅读页 canonical / OG / BreadcrumbList 结构化数据，`og:novel:index_url` 仅在真实目录入口存在时输出，不再把详情页误当目录页。
+- 修正：阅读页目录按钮不再回退到详情页；当前改为“目录缺失则禁用展示，详情单独按钮输出”，并补齐作者 / 字数 / 时间信息行。
+- 收口：`tpl_search.php` 补齐搜索关键词安全输出、结果数展示与 canonical / OG 基础项；搜索无结果提示文案与热门推荐口径同步统一。
+
 ## 2026-03-12 | 模板 | simple 第二轮按 v5 收搜索链路与底部地图（v2)
 - 范围：仅调整 `themes/simple/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 `www/static/simple/*`。
 - 修正：`tpl_home.php` 与 `tpl_search.php` 的搜索表单不再使用未定义的 `$search_url_safe`；改为直接消费头部已整理好的 `search_url_raw / search_url_attr / search_placeholder_attr`。
