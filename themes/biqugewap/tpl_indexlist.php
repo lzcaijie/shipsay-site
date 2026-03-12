@@ -39,6 +39,7 @@ $first_url_attr = htmlspecialchars((string)$first_url, ENT_QUOTES, 'UTF-8');
 $info_url_attr = htmlspecialchars((string)$info_url, ENT_QUOTES, 'UTF-8');
 $intro_html = !empty($intro) ? (string)$intro : (!empty($intro_des) ? '<p>' . nl2br(htmlspecialchars((string)$intro_des, ENT_QUOTES, 'UTF-8')) . '</p>' : '<p>暂无简介</p>');
 $langtail_rows = !empty($langtailrows) && is_array($langtailrows) ? array_slice($langtailrows, 0, 12) : [];
+$latest_rows = !empty($lastarr) && is_array($lastarr) ? $lastarr : (!empty($lastchapter_arr) && is_array($lastchapter_arr) ? array_slice($lastchapter_arr, 0, 12) : []);
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 require_once __ROOT_DIR__.'/shipsay/include/neighbor.php';
 $postdate_rows = !empty($postdate) && is_array($postdate) ? array_slice($postdate, 0, 5) : [];
@@ -91,6 +92,18 @@ if (trim((string)$seo_description) === '' || trim((string)$seo_description) === 
         <div class="clear"></div>
     </div>
     <div class="bookintro"><div class="bookintro-content"><?=$intro_html?></div></div>
+    <?php if (!empty($latest_rows)): ?>
+    <div class="bookchapter">
+            <h2>最新12章<span class="pull-right">倒序更新</span></h2>
+            <ul class="mt0">
+                <?php foreach($latest_rows as $v): ?>
+                <li><a href="<?=htmlspecialchars((string)$v['cid_url'], ENT_QUOTES, 'UTF-8')?>" title="<?=htmlspecialchars((string)$v['cname'], ENT_QUOTES, 'UTF-8')?>" rel="chapter"><?=htmlspecialchars((string)$v['cname'], ENT_QUOTES, 'UTF-8')?></a></li>
+                <?php endforeach ?>
+            </ul>
+            <a href="<?=$indexlist_url_attr?>" class="bookchaptermore">全部章节目录</a>
+            <div class="clear"></div>
+        </div>
+    <?php endif; ?>
     <?php if (!empty($langtail_rows)): ?>
     <div class="booktail">
         <h2>相关小说推荐</h2>

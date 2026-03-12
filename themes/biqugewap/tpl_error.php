@@ -8,7 +8,7 @@
 </head>
 <body>
 <?php
-$search_url_safe = function_exists('ss_search_url') ? ss_search_url() : ((isset($fake_search) && $fake_search) ? $fake_search : '');
+$search_url_safe = function_exists('ss_search_url') ? ss_search_url() : ((isset($fake_search) && $fake_search) ? $fake_search : '/search/');
 $error_home_url = !empty($site_url) ? $site_url : '/';
 ?>
 <div class="rank">

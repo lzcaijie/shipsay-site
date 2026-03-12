@@ -123,6 +123,23 @@ $popular_rows = (isset($postdate) && is_array($postdate)) ? $postdate : [];
 
     <div class="row row-section">
         <div class="layout layout-col1">
+            <h2 class="layout-tit">《<?=ss_qh($articlename)?>》最新12章</h2>
+            <div class="section-box">
+                <ul class="section-list fix">
+                    <?php if(!empty($latest_rows)): ?>
+                        <?php foreach($latest_rows as $v): ?>
+                        <li><a href="<?=ss_qh($v['cid_url'])?>"><?=ss_qh($v['cname'])?></a></li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li>暂无最新章节</li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-section">
+        <div class="layout layout-col1">
             <h2 class="layout-tit">《<?=ss_qh($articlename)?>》顺序目录分页</h2>
             <div class="section-box">
                 <ul class="section-list fix">

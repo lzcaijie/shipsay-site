@@ -20,6 +20,9 @@ if (function_exists('ss_search_url')) {
 if ($search_url_safe === '' && isset($fake_search) && trim((string)$fake_search) !== '') {
     $search_url_safe = trim((string)$fake_search);
 }
+if ($search_url_safe === '') {
+    $search_url_safe = '/search/';
+}
 
 $recentread_url_safe = '';
 if (function_exists('ss_recentread_url')) {

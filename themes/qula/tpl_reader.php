@@ -95,7 +95,7 @@ $pageDescription .= '，作者：' . $author . '。';
         <span style=" margin-right: 10px;"><a href="javascript:zh_tran('s');" title="点击[繁/简]切换">简体版</a></span>
         
         <select style=" float: right;border: 1px solid #0065B5;border-radius: 5px; color: #0065B5;" class="select select-size">
-            <option value="24px">默认</option>
+            <option value="20px">默认</option>
             <option value="16px">16px</option>
             <option value="18px">18px</option>
             <option value="20px">20px</option>
@@ -208,7 +208,7 @@ if (!function_exists('ss_reader_page_url')) {
                     </select>
                     <select class="select select-size">
                         <option value="#E9FAFF">大小</option>
-                        <option value="24px">默认</option>
+                        <option value="20px">默认</option>
                         <option value="16px">16px</option>
                         <option value="18px">18px</option>
                         <option value="20px">20px</option>
@@ -320,5 +320,41 @@ if (!function_exists('ss_reader_page_url')) {
   <?php endif ?>
 
     lastread.set('<?=$info_url?>','<?=$uri?>','<?=$articlename?>','<?=$chaptername?>','<?=$author?>','<?=date("m-d")?>','<?=$img_url?>');
+
+    function ssApplyReaderPrefs(){
+        var bg = $.cookie('bgcolor') || '#F2F2F2';
+        var color = $.cookie('fontcolor') || '#555';
+        var size = $.cookie('fontsize') || '20px';
+        $('#content').css({
+            background: bg,
+            color: color,
+            fontSize: size
+        });
+    }
+
+    $('.select-font').off('change.ssfix').on('change.ssfix', function(){
+        var font = $(this).val() || '';
+        $.cookie('read_font', font, {path:'/'});
+        if (font !== '') {
+            $('#content').css('font-family', font);
+        }
+    });
+    $('.select-color').off('change.ssfix').on('change.ssfix', function(){
+        var color = $(this).val() || '#555';
+        $.cookie('fontcolor', color, {path:'/'});
+        ssApplyReaderPrefs();
+    });
+    $('.select-size').off('change.ssfix').on('change.ssfix', function(){
+        var size = $(this).val() || '20px';
+        $.cookie('fontsize', size, {path:'/'});
+        ssApplyReaderPrefs();
+    });
+    $('.select-bg').off('change.ssfix').on('change.ssfix', function(){
+        var bg = $(this).val() || '#F2F2F2';
+        $.cookie('bgcolor', bg, {path:'/'});
+        ssApplyReaderPrefs();
+    });
+
+    ssApplyReaderPrefs();
 </script>
 <?php require_once 'tpl_footer.php'; ?>

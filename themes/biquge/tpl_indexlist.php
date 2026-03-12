@@ -21,6 +21,7 @@ $author_name = isset($author) ? (string)$author : '';
 $sort_name = isset($sortname) ? (string)$sortname : '';
 $list_rows = !empty($list_arr) && is_array($list_arr) ? $list_arr : [];
 $langtail_rows = !empty($langtailrows) && is_array($langtailrows) ? $langtailrows : [];
+$latest_rows = !empty($lastarr) && is_array($lastarr) ? $lastarr : (!empty($lastchapter_arr) && is_array($lastchapter_arr) ? array_slice($lastchapter_arr, 0, 12) : []);
 
 require_once __ROOT_DIR__ . '/shipsay/seo.php';
 list($seo_title, $seo_keywords, $seo_description) = ss_seo_render('indexlist');
@@ -91,6 +92,30 @@ $index_breadcrumb_ld = [
         <a href="<?=$h(isset($author_url) ? $author_url : '')?>"><p>作&nbsp;&nbsp;&nbsp;&nbsp;者：<?=$h($author_name)?></p></a>
         <p>最后更新：<?=$h(isset($lastupdate) ? $lastupdate : '')?>&nbsp;&nbsp;<a href="javascript:gofooter();">直达底部</a></p>
         <a href="<?=$h(isset($last_url) ? $last_url : '')?>"><p>最新章节：<?=$h(isset($lastchapter) ? $lastchapter : '')?></p></a>
+    </div>
+</div>
+
+<?php if (isset($is_langtail) && (int)$is_langtail === 1 && !empty($langtail_rows)) : ?>
+<div class="container border3-2 mt8 info-commend-mobile">
+    <div class="info-chapters-title"><strong>相关推荐</strong></div>
+    <div class="info-commend mobile-visible">
+        <?php foreach ($langtail_rows as $v) : ?>
+            <a href="<?=$h(isset($v['info_url']) ? $v['info_url'] : '')?>" title="<?=$h(isset($v['langname']) ? $v['langname'] : '')?>"><?=$h(isset($v['langname']) ? $v['langname'] : '')?></a>&nbsp;
+        <?php endforeach ?>
+    </div>
+</div>
+<?php endif; ?>
+
+<div class="container border3-2 mt8">
+    <div class="info-chapters-title"><strong>《<?=$h($article_title)?>》最新12章</strong></div>
+    <div class="info-chapters flex flex-wrap">
+        <?php if (!empty($latest_rows)): ?>
+            <?php foreach($latest_rows as $v): ?>
+                <a href="<?=$h(isset($v['cid_url']) ? $v['cid_url'] : '')?>" title="<?=$h($article_title . ' ' . (isset($v['cname']) ? $v['cname'] : ''))?>"><?=$h(isset($v['cname']) ? $v['cname'] : '')?></a>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="chapter-empty">暂无最新章节</div>
+        <?php endif; ?>
     </div>
 </div>
 

@@ -6,6 +6,14 @@ if (isset($chapters) && isset($per_page) && intval($per_page) > 0) {
 } elseif (isset($pid) && $pid > 1) {
     $total_pages_safe = (int)$pid;
 }
+$last_rows = [];
+if (!empty($lastarr) && is_array($lastarr)) {
+    $last_rows = $lastarr;
+} elseif (!empty($lastchapter_arr) && is_array($lastchapter_arr)) {
+    $last_rows = array_slice($lastchapter_arr, 0, 12);
+} elseif (!empty($preview_chapters) && is_array($preview_chapters)) {
+    $last_rows = array_slice($preview_chapters, 0, 12);
+}
 $indexlist_url_raw = (isset($uri) && $uri) ? (string)$uri : ((isset($index_url) && $index_url) ? (string)$index_url : '');
 $indexlist_url_attr = htmlspecialchars($indexlist_url_raw, ENT_QUOTES, 'UTF-8');
 $site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
@@ -95,6 +103,17 @@ $indexlist_breadcrumb_ld = [
                 </div>
             </div>
         </div>
+
+        <?php if (!empty($last_rows)): ?>
+        <div class="section chapter_list">
+            <div class="title jcc">《<?=$article_title_html?>》最新12章</div>
+            <ul>
+                <?php foreach ($last_rows as $v): $cid_url_attr = htmlspecialchars((string)$v['cid_url'], ENT_QUOTES, 'UTF-8'); $cname_html = htmlspecialchars((string)$v['cname'], ENT_QUOTES, 'UTF-8'); ?>
+                    <li><a href="<?=$cid_url_attr?>" title="<?=$article_title_html?> <?=$cname_html?>"><?=$cname_html?></a></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <?php endif; ?>
 
         <div class="section chapter_list">
             <div class="title jcc">《<?=$article_title_html?>》章节目录</div>

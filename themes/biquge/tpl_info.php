@@ -122,6 +122,17 @@ $info_breadcrumb_ld = [
     </div>
 </div>
 
+<?php if (isset($is_langtail) && (int)$is_langtail === 1 && !empty($langtail_rows)) : ?>
+<div class="container border3-2 mt8 info-commend-mobile">
+    <div class="info-chapters-title"><strong>相关推荐</strong></div>
+    <div class="info-commend mobile-visible">
+        <?php foreach ($langtail_rows as $v) : ?>
+            <a href="<?=$h(isset($v['info_url']) ? $v['info_url'] : '')?>" title="<?=$h(isset($v['langname']) ? $v['langname'] : '')?>"><?=$h(isset($v['langname']) ? $v['langname'] : '')?></a>
+        <?php endforeach ?>
+    </div>
+</div>
+<?php endif; ?>
+
 <div class="container border3-2 mt8 mb20">
     <div class="info-chapters-title">
         <strong>《<?=$h($article_title)?>》正文</strong>
