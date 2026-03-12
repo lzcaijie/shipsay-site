@@ -11,9 +11,7 @@ $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
 $site_name_html = htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8');
 $recentread_url_raw = function_exists('ss_recentread_url') ? (string)ss_recentread_url() : '';
 $recentread_url_attr = htmlspecialchars($recentread_url_raw, ENT_QUOTES, 'UTF-8');
-$full_allbooks_url_raw = !empty($full_allbooks_url)
-    ? (string)$full_allbooks_url
-    : (!empty($allbooks_url) ? '/quanben' . (string)$allbooks_url : '');
+$full_allbooks_url_raw = function_exists('ss_full_allbooks_url') ? (string)ss_full_allbooks_url() : '';
 $full_allbooks_url_attr = htmlspecialchars($full_allbooks_url_raw, ENT_QUOTES, 'UTF-8');
 $top_url_raw = function_exists('ss_top_url') ? (string)ss_top_url() : '';
 $top_url_attr = htmlspecialchars($top_url_raw, ENT_QUOTES, 'UTF-8');
@@ -26,23 +24,11 @@ $top_url_attr = htmlspecialchars($top_url_raw, ENT_QUOTES, 'UTF-8');
 <div class="index-head">
     <h1><a href="<?=$site_home_url_attr?>" class="logo"><?=$site_name_html?></a></h1>
     <?php if ($recentread_url_raw !== ''): ?><a href="<?=$recentread_url_attr?>" rel="nofollow" class="btn">记录</a><?php endif; ?>
-    <?php if ($full_allbooks_url_raw !== ''): ?><a href="<?=$full_allbooks_url_attr?>" rel="nofollow" class="btn">完本</a><?php endif; ?>
     <?php if ($top_url_raw !== ''): ?><a href="<?=$top_url_attr?>" class="btn">排行</a><?php endif; ?>
-    <a href="javascript:;" onclick="toggleSort();" rel="nofollow" class="btn">分类</a>
+    <?php if ($full_allbooks_url_raw !== ''): ?><a href="<?=$full_allbooks_url_attr?>" rel="nofollow" class="btn">完本</a><?php endif; ?>
 </div>
-<div class="sort c_sort" id="submenu" style="display:none;">
-    <ul>
-        <?php foreach(Sort::ss_sorthead() as $v): ?>
-            <?php if (rtrim((string)$v['sorturl'], '/') === rtrim($top_url_raw, '/') || (isset($v['sortname']) && mb_strpos((string)$v['sortname'], '排行') !== false)) continue; ?>
-            <li><a href="<?=htmlspecialchars((string)$v['sorturl'], ENT_QUOTES, 'UTF-8')?>"><?=htmlspecialchars((string)$v['sortname_2'], ENT_QUOTES, 'UTF-8')?></a></li>
-        <?php endforeach ?>
-        <div class="cc"></div>
-    </ul>
-</div>
-<?php
-$searchkey_value = isset($searchkey) ? trim((string)$searchkey) : '';
-ss_render_search_form(['searchkey' => $searchkey_value]);
-?>
+<?php ss_render_common_nav(); ?>
+<?php ss_render_search_form(['searchkey' => isset($searchkey) ? trim((string)$searchkey) : '']); ?>
 <div class="s_m">
     <div class="q_top c_big"><p class="c_big_border">重磅推荐</p></div>
     <div class="cc"></div>
@@ -73,8 +59,7 @@ $home_sections = [
     ['title' => Sort::ss_sortname(5,1), 'more' => Sort::ss_sorturl(5), 'rows' => isset($sort5) && is_array($sort5) ? $sort5 : []],
 ];
 foreach ($home_sections as $section):
-    $section_rows = $section['rows'];
-    if (empty($section_rows)) continue;
+    if (empty($section['rows'])) continue;
 ?>
 <div class="s_m">
     <div class="q_top c_big">
@@ -82,7 +67,7 @@ foreach ($home_sections as $section):
         <?php if (!empty($section['more'])): ?><div class="more"><a href="<?=htmlspecialchars((string)$section['more'], ENT_QUOTES, 'UTF-8')?>">更多</a></div><?php endif; ?>
     </div>
     <div class="cc"></div>
-    <?php foreach($section_rows as $k => $v): ?><?php if($k == 0):?>
+    <?php foreach($section['rows'] as $k => $v): ?><?php if($k == 0):?>
     <div class="sort_top">
         <table>
             <tr>
