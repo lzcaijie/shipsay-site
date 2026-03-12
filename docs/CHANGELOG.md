@@ -1,3 +1,8 @@
+## 2026-03-12 | ss_wap 第二轮按 v5 标准内联搜索表单并删除多余模板文件（v2）
+- 将首页与搜索页内的搜索表单直接内联回 `tpl_home.php`、`tpl_search.php`。
+- 删除不再需要的 `themes/ss_wap/tpl_search_form.php`，使模板文件集合收口到 v5 标准主集合。
+- 本轮不再扩散到其他模板，也不改核心目录。
+
 ## 2026-03-12 | 模板 | ss_wap 首轮按 v5 清会员残留并补齐模板集合（v1）
 - 范围：仅调整 `themes/ss_wap/*`、`www/static/ss_wap/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 清理：删除 `themes/ss_wap/user/*` 旧会员模板，首页/作者页/分类页/详情页/目录页/搜索页/阅读页/底部不再输出“我的书架 / 加入书架 / 加入书签 / 登录注册”旧会员入口。
