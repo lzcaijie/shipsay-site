@@ -1,3 +1,8 @@
+## 2026-03-12 | 模板 | simple 第七轮调聚合榜入口为 PC 两列 / 手机单列（v7）
+- 范围：仅调整 `themes/simple/tpl_top.php` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 `www/static/simple/*`。
+- 修正：聚合榜页的榜单入口区从 PC 端横向多按钮改为两列栅格；当前桌面端一行 2 个入口，整体更接近其他模板的榜单入口密度。
+- 修正：手机端继续保持单列纵向入口，一行只显示 1 个榜单入口，不再出现多列挤压或 PC / 手机口径不一致。
+
 ## 2026-03-12 | 模板 | simple 第六轮修聚合榜手机端榜单入口单列（v6）
 - 范围：仅调整 `themes/simple/tpl_top.php` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 `www/static/simple/*`。
 - 修正：`tpl_top.php` 的聚合榜页在手机端把榜单分类入口改为单列纵向排列，不再多列横向挤压；当前一行只显示一个入口，更贴合手机单列阅读。
