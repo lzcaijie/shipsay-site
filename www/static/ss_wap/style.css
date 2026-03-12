@@ -486,6 +486,10 @@ a:hover{
 .article-title{
     margin:5px 5px;
     }
+
+.ss-footer{background:#fff;}
+.ss-footer p{color:#666;line-height:1.9;margin-left:0;padding:0 10px;}
+.ss-footer p a{color:#0065B5;}
 .foot{
     text-align:center;
     margin:10px 0 0 0;
