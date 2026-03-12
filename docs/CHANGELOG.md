@@ -1,3 +1,12 @@
+## 2026-03-12 | 模板 | ss_wap 第六轮一次收口头尾、详情目录、阅读页、排行与阅读记录（v6）
+- 范围：仅调整 `themes/ss_wap/*`、`www/static/ss_wap/style.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 修正：`tpl_header.php` 统一头部 helper，新增全站公共子导航与分类展开层；首页与其它页面头尾职责统一，`排行榜 / 完本 / 阅读记录 / 分类` 统一前移到头部。
+- 修正：`tpl_info.php` 恢复“最新章节 + 前50章 + 相关推荐”三段结构，前50章优先取 `chapterrows`，不再只剩最近章节切片。
+- 修正：`tpl_indexlist.php` 按详情页同体系重组，补回书籍信息区、简介区、开始阅读 / 返回详情按钮与章节目录主体，目录页继续复用 app 已生成分页。
+- 修正：`tpl_reader.php` 补回顶部公共页头，阅读正文增加容器与留白，首页链接不再写死 `/`，正文阅读区不再贴边。
+- 修正：`tpl_rank.php`、`tpl_top.php` 重排榜单结构；聚合榜 PC 两列 / 手机单列，单榜简介收口不再溢出。
+- 修正：`tpl_recentread.php` 与 `style.css` 重做阅读记录页结构样式，恢复可用的阅读记录列表与猜你喜欢区域。
+
 ## 2026-03-12 | 模板 | ss_wap 第五轮按 v5 收头部入口、搜索表单与详情/目录页（v5）
 - 范围：仅调整 `themes/ss_wap/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 `www/static/ss_wap/*`。
 - 修正：`tpl_header.php` 补齐 `ss_render_search_form()`、`ss_render_page_top()`，并让搜索入口优先吃 `search_url / fake_search`，缺失时回退当前站真实搜索页 `/search/`，解决首页/搜索页“点了没反应”。
