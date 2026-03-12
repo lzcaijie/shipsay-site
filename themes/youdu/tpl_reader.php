@@ -29,6 +29,9 @@ if ($max_pid > 1) {
     $pageDescription .= ' 第' . $now_pid . '页/共' . $max_pid . '页';
 }
 $pageDescription .= '，作者：' . $author . '。';
+$site_home_url_safe = !empty($site_url) ? (string)$site_url : '/';
+$recentread_url_safe = isset($fake_recentread) && $fake_recentread ? (string)$fake_recentread : '';
+$index_url_safe = isset($index_url) && $index_url ? (string)$index_url : '';
 ?>
 <!DOCTYPE html>
 <html lang="zh">
@@ -50,7 +53,7 @@ $pageDescription = $seo_description;
 <meta property="og:novel:category" content="<?=$sortname?>小说">
 <meta property="og:novel:author" content="<?=$author?>">
 <meta property="og:novel:book_name" content="<?=$articlename?>">
-<meta property="og:novel:index_url" content="<?=$info_url?>">
+<?php if ($index_url_safe !== ''): ?><meta property="og:novel:index_url" content="<?=$index_url_safe?>"><?php endif; ?>
 <meta property="og:novel:info_url" content="<?=$info_url?>">
 <meta property="og:novel:status" content="<?=$isfull?>">
 <meta property="og:novel:chapter_name" content="<?=$chaptername?>">
@@ -110,7 +113,6 @@ $pageDescription = $seo_description;
 
 <script src="/static/<?=$theme_dir?>/js/jquery1.min.js"></script>
 <script src="/static/<?=$theme_dir?>/js/jquery.cookie.min.js"></script>
-<script src="/static/<?=$theme_dir?>/js/user.js"></script>
 <?php
 $tempvar = Ss::is_mobile() ? 'motheme' : 'pctheme';
 echo '<script src="/static/' . $theme_dir . '/js/' . $tempvar . '.js"></script>';
@@ -122,9 +124,9 @@ echo '<script src="/static/' . $theme_dir . '/js/' . $tempvar . '.js"></script>'
 <div class="top">
     <div class="bar">
         <div class="chepnav">
-            <i>当前位置:</i><a href="/"><?=SITE_NAME?></a>><a href="<?=Sort::ss_sorturl($sortid)?>"><?=$sortname?></a>><a href="<?=$info_url?>"><?=$articlename?></a>> <em><?=$chaptername?></em>
+            <i>当前位置:</i><a href="<?=$site_home_url_safe?>"><?=SITE_NAME?></a>><a href="<?=Sort::ss_sorturl($sortid)?>"><?=$sortname?></a>><a href="<?=$info_url?>"><?=$articlename?></a>> <em><?=$chaptername?></em>
         </div>
-        <ul><div class="unloginl"><script>login();</script></div></ul>
+        <ul></ul>
     </div>
 </div>
 
@@ -132,12 +134,14 @@ echo '<script src="/static/' . $theme_dir . '/js/' . $tempvar . '.js"></script>'
 
 <?php if(!Ss::is_mobile()) :?>
     <div class="container">
+        <?php require_once __ROOT_DIR__ . '/shipsay/configs/report.ini.php'; ?>
         <ul class="links">
-            <li><a href="javascript:addbookcase('<?=$articleid?>','<?=$articlename?>','<?=$chapterid?>','<?=$chaptername?>')">标记书签</a> | </li>
-            <?php require_once __ROOT_DIR__ . '/shipsay/configs/report.ini.php'; if(!empty($ShipSayReport['on'])) : ?>
-                <li><a href="javascript:report()" style="color:red">章节报错</a> | </li>
+            <?php if($index_url_safe !== ''): ?><li><a href="<?=$index_url_safe?>">目录</a> | </li><?php endif; ?>
+            <li><a href="<?=$info_url?>">详情</a><?php if((!empty($ShipSayReport['on']) || $recentread_url_safe !== '')): ?> | <?php endif; ?></li>
+            <?php if(!empty($ShipSayReport['on'])) : ?>
+                <li><a href="javascript:report()" style="color:red">章节报错</a><?php if($recentread_url_safe !== ''): ?> | <?php endif; ?></li>
             <?php endif?>
-            <li><a href="<?=$fake_recentread?>">阅读记录</a></li>
+            <?php if($recentread_url_safe !== ''): ?><li><a href="<?=$recentread_url_safe?>">阅读记录</a></li><?php endif; ?>
         </ul>
         <div class="mlfy_main_l"><i class="szk"><em class="icon-cog"></em> <z>阅读</z>设置</i><i class="hid">（推荐配合 快捷键[F11] 进入全屏沉浸式阅读）</i></div>
     </div>
@@ -163,11 +167,12 @@ echo '<script src="/static/' . $theme_dir . '/js/' . $tempvar . '.js"></script>'
     <div class="toolbar">
         <div class="theme" style="float: left;width: auto;height: auto;">
             <span>
-                <a href="javascript:addbookcase('<?=$articleid?>','<?=$articlename?>','<?=$chapterid?>','<?=$chaptername?>')">添加书签</a>
+                <?php if($index_url_safe !== ''): ?><a href="<?=$index_url_safe?>">目录</a><?php endif; ?>
+                <a href="<?=$info_url?>">详情</a>
                 <?php require_once __ROOT_DIR__ . '/shipsay/configs/report.ini.php'; if(!empty($ShipSayReport['on'])) : ?>
                     <a href="javascript:report()" style="color: red;">章节报错</a>
                 <?php endif?>
-                <a href="<?=$fake_recentread?>">阅读记录</a>
+                <?php if($recentread_url_safe !== ''): ?><a href="<?=$recentread_url_safe?>">阅读记录</a><?php endif; ?>
             </span>
         </div>
         <a href="javascript:;" class="aminus font_dec" id="font_dec"></a>
@@ -183,12 +188,9 @@ echo '<script src="/static/' . $theme_dir . '/js/' . $tempvar . '.js"></script>'
 <!-- ✅ 阅读页：蜘蛛专用分页（仅阅读页需要保留） -->
 <?php if ($isSearchEngine && $max_pid > 1): ?>
 <div class="spider-pagination" aria-label="章节分页导航">
-    <?php if ($now_pid > 1): ?><a href="<?=$prevpage_url?>" rel="prev">上一页</a><?php endif; ?>
+    <?php if ($now_pid > 1 && $prevpage_url != ''): ?><a href="<?=$prevpage_url?>" rel="prev">上一页</a><?php endif; ?>
     <span>第<?=$now_pid?>页/共<?=$max_pid?>页</span>
-    <?php for ($i = 1; $i <= min($max_pid, 10); $i++): ?>
-        <?php if ($i == $now_pid): ?><strong><?=$i?></strong><?php else: ?><a href="/read/<?=$articleid?>/<?=$chapterid?>/<?=$i?>.html"><?=$i?></a><?php endif; ?>
-    <?php endfor; ?>
-    <?php if ($now_pid < $max_pid): ?><a href="<?=$nextpage_url?>" rel="next">下一页</a><?php endif; ?>
+    <?php if ($now_pid < $max_pid && $nextpage_url != ''): ?><a href="<?=$nextpage_url?>" rel="next">下一页</a><?php endif; ?>
 </div>
 <?php endif; ?>
 
@@ -212,8 +214,8 @@ echo '<script src="/static/' . $theme_dir . '/js/' . $tempvar . '.js"></script>'
         <?php if($pre_cid == 0): ?><a id="prev_url" href="javascript:void(0);">没有了</a><?php else: ?><a id="prev_url" href="<?=$pre_url?>">上一章</a><?php endif ?>
     <?php endif ?>
 
-    <a id="info_url" href="<?=$info_url?>">目录</a>
-    <a href="javascript:addbookcase('<?=$articleid?>','<?=$articlename?>','<?=$chapterid?>','<?=$chaptername?>')">+书签</a>
+    <?php if($index_url_safe !== ''): ?><a id="info_url" href="<?=$index_url_safe?>">目录</a><?php else: ?><a id="info_url" href="javascript:void(0);">目录</a><?php endif; ?>
+    <a href="<?=$info_url?>">详情</a>
 
     <?php if($nextpage_url != ''): ?>
         <a id="next_url" href="<?=$nextpage_url?>">下一页</a>

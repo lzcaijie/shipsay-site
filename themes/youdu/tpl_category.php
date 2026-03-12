@@ -28,6 +28,7 @@ $sortcategory_safe = (!empty($sortcategory) && is_array($sortcategory)) ? $sortc
 $retarr_safe       = (!empty($retarr) && is_array($retarr)) ? $retarr : [];
 $sortid_safe       = isset($sortid) ? (int)$sortid : -1;
 $sortname_safe     = isset($sortname) ? $sortname : '';
+$allbooks_url_safe = isset($allbooks_url) && $allbooks_url ? (string)$allbooks_url : '';
 ?>
 <div class="page">
 <!-- start header -->
@@ -40,7 +41,7 @@ $sortname_safe     = isset($sortname) ? $sortname : '';
 		<span class="_shadow"><?php if($sortname_safe != ''):?><?=$sortname_safe?><?php endif ?></span>
 
 		<p class="lst-nav _tab _slide">
-			<a href="/home/" title="全部小说">全部小说</a>
+			<?php if ($allbooks_url_safe !== ''): ?><a href="<?=$allbooks_url_safe?>" title="全部小说">全部小说</a><?php else: ?><a href="javascript:;" title="全部小说" aria-disabled="true">全部小说</a><?php endif; ?>
 			<?php foreach($sortcategory_safe as $k => $v): ?>
 				<a href="<?=$v['sorturl']?>" title="<?=$v['sortname']?>" <?php if($sortid_safe == $k): ?>style="font-weight: 700; color: rgb(0, 0, 0); border-bottom: 1px solid;"<?php endif?>>
 					<?=$v['sortname']?>
