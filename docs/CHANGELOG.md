@@ -1,3 +1,10 @@
+## 2026-03-12 | 模板 | simple 第五轮按 v5 回修搜索 / 阅读 / 排行 / 阅读记录（v5）
+- 范围：仅调整 `themes/simple/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 `www/static/simple/*`。
+- 修正：`tpl_header.php` 正式补齐 `search_url_attr / search_placeholder_attr`，首页与搜索页表单不再因未定义变量导致 action 为空、出现“能点但返回空白”。
+- 回修：`tpl_reader.php` 恢复原有章节正文 AJAX 加载链路 `/api/reader_js.php`，阅读页不再停留在“正在加载章节内容...”导致页面看似打不开。
+- 回修：`tpl_recentread.php` 改回当前模板稳定的 `showbook()` 阅读记录展示链路，避免与 `common.js` 的 LastRead 数据结构不一致造成整页空白。
+- 新增：补齐 `themes/simple/tpl_top.php` 与 `themes/simple/tpl_rank.php`，simple 模板正式接管聚合榜 / 单榜页，不再落回通用默认榜单页；同步补齐基础 SEO、面包屑与榜单切换口径。
+
 ## 2026-03-12 | 模板 | simple 第四轮去当前生效的禁右键并恢复搜索可点击（v4）
 - 范围：仅调整 `themes/simple/*`、`www/static/simple/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`；`protect-page.js` 本轮明确不动。
 - 修正：移除 `www/static/simple/common.js` 当前正在全站生效的禁右键 / 禁复制脚本，不再拦截右键菜单与 Ctrl+C / Ctrl+V。
