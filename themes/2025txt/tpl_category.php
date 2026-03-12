@@ -57,15 +57,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
 
 <div class="list-index-2 hidden-xs">
 <div class="title"><h2>热门<?=$__sortname?>小说推荐</h2></div>
-<?php
-    $sql = $sortid > 0 ? $rico_sql.'AND sortid = '. $sortid : $rico_sql;
-    $sql .= ' ORDER BY weekvisit DESC LIMIT 6';
-    if(isset($redis)) {
-        $weekvisit10 = $redis->ss_redis_getrows($sql, $home_cache_time);
-    } else {
-        $weekvisit10 = $db->ss_getrows($sql);
-    }
-?>
+<?php $weekvisit10 = (isset($category_hot_rows) && is_array($category_hot_rows)) ? array_slice($category_hot_rows, 0, 6) : []; ?>
 <?php if(!empty($weekvisit10) && is_array($weekvisit10)): ?>
 <?php foreach($weekvisit10 as $k => $v) { ?>
 <div class="item">

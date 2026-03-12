@@ -20,9 +20,6 @@ if (function_exists('ss_search_url')) {
 if ($search_url_safe === '' && isset($fake_search) && trim((string)$fake_search) !== '') {
     $search_url_safe = trim((string)$fake_search);
 }
-if ($search_url_safe === '') {
-    $search_url_safe = '/search/';
-}
 
 $recentread_url_safe = '';
 if (function_exists('ss_recentread_url')) {
@@ -78,7 +75,7 @@ $search_placeholder_attr = htmlspecialchars($search_placeholder, ENT_QUOTES, 'UT
 
 <div class="header">
   <h1 class="logo"><a href="<?=$site_home_url_attr?>"><?=SITE_NAME?></a></h1>
-  <form name="t_frmsearch" method="get" action="<?=$search_url_attr?>" class="search-form" onsubmit="return chkval()">
+  <form name="t_frmsearch" method="get"<?php if ($search_url_safe !== ""): ?> action="<?=$search_url_attr?>"<?php else: ?> onsubmit="return false;"<?php endif; ?> class="search-form">
     <input
       autocomplete="off"
       id="searchkey"
@@ -87,7 +84,7 @@ $search_placeholder_attr = htmlspecialchars($search_placeholder, ENT_QUOTES, 'UT
       class="input-text input-key"
       placeholder="<?=$search_placeholder_attr?>"
     >
-    <button type="submit" name="Submit" id="search_btn" class="btn-tosearch" value="搜索" title="搜索">搜索</button>
+    <button type="submit" name="Submit" id="search_btn" class="btn-tosearch" value="搜索" title="搜索"<?php if ($search_url_safe === ""): ?> disabled="disabled" aria-disabled="true"<?php endif; ?>>搜索</button>
   </form>
 </div>
 

@@ -8,7 +8,7 @@
 </head>
 <body>
 <?php
-$search_url_safe = function_exists('ss_search_url') ? ss_search_url() : ((isset($fake_search) && $fake_search) ? $fake_search : '/search/');
+$search_url_safe = function_exists('ss_search_url') ? ss_search_url() : ((isset($fake_search) && $fake_search) ? $fake_search : '');
 $error_home_url = !empty($site_url) ? $site_url : '/';
 ?>
 <div class="rank">
@@ -19,9 +19,9 @@ $error_home_url = !empty($site_url) ? $site_url : '/';
       <a href="<?=$error_home_url?>">返回首页</a>
       <a href="#" id="goBackError">返回上一页</a>
     </p>
-    <form name="search" action="<?=$search_url_safe?>" method="get">
+    <form name="search"<?php if ($search_url_safe !== ""): ?> action="<?=$search_url_safe?>"<?php else: ?> onsubmit="return false;"<?php endif; ?> method="get">
       <input type="text" placeholder="搜索书名/作者" value="" name="searchkey" class="search" id="searchkey" autocomplete="on" required>
-      <button type="submit">搜 索</button>
+      <button type="submit"<?php if ($search_url_safe === ""): ?> disabled="disabled" aria-disabled="true"<?php endif; ?>>搜 索</button>
     </form>
   </div>
 </div>

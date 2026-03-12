@@ -130,6 +130,26 @@ $pageDescription .= '，作者：' . $author . '。';
     </div>
 </div>
 
+
+<?php
+$reader_recentread_url = '';
+if (function_exists('ss_recentread_url')) {
+    $reader_recentread_url = trim((string)ss_recentread_url());
+}
+if ($reader_recentread_url === '' && !empty($fake_recentread)) {
+    $reader_recentread_url = trim((string)$fake_recentread);
+}
+$reader_rank_url = !empty($rank_entry_url) ? (string)$rank_entry_url : (!empty($fake_top) ? (string)$fake_top : '');
+if (!function_exists('ss_reader_page_url')) {
+    function ss_reader_page_url($articleid, $chapterid, $page){
+        if (class_exists('Url') && method_exists('Url', 'chapter_url')) {
+            return (string)Url::chapter_url($articleid, $chapterid, $page);
+        }
+        return '';
+    }
+}
+?>
+
 <div class="spider-pagination" aria-label="章节分页导航">
     <?php if ($max_pid > 1): ?>
         <?php if ($now_pid > 1): ?>
@@ -142,7 +162,7 @@ $pageDescription .= '，作者：' . $author . '。';
             <?php if ($i == $now_pid): ?>
                 <strong><?=$i?></strong>
             <?php else: ?>
-                <a href="/read/<?=$articleid?>/<?=$chapterid?>/<?=$i?>.html"><?=$i?></a>
+                <?php $reader_page_url = ss_reader_page_url($articleid, $chapterid, $i); ?><?php if($reader_page_url !== ""): ?><a href="<?=$reader_page_url?>"><?=$i?></a><?php else: ?><span><?=$i?></span><?php endif; ?>
             <?php endif; ?>
         <?php endfor; ?>
         
@@ -239,7 +259,7 @@ $pageDescription .= '，作者：' . $author . '。';
                         <?php if($next_cid == 0): ?><a id="next_url" href="<?=$info_url?>" class="w_gray">没有了 </a><?php else: ?><a id="next_url" href="<?=$next_url ?>">下一章 </a><?php endif ?>
                     <?php endif ?>
                     <?php if($enable_down) { ?> 
-                        <a href="<?=$fake_recentread?>" rel="nofollow">最近阅读</a>
+                        <?php if($reader_recentread_url !== ""): ?><a href="<?=$reader_recentread_url?>" rel="nofollow">最近阅读</a><?php endif; ?>
                     <?php }?>
                     <a href="javascript:vote('<?=$articleid?>','<?=$vote_perday?>')" class="xs-hidden" rel="nofollow">推荐本书</a>
                 </div>
@@ -270,7 +290,7 @@ $pageDescription .= '，作者：' . $author . '。';
                         <?php if($next_cid == 0): ?><a id="next_url" href="<?=$info_url?>" class="w_gray">没有了 </a><?php else: ?><a id="next_url" href="<?=$next_url ?>">下一章 </a><?php endif ?>
                     <?php endif ?>
                     <?php if($enable_down) { ?> 
-                        <a href="<?=$fake_recentread?>" rel="nofollow">最近阅读</a>
+                        <?php if($reader_recentread_url !== ""): ?><a href="<?=$reader_recentread_url?>" rel="nofollow">最近阅读</a><?php endif; ?>
                     <?php }?>
                 </div>
             </div>

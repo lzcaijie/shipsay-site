@@ -39,6 +39,18 @@ else
 
 if($author_count<=0) $author_count=is_array($res)?count($res):0;
 
+
+$rand_authors=[];
+$sql_rand='SELECT author, COUNT(*) AS bookcount FROM '.$dbarr['pre'].'article_article WHERE display <> 1 AND '.$dbarr['words'].' >= 0 AND author <> "" GROUP BY author ORDER BY RAND() LIMIT 15';
+if(isset($redis))
+{
+    $rand_authors=$redis->ss_redis_getrows($sql_rand,86400);
+}
+else
+{
+    $rand_authors=$db->ss_getrows($sql_rand);
+}
+
 if($is_ft)$author=Convert::jt2ft($author);
 require_once __THEME_DIR__.'/tpl_author.php';
 ?>

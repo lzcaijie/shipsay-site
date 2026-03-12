@@ -16,21 +16,13 @@ $startChapter = ($currentPage - 1) * $chaptersPerPage + 1;
 $endChapter = min($currentPage * $chaptersPerPage, $chapters);
 $totalPages = max(1, (int)ceil($chapters / $chaptersPerPage));
 
-function ss2025txt_index_page_url($articleid, $page = 1) {
-    $page = (int)$page;
-    if ($page < 1) $page = 1;
-    if (class_exists('Url') && method_exists('Url', 'index_url')) {
-        return (string)Url::index_url($articleid, $page);
-    }
-    return '';
-}
 
 $currentUrlRaw = isset($uri) && $uri ? (string)$uri : ((isset($index_url) && $index_url) ? (string)$index_url : '');
 $currentUrlAttr = htmlspecialchars($currentUrlRaw, ENT_QUOTES, 'UTF-8');
-$prevPageUrlRaw = ($currentPage > 1) ? ss2025txt_index_page_url($articleid, $currentPage - 1) : '';
-$prevPageUrlAttr = htmlspecialchars($prevPageUrlRaw, ENT_QUOTES, 'UTF-8');
-$nextPageUrlRaw = ($currentPage < $totalPages) ? ss2025txt_index_page_url($articleid, $currentPage + 1) : '';
-$nextPageUrlAttr = htmlspecialchars($nextPageUrlRaw, ENT_QUOTES, 'UTF-8');
+$prevPageUrlRaw = '';
+$prevPageUrlAttr = '';
+$nextPageUrlRaw = '';
+$nextPageUrlAttr = '';
 ?>
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
@@ -192,28 +184,11 @@ $pageTitle = $seo_title;
 
         <!-- 分页导航 -->
         <div class="chapter-pagination">
-            <?php if ($prevPageUrlRaw !== ""): ?>
-            <a href="<?=$prevPageUrlAttr?>" class="chapter-page-btn prev">上一页</a>
-            <?php endif; ?>
-
             <div class="chapter-page-info">
                 第 <?=$currentPage?> 页 / 共 <?=$totalPages?> 页
             </div>
-
-            <?php if ($nextPageUrlRaw !== ""): ?>
-            <a href="<?=$nextPageUrlAttr?>" class="chapter-page-btn next">下一页</a>
-            <?php endif; ?>
-
-            <?php if ($totalPages > 1): ?>
-            <div class="chapter-page-select">
-                <span>跳转到：</span>
-                <select onchange="if(this.value){window.location.href=this.value;}">
-                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                    <?php $pageUrlRaw = ($i === $currentPage) ? $currentUrlRaw : ss2025txt_index_page_url($articleid, $i); ?>
-                    <option value="<?=htmlspecialchars($pageUrlRaw, ENT_QUOTES, 'UTF-8')?>" <?=($i == $currentPage) ? 'selected' : ''?><?=($pageUrlRaw === '') ? ' disabled="disabled"' : ''?>><?=$i?></option>
-                    <?php endfor; ?>
-                </select>
-            </div>
+            <?php if (!empty($htmltitle)): ?>
+            <div class="index-container"><?=$htmltitle?></div>
             <?php endif; ?>
         </div>
     </div>

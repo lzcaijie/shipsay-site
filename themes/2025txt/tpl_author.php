@@ -85,17 +85,6 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('author');
 <div class="cf"></div>
 </div>
 
-<?php
-$rand_authors = [];
-if (isset($dbarr) && isset($db)) {
-	$sql_rand = 'SELECT author, COUNT(*) AS bookcount FROM '.$dbarr['pre'].'article_article WHERE display <> 1 AND '.$dbarr['words'].' >= 0 AND author <> "" GROUP BY author ORDER BY RAND() LIMIT 15';
-	if (isset($redis)) {
-		$rand_authors = $redis->ss_redis_getrows($sql_rand,86400);
-	} else {
-		$rand_authors = $db->ss_getrows($sql_rand);
-	}
-}
-?>
 <?php if(is_array($rand_authors) && !empty($rand_authors)): ?>
 <div class="list-author">
 <div class="title"><h2><?=SITE_NAME?>推荐作者</h2></div>
