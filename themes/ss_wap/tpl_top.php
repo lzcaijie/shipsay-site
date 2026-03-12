@@ -6,8 +6,6 @@
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('rank');
-$recentread_url_raw = !empty($fake_recentread) ? (string)$fake_recentread : '';
-$recentread_url_attr = htmlspecialchars($recentread_url_raw, ENT_QUOTES, 'UTF-8');
 $rank_sections = isset($top_sections) && is_array($top_sections) ? $top_sections : [];
 $rank_lists = isset($top_rank_lists) && is_array($top_rank_lists) ? $top_rank_lists : [];
 $rank_limit = isset($top_rank_limit) && (int)$top_rank_limit > 0 ? (int)$top_rank_limit : 10;
@@ -24,11 +22,7 @@ if (trim((string)$seo_description) === '' || trim((string)$seo_description) === 
 </style>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <body>
-<div class="page-head">
-    <a href="/" class="home">首页</a>
-    <?php if ($recentread_url_raw !== ''): ?><a href="<?=$recentread_url_attr?>" rel="nofollow" class="bookcase">阅读记录</a><?php endif; ?>
-    <h1>排行榜</h1>
-</div>
+<?php ss_render_page_top(['page_title' => '排行榜', 'show_back' => true]); ?>
 <?php if (!empty($rank_sections)): ?>
 <div class="rank-tabs">
     <?php foreach ($rank_sections as $conf): ?>

@@ -19,8 +19,6 @@ $title_arr = [
 ];
 $current_query = isset($query) && $query ? (string)$query : 'allvisit';
 $current_title = isset($title_arr[$current_query]) ? $title_arr[$current_query] : '排行榜';
-$recentread_url_raw = !empty($fake_recentread) ? (string)$fake_recentread : '';
-$recentread_url_attr = htmlspecialchars($recentread_url_raw, ENT_QUOTES, 'UTF-8');
 $rank_detail_base_raw = !empty($rank_detail_base) ? rtrim((string)$rank_detail_base, '/') . '/' : '';
 if (trim((string)$seo_title) === '' || trim((string)$seo_title) === SITE_NAME) $seo_title = $current_title . '_' . SITE_NAME;
 if (trim((string)$seo_keywords) === '' || trim((string)$seo_keywords) === SITE_NAME) $seo_keywords = $current_title . ',排行榜,' . SITE_NAME;
@@ -38,11 +36,7 @@ if (trim((string)$seo_description) === '' || trim((string)$seo_description) === 
 <?php require_once __THEME_DIR__ . '/tpl_header.php';?>
 </head>
 <body>
-<div class="page-head">
-    <a href="/" class="home">首页</a>
-    <?php if ($recentread_url_raw !== ''): ?><a href="<?=$recentread_url_attr?>" rel="nofollow" class="bookcase">阅读记录</a><?php endif; ?>
-    <h1><?=htmlspecialchars($current_title, ENT_QUOTES, 'UTF-8')?></h1>
-</div>
+<?php ss_render_page_top(['page_title' => $current_title, 'show_back' => true]); ?>
 <div class="rank-tabs">
 <?php foreach ($title_arr as $key => $label): ?>
     <?php if ($rank_detail_base_raw !== ''): ?><a href="<?=htmlspecialchars($rank_detail_base_raw . $key . '/', ENT_QUOTES, 'UTF-8')?>" class="<?=$current_query === $key ? 'active' : ''?>"><?=htmlspecialchars($label, ENT_QUOTES, 'UTF-8')?></a><?php endif; ?>

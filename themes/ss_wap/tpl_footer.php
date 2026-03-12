@@ -1,6 +1,8 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 <?php
 $year_safe = isset($year) ? (string)$year : date('Y');
+$site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
+$site_home_url_attr = ss_h($site_home_url_raw);
 $home_url_raw = function_exists('ss_home_url') ? (string)ss_home_url() : '/';
 $home_url_attr = ss_h($home_url_raw);
 $recentread_url_raw = function_exists('ss_recentread_url') ? (string)ss_recentread_url() : '';
@@ -21,11 +23,6 @@ $rank_entry_url_attr = ss_h($rank_entry_url_raw);
         <a href="/sitemap/sm_sitemap.xml" title="XML SiteMap_TAG">SMSiteMap</a>
     </p>
     <p>Copyright &copy; <?=ss_h($year_safe)?> <?=ss_h(SITE_NAME)?></p>
-</div>
-<div id="foot" class="foot">
-    <a href="<?=$home_url_attr?>">首页</a>
-    <?php if ($recentread_url_raw !== ''): ?>&nbsp;&nbsp;<a href="<?=$recentread_url_attr?>" rel="nofollow">阅读记录</a><?php endif; ?>
-    <?php if ($rank_entry_url_raw !== ''): ?>&nbsp;&nbsp;<a href="<?=$rank_entry_url_attr?>">排行榜</a><?php endif; ?>
 </div>
 <?php include_once __ROOT_DIR__ . '/shipsay/configs/count.ini.php'; foreach($count as $v) { if($v['enable']) echo $v['html']; } ?>
 </body>
