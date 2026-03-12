@@ -640,7 +640,7 @@ a:hover{
 .history-box .bookcase-item .book-img img{width:72px;height:96px;object-fit:cover;}
 .history-box .bookcase-item .book-info{float:none;overflow:hidden;width:auto;margin-left:84px;}
 .history-box .bookcase-item .book-info .booktitle{display:block;font-size:16px;color:#0065B5;margin-bottom:6px;}
-.history-box .bookcase-item .book-info p{margin:0 0 4px;line-height:1.7;color:#666;}
+.history-box .bookcase-item .book-info p{margin:0 0 4px;text-align:left;margin-left:0;line-height:1.7;color:#666;}
 .history-box .bookcase-item .book-info p a{color:#0065B5;}
 .history-box .bookcase-item .book-del{color:#f30 !important;}
 @media screen and (min-width: 900px){
