@@ -15,6 +15,9 @@ if (function_exists('ss_search_url')) {
 if ($search_url_safe === '' && isset($fake_search) && $fake_search) {
     $search_url_safe = (string)$fake_search;
 }
+if ($search_url_safe === '') {
+    $search_url_safe = '/search/';
+}
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
@@ -39,7 +42,7 @@ if ($search_url_safe === '' && isset($fake_search) && $fake_search) {
     <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
     <div class="ser-wrap">
-        <form id="searchForm" name="t_frmsearch"<?php if ($search_url_safe !== ''): ?> action="<?=$search_url_safe?>" method="post"<?php else: ?> action="javascript:;" onsubmit="return false;"<?php endif; ?> class="ser-form mb10 pr">
+        <form id="searchForm" name="t_frmsearch"<?php if ($search_url_safe !== ''): ?> action="<?=$search_url_safe?>" method="get"<?php else: ?> action="javascript:;" onsubmit="return false;"<?php endif; ?> class="ser-form mb10 pr">
             <input
                 type="text"
                 name="searchkey"

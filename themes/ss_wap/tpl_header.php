@@ -39,7 +39,7 @@ if (!function_exists('ss_search_url')) {
         global $search_url, $fake_search;
         if (!empty($search_url)) return (string)$search_url;
         if (!empty($fake_search)) return (string)$fake_search;
-        return '';
+        return '/search/';
     }
 }
 if (!function_exists('ss_recentread_url')) {
@@ -103,8 +103,8 @@ if (!function_exists('ss_render_search_form')) {
         $placeholder_attr = ss_h($placeholder_raw);
         $wrapper_class = array_key_exists('wrapper_class', $options) ? trim((string)$options['wrapper_class']) : 'search';
         $wrapper_class_attr = ss_h($wrapper_class);
-        $method = array_key_exists('method', $options) ? strtolower((string)$options['method']) : 'post';
-        if ($method !== 'get') $method = 'post';
+        $method = array_key_exists('method', $options) ? strtolower((string)$options['method']) : 'get';
+        if ($method !== 'post' && $method !== 'get') $method = 'get';
         ss_submit_search_js();
         ?>
 <div class="<?=$wrapper_class_attr?>">

@@ -26,6 +26,9 @@ if (function_exists('ss_search_url')) {
 if ($search_url_raw === '' && !empty($fake_search)) {
     $search_url_raw = trim((string)$fake_search);
 }
+if ($search_url_raw === '') {
+    $search_url_raw = '/search/';
+}
 $search_url_attr = htmlspecialchars($search_url_raw, ENT_QUOTES, 'UTF-8');
 $search_placeholder_raw = isset($search_placeholder) && trim((string)$search_placeholder) !== '' ? (string)$search_placeholder : '搜索作品';
 $search_placeholder_attr = htmlspecialchars($search_placeholder_raw, ENT_QUOTES, 'UTF-8');
