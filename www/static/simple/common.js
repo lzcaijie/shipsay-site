@@ -1,15 +1,3 @@
-//右键选择内容
-function stop() {
-    return false;
-}
-document.oncontextmenu = stop;
-var rico_ret = '不能复制!';
-document.onkeydown = function() {
-    if ((event.ctrlKey) && ((event.keyCode == 67) || (event.keyCode == 86))) {
-        alert(decodeURI(rico_ret));
-    }
-}
-
 action = window.location.pathname;
 
 function login() {
