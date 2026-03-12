@@ -9,10 +9,6 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
 $index_url_raw = isset($index_url) && $index_url ? (string)$index_url : '';
 $index_url_attr = htmlspecialchars($index_url_raw, ENT_QUOTES, 'UTF-8');
 $first_url_attr = htmlspecialchars(isset($first_url) ? (string)$first_url : '', ENT_QUOTES, 'UTF-8');
-$home_url_raw = function_exists('ss_home_url') ? (string)ss_home_url() : '/';
-$home_url_attr = htmlspecialchars($home_url_raw, ENT_QUOTES, 'UTF-8');
-$recentread_url_raw = function_exists('ss_recentread_url') ? (string)ss_recentread_url() : '';
-$recentread_url_attr = htmlspecialchars($recentread_url_raw, ENT_QUOTES, 'UTF-8');
 $langtailrows_safe = (!empty($langtailrows) && is_array($langtailrows)) ? $langtailrows : [];
 $lastarr_safe = (!empty($lastarr) && is_array($lastarr)) ? $lastarr : [];
 $canonical_raw = function_exists('ss_abs_url') ? ss_abs_url(isset($uri) ? (string)$uri : '') : (isset($uri) ? (string)$uri : '');
@@ -27,27 +23,24 @@ $last_abs_url_attr = htmlspecialchars($last_abs_url_raw, ENT_QUOTES, 'UTF-8');
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
 <meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-<?php if ($canonical_raw !== ''): ?><link rel="canonical" href="<?=$canonical_attr?>"><?php endif; ?>
+<?php if ($canonical_raw !== ""): ?><link rel="canonical" href="<?=$canonical_attr?>"><?php endif; ?>
 <meta property="og:type" content="novel">
 <meta property="og:title" content="<?=htmlspecialchars((string)$articlename . '(' . (string)$author . ')_' . (string)$articlename . '全文免费阅读无弹窗_' . (string)$articlename . '最新章节阅读_' . (string)SITE_NAME, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:image" content="<?=htmlspecialchars((string)$img_url, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:description" content="<?=htmlspecialchars((string)$intro_des, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:novel:category" content="<?=htmlspecialchars((string)$sortname, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:novel:author" content="<?=htmlspecialchars((string)$author, ENT_QUOTES, 'UTF-8')?>">
-<?php if ($author_abs_url_raw !== ''): ?><meta property="og:novel:author_link" content="<?=$author_abs_url_attr?>"><?php endif; ?>
+<?php if ($author_abs_url_raw !== ""): ?><meta property="og:novel:author_link" content="<?=$author_abs_url_attr?>"><?php endif; ?>
 <meta property="og:novel:book_name" content="<?=htmlspecialchars((string)$articlename, ENT_QUOTES, 'UTF-8')?>">
-<?php if ($canonical_raw !== ''): ?><meta property="og:novel:read_url" content="<?=$canonical_attr?>"><?php endif; ?>
-<?php if ($info_abs_url_raw !== ''): ?><meta property="og:novel:url" content="<?=$info_abs_url_attr?>"><?php elseif ($canonical_raw !== ''): ?><meta property="og:novel:url" content="<?=$canonical_attr?>"><?php endif; ?>
+<?php if ($canonical_raw !== ""): ?><meta property="og:novel:read_url" content="<?=$canonical_attr?>"><?php endif; ?>
+<?php if ($info_abs_url_raw !== ""): ?><meta property="og:novel:url" content="<?=$info_abs_url_attr?>"><?php elseif ($canonical_raw !== ""): ?><meta property="og:novel:url" content="<?=$canonical_attr?>"><?php endif; ?>
 <meta property="og:novel:status" content="<?=htmlspecialchars((string)$isfull, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:novel:update_time" content="<?=htmlspecialchars((string)$lastupdate, ENT_QUOTES, 'UTF-8')?>">
 <meta property="og:novel:lastest_chapter_name" content="<?=htmlspecialchars((string)$lastchapter, ENT_QUOTES, 'UTF-8')?>">
-<?php if ($last_abs_url_raw !== ''): ?><meta property="og:novel:lastest_chapter_url" content="<?=$last_abs_url_attr?>"><?php endif; ?>
+<?php if ($last_abs_url_raw !== ""): ?><meta property="og:novel:lastest_chapter_url" content="<?=$last_abs_url_attr?>"><?php endif; ?>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <body>
-<div class="page-head">
-    <a href="<?=$home_url_attr?>" class="home">首页</a>
-    <?php if ($recentread_url_raw !== ''): ?><a href="<?=$recentread_url_attr?>" rel="nofollow" class="bookcase">阅读记录</a><?php endif; ?>
-</div>
+<?php ss_render_page_top(['page_title' => (string)$articlename, 'show_back' => true]); ?>
 <div class="bookinfo">
     <table cellpadding="0" cellspacing="0"><tr>
         <td><img src="<?=htmlspecialchars((string)$img_url, ENT_QUOTES, 'UTF-8')?>" border="0" width="100" height="130" alt="<?=htmlspecialchars((string)$articlename, ENT_QUOTES, 'UTF-8')?>"/></td>
@@ -61,7 +54,7 @@ $last_abs_url_attr = htmlspecialchars($last_abs_url_raw, ENT_QUOTES, 'UTF-8');
         </td>
     </tr></table>
     <table cellpadding="0" cellspacing="0" class="book-op"><tr>
-        <td><?php if ($recentread_url_raw !== ''): ?><a href="<?=$recentread_url_attr?>" rel="nofollow">阅读记录</a><?php else: ?><span>阅读记录</span><?php endif; ?></td>
+        <td><?php $recentread_url_raw = ss_recentread_url(); ?><?php if ($recentread_url_raw !== ""): ?><a href="<?=ss_h($recentread_url_raw)?>" rel="nofollow">阅读记录</a><?php else: ?><span>阅读记录</span><?php endif; ?></td>
         <td><?php if ($index_url_raw !== ''): ?><a href="<?=$index_url_attr?>">章节目录</a><?php else: ?><span>章节目录</span><?php endif; ?></td>
         <td><?php if (!empty($first_url)): ?><a href="<?=$first_url_attr?>">立即阅读</a><?php else: ?><span>立即阅读</span><?php endif; ?></td>
     </tr></table>

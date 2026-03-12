@@ -1,9 +1,11 @@
-## 2026-03-12 | 模板 | ss_wap 第四轮按 v5 统一首页/完本/底部/详情 OG 真实链接（v4）
+## 2026-03-12 | 模板 | ss_wap 第五轮按 v5 收头部入口、搜索表单与详情/目录页（v5）
 - 范围：仅调整 `themes/ss_wap/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 `www/static/ss_wap/*`。
-- 修正：`tpl_header.php` 补齐 `ss_site_base_url()`、`ss_abs_url()`、`ss_full_allbooks_url()`，把站点根地址、绝对链接拼装、完本入口 fallback 统一收回到头部 helper，避免分散在页面里继续各写一套。
-- 修正：`tpl_home.php` 的完本入口改为统一消费 `ss_full_allbooks_url()`；分类展开菜单对齐母模板口径，跳过排行入口与“排行”类目，避免首页菜单与排行页重复。
-- 修正：`tpl_footer.php` 首页入口真正改为消费 `ss_home_url()`，不再回退使用 `site_url` 旧拼法，保持头尾首页链接一致。
-- 修正：`tpl_info.php` 补 canonical，并将 `og:novel:author_link / read_url / url / lastest_chapter_url` 统一改为通过 `ss_abs_url()` 生成，避免模板层继续直接拼接 `site_url + path`。
+- 修正：`tpl_header.php` 补齐 `ss_render_search_form()`、`ss_render_page_top()`，并让搜索入口优先吃 `search_url / fake_search`，缺失时回退当前站真实搜索页 `/search/`，解决首页/搜索页“点了没反应”。
+- 修正：`tpl_footer.php` 去掉底部 `首页 / 阅读记录 / 排行榜` 导航，不再把公共入口继续压在 footer；这些入口统一前移到页面头部展示，符合 v5 头尾职责。
+- 修正：`tpl_home.php` 首页头部补齐 `排行` 入口，搜索框改为复用统一 helper；分类弹层继续跳过排行入口，避免首页分类与排行重复。
+- 修正：`tpl_search.php`、`tpl_author.php`、`tpl_category.php`、`tpl_rank.php`、`tpl_top.php`、`tpl_recentread.php`、`tpl_error.php` 统一改走 `ss_render_page_top()`，把 `排行榜 / 完本 / 阅读记录` 前移到头部展示。
+- 修正：`tpl_info.php`、`tpl_indexlist.php` 按 v5 收口头部与真实链接；其中目录页补 `canonical / og:url` 等基础 SEO，详情页继续沿用真实绝对链接输出。
+- 结论：本轮先把 `ss_wap` 的头部职责、搜索可用性、详情/目录页头部结构收齐，再继续做剩余页面细修。
 
 ## 2026-03-12 | 模板 | ss_wap 第三轮按 v5 收首页/搜索/阅读记录/排行真实链接（v3)
 - 范围：仅调整 `themes/ss_wap/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 `www/static/ss_wap/*`。

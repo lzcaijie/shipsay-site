@@ -11,8 +11,12 @@ $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
 $site_name_html = htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8');
 $recentread_url_raw = function_exists('ss_recentread_url') ? (string)ss_recentread_url() : '';
 $recentread_url_attr = htmlspecialchars($recentread_url_raw, ENT_QUOTES, 'UTF-8');
-$full_allbooks_url_raw = function_exists('ss_full_allbooks_url') ? (string)ss_full_allbooks_url() : '';
+$full_allbooks_url_raw = !empty($full_allbooks_url)
+    ? (string)$full_allbooks_url
+    : (!empty($allbooks_url) ? '/quanben' . (string)$allbooks_url : '');
 $full_allbooks_url_attr = htmlspecialchars($full_allbooks_url_raw, ENT_QUOTES, 'UTF-8');
+$top_url_raw = function_exists('ss_top_url') ? (string)ss_top_url() : '';
+$top_url_attr = htmlspecialchars($top_url_raw, ENT_QUOTES, 'UTF-8');
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
 <meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
@@ -23,11 +27,11 @@ $full_allbooks_url_attr = htmlspecialchars($full_allbooks_url_raw, ENT_QUOTES, '
     <h1><a href="<?=$site_home_url_attr?>" class="logo"><?=$site_name_html?></a></h1>
     <?php if ($recentread_url_raw !== ''): ?><a href="<?=$recentread_url_attr?>" rel="nofollow" class="btn">记录</a><?php endif; ?>
     <?php if ($full_allbooks_url_raw !== ''): ?><a href="<?=$full_allbooks_url_attr?>" rel="nofollow" class="btn">完本</a><?php endif; ?>
+    <?php if ($top_url_raw !== ''): ?><a href="<?=$top_url_attr?>" class="btn">排行</a><?php endif; ?>
     <a href="javascript:;" onclick="toggleSort();" rel="nofollow" class="btn">分类</a>
 </div>
 <div class="sort c_sort" id="submenu" style="display:none;">
     <ul>
-        <?php $top_url_raw = function_exists('ss_top_url') ? (string)ss_top_url() : ''; ?>
         <?php foreach(Sort::ss_sorthead() as $v): ?>
             <?php if (rtrim((string)$v['sorturl'], '/') === rtrim($top_url_raw, '/') || (isset($v['sortname']) && mb_strpos((string)$v['sortname'], '排行') !== false)) continue; ?>
             <li><a href="<?=htmlspecialchars((string)$v['sorturl'], ENT_QUOTES, 'UTF-8')?>"><?=htmlspecialchars((string)$v['sortname_2'], ENT_QUOTES, 'UTF-8')?></a></li>
@@ -35,30 +39,10 @@ $full_allbooks_url_attr = htmlspecialchars($full_allbooks_url_raw, ENT_QUOTES, '
         <div class="cc"></div>
     </ul>
 </div>
-<div class="search">
 <?php
 $searchkey_value = isset($searchkey) ? trim((string)$searchkey) : '';
-$searchkey_attr = ss_h($searchkey_value);
-$search_url_raw = function_exists('ss_search_url') ? (string)ss_search_url() : '';
-$search_url_attr = ss_h($search_url_raw);
+ss_render_search_form(['searchkey' => $searchkey_value]);
 ?>
-<form id="post" name="t_frmsearch" method="post" action="<?=$search_url_attr?>"<?php if ($search_url_raw === ''): ?> onsubmit="return false;"<?php endif; ?>>
-    <table cellpadding="0" cellspacing="0" style="width:100%;">
-        <tr>
-            <td style="width:50px;">
-                <div id="type" class="type">综合</div>
-            </td>
-            <td style="background-color:#fff; border:1px solid #CCC;">
-                <input id="s_key" name="searchkey" type="text" class="key" value="<?=$searchkey_attr?>" placeholder="输入书名/作者" maxlength="50">
-                <input type="hidden" name="searchtype" value="all">
-            </td>
-            <td style="width:35px; background-color:#0080C0; background-image:url('/static/<?=$theme_dir_attr?>/search.png'); background-repeat:no-repeat; background-position:center">
-                <input name="t_btnsearch" type="submit" value="" class="go"<?php if ($search_url_raw === ''): ?> disabled="disabled" aria-disabled="true"<?php endif; ?>>
-            </td>
-        </tr>
-    </table><span id="s_tips"></span>
-</form>
-</div>
 <div class="s_m">
     <div class="q_top c_big"><p class="c_big_border">重磅推荐</p></div>
     <div class="cc"></div>

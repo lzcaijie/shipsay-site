@@ -7,8 +7,6 @@
 $sortname_safe = isset($sortname) ? trim((string)$sortname) : '';
 $retarr_safe   = (!empty($retarr) && is_array($retarr)) ? $retarr : [];
 $jump_html_wap_safe = isset($jump_html_wap) ? (string)$jump_html_wap : '';
-$recentread_url_raw = !empty($fake_recentread) ? (string)$fake_recentread : '';
-$recentread_url_attr = htmlspecialchars($recentread_url_raw, ENT_QUOTES, 'UTF-8');
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
 ?>
@@ -23,11 +21,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('category');
 </style>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <body>
-<div class="page-head" style="margin-bottom:5px;">
-    <a href="/" class="home">首页</a>
-    <?php if ($recentread_url_raw !== ''): ?><a href="<?=$recentread_url_attr?>" rel="nofollow" class="bookcase">阅读记录</a><?php endif; ?>
-    <h1><?=htmlspecialchars($sortname_safe !== '' ? $sortname_safe . '小说列表' : '小说列表', ENT_QUOTES, 'UTF-8')?></h1>
-</div>
+<?php ss_render_page_top(['page_title' => ($sortname_safe !== '' ? $sortname_safe . '小说列表' : '小说列表'), 'show_back' => true]); ?>
 <?php foreach($retarr_safe as $v): ?>
 <table class="list-item"><tr>
     <td width="80"><a href="<?=htmlspecialchars((string)$v['info_url'], ENT_QUOTES, 'UTF-8')?>"><img src="<?=htmlspecialchars((string)$v['img_url'], ENT_QUOTES, 'UTF-8')?>" width="80" height="100" alt="<?=htmlspecialchars((string)$v['articlename'], ENT_QUOTES, 'UTF-8')?>"/></a></td>

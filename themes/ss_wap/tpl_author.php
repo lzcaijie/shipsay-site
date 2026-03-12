@@ -6,8 +6,6 @@
 <?php
 $author_safe = isset($author) ? trim((string)$author) : '';
 $res_safe = (!empty($res) && is_array($res)) ? $res : [];
-$recentread_url_raw = !empty($fake_recentread) ? (string)$fake_recentread : '';
-$recentread_url_attr = htmlspecialchars($recentread_url_raw, ENT_QUOTES, 'UTF-8');
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('author');
 ?>
@@ -21,11 +19,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('author');
 </style>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <body>
-<div class="page-head">
-    <a href="/" class="home">首页</a>
-    <?php if ($recentread_url_raw !== ''): ?><a href="<?=$recentread_url_attr?>" rel="nofollow" class="bookcase">阅读记录</a><?php endif; ?>
-    <h1><?=htmlspecialchars($author_safe !== '' ? $author_safe . '作品' : '作者作品', ENT_QUOTES, 'UTF-8')?></h1>
-</div>
+<?php ss_render_page_top(['page_title' => ($author_safe !== '' ? $author_safe . '作品' : '作者作品'), 'show_back' => true]); ?>
 <?php if ($author_safe !== ''): ?><h1 class="search-title">作者：<span class="red"><?=htmlspecialchars($author_safe, ENT_QUOTES, 'UTF-8')?></span></h1><?php endif; ?>
 <?php if(!empty($res_safe)): foreach($res_safe as $v): ?>
 <table class="list-item"><tr>

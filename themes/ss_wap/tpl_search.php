@@ -5,8 +5,6 @@
 <meta charset="UTF-8">
 <?php
 $searchkey_safe = isset($searchkey) ? trim((string)$searchkey) : '';
-$recentread_url_raw = !empty($fake_recentread) ? (string)$fake_recentread : '';
-$recentread_url_attr = htmlspecialchars($recentread_url_raw, ENT_QUOTES, 'UTF-8');
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('search');
 ?>
@@ -20,33 +18,10 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('search');
 </style>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <body>
-<div class="page-head">
-    <a href="/" class="home">首页</a>
-    <?php if ($recentread_url_raw !== ''): ?><a href="<?=$recentread_url_attr?>" rel="nofollow" class="bookcase">阅读记录</a><?php endif; ?>
-    <h1>搜索小说</h1>
+<?php ss_render_page_top(['page_title' => '搜索小说', 'show_back' => true]); ?>
+<div class="waps_r">
+<?php ss_render_search_form(['searchkey' => $searchkey_safe]); ?>
 </div>
-<?php
-$search_url_raw = function_exists('ss_search_url') ? (string)ss_search_url() : '';
-$search_url_attr = ss_h($search_url_raw);
-?>
-<div class="waps_r"><div class="search">
-<form id="post" name="t_frmsearch" method="post" action="<?=$search_url_attr?>"<?php if ($search_url_raw === ''): ?> onsubmit="return false;"<?php endif; ?>>
-    <table cellpadding="0" cellspacing="0" style="width:100%;">
-        <tr>
-            <td style="width:50px;">
-                <div id="type" class="type">综合</div>
-            </td>
-            <td style="background-color:#fff; border:1px solid #CCC;">
-                <input id="s_key" name="searchkey" type="text" class="key" value="<?=htmlspecialchars($searchkey_safe, ENT_QUOTES, 'UTF-8')?>" placeholder="输入书名/作者" maxlength="50">
-                <input type="hidden" name="searchtype" value="all">
-            </td>
-            <td style="width:35px; background-color:#0080C0; background-image:url('/static/<?=$theme_dir_attr?>/search.png'); background-repeat:no-repeat; background-position:center">
-                <input name="t_btnsearch" type="submit" value="" class="go"<?php if ($search_url_raw === ''): ?> disabled="disabled" aria-disabled="true"<?php endif; ?>>
-            </td>
-        </tr>
-    </table><span id="s_tips"></span>
-</form>
-</div></div>
 <?php if($searchkey_safe !== ''): ?>
     <h1 class="search-title">搜索<span class="red"><?=htmlspecialchars($searchkey_safe, ENT_QUOTES, 'UTF-8')?></span>的结果<?php if (!empty($search_res) && is_array($search_res)): ?><small style="font-size:12px;color:#999;">（<?=count($search_res)?>条）</small><?php endif; ?></h1>
 <?php endif; ?>

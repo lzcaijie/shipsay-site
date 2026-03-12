@@ -15,10 +15,11 @@
 <?php require_once __THEME_DIR__ . '/tpl_header.php';?>
 </head>
 <body>
-<div class="page-head">
-    <a href="/" class="home">首页</a>
-    <h1>阅读记录</h1>
-</div>
+<?php
+$home_url_raw = function_exists('ss_home_url') ? (string)ss_home_url() : '/';
+$home_url_attr = htmlspecialchars($home_url_raw, ENT_QUOTES, 'UTF-8');
+?>
+<?php ss_render_page_top(['page_title' => '阅读记录', 'show_back' => true]); ?>
 <div class="s_m history-box">
     <div class="q_top c_big"><p class="c_big_border">最近阅读</p><div class="more"><a href="javascript:removeall();" id="clearRecentRead" rel="nofollow">清空记录</a></div></div>
     <div class="cc"></div>
