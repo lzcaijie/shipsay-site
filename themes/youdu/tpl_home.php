@@ -52,7 +52,7 @@ $rank_allvote_url = isset($rank_detail_base_safe) && $rank_detail_base_safe !== 
 
 	    <ul class="g_row hom-books hom-gutter hom-arr">
 	        <?php if(!empty($postdate) && is_array($postdate)): ?>
-                <?php foreach($postdate as $k => $v): ?>
+                <?php foreach(array_slice($postdate, 0, 6) as $k => $v): ?>
                     <li class="g_col_2">
                         <a href="<?=$v['info_url']?>" title="<?=$v['articlename']?>">
                             <i class="g_thumb hom-thumb">

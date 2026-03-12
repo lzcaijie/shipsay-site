@@ -1,262 +1,52 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 <?php
-
 $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 $isSearchEngine = false;
-$searchEngines = [
-    'Baiduspider',
-    'bingbot',
-    '360Spider',
-    'Sogou web spider',
-    'YisouSpider',
-];
+$searchEngines = ['Baiduspider','bingbot','360Spider','Sogou web spider','YisouSpider'];
 foreach ($searchEngines as $bot) {
-    if (stripos($userAgent, $bot) !== false) {
-        $isSearchEngine = true;
-        break;
-    }
+    if (stripos($userAgent, $bot) !== false) { $isSearchEngine = true; break; }
 }
-
-// ====== SEO 标题与描述 ======
 $pageTitle = $articlename . ' - ' . $chaptername;
-if ($max_pid > 1) {
-    $pageTitle .= '（' . $now_pid . '/' . $max_pid . '）';
-}
+if ($max_pid > 1) { $pageTitle .= '（' . $now_pid . '/' . $max_pid . '）'; }
 $pageTitle .= ' - ' . SITE_NAME;
-
 $pageDescription = '《' . $articlename . '》最新章节：' . $chaptername;
-if ($max_pid > 1) {
-    $pageDescription .= ' 第' . $now_pid . '页/共' . $max_pid . '页';
-}
+if ($max_pid > 1) { $pageDescription .= ' 第' . $now_pid . '页/共' . $max_pid . '页'; }
 $pageDescription .= '，作者：' . $author . '。';
 $site_home_url_safe = !empty($site_url) ? (string)$site_url : '/';
 $recentread_url_safe = isset($fake_recentread) && $fake_recentread ? (string)$fake_recentread : '';
 $index_url_safe = isset($index_url) && $index_url ? (string)$index_url : '';
+$full_allbooks_url_safe = isset($full_allbooks_url) && $full_allbooks_url ? (string)$full_allbooks_url : '';
+$rank_entry_url_safe = '';
+if (isset($rank_entry_url) && $rank_entry_url) { $rank_entry_url_safe = (string)$rank_entry_url; } elseif (isset($fake_top) && $fake_top) { $rank_entry_url_safe = (string)$fake_top; }
+$search_url_safe = function_exists('ss_search_url') ? (string)ss_search_url() : '';
 ?>
 <!DOCTYPE html>
 <html lang="zh">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<?php
-require_once __ROOT_DIR__.'/shipsay/seo.php';
-list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('reader');
-$pageTitle = $seo_title;
-$pageDescription = $seo_description;
-?>
+<?php require_once __ROOT_DIR__.'/shipsay/seo.php'; list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('reader'); $pageTitle = $seo_title; $pageDescription = $seo_description; ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
-<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
-<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-
-<meta property="og:type" content="novel">
-<meta property="og:title" content="<?=$pageTitle?>">
-<meta property="og:description" content="<?=$pageDescription?>">
-<meta property="og:novel:category" content="<?=$sortname?>小说">
-<meta property="og:novel:author" content="<?=$author?>">
-<meta property="og:novel:book_name" content="<?=$articlename?>">
-<?php if ($index_url_safe !== ''): ?><meta property="og:novel:index_url" content="<?=$index_url_safe?>"><?php endif; ?>
-<meta property="og:novel:info_url" content="<?=$info_url?>">
-<meta property="og:novel:status" content="<?=$isfull?>">
-<meta property="og:novel:chapter_name" content="<?=$chaptername?>">
-<meta property="og:novel:chapter_url" content="<?=$uri?>">
-<meta property="og:url" content="<?=$uri?>" id="ogurl" />
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="applicable-device" content="pc,mobile" />
-<meta http-equiv="mobile-agent" content="format=html5;url=<?=$uri?>" />
-<meta http-equiv="mobile-agent" content="format=xhtml;url=<?=$uri?>" />
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<meta name="renderer" content="webkit">
-
-<link rel="shortcut icon" type="image/x-icon" href="/static/<?=$theme_dir?>/images/favicon.ico" media="screen">
-<link rel="stylesheet" href="/static/<?=$theme_dir?>/css/reader.css" />
-
+<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>"><meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
+<meta property="og:type" content="novel"><meta property="og:title" content="<?=$pageTitle?>"><meta property="og:description" content="<?=$pageDescription?>"><meta property="og:novel:category" content="<?=$sortname?>小说"><meta property="og:novel:author" content="<?=$author?>"><meta property="og:novel:book_name" content="<?=$articlename?>"><?php if ($index_url_safe !== ''): ?><meta property="og:novel:index_url" content="<?=$index_url_safe?>"><?php endif; ?><meta property="og:novel:info_url" content="<?=$info_url?>"><meta property="og:novel:status" content="<?=$isfull?>"><meta property="og:novel:chapter_name" content="<?=$chaptername?>"><meta property="og:novel:chapter_url" content="<?=$uri?>"><meta property="og:url" content="<?=$uri?>" id="ogurl" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><meta name="applicable-device" content="pc,mobile" /><meta http-equiv="mobile-agent" content="format=html5;url=<?=$uri?>" /><meta http-equiv="mobile-agent" content="format=xhtml;url=<?=$uri?>" /><meta http-equiv="Cache-Control" content="no-transform" /><meta http-equiv="Cache-Control" content="no-siteapp" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="renderer" content="webkit">
+<link rel="shortcut icon" type="image/x-icon" href="/static/<?=$theme_dir?>/images/favicon.ico" media="screen"><link rel="stylesheet" href="/static/<?=$theme_dir?>/css/reader.css" />
 <style>
-/* ✅ 修复你截图里的 404：reader.css 里写死了 /static/ss_qb/icomoon.*，实际你du的字体在 /static/<?=$theme_dir?>/css/icomoon.ttf */
-@font-face{
-    font-family: 'icomoon';
-    src: url('/static/<?=$theme_dir?>/css/icomoon.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-}
-
-
-.spider-pagination{
-    position:absolute;
-    left:-9999px;
-    top:-9999px;
-    height:0;
-    overflow:hidden;
-}
-.spider-pagination a{
-    display:inline-block;
-    margin:0 5px;
-    color:#333;
-    text-decoration:none;
-}
-
-/* ====== 加载提示样式 ====== */
-.loading-text{
-    text-align:center;
-    padding:40px 20px;
-    color:#666;
-    font-size:16px;
-}
-.error-text{
-    text-align:center;
-    padding:40px 20px;
-    color:#f00;
-    font-size:16px;
-}
+@font-face{font-family:'icomoon';src:url('/static/<?=$theme_dir?>/css/icomoon.ttf') format('truetype');font-weight:400;font-style:normal}.spider-pagination{position:absolute;left:-9999px;top:-9999px;height:0;overflow:hidden}.spider-pagination a{display:inline-block;margin:0 5px;color:#333;text-decoration:none}.loading-text{text-align:center;padding:40px 20px;color:#666;font-size:16px}.error-text{text-align:center;padding:40px 20px;color:#f00;font-size:16px}.reader-site-header{background:#fff;border-bottom:1px solid #e5e5e5}.reader-site-header .inner{width:990px;max-width:100%;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:14px;box-sizing:border-box}.reader-site-header .brand{display:flex;align-items:center;gap:10px;color:#365899;font-size:20px;font-weight:700}.reader-site-header .brand .dot{display:inline-flex;width:12px;height:12px;border-radius:50%;background:#365899}.reader-site-header .nav{display:flex;flex-wrap:wrap;gap:10px 16px}.reader-site-header .nav a{color:#333;font-size:14px}.reader-site-footer{width:990px;max-width:100%;margin:0 auto 24px;padding:0 16px;box-sizing:border-box}.reader-footer-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 14px;margin:0 0 16px;padding:14px 16px;background:#f6f1e7;border-radius:8px}.reader-footer-nav a{color:#365899;font-size:14px}.reader-footer-copy{padding:20px 12px;background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.05);text-align:center}.reader-footer-copy p{margin:0 0 8px;line-height:1.8;color:#666}.reader-footer-copy p:last-child{margin-bottom:0}@media screen and (max-width:768px){.reader-site-header .inner{padding:10px 12px;align-items:flex-start;flex-direction:column}.reader-site-header .brand{font-size:18px}.reader-site-header .nav{gap:8px 12px}.reader-footer-nav{padding:12px 10px}}
 </style>
-
-<script src="/static/<?=$theme_dir?>/js/jquery1.min.js"></script>
-<script src="/static/<?=$theme_dir?>/js/jquery.cookie.min.js"></script>
-<?php
-$tempvar = Ss::is_mobile() ? 'motheme' : 'pctheme';
-echo '<script src="/static/' . $theme_dir . '/js/' . $tempvar . '.js"></script>';
-?>
+<script src="/static/<?=$theme_dir?>/js/jquery1.min.js"></script><script src="/static/<?=$theme_dir?>/js/jquery.cookie.min.js"></script><?php $tempvar = Ss::is_mobile() ? 'motheme' : 'pctheme'; echo '<script src="/static/' . $theme_dir . '/js/' . $tempvar . '.js"></script>'; ?>
 </head>
-
 <body class="bg6" id="readbg" onselectstart="return false">
-
-<div class="top">
-    <div class="bar">
-        <div class="chepnav">
-            <i>当前位置:</i><a href="<?=$site_home_url_safe?>"><?=SITE_NAME?></a>><a href="<?=Sort::ss_sorturl($sortid)?>"><?=$sortname?></a>><a href="<?=$info_url?>"><?=$articlename?></a>> <em><?=$chaptername?></em>
-        </div>
-        <ul></ul>
-    </div>
-</div>
-
-<div class="mlfy_main">
-
-<?php if(!Ss::is_mobile()) :?>
-    <div class="container">
-        <?php require_once __ROOT_DIR__ . '/shipsay/configs/report.ini.php'; ?>
-        <ul class="links">
-            <?php if($index_url_safe !== ''): ?><li><a href="<?=$index_url_safe?>">目录</a> | </li><?php endif; ?>
-            <li><a href="<?=$info_url?>">详情</a><?php if((!empty($ShipSayReport['on']) || $recentread_url_safe !== '')): ?> | <?php endif; ?></li>
-            <?php if(!empty($ShipSayReport['on'])) : ?>
-                <li><a href="javascript:report()" style="color:red">章节报错</a><?php if($recentread_url_safe !== ''): ?> | <?php endif; ?></li>
-            <?php endif?>
-            <?php if($recentread_url_safe !== ''): ?><li><a href="<?=$recentread_url_safe?>">阅读记录</a></li><?php endif; ?>
-        </ul>
-        <div class="mlfy_main_l"><i class="szk"><em class="icon-cog"></em> <z>阅读</z>设置</i><i class="hid">（推荐配合 快捷键[F11] 进入全屏沉浸式阅读）</i></div>
-    </div>
-    <div class="mlfy_main_sz b2">
-        <p class="ml"><span class="txt">设置</span><span class="close">X</span></p>
-        <ul>
-            <li><span class="fl">阅读主题</span><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6 hover"></i><i class="c7"></i><i class="c8"></i></li>
-            <li class="hid"><span class="fl">正文字体</span><span class="zt hover">雅黑</span><span class="zt">宋体</span><span class="zt">楷体</span><span class="zt" title="方正启体简体">启体</span><span class="zt" title="思源黑体 CN">思源</span><span class="zt" title="苹方字体">苹方</span></li>
-            <li><span class="fl">字体大小</span><span class="dx dxl">A-</span><span class="dx dxc">20</span><span class="dx dxr">A+</span></li>
-            <li class="hid"><span class="fl">页面宽度</span><p class="dx kdl"><span class="icon"></span><span class="fl">-</span></p><p class="dx kdc">100%</p><p class="dx kdr"><span class="icon"></span><span class="fl">+</span></p></li>
-        </ul>
-        <div class="btn-wrap"><a class="red-btn" href="javascript:">保存</a><a class="grey-btn" href="javascript:">取消</a></div>
-    </div>
-<?php endif ?>
-
-<div id="mlfy_main_text">
-
-    <h1><?=$chaptername?><?php if ($max_pid > 1): ?>（第<?=$now_pid?>页/共<?=$max_pid?>页）<?php endif; ?></h1>
-    <dt class="tp"></dt>
-    <dt class="kw"></dt>
-
-<?php if(Ss::is_mobile()) :?>
-    <div class="toolbar">
-        <div class="theme" style="float: left;width: auto;height: auto;">
-            <span>
-                <?php if($index_url_safe !== ''): ?><a href="<?=$index_url_safe?>">目录</a><?php endif; ?>
-                <a href="<?=$info_url?>">详情</a>
-                <?php require_once __ROOT_DIR__ . '/shipsay/configs/report.ini.php'; if(!empty($ShipSayReport['on'])) : ?>
-                    <a href="javascript:report()" style="color: red;">章节报错</a>
-                <?php endif?>
-                <?php if($recentread_url_safe !== ''): ?><a href="<?=$recentread_url_safe?>">阅读记录</a><?php endif; ?>
-            </span>
-        </div>
-        <a href="javascript:;" class="aminus font_dec" id="font_dec"></a>
-        <a href="javascript:;" class="aadd font_inc" id="font_inc"></a>
-        <a href="javascript:;" class="pattern menu-moon" id="mode"></a>
-        <div class="option theme">
-            <div class="theme-area theme-pink" id="theme2"></div>
-        </div>
-        <div class="cr"></div>
-    </div>
-<?php endif ?>
-
-<!-- ✅ 阅读页：蜘蛛专用分页（仅阅读页需要保留） -->
-<?php if ($isSearchEngine && $max_pid > 1): ?>
-<div class="spider-pagination" aria-label="章节分页导航">
-    <?php if ($now_pid > 1 && $prevpage_url != ''): ?><a href="<?=$prevpage_url?>" rel="prev">上一页</a><?php endif; ?>
-    <span>第<?=$now_pid?>页/共<?=$max_pid?>页</span>
-    <?php if ($now_pid < $max_pid && $nextpage_url != ''): ?><a href="<?=$nextpage_url?>" rel="next">下一页</a><?php endif; ?>
-</div>
-<?php endif; ?>
-
-    <div id="TextContent" class="read-content">
-        <article id="article" class="content">
-            <?php if ($isSearchEngine || !Ss::use_js()): ?>
-                <p>天才一秒记住【<?=SITE_NAME?>】地址：<?=$site_url?></p>
-                <?php echo $rico_content; ?>
-            <?php else: ?>
-                <div class="loading-text">正在加载章节内容...</div>
-            <?php endif; ?>
-        </article>
-    </div>
-</div>
-</div>
-
-<p class="mlfy_page">
-    <?php if($prevpage_url != ''): ?>
-        <a id="prev_url" href="<?=$prevpage_url?>">上一页</a>
-    <?php else: ?>
-        <?php if($pre_cid == 0): ?><a id="prev_url" href="javascript:void(0);">没有了</a><?php else: ?><a id="prev_url" href="<?=$pre_url?>">上一章</a><?php endif ?>
-    <?php endif ?>
-
-    <?php if($index_url_safe !== ''): ?><a id="info_url" href="<?=$index_url_safe?>">目录</a><?php else: ?><a id="info_url" href="javascript:void(0);">目录</a><?php endif; ?>
-    <a href="<?=$info_url?>">详情</a>
-
-    <?php if($nextpage_url != ''): ?>
-        <a id="next_url" href="<?=$nextpage_url?>">下一页</a>
-    <?php else: ?>
-        <?php if($next_cid == 0): ?><a id="next_url" href="javascript:void(0);">没有了</a><?php else: ?><a id="next_url" href="<?=$next_url ?>">下一章</a><?php endif ?>
-    <?php endif ?>
-</p>
-
-<p class="mlfy_page"><?=SITE_NAME?> -书友最值得收藏的网络小说网站</p>
-
-<script src="/static/<?=$theme_dir?>/js/history.js"></script>
-<script type="text/javascript" src="/static/<?=$theme_dir?>/js/transform.js"></script>
-
-<script>
-    var lastread = new LastRead();
-lastread.set('<?=$articleid?>', '<?=$uri?>', '<?=$articlename?>', '<?=$chaptername?>', '<?=$author?>', '<?=isset($img_url)?$img_url:''?>');
-
-</script>
-
-<script>
-<?php if (Ss::use_js() && !$isSearchEngine) : ?>
-    setTimeout(function() {
-        $.ajax({
-            type: "post",
-            url: "/api/reader_js.php",
-            data: {
-                articleid: '<?= $articleid ?>',
-                chapterid: '<?= $chapterid ?>',
-                pid: '<?= $now_pid ?>'
-            },
-            success: function(data) {
-                $('#article').html(data);
-            },
-            error: function() {
-                $('#article').html('<div class="error-text">加载失败，请刷新重试</div>');
-            }
-        });
-    }, 200);
-<?php endif ?>
-</script>
-
-<?php include_once __ROOT_DIR__ . '/shipsay/configs/count.ini.php';foreach($count as $v) {if($v['enable'])echo $v['html'];}?>
+<div class="reader-site-header"><div class="inner"><a class="brand" href="<?=$site_home_url_safe?>"><span class="dot"></span><span><?=SITE_NAME?></span></a><div class="nav"><a href="<?=$site_home_url_safe?>">首页</a><?php if($full_allbooks_url_safe !== ''): ?><a href="<?=$full_allbooks_url_safe?>">完本</a><?php endif; ?><?php if($rank_entry_url_safe !== ''): ?><a href="<?=$rank_entry_url_safe?>">排行</a><?php endif; ?><?php if($search_url_safe !== ''): ?><a href="<?=$search_url_safe?>">搜索</a><?php endif; ?><?php if($recentread_url_safe !== ''): ?><a href="<?=$recentread_url_safe?>" rel="nofollow">阅读记录</a><?php endif; ?></div></div></div>
+<div class="top"><div class="bar"><div class="chepnav"><i>当前位置:</i><a href="<?=$site_home_url_safe?>"><?=SITE_NAME?></a>><a href="<?=Sort::ss_sorturl($sortid)?>"><?=$sortname?></a>><a href="<?=$info_url?>"><?=$articlename?></a>> <em><?=$chaptername?></em></div><ul></ul></div></div>
+<div class="mlfy_main"><?php require_once __ROOT_DIR__ . '/shipsay/configs/report.ini.php'; ?>
+<?php if(!Ss::is_mobile()) :?><div class="container"><ul class="links"><?php if($index_url_safe !== ''): ?><li><a href="<?=$index_url_safe?>">目录</a> | </li><?php endif; ?><li><a href="<?=$info_url?>">详情</a><?php if((!empty($ShipSayReport['on']) || $recentread_url_safe !== '')): ?> | <?php endif; ?></li><?php if(!empty($ShipSayReport['on'])) : ?><li><a href="javascript:report()" style="color:red">章节报错</a><?php if($recentread_url_safe !== ''): ?> | <?php endif; ?></li><?php endif?><?php if($recentread_url_safe !== ''): ?><li><a href="<?=$recentread_url_safe?>">阅读记录</a></li><?php endif; ?></ul><div class="mlfy_main_l"><i class="szk"><em class="icon-cog"></em> <z>阅读</z>设置</i><i class="hid">（推荐配合 快捷键[F11] 进入全屏沉浸式阅读）</i></div></div><div class="mlfy_main_sz b2"><p class="ml"><span class="txt">设置</span><span class="close">X</span></p><ul><li><span class="fl">阅读主题</span><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i><i class="c5"></i><i class="c6 hover"></i><i class="c7"></i><i class="c8"></i></li><li class="hid"><span class="fl">正文字体</span><span class="zt hover">雅黑</span><span class="zt">宋体</span><span class="zt">楷体</span><span class="zt" title="方正启体简体">启体</span><span class="zt" title="思源黑体 CN">思源</span><span class="zt" title="苹方字体">苹方</span></li><li><span class="fl">字体大小</span><span class="dx dxl">A-</span><span class="dx dxc">20</span><span class="dx dxr">A+</span></li><li class="hid"><span class="fl">页面宽度</span><p class="dx kdl"><span class="icon"></span><span class="fl">-</span></p><p class="dx kdc">100%</p><p class="dx kdr"><span class="icon"></span><span class="fl">+</span></p></li></ul><div class="btn-wrap"><a class="red-btn" href="javascript:">保存</a><a class="grey-btn" href="javascript:">取消</a></div></div><?php endif ?>
+<div id="mlfy_main_text"><h1><?=$chaptername?><?php if ($max_pid > 1): ?>（第<?=$now_pid?>页/共<?=$max_pid?>页）<?php endif; ?></h1><dt class="tp"></dt><dt class="kw"></dt>
+<?php if(Ss::is_mobile()) :?><div class="toolbar"><div class="theme" style="float: left;width: auto;height: auto;"><span><?php if($index_url_safe !== ''): ?><a href="<?=$index_url_safe?>">目录</a><?php endif; ?><a href="<?=$info_url?>">详情</a><?php if(!empty($ShipSayReport['on'])) : ?><a href="javascript:report()" style="color: red;">章节报错</a><?php endif?><?php if($recentread_url_safe !== ''): ?><a href="<?=$recentread_url_safe?>">阅读记录</a><?php endif; ?></span></div><a href="javascript:;" class="aminus font_dec" id="font_dec"></a><a href="javascript:;" class="aadd font_inc" id="font_inc"></a><a href="javascript:;" class="pattern menu-moon" id="mode"></a><div class="option theme"><div class="theme-area theme-pink" id="theme2"></div></div><div class="cr"></div></div><?php endif ?>
+<?php if ($isSearchEngine && $max_pid > 1): ?><div class="spider-pagination" aria-label="章节分页导航"><?php if ($now_pid > 1 && $prevpage_url != ''): ?><a href="<?=$prevpage_url?>" rel="prev">上一页</a><?php endif; ?><span>第<?=$now_pid?>页/共<?=$max_pid?>页</span><?php if ($now_pid < $max_pid && $nextpage_url != ''): ?><a href="<?=$nextpage_url?>" rel="next">下一页</a><?php endif; ?></div><?php endif; ?>
+<div id="TextContent" class="read-content"><article id="article" class="content"><?php if ($isSearchEngine || !Ss::use_js()): ?><p>天才一秒记住【<?=SITE_NAME?>】地址：<?=$site_url?></p><?php echo $rico_content; ?><?php else: ?><div class="loading-text">正在加载章节内容...</div><?php endif; ?></article></div></div></div>
+<p class="mlfy_page"><?php if($prevpage_url != ''): ?><a id="prev_url" href="<?=$prevpage_url?>">上一页</a><?php else: ?><?php if($pre_cid == 0): ?><a id="prev_url" href="javascript:void(0);">没有了</a><?php else: ?><a id="prev_url" href="<?=$pre_url?>">上一章</a><?php endif ?><?php endif ?><?php if($index_url_safe !== ''): ?><a id="info_url" href="<?=$index_url_safe?>">目录</a><?php else: ?><a id="info_url" href="javascript:void(0);">目录</a><?php endif; ?><a href="<?=$info_url?>">详情</a><?php if($nextpage_url != ''): ?><a id="next_url" href="<?=$nextpage_url?>">下一页</a><?php else: ?><?php if($next_cid == 0): ?><a id="next_url" href="javascript:void(0);">没有了</a><?php else: ?><a id="next_url" href="<?=$next_url ?>">下一章</a><?php endif ?><?php endif ?></p>
+<p class="mlfy_page"><?=SITE_NAME?> - 书友最值得收藏的网络小说网站</p>
+<div class="reader-site-footer"><div class="reader-footer-nav"><a href="<?=$site_home_url_safe?>">首页</a><?php if($index_url_safe !== ''): ?><a href="<?=$index_url_safe?>">目录</a><?php endif; ?><a href="<?=$info_url?>">详情</a><?php if($recentread_url_safe !== ''): ?><a href="<?=$recentread_url_safe?>" rel="nofollow">阅读记录</a><?php endif; ?><?php if($rank_entry_url_safe !== ''): ?><a href="<?=$rank_entry_url_safe?>">排行榜</a><?php endif; ?></div><div class="reader-footer-copy"><?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?></div></div>
+<script src="/static/<?=$theme_dir?>/js/history.js"></script><script type="text/javascript" src="/static/<?=$theme_dir?>/js/transform.js"></script><script>var lastread = new LastRead();lastread.set('<?=$articleid?>', '<?=$uri?>', '<?=$articlename?>', '<?=$chaptername?>', '<?=$author?>', '<?=isset($img_url)?$img_url:''?>');</script><script><?php if (Ss::use_js() && !$isSearchEngine) : ?>setTimeout(function(){$.ajax({type:"post",url:"/api/reader_js.php",data:{articleid:'<?= $articleid ?>',chapterid:'<?= $chapterid ?>',pid:'<?= $now_pid ?>'},success:function(data){$('#article').html(data);},error:function(){$('#article').html('<div class="error-text">加载失败，请刷新重试</div>');}});},200);<?php endif ?></script>
 </body>
 </html>

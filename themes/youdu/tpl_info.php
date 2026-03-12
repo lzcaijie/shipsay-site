@@ -1,33 +1,53 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 <?php
-// 变量安全兜底（不改变原展示）
-$articlename_safe = isset($articlename) ? $articlename : '';
-$intro_des_safe   = isset($intro_des) ? $intro_des : '';
-$author_safe      = isset($author) ? $author : '';
-$sortname_safe    = isset($sortname) ? $sortname : '';
-$isfull_safe      = isset($isfull) ? $isfull : '';
-$words_w_safe     = isset($words_w) ? $words_w : '';
-$lastupdate_safe  = isset($lastupdate) ? (int)$lastupdate : time();
-$lastchapter_safe = isset($lastchapter) ? $lastchapter : '';
-$img_url_safe     = isset($img_url) ? $img_url : '';
-
-$author_url_safe  = isset($author_url) ? $author_url : '';
-$first_url_safe   = isset($first_url) ? $first_url : '';
-$info_url_safe    = isset($info_url) ? $info_url : '';
-$last_url_safe    = isset($last_url) ? $last_url : '';
-
-$articleid_safe   = isset($articleid) ? (int)$articleid : 0;
-$sortid_safe      = isset($sortid) ? (int)$sortid : 0;
-
-$chapterrows_safe  = (!empty($chapterrows) && is_array($chapterrows)) ? $chapterrows : [];
-$langtailrows_safe = (!empty($langtailrows) && is_array($langtailrows)) ? $langtailrows : [];
-
-// 目录页链接仅消费 app 已提供的真实入口
-$index_url_safe = isset($index_url) && $index_url ? (string)$index_url : '';
+$esc = static function ($value) {
+    return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+};
+$articlename_safe = isset($articlename) ? (string)$articlename : '';
+$intro_des_safe   = isset($intro_des) ? (string)$intro_des : '';
+$author_safe      = isset($author) ? (string)$author : '';
+$sortname_safe    = isset($sortname) ? (string)$sortname : '';
+$isfull_safe      = isset($isfull) ? (string)$isfull : '';
+$words_w_safe     = isset($words_w) ? (string)$words_w : '';
+$lastchapter_safe = isset($lastchapter) ? (string)$lastchapter : '';
+$img_url_safe     = isset($img_url) ? (string)$img_url : '';
+$first_url_safe   = isset($first_url) ? (string)$first_url : '';
+$info_url_safe    = isset($info_url) ? (string)$info_url : '';
+$last_url_safe    = isset($last_url) ? (string)$last_url : '';
+$index_url_safe   = isset($index_url) && $index_url ? (string)$index_url : '';
 $site_home_url_safe = !empty($site_url) ? (string)$site_url : '/';
-
-// ✅ 详情页章节只展示前50章
-$maxDisplay = 50;
+$sortid_safe      = isset($sortid) ? (int)$sortid : 0;
+$chapters_safe    = isset($chapters) ? (int)$chapters : 0;
+$chapterrows_safe = (!empty($chapterrows) && is_array($chapterrows)) ? $chapterrows : [];
+$langtailrows_safe = (!empty($langtailrows) && is_array($langtailrows)) ? $langtailrows : [];
+$latest_rows_safe = [];
+if (!empty($lastchapter_arr) && is_array($lastchapter_arr)) {
+    $latest_rows_safe = $lastchapter_arr;
+} elseif (!empty($lastarr) && is_array($lastarr)) {
+    $latest_rows_safe = $lastarr;
+} elseif (!empty($chapterrows_safe)) {
+    $latest_rows_safe = array_reverse(array_slice($chapterrows_safe, -12, 12));
+}
+$latest_rows_safe = array_slice($latest_rows_safe, 0, 12);
+$preview_rows_safe = [];
+if (!empty($preview_chapters) && is_array($preview_chapters)) {
+    $preview_rows_safe = $preview_chapters;
+} elseif (!empty($chapterrows_safe)) {
+    $preview_rows_safe = array_slice($chapterrows_safe, 0, 50);
+}
+$preview_rows_safe = array_slice($preview_rows_safe, 0, 50);
+$lastupdate_ts = 0;
+if (isset($lastupdate_stamp) && is_numeric($lastupdate_stamp)) {
+    $lastupdate_ts = (int)$lastupdate_stamp;
+} elseif (isset($lastupdate) && is_numeric($lastupdate)) {
+    $lastupdate_ts = (int)$lastupdate;
+} elseif (!empty($lastupdate) && is_string($lastupdate)) {
+    $tmp_ts = strtotime($lastupdate);
+    if ($tmp_ts) {
+        $lastupdate_ts = $tmp_ts;
+    }
+}
+$lastupdate_text = $lastupdate_ts > 0 ? date('Y-m-d', $lastupdate_ts) : (isset($lastupdate_cn) ? (string)$lastupdate_cn : '');
 ?>
 <!DOCTYPE html>
 <html>
@@ -40,10 +60,9 @@ $maxDisplay = 50;
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
 ?>
-<title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
-<meta name="keywords" content="<?=htmlspecialchars($seo_keywords, ENT_QUOTES, 'UTF-8')?>">
-<meta name="description" content="<?=htmlspecialchars($seo_description, ENT_QUOTES, 'UTF-8')?>">
-
+<title><?=$esc($seo_title)?></title>
+<meta name="keywords" content="<?=$esc($seo_keywords)?>">
+<meta name="description" content="<?=$esc($seo_description)?>">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="renderer" content="webkit">
@@ -56,169 +75,65 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
 <script type="text/javascript" src="/static/<?=$theme_dir?>/js/jquery.min.js"></script>
 <script src="/static/<?=$theme_dir?>/js/jquery.cookie.min.js"></script>
 <script type="text/javascript" src="/static/<?=$theme_dir?>/js/common.js"></script>
-
 <style>
-    @media screen and (max-width: 768px){.g_header {background-color: rgba(0,0,0,.1);}.g_drop_sel .bhn:hover {background-color: rgba(0,0,0,.1);}}
-
-    /* ✅ 相关小说样式（你之前直接加进去的那块，做轻微规范化） */
-    .rel-novel{
-        margin: 10px 0 0;
-        font-size: 14px;
-        line-height: 1.8;
-        color: #333;
-    }
-    .rel-novel a{
-        color:#1a73e8;
-        text-decoration:none;
-        margin-right: 8px;
-        white-space: nowrap;
-        display: inline-block;
-    }
-    .rel-novel .rel-title{
-        color:#666;
-        margin-right: 6px;
-    }
+@media screen and (max-width: 768px){.g_header {background-color: rgba(0,0,0,.1);}.g_drop_sel .bhn:hover {background-color: rgba(0,0,0,.1);}}
+.youdu-book-shell{padding-bottom:18px}.youdu-meta-grid{display:flex;flex-wrap:wrap;gap:10px 16px;margin:0 0 16px}.youdu-meta-grid strong{display:inline-flex;align-items:center;min-width:calc(50% - 8px)}.youdu-action-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}.youdu-action-row .bt.alt{background:#fff;color:#365899;border:1px solid #365899}.youdu-section{margin-top:18px;padding:18px 20px;background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.05)}.youdu-section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.youdu-section-head h3{font-size:20px;font-weight:700;color:#222}.youdu-section-head .meta{font-size:13px;color:#777}.youdu-chapter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px}.youdu-chapter-grid a{display:block;padding:10px 12px;border:1px solid #ececf2;border-radius:10px;background:#fafbff;color:#222;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.youdu-chapter-grid a:hover{color:#365899;border-color:#cfd8ef}.youdu-preview-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px}.youdu-preview-list li{list-style:none}.youdu-preview-list a{display:block;padding:8px 0;border-bottom:1px solid #f0f0f0;color:#333;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.youdu-preview-list a:hover{color:#365899}.youdu-more-link{display:inline-flex;align-items:center;justify-content:center;min-width:180px;margin-top:16px;padding:11px 16px;border-radius:999px;background:#365899;color:#fff}.youdu-more-link:hover{color:#fff;opacity:.92}.rel-novel{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start}.rel-novel .rel-title{padding:7px 0;color:#666}.rel-novel a{display:inline-flex;align-items:center;padding:7px 12px;border-radius:999px;background:#f3f6fb;border:1px solid #d8e3f5;color:#365899}.rel-novel a:hover{background:#eaf1ff}@media (max-width: 900px){.youdu-chapter-grid,.youdu-preview-list{grid-template-columns:1fr}}@media (max-width: 768px){.youdu-meta-grid strong{min-width:100%}.youdu-action-row .bt,.youdu-action-row .bt.alt{flex:1 1 calc(50% - 6px);text-align:center}.youdu-section{padding:15px}.youdu-section-head{align-items:flex-start;flex-direction:column}.rel-novel{gap:8px}.rel-novel a{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 </style>
 </head>
 <body style="zoom: 1;">
-
 <div class="page">
-    <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
-
-    <div class="det-hd pt25 mb30">
-        <div class="g_wrap">
-            <p class="g_bread fs16 c_strong mb30 ell">
-                <a href="<?=$site_home_url_safe?>" class="fs12 i c_strong"><svg><use xlink:href="#i-bread"></use></svg></a>
-                <span class="vam"><a href="<?=$site_home_url_safe?>" class="c_strong vam" title="<?=SITE_NAME?>" style=" text-transform: capitalize; "><?=SITE_NAME?></a>/ </span>
-                <a href="<?=Sort::ss_sorturl($sortid_safe)?>" class="c_strong vam" title="<?=$sortname_safe?>" style=" text-transform: capitalize; "><?=$sortname_safe?></a>
-                <span class="vam"> / <?=$articlename_safe?></span>
-            </p>
-
-            <div class="det-info g_row c_strong fs16 pr book-detail-x">
-                <img src="<?=$img_url_safe?>" class="book-cover-blur hide" alt="<?=$articlename_safe?>">
-                <div class="cover g_col_4">
-                    <span class="g_thumb">
-                        <img src="<?=$img_url_safe?>" width="300" height="400" alt="<?=$articlename_safe?>" loading="lazy">
-                    </span>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
+<div class="det-hd pt25 mb30">
+    <div class="g_wrap">
+        <p class="g_bread fs16 c_strong mb30 ell">
+            <a href="<?=$esc($site_home_url_safe)?>" class="fs12 i c_strong"><svg><use xlink:href="#i-bread"></use></svg></a>
+            <span class="vam"><a href="<?=$esc($site_home_url_safe)?>" class="c_strong vam" title="<?=SITE_NAME?>" style="text-transform: capitalize;"><?=SITE_NAME?></a>/ </span>
+            <a href="<?=Sort::ss_sorturl($sortid_safe)?>" class="c_strong vam" title="<?=$esc($sortname_safe)?>" style="text-transform: capitalize;"><?=$esc($sortname_safe)?></a>
+            <span class="vam"> / <?=$esc($articlename_safe)?></span>
+        </p>
+        <div class="det-info g_row c_strong fs16 pr book-detail-x youdu-book-shell">
+            <img src="<?=$esc($img_url_safe)?>" class="book-cover-blur hide" alt="<?=$esc($articlename_safe)?>">
+            <div class="cover g_col_4"><span class="g_thumb"><img src="<?=$esc($img_url_safe)?>" width="300" height="400" alt="<?=$esc($articlename_safe)?>" loading="lazy"></span></div>
+            <div class="g_col_8 pr">
+                <h1 class="mb15 lh1d2 oh"><?=$esc($articlename_safe)?></h1>
+                <div class="youdu-meta-grid">
+                    <strong><svg class="fs20 mr5"><use xlink:href="#i-pen"></use></svg><span><?=$esc($author_safe)?></span></strong>
+                    <strong><svg class="fs20 mr5"><use xlink:href="#i-others"></use></svg><span><?=$esc($sortname_safe)?></span></strong>
+                    <strong><svg class="fs20 mr5"><use xlink:href="#i-chapter"></use></svg><span><?=$esc($isfull_safe)?></span></strong>
+                    <strong><svg class="fs20 mr5"><use xlink:href="#i-all"></use></svg><span><?=$esc($words_w_safe)?>万字</span></strong>
                 </div>
-
-                <div class="g_col_8 pr">
-                    <h1 class="mb15 lh1d2 oh"><?=$articlename_safe?></h1>
-                    <p class="mb15 ell _tags pt2">
-                        <strong class="mr15 ttl">
-                            <svg class="fs20 mr5"><use xlink:href="#i-pen"></use></svg>
-                            <span><?=$author_safe?></span>
-                        </strong>
-                        <strong class="mr15 ttc">
-                            <svg class="fs20 mr5"><use xlink:href="#i-others"></use></svg>
-                            <span><?=$sortname_safe?></span>
-                        </strong>
-                        <strong class="mr15 ttc hisp">
-                            <svg class="fs20 mr5"><use xlink:href="#i-chapter"></use></svg>
-                            <span><?=$isfull_safe?></span>
-                        </strong>
-                        <strong class="mr15 ttc hisp">
-                            <svg class="fs20 mr5"><use xlink:href="#i-all"></use></svg>
-                            <span><?=$words_w_safe?>万字</span>
-                        </strong>
-                    </p>
-
-                    <div class="h112 mb15 det-abt lh1d8 c_strong fs16 hm-scroll">
-                        <p><?=$intro_des_safe?><br></p>
-                    </div>
-                    <div class="_bts pa l0">
-                        <a id="j_read" href="<?=$first_url_safe?>" title="立即阅读" class="bt">立即阅读</a>
-                    </div>
+                <div class="h112 mb15 det-abt lh1d8 c_strong fs16 hm-scroll"><p><?=$esc($intro_des_safe)?><br></p></div>
+                <div class="youdu-action-row">
+                    <?php if($first_url_safe !== ''): ?><a id="j_read" href="<?=$esc($first_url_safe)?>" title="立即阅读" class="bt">立即阅读</a><?php endif; ?>
+                    <?php if($index_url_safe !== ''): ?><a href="<?=$esc($index_url_safe)?>" title="查看目录" class="bt alt">查看目录</a><?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="g_wrap det-con pb30 pt20" id="Contents">
-        <div class="pb20">
-            <div class="cf mb5">
-                <h3 class="det-h2 fl">章节目录（显示前50章）</h3>
-            </div>
-            <p class="fs16 c_strong">
-                <span class="vam">最新章节：</span>
-                <a class="ell lst-chapter dib vam" href="<?=$last_url_safe?>" title="<?=$lastchapter_safe?>"><?=$lastchapter_safe?></a>
-                <small class="c_small ml10 vam ml0"><?=date('Y-m-d', $lastupdate_safe)?></small>
-                <label class="rank-chk">
-                    <span onclick="javascript:reverse(this);"><svg><use xlink:href="#i-rank-up"></use></svg></span>
-                </label>
-            </p>
-        </div>
-
-        <div class="f_mr fs16 det-con-ol oh">
-            <ol class="inline mb20" id="chapterList">
-                <?php
-                $cnt = 0;
-                foreach($chapterrows_safe as $k => $v):
-                    if ($cnt >= $maxDisplay) break;
-                    $cnt++;
-                ?>
-                <li class="w33p">
-                    <a href="<?=$v['cid_url']?>" title="<?=$articlename_safe?> <?=$v['cname']?>" class="c_strong vam ell db">
-                        <span class="vam"><?=$v['cname']?></span>
-                    </a>
-                </li>
-                <?php endforeach; ?>
-            </ol>
-        </div>
-
-        <?php if(!empty($index_url_safe)): ?>
-            <a class="lbxxyx_s fs16" href="<?=$index_url_safe?>">
-                查看更多章节<?php if(isset($chapters) && (int)$chapters>0): ?>（共<?=$chapters?>章）<?php endif; ?>
-            </a>
-        <?php endif; ?>
-
-        <?php if ($is_langtail == 1 && !empty($langtailrows_safe)) : ?>
-            <div class="rel-novel">
-                <span class="rel-title">相关小说：</span>
-                <?php foreach ($langtailrows_safe as $i => $v) : ?>
-                    <a href="<?=$v['info_url']?>" title="<?=$v['langname']?>"><?=$v['langname']?></a>
-                <?php endforeach ?>
-            </div>
-        <?php endif; ?>
-
-        <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDYwMy83MTU4" style="padding-top:30px;"></div>
-    </div>
-
-    <script type="text/javascript">
-    var bookid="<?= isset($sourceid) ? $sourceid : ''?>";
-    var isDesc=1;
-    function reverse(obj){
-        var ol=$("#chapterList");
-        var list=ol.children();
-        ol.empty();$(obj).text(isDesc?"↓":"↑");
-        for(var i=list.length-1;i>=0;i--){
-            var copy=list.eq(i).clone();
-            ol.append(copy);
-        }
-        isDesc^=1;
-    }
-    </script>
-
-    <div class="g_footer">
-        <div class="g_row">
-            <div class="g_col_9">
-                <?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
-            </div>
-        </div>
-    </div>
-
-    <div class="g_goTop _on"><a href="javascript:;" class="t_on"><svg><use xlink:href="#i-goTop"></use></svg></a></div>
-    <script async="" type="text/javascript" src="/static/<?=$theme_dir?>/js/transform.js"></script>
-    <script>tongji();</script>
-    <script>
-    (function(){
-        var bp = document.createElement('script');
-        bp.src = "//zz.bdstatic.com/linksubmit/push.js";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(bp, s);
-    })();
-    </script>
 </div>
-
+<div class="g_wrap det-con pb30 pt10" id="Contents">
+    <section class="youdu-section">
+        <div class="youdu-section-head">
+            <h3>最新12章</h3>
+            <span class="meta"><?php if($lastchapter_safe !== ''): ?>最新：<a href="<?=$esc($last_url_safe)?>"><?=$esc($lastchapter_safe)?></a><?php endif; ?><?php if($lastupdate_text !== ''): ?>&nbsp;&nbsp;<?=$esc($lastupdate_text)?><?php endif; ?></span>
+        </div>
+        <div class="youdu-chapter-grid"><?php foreach($latest_rows_safe as $row): ?><a href="<?=$esc($row['cid_url'])?>" title="<?=$esc($row['cname'])?>"><?=$esc($row['cname'])?></a><?php endforeach; ?></div>
+    </section>
+    <section class="youdu-section">
+        <div class="youdu-section-head"><h3>顺序预览（前50章）</h3><span class="meta"><?php if($chapters_safe > 0): ?>共<?=$chapters_safe?>章<?php endif; ?></span></div>
+        <ol class="youdu-preview-list"><?php foreach($preview_rows_safe as $row): ?><li><a href="<?=$esc($row['cid_url'])?>" title="<?=$esc($articlename_safe . ' ' . $row['cname'])?>"><?=$esc($row['cname'])?></a></li><?php endforeach; ?></ol>
+        <?php if(!empty($index_url_safe)): ?><a class="youdu-more-link" href="<?=$esc($index_url_safe)?>">查看更多章节<?php if($chapters_safe > 0): ?>（共<?=$chapters_safe?>章）<?php endif; ?></a><?php endif; ?>
+    </section>
+    <?php if ($is_langtail == 1 && !empty($langtailrows_safe)) : ?>
+        <div class="rel-novel"><span class="rel-title">相关小说：</span><?php foreach ($langtailrows_safe as $v) : ?><a href="<?=$esc($v['info_url'])?>" title="<?=$esc($v['langname'])?>"><?=$esc($v['langname'])?></a><?php endforeach; ?></div>
+    <?php endif; ?>
+    <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDYwMy83MTU4" style="padding-top:30px;"></div>
+</div>
+<div class="g_footer"><div class="g_row"><div class="g_col_9"><?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?></div></div></div>
+<div class="g_goTop _on"><a href="javascript:;" class="t_on"><svg><use xlink:href="#i-goTop"></use></svg></a></div>
+<script async="" type="text/javascript" src="/static/<?=$theme_dir?>/js/transform.js"></script>
+<script>tongji();</script>
+<script>(function(){var bp = document.createElement('script');bp.src = "//zz.bdstatic.com/linksubmit/push.js";var s = document.getElementsByTagName("script")[0];s.parentNode.insertBefore(bp, s);})();</script>
+</div>
 </body>
 </html>
