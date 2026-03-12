@@ -28,6 +28,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('author');
 <script type="text/javascript" src="/static/<?=$theme_dir?>/js/jquery.min.js"></script>
 <script type="text/javascript" src="/static/<?=$theme_dir?>/js/common.js"></script>
 <script>var userlogin = 0;</script>
+<style>.g_header{position:relative;z-index:30}.lst-hd,.pop-list,.g_footer{position:relative;z-index:1}</style>
 </head>
 <body style="zoom: 1;">
 <div class="page">
