@@ -20,6 +20,7 @@ $site_name_html = htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8');
 $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
 $allbooks_url_attr = htmlspecialchars($allbooks_url_raw, ENT_QUOTES, 'UTF-8');
 $full_allbooks_url_attr = htmlspecialchars($full_allbooks_url_raw, ENT_QUOTES, 'UTF-8');
+if ($search_url_raw === '') $search_url_raw = '/search/';
 $search_url_attr = htmlspecialchars($search_url_raw, ENT_QUOTES, 'UTF-8');
 $recent_url_attr = htmlspecialchars($recent_url_raw, ENT_QUOTES, 'UTF-8');
 $rank_entry_attr = htmlspecialchars($rank_entry_raw, ENT_QUOTES, 'UTF-8');

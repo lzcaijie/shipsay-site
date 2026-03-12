@@ -12,6 +12,7 @@ if (isset($rank_entry_url) && $rank_entry_url) {
 }
 $theme_dir_attr = htmlspecialchars($theme_dir_raw, ENT_QUOTES, 'UTF-8');
 $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
+if ($search_url_raw === '') $search_url_raw = '/search/';
 $search_url_attr = htmlspecialchars($search_url_raw, ENT_QUOTES, 'UTF-8');
 $recentread_url_attr = htmlspecialchars($recentread_url_raw, ENT_QUOTES, 'UTF-8');
 $rank_entry_attr = htmlspecialchars($rank_entry_raw, ENT_QUOTES, 'UTF-8');

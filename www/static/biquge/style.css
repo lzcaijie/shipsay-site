@@ -465,7 +465,7 @@ nav a{
 }
 article{
     font-family: 方正启体简体,"Microsoft YaHei",微软雅黑,宋体;
-    font-size: 19pt;
+    font-size: 20px;
     letter-spacing: 0.2em;
     width: 85%;
     margin: auto;
@@ -1118,4 +1118,18 @@ article p{
     .error-page-link{
         margin:0;
     }
+}
+
+.rank-detail-page .popular{
+    width:100%;
+}
+.rank-detail-page .list-out{
+    height:auto;
+    min-height:35px;
+}
+.info-commend-mobile{display:none;}
+@media screen and (max-width:767px){
+  .info-commend-mobile{display:block;}
+  .info-commend.mobile-visible{display:block!important;padding:10px;}
+  .info-commend.mobile-visible a{display:inline-block;margin:0 8px 8px 0;}
 }

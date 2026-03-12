@@ -14,7 +14,7 @@ if (!function_exists('ss_home_url')) {
 if (!function_exists('ss_search_url')) {
   function ss_search_url(){
     global $fake_search;
-    return !empty($fake_search) ? (string)$fake_search : '';
+    return !empty($fake_search) ? (string)$fake_search : '/search/';
   }
 }
 if (!function_exists('ss_recentread_url')) {
