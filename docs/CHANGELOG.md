@@ -1,3 +1,8 @@
+## 2026-03-12 | 模板 | ss_wap 第七轮回修阅读页白屏（v7）
+- 范围：仅调整 `themes/ss_wap/tpl_reader.php` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与其他模板文件。
+- 修正：阅读页改回与当前 `tpl_header.php` 一致的头部接法，不再在引入 header 之前调用 `ss_home_url()` / `ss_recentread_url()`，避免 helper 未定义导致白屏。
+- 修正：移除阅读页重复输出的 `</head>` 错位结构，保留现有正文 AJAX、阅读记录、上下章与目录入口，仅回修页面骨架。
+
 ## 2026-03-12 | 模板 | ss_wap 第六轮一次收口头尾、详情目录、阅读页、排行与阅读记录（v6）
 - 范围：仅调整 `themes/ss_wap/*`、`www/static/ss_wap/style.css` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
 - 修正：`tpl_header.php` 统一头部 helper，新增全站公共子导航与分类展开层；首页与其它页面头尾职责统一，`排行榜 / 完本 / 阅读记录 / 分类` 统一前移到头部。
