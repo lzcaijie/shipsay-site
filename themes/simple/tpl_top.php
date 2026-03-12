@@ -46,7 +46,7 @@ if (trim((string)$seo_description) === '' || trim((string)$seo_description) === 
 .simple-rank-card-head{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid #eee;background:#f7f7f7}
 .simple-rank-card-head h2{font-size:16px;margin:0}.simple-rank-card-head a{color:#666;text-decoration:none}
 .simple-rank-list{margin:0;padding:10px 12px 12px 36px}.simple-rank-list li{line-height:2;overflow:hidden}.simple-rank-list li em{float:right;color:#999;font-style:normal}.simple-rank-empty{color:#999}
-@media (max-width:768px){.simple-rank-card{min-width:100%;flex-basis:100%}}
+@media (max-width:768px){.simple-rank-tabs{display:block}.simple-rank-tabs a{display:block;width:100%;box-sizing:border-box;margin:0 0 10px}.simple-rank-card{min-width:100%;flex-basis:100%}}
 </style>
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 <div class="container">
