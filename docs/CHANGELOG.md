@@ -1,3 +1,13 @@
+## 2026-03-12 | 模板 | ss_wap 首轮按 v5 清会员残留并补齐模板集合（v1）
+- 范围：仅调整 `themes/ss_wap/*`、`www/static/ss_wap/*` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs`。
+- 清理：删除 `themes/ss_wap/user/*` 旧会员模板，首页/作者页/分类页/详情页/目录页/搜索页/阅读页/底部不再输出“我的书架 / 加入书架 / 加入书签 / 登录注册”旧会员入口。
+- 补齐：新增 `tpl_recentread.php`、`tpl_rank.php`、`tpl_top.php`，让阅读记录、单榜、聚合榜都由 `ss_wap` 自己模板接管，不再缺页回退。
+- 修正：`tpl_home.php` 头部按钮把原来会展开分类菜单的“排行”改回“分类”，并补“阅读记录 / 完本”真实入口；`tpl_category.php` 页头文案回修为分类列表，不再误写成排行榜。
+- 修正：`tpl_search_form.php` 与 `tpl_error.php` 不再写死 `/search/` fallback；搜索入口缺失时只做禁用展示，不再模板层反造旧搜索链路。
+- 修正：`tpl_info.php` 去掉模板层 `Url::index_url($articleid)` 目录兜底；目录按钮只消费 app 已传入的 `$index_url`，缺失时禁用展示。
+- 新增：增加 `www/static/ss_wap/tempbookcase.js`，阅读页写入本地阅读记录，`tpl_recentread.php` 读取并展示阅读记录；`removeAll()` 仅清当前阅读记录键，不再全清 `localStorage`。
+- 清理：`www/static/ss_wap/common.js` 去掉未再使用的旧会员相关函数，保留阅读页设置与分类菜单切换逻辑。
+
 ## 2026-03-12 | 模板 | simple 第九轮修聚合榜顶部入口为 PC/手机都单行横排（v9）
 - 范围：仅调整 `themes/simple/tpl_top.php` 与 `docs/CHANGELOG.md`，不动 `app / class / include / configs` 与 `www/static/simple/*`。
 - 修正：聚合榜页顶部 6 个榜单入口在桌面端继续保持一整行横排；手机端撤回单列纵向排列，改为同样单行横排，超出宽度时允许横向滑动，不再出现 6 行堆叠。
