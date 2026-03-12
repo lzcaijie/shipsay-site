@@ -36,8 +36,9 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
     <!-- end header -->
 
 <?php
-$rank_base = '/' . ((isset($fake_rankstr) && $fake_rankstr) ? trim($fake_rankstr, '/') : 'rank') . '/';
-$rank_allvote_url = $rank_base . 'allvote/';
+$rank_allvote_url = isset($rank_detail_base_safe) && $rank_detail_base_safe !== ''
+    ? $rank_detail_base_safe . 'allvote/'
+    : ((isset($rank_entry_url_safe) && $rank_entry_url_safe !== '') ? $rank_entry_url_safe : '');
 ?>
 
 	<div class="hom-bd pr" id="imgload">
@@ -46,7 +47,7 @@ $rank_allvote_url = $rank_base . 'allvote/';
 
 		<div class="cf g_wrap">
     		<h2 class="hom-h1 fl">新书推荐</h2>
-			<a href="<?=$rank_allvote_url?>" class="fl ml20 mt20 fs16 ttl">more<i class="i-more"></i></a>
+			<?php if ($rank_allvote_url !== ''): ?><a href="<?=$rank_allvote_url?>" class="fl ml20 mt20 fs16 ttl">more<i class="i-more"></i></a><?php endif; ?>
     	</div>
 
 	    <ul class="g_row hom-books hom-gutter hom-arr">

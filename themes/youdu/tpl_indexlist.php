@@ -8,12 +8,7 @@ $list_arr_safe    = (!empty($list_arr) && is_array($list_arr)) ? $list_arr : [];
 $htmltitle_safe   = isset($htmltitle) ? $htmltitle : '';
 
 $articleid_safe   = isset($articleid) ? (int)$articleid : 0;
-$index_url_safe = '';
-if (isset($index_url) && $index_url) {
-    $index_url_safe = $index_url;
-} elseif ($articleid_safe > 0) {
-    $index_url_safe = Url::index_url($articleid_safe);
-}
+$index_url_safe = isset($index_url) && $index_url ? (string)$index_url : '';
 ?>
 <!DOCTYPE html>
 <html lang="zh">
@@ -40,10 +35,8 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('indexlist');
 <link rel="stylesheet" data-ignore="true" href="/static/<?=$theme_dir?>/css/index.css">
 <script async="" type="text/javascript" src="/static/<?=$theme_dir?>/js/iconfont.0.6.js" data-ignore="true"></script>
 <script type="text/javascript" src="/static/<?=$theme_dir?>/js/jquery.min.js"></script>
-<script src="/static/<?=$theme_dir?>/js/user.js"></script>
 <script src="/static/<?=$theme_dir?>/js/jquery.cookie.min.js"></script>
 <script type="text/javascript" src="/static/<?=$theme_dir?>/js/common.js"></script>
-<script>var userlogin = 0;</script>
 
 <style>
     /* ✅ 修复原始目录页“错乱”的核心：用 flex 做章节网格，避免 float/inline 在不同屏幕断行错位 */

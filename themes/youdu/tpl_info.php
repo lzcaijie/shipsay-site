@@ -22,13 +22,9 @@ $sortid_safe      = isset($sortid) ? (int)$sortid : 0;
 $chapterrows_safe  = (!empty($chapterrows) && is_array($chapterrows)) ? $chapterrows : [];
 $langtailrows_safe = (!empty($langtailrows) && is_array($langtailrows)) ? $langtailrows : [];
 
-// 目录页链接兜底
-$index_url_safe = '';
-if (isset($index_url) && $index_url) {
-    $index_url_safe = $index_url;
-} elseif ($articleid_safe > 0) {
-    $index_url_safe = Url::index_url($articleid_safe);
-}
+// 目录页链接仅消费 app 已提供的真实入口
+$index_url_safe = isset($index_url) && $index_url ? (string)$index_url : '';
+$site_home_url_safe = !empty($site_url) ? (string)$site_url : '/';
 
 // ✅ 详情页章节只展示前50章
 $maxDisplay = 50;
@@ -58,10 +54,8 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
 <link rel="stylesheet" data-ignore="true" href="/static/<?=$theme_dir?>/css/index.css">
 <script async="" type="text/javascript" src="/static/<?=$theme_dir?>/js/iconfont.0.6.js" data-ignore="true"></script>
 <script type="text/javascript" src="/static/<?=$theme_dir?>/js/jquery.min.js"></script>
-<script src="/static/<?=$theme_dir?>/js/user.js"></script>
 <script src="/static/<?=$theme_dir?>/js/jquery.cookie.min.js"></script>
 <script type="text/javascript" src="/static/<?=$theme_dir?>/js/common.js"></script>
-<script>var userlogin = 0;</script>
 
 <style>
     @media screen and (max-width: 768px){.g_header {background-color: rgba(0,0,0,.1);}.g_drop_sel .bhn:hover {background-color: rgba(0,0,0,.1);}}
@@ -94,8 +88,8 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
     <div class="det-hd pt25 mb30">
         <div class="g_wrap">
             <p class="g_bread fs16 c_strong mb30 ell">
-                <a href="/" class="fs12 i c_strong"><svg><use xlink:href="#i-bread"></use></svg></a>
-                <span class="vam"><a href="/" class="c_strong vam" title="<?=SITE_NAME?>" style=" text-transform: capitalize; "><?=SITE_NAME?></a>/ </span>
+                <a href="<?=$site_home_url_safe?>" class="fs12 i c_strong"><svg><use xlink:href="#i-bread"></use></svg></a>
+                <span class="vam"><a href="<?=$site_home_url_safe?>" class="c_strong vam" title="<?=SITE_NAME?>" style=" text-transform: capitalize; "><?=SITE_NAME?></a>/ </span>
                 <a href="<?=Sort::ss_sorturl($sortid_safe)?>" class="c_strong vam" title="<?=$sortname_safe?>" style=" text-transform: capitalize; "><?=$sortname_safe?></a>
                 <span class="vam"> / <?=$articlename_safe?></span>
             </p>
@@ -178,7 +172,7 @@ list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('info');
             </a>
         <?php endif; ?>
 
-        <?php if ($is_langtail == 1 && !empty($langtailrows)) : ?>
+        <?php if ($is_langtail == 1 && !empty($langtailrows_safe)) : ?>
             <div class="rel-novel">
                 <span class="rel-title">相关小说：</span>
                 <?php foreach ($langtailrows_safe as $i => $v) : ?>
