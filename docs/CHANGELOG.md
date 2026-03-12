@@ -1,3 +1,9 @@
+## 2026-03-12 | ss_wap 第三轮按 v5 清理未引用静态残留（v3)
+- 范围：仅调整 `docs/CHANGELOG.md`，并删除 `www/static/ss_wap/` 下已确认未引用的静态残留；不动 `app / class / include / configs` 与其他模板文件。
+- 清理：删除 `www/static/ss_wap/checkcode.php`、`www/static/ss_wap/arial.ttf`、`www/static/ss_wap/js/protect-page.js`、`www/static/ss_wap/js/protect-ptcms.js`。
+- 依据：`ss_wap` 当前已删除 `user/` 会员模板、也不存在登录/注册验证码入口；上述 4 个文件在当前 `themes/ss_wap/*` 与站内代码中均无有效引用，保留只会干扰后续模板基线判断。
+- 保持：`www/static/ss_wap/common.js`、`tempbookcase.js`、`style.css`、`search.png`、`nocover.jpg`、`favicon.ico`、`js/jquery*.js` 仍为当前模板实际使用文件，本轮不动。
+
 ## 2026-03-12 | ss_wap 第二轮按 v5 标准内联搜索表单并删除多余模板文件（v2）
 - 将首页与搜索页内的搜索表单直接内联回 `tpl_home.php`、`tpl_search.php`。
 - 删除不再需要的 `themes/ss_wap/tpl_search_form.php`，使模板文件集合收口到 v5 标准主集合。
