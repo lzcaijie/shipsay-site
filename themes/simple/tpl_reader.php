@@ -56,8 +56,6 @@ if (trim((string)$seo_keywords) === '' || trim((string)$seo_keywords) === SITE_N
 if (trim((string)$seo_description) === '' || trim((string)$seo_description) === SITE_NAME) {
     $seo_description = '《' . $articlename . '》最新章节：' . $chaptername . '，作者：' . $author . '。';
 }
-$pageTitle = $seo_title;
-$pageDescription = $seo_description;
 $reader_breadcrumb_ld = [
     '@context' => 'https://schema.org',
     '@type' => 'BreadcrumbList',
@@ -99,44 +97,13 @@ $reader_breadcrumb_ld = [
     <script type="application/ld+json"><?=json_encode($reader_breadcrumb_ld, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?></script>
 
     <style>
-        #rtext p {
-            text-indent: 2rem;
-            margin: 2rem 0;
-        }
-        .loading-text {
-            text-align: center;
-            padding: 40px 20px;
-            color: #666;
-            font-size: 16px;
-        }
-        .error-text {
-            text-align: center;
-            padding: 40px 20px;
-            color: #f00;
-            font-size: 16px;
-        }
-        .spider-pagination {
-            position: absolute;
-            left: -9999px;
-            top: -9999px;
-            height: 0;
-            overflow: hidden;
-        }
-        .spider-pagination a {
-            display: inline-block;
-            margin: 0 5px;
-            color: #333;
-            text-decoration: none;
-        }
-        .reader-meta {
-            margin-bottom: 10px;
-            color: #666;
-            line-height: 1.8;
-        }
-        .reader-meta span {
-            display: inline-block;
-            margin-right: 12px;
-        }
+        #rtext p { text-indent: 2rem; margin: 2rem 0; }
+        .loading-text { text-align: center; padding: 40px 20px; color: #666; font-size: 16px; }
+        .error-text { text-align: center; padding: 40px 20px; color: #f00; font-size: 16px; }
+        .spider-pagination { position: absolute; left: -9999px; top: -9999px; height: 0; overflow: hidden; }
+        .spider-pagination a { display: inline-block; margin: 0 5px; color: #333; text-decoration: none; }
+        .reader-meta { margin-bottom: 10px; color: #666; line-height: 1.8; }
+        .reader-meta span { display: inline-block; margin-right: 12px; }
     </style>
 
 <?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
@@ -146,9 +113,7 @@ $reader_breadcrumb_ld = [
         <?php if ($now_pid_safe > 1): ?>
             <a href="<?=$prevpage_url_attr?>" rel="prev">上一页</a>
         <?php endif; ?>
-
         <span>第<?=$now_pid_safe?>页/共<?=$max_pid_safe?>页</span>
-
         <?php for ($i = 1; $i <= min($max_pid_safe, 10); $i++): ?>
             <?php if ($i == $now_pid_safe): ?>
                 <strong><?=$i?></strong>
@@ -157,7 +122,6 @@ $reader_breadcrumb_ld = [
                 <?php if ($spider_page_url !== ''): ?><a href="<?=htmlspecialchars((string)$spider_page_url, ENT_QUOTES, 'UTF-8')?>"><?=$i?></a><?php endif; ?>
             <?php endif; ?>
         <?php endfor; ?>
-
         <?php if ($now_pid_safe < $max_pid_safe): ?>
             <a href="<?=$nextpage_url_attr?>" rel="next">下一页</a>
         <?php endif; ?>
@@ -173,25 +137,19 @@ $reader_breadcrumb_ld = [
             <li class="active">
                 <?=$chaptername_html?>
                 <?php if ($max_pid_safe > 1): ?>
-                <span style="font-size: 14px; color: #666; margin-left: 10px;">
-                    （第<?=$now_pid_safe?>页/共<?=$max_pid_safe?>页）
-                </span>
+                <span style="font-size: 14px; color: #666; margin-left: 10px;">（第<?=$now_pid_safe?>页/共<?=$max_pid_safe?>页）</span>
                 <?php endif; ?>
             </li>
         </ol>
 
         <div class="book read" id="acontent">
             <div class="fullbar"><script src="/static/<?=$theme_dir_attr?>/pagetop.js"></script></div>
-
             <h1 class="pt10">
                 <?=$chaptername_html?>
                 <?php if ($max_pid_safe > 1): ?>
-                <span style="font-size: 14px; color: #666; margin-left: 10px;">
-                    （第<?=$now_pid_safe?>页/共<?=$max_pid_safe?>页）
-                </span>
+                <span style="font-size: 14px; color: #666; margin-left: 10px;">（第<?=$now_pid_safe?>页/共<?=$max_pid_safe?>页）</span>
                 <?php endif; ?>
             </h1>
-
             <div class="reader-meta">
                 <span><?php if ($info_url_raw !== ''): ?><a href="<?=$info_url_attr?>"><?=$article_title_html?></a><?php else: ?><?=$article_title_html?><?php endif; ?></span>
                 <span><?php if ($author_url_attr !== ''): ?><a href="<?=$author_url_attr?>">作者：<?=$author_html?></a><?php else: ?>作者：<?=$author_html?><?php endif; ?></span>
@@ -201,7 +159,6 @@ $reader_breadcrumb_ld = [
 
             <div class="readcontent" id="rtext">
                 <p>天才一秒记住【<?=SITE_NAME?>】地址：<?=htmlspecialchars((string)$site_url, ENT_QUOTES, 'UTF-8')?></p>
-
                 <?php if ($isSearchEngine || !Ss::use_js()): ?>
                     <?php echo $rico_content; ?>
                 <?php else: ?>
@@ -235,14 +192,31 @@ $reader_breadcrumb_ld = [
             <div class="clear"></div>
         </div>
 
-        <p class="pt10 hidden-xs">
-            《<?=$article_title_html?>》情节跌宕起伏、扣人心弦，是一本情节与文笔俱佳的<?=$sortname_html?>小说，<?=htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8')?>转载收集《<?=$article_title_html?>》最新章节。
-        </p>
+        <p class="pt10 hidden-xs">《<?=$article_title_html?>》情节跌宕起伏、扣人心弦，是一本情节与文笔俱佳的<?=$sortname_html?>小说，<?=htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8')?>转载收集《<?=$article_title_html?>》最新章节。</p>
     </div>
     <div class="clear"></div>
 </div>
 
 <script>
+<?php if (Ss::use_js() && !$isSearchEngine) : ?>
+setTimeout(function() {
+    $.ajax({
+        type: "post",
+        url: "/api/reader_js.php",
+        data: {
+            articleid: '<?= $articleid ?>',
+            chapterid: '<?= $chapterid ?>',
+            pid: '<?= $now_pid ?>'
+        },
+        success: function(data) {
+            $('#rtext').html(data);
+        },
+        error: function() {
+            $('#rtext').html('<div class="error-text">加载失败，请刷新重试</div>');
+        }
+    });
+}, 200);
+<?php endif ?>
 var lastread = new LastRead();
 lastread.set(<?=json_encode($info_url_raw, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>, window.location.href, <?=json_encode($articlename, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>, <?=json_encode($chaptername, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>, <?=json_encode($author, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>, <?=json_encode($sortname, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)?>);
 </script>

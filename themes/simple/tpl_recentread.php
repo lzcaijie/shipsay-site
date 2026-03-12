@@ -6,7 +6,6 @@ $recentread_page_description = SITE_NAME . '阅读记录页面。';
 $recentread_page_description_html = htmlspecialchars($recentread_page_description, ENT_QUOTES, 'UTF-8');
 $site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
 $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
-$theme_dir_attr = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
 <html lang="zh">
@@ -14,7 +13,7 @@ $theme_dir_attr = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
 <meta charset="utf-8">
 <title><?=$recentread_page_title_html?></title>
 <meta name="description" content="<?=$recentread_page_description_html?>">
-<?php require_once 'tpl_header.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_header.php'; ?>
 
 <div class="container">
     <div class="content book">
@@ -23,11 +22,8 @@ $theme_dir_attr = htmlspecialchars((string)$theme_dir, ENT_QUOTES, 'UTF-8');
             <li class="active">阅读记录</li>
         </ol>
         <h2 class="text-center">阅读记录</h2>
-        <div id="tempBookcase"></div>
+        <div id="showbook"><script>showbook();</script></div>
     </div>
 </div>
 
-<script src="/static/<?=$theme_dir_attr?>/tempbookcase.js"></script>
-<script>showtempbooks();</script>
-
-<?php require_once 'tpl_footer.php'; ?>
+<?php require_once __THEME_DIR__ . '/tpl_footer.php'; ?>
