@@ -6,14 +6,12 @@
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
 list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('home');
-$site_home_url_raw = !empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/';
+$site_home_url_raw = function_exists('ss_home_url') ? (string)ss_home_url() : (!empty($site_url) ? rtrim((string)$site_url, '/') . '/' : '/');
 $site_home_url_attr = htmlspecialchars($site_home_url_raw, ENT_QUOTES, 'UTF-8');
 $site_name_html = htmlspecialchars((string)SITE_NAME, ENT_QUOTES, 'UTF-8');
-$recentread_url_raw = !empty($fake_recentread) ? (string)$fake_recentread : '';
+$recentread_url_raw = function_exists('ss_recentread_url') ? (string)ss_recentread_url() : '';
 $recentread_url_attr = htmlspecialchars($recentread_url_raw, ENT_QUOTES, 'UTF-8');
-$full_allbooks_url_raw = !empty($full_allbooks_url)
-    ? (string)$full_allbooks_url
-    : (!empty($allbooks_url) ? '/quanben' . (string)$allbooks_url : '');
+$full_allbooks_url_raw = function_exists('ss_full_allbooks_url') ? (string)ss_full_allbooks_url() : '';
 $full_allbooks_url_attr = htmlspecialchars($full_allbooks_url_raw, ENT_QUOTES, 'UTF-8');
 ?>
 <title><?=htmlspecialchars($seo_title, ENT_QUOTES, 'UTF-8')?></title>
@@ -29,7 +27,9 @@ $full_allbooks_url_attr = htmlspecialchars($full_allbooks_url_raw, ENT_QUOTES, '
 </div>
 <div class="sort c_sort" id="submenu" style="display:none;">
     <ul>
+        <?php $top_url_raw = function_exists('ss_top_url') ? (string)ss_top_url() : ''; ?>
         <?php foreach(Sort::ss_sorthead() as $v): ?>
+            <?php if (rtrim((string)$v['sorturl'], '/') === rtrim($top_url_raw, '/') || (isset($v['sortname']) && mb_strpos((string)$v['sortname'], '排行') !== false)) continue; ?>
             <li><a href="<?=htmlspecialchars((string)$v['sorturl'], ENT_QUOTES, 'UTF-8')?>"><?=htmlspecialchars((string)$v['sortname_2'], ENT_QUOTES, 'UTF-8')?></a></li>
         <?php endforeach ?>
         <div class="cc"></div>
