@@ -10,6 +10,9 @@ if (function_exists('ss_search_url')) {
 if ($search_url_safe === '' && isset($fake_search) && $fake_search) {
     $search_url_safe = (string)$fake_search;
 }
+if ($search_url_safe === '') {
+    $search_url_safe = '/search/';
+}
 $recentread_url_safe = isset($fake_recentread) && $fake_recentread ? (string)$fake_recentread : '';
 $rank_entry_url_safe = '';
 if (isset($rank_entry_url) && $rank_entry_url) {

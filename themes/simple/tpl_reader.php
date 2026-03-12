@@ -173,7 +173,6 @@ $reader_breadcrumb_ld = [
                     <?php if((int)($pre_cid ?? 0) === 0): ?><a id="linkPrev" class="btn btn-default" href="javascript:void(0);">书首页</a><?php else: ?><a id="linkPrev" class="btn btn-default" href="<?=$pre_url_attr?>">上一章</a><?php endif ?>
                 <?php endif ?>
                 <?php if ($index_url_raw !== ''): ?><a id="linkIndex" class="btn btn-default" href="<?=$index_url_attr?>">目录</a><?php else: ?><a id="linkIndex" class="btn btn-default" href="javascript:void(0);" aria-disabled="true">目录</a><?php endif; ?>
-                <?php if ($info_url_raw !== ''): ?><a class="btn btn-default" href="<?=$info_url_attr?>">详情</a><?php endif; ?>
                 <?php if((string)($nextpage_url ?? '') !== ''): ?>
                     <a id="linkNext" class="btn btn-default" href="<?=$nextpage_url_attr?>">下一页</a>
                 <?php else: ?>
