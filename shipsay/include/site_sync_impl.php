@@ -925,7 +925,7 @@ function ss_render_config_ini($cfg){
   foreach (['home','top','rank','info','indexlist','reader','category','author','search'] as $__pg) {
     foreach (['title','keywords','desc'] as $__t) {
       $__key = 'seo_'. $__pg .'_'. $__t .'_tpl';
-      $saveStr .= "\$".$__key." = '".ss_php_sq($cfg[$__key] ?? '')."';\r\n";
+      $saveStr .= "$".$__key." = '".ss_php_sq($cfg[$__key] ?? '')."';\r\n";
     }
   }
 
