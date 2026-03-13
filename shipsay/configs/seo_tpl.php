@@ -9,6 +9,10 @@ if (!isset($seo_home_title_tpl) || $seo_home_title_tpl==='') $seo_home_title_tpl
 if (!isset($seo_home_keywords_tpl) || $seo_home_keywords_tpl==='') $seo_home_keywords_tpl = '{SITE_NAME},小说,小说网,最新章节,免费阅读';
 if (!isset($seo_home_desc_tpl) || $seo_home_desc_tpl==='') $seo_home_desc_tpl = '{SITE_NAME}为您提供热门小说最新章节免费阅读。';
 
+if (!isset($seo_top_title_tpl) || $seo_top_title_tpl==='') $seo_top_title_tpl = '排行榜_{SITE_NAME}';
+if (!isset($seo_top_keywords_tpl) || $seo_top_keywords_tpl==='') $seo_top_keywords_tpl = '{SITE_NAME},小说排行榜,排行榜导航,热门小说';
+if (!isset($seo_top_desc_tpl) || $seo_top_desc_tpl==='') $seo_top_desc_tpl = '{SITE_NAME}排行榜聚合页，汇总热门榜单与小说排行入口。';
+
 if (!isset($seo_info_title_tpl) || $seo_info_title_tpl==='') $seo_info_title_tpl = '{articlename}最新章节目录_{author}著_{SITE_NAME}';
 if (!isset($seo_info_keywords_tpl) || $seo_info_keywords_tpl==='') $seo_info_keywords_tpl = '{articlename},{author},{SITE_NAME},最新章节,全文阅读';
 if (!isset($seo_info_desc_tpl) || $seo_info_desc_tpl==='') $seo_info_desc_tpl = '《{articlename}》作者：{author}，简介：{intro_p}';
