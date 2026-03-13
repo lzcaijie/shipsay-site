@@ -471,6 +471,65 @@ function ss_extract_sortarr_src($config_file){
   return '';
 }
 
+function ss_fix_config_ini_seo_escapes($raw){
+  if (!is_string($raw) || $raw === '') return $raw;
+  return preg_replace_callback('/(^|\R)([ \t]*)\\\\\$(seo_[A-Za-z0-9_]+)\s*=/', function($m){
+    return $m[1] . $m[2] . '$' . $m[3] . ' =';
+  }, $raw);
+}
+
+function ss_is_seo_config_patch($patch_cfg){
+  if (empty($patch_cfg) || !is_array($patch_cfg)) return false;
+  foreach ($patch_cfg as $k => $v) {
+    if ($k === 'seo_profile') continue;
+    if (preg_match('/^seo_[A-Za-z0-9_]+$/', (string)$k)) continue;
+    return false;
+  }
+  return true;
+}
+
+function ss_write_seo_only_config_ini($cfg_file, $seo_cfg){
+  if (!is_array($seo_cfg) || empty($seo_cfg)) return true;
+  $raw = is_file($cfg_file) ? @file_get_contents($cfg_file) : '';
+  if (!is_string($raw)) return false;
+  if ($raw === '') return false;
+
+  $raw = ss_fix_config_ini_seo_escapes($raw);
+
+  $ordered = [];
+  if (array_key_exists('seo_profile', $seo_cfg)) $ordered[] = 'seo_profile';
+  foreach (['home','top','rank','info','indexlist','reader','category','author','search'] as $__pg) {
+    foreach (['title','keywords','desc'] as $__t) {
+      $__key = 'seo_' . $__pg . '_' . $__t . '_tpl';
+      if (array_key_exists($__key, $seo_cfg)) $ordered[] = $__key;
+    }
+  }
+
+  if (empty($ordered)) return true;
+
+  $has_header = (strpos($raw, '//SEO 配置') !== false);
+  $appended_any = false;
+  foreach ($ordered as $__key) {
+    $__line = '$' . $__key . " = '" . ss_php_sq($seo_cfg[$__key] ?? '') . "';";
+    $__pattern = '/^[ \t]*\$' . preg_quote($__key, '/') . '\s*=.*$/m';
+    if (preg_match($__pattern, $raw)) {
+      $raw = preg_replace_callback($__pattern, function($m) use ($__line){ return $__line; }, $raw, 1);
+      continue;
+    }
+    if (!$appended_any) {
+      if (!preg_match('/(?:\r\n|\n|\r)$/', $raw)) $raw .= "\r\n";
+      if (!$has_header) {
+        $raw .= "\r\n//SEO 配置\r\n";
+        $has_header = true;
+      }
+      $appended_any = true;
+    }
+    $raw .= $__line . "\r\n";
+  }
+
+  return ss_write_atomic($cfg_file, $raw);
+}
+
 function ss_load_override($override_file){
   $site_name = null; $theme_dir = null; $kw_pack_id = null; $enable_protect = null;
   if (is_file($override_file)) {
@@ -499,6 +558,7 @@ function ss_safe_include_config_ini_v5($file){
   ];
   $clean = preg_replace($patterns, '', $raw);
   if (!is_string($clean) || $clean === '') $clean = $raw;
+  $clean = ss_fix_config_ini_seo_escapes($clean);
   $tmp = tempnam(sys_get_temp_dir(), 'sscfg_');
   if (!$tmp) { include $file; return; }
   @file_put_contents($tmp, $clean);
@@ -925,7 +985,7 @@ function ss_render_config_ini($cfg){
   foreach (['home','top','rank','info','indexlist','reader','category','author','search'] as $__pg) {
     foreach (['title','keywords','desc'] as $__t) {
       $__key = 'seo_'. $__pg .'_'. $__t .'_tpl';
-      $saveStr .= "$".$__key." = '".ss_php_sq($cfg[$__key] ?? '')."';\r\n";
+      $saveStr .= '$'.$__key." = '".ss_php_sq($cfg[$__key] ?? '')."';\r\n";
     }
   }
 
@@ -1739,6 +1799,7 @@ if (!empty($patch['site_sync']) && is_array($patch['site_sync'])) {
 
 // config merge
 $cfg_toggles = ['use_js','use_gzip','enable_down','is_ft','is_3in1','count_visit','local_img','is_attachment','use_redis','is_multiple','is_langtail','is_keywords'];
+$config_is_seo_only = ss_is_seo_config_patch($patch['config'] ?? []);
 if (!empty($patch['config']) && is_array($patch['config'])) {
   // dbpass: *** 不修改
   if (isset($patch['config']['dbpass'])) {
@@ -1813,8 +1874,12 @@ ss_clean_old_bundles($bakdir, 30);
 
 // write config.ini.php
 if (in_array($cfg_file, $write_files, true)) {
-  $str = ss_render_config_ini($next['config']);
-  if (!ss_write_atomic($cfg_file, $str)) ss_resp(['ok'=>0,'error'=>'write_failed','file'=>'config.ini.php']);
+  if ($config_is_seo_only) {
+    if (!ss_write_seo_only_config_ini($cfg_file, $patch['config'])) ss_resp(['ok'=>0,'error'=>'write_failed','file'=>'config.ini.php']);
+  } else {
+    $str = ss_render_config_ini($next['config']);
+    if (!ss_write_atomic($cfg_file, $str)) ss_resp(['ok'=>0,'error'=>'write_failed','file'=>'config.ini.php']);
+  }
 }
 
 if (in_array($filter_file, $write_files, true)) {
