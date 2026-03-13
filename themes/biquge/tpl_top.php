@@ -1,7 +1,7 @@
 <?php if (!defined('__ROOT_DIR__')) exit; ?>
 <?php
 require_once __ROOT_DIR__.'/shipsay/seo.php';
-list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('rank');
+list($seo_title,$seo_keywords,$seo_description) = ss_seo_render('top');
 if (trim($seo_title) === '' || trim($seo_title) === SITE_NAME) $seo_title = '排行榜_' . SITE_NAME;
 if (trim($seo_keywords) === '' || trim($seo_keywords) === SITE_NAME) $seo_keywords = '排行榜,热门小说,' . SITE_NAME;
 if (trim($seo_description) === '' || trim($seo_description) === SITE_NAME) $seo_description = SITE_NAME . '小说排行榜聚合页。';
