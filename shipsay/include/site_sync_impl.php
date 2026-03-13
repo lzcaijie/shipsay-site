@@ -715,6 +715,13 @@ function ss_load_config_ini($root){
   $is_keywords = 0;
   $keywords_num = 5;
 
+  $seo_profile = '';
+  foreach (['home','info','indexlist','reader','category','author','search','rank'] as $__pg) {
+    ${'seo_' . $__pg . '_title_tpl'} = '';
+    ${'seo_' . $__pg . '_keywords_tpl'} = '';
+    ${'seo_' . $__pg . '_desc_tpl'} = '';
+  }
+
   if (is_file($file)) {
     include $file;
   }
@@ -800,6 +807,32 @@ function ss_load_config_ini($root){
 
     'is_keywords' => (int)$is_keywords,
     'keywords_num' => (int)$keywords_num,
+
+    'seo_profile' => (string)$seo_profile,
+    'seo_home_title_tpl' => (string)$seo_home_title_tpl,
+    'seo_home_keywords_tpl' => (string)$seo_home_keywords_tpl,
+    'seo_home_desc_tpl' => (string)$seo_home_desc_tpl,
+    'seo_info_title_tpl' => (string)$seo_info_title_tpl,
+    'seo_info_keywords_tpl' => (string)$seo_info_keywords_tpl,
+    'seo_info_desc_tpl' => (string)$seo_info_desc_tpl,
+    'seo_indexlist_title_tpl' => (string)$seo_indexlist_title_tpl,
+    'seo_indexlist_keywords_tpl' => (string)$seo_indexlist_keywords_tpl,
+    'seo_indexlist_desc_tpl' => (string)$seo_indexlist_desc_tpl,
+    'seo_reader_title_tpl' => (string)$seo_reader_title_tpl,
+    'seo_reader_keywords_tpl' => (string)$seo_reader_keywords_tpl,
+    'seo_reader_desc_tpl' => (string)$seo_reader_desc_tpl,
+    'seo_category_title_tpl' => (string)$seo_category_title_tpl,
+    'seo_category_keywords_tpl' => (string)$seo_category_keywords_tpl,
+    'seo_category_desc_tpl' => (string)$seo_category_desc_tpl,
+    'seo_author_title_tpl' => (string)$seo_author_title_tpl,
+    'seo_author_keywords_tpl' => (string)$seo_author_keywords_tpl,
+    'seo_author_desc_tpl' => (string)$seo_author_desc_tpl,
+    'seo_search_title_tpl' => (string)$seo_search_title_tpl,
+    'seo_search_keywords_tpl' => (string)$seo_search_keywords_tpl,
+    'seo_search_desc_tpl' => (string)$seo_search_desc_tpl,
+    'seo_rank_title_tpl' => (string)$seo_rank_title_tpl,
+    'seo_rank_keywords_tpl' => (string)$seo_rank_keywords_tpl,
+    'seo_rank_desc_tpl' => (string)$seo_rank_desc_tpl,
   ];
 }
 
@@ -1028,6 +1061,15 @@ function ss_render_config_ini($cfg){
 
   $saveStr .= "\$is_keywords = ".(int)($cfg['is_keywords'] ?? 0).";\r\n";
   $saveStr .= "\$keywords_num = ".(int)($cfg['keywords_num'] ?? 5).";\r\n";
+
+  $saveStr .= "\r\n// SEO（总控下发为主，seo_tpl.php 为兜底）\r\n";
+  $saveStr .= "\$seo_profile = '".ss_php_sq($cfg['seo_profile'] ?? '')."';\r\n";
+  foreach (['home','info','indexlist','reader','category','author','search','rank'] as $__pg) {
+    foreach (['title','keywords','desc'] as $__tp) {
+      $__key = 'seo_' . $__pg . '_' . $__tp . '_tpl';
+      $saveStr .= '\$' . $__key . " = '" . ss_php_sq($cfg[$__key] ?? '') . "';\r\n";
+    }
+  }
 
   return $saveStr;
 }
